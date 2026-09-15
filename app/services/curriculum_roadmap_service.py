@@ -644,9 +644,25 @@ def calculate_dynamic_daily_quota(
     reason = f"Standard-Tagesziel von {base_quota} neuen Karten."
     adjusted_target = base_quota
 
-    if prev_log:
+    # Preceding day's actual new cards learned (prefer live Anki Desktop count)
+    cards_done = 0
+    cards_target = base_quota
+    try:
+        from app.services.anki_desktop_sync import read_live_anki_desktop_state
+        prev_state = read_live_anki_desktop_state(target_date_str=prev_date_str)
+        if prev_state and prev_state.get("connected"):
+            live_cnt = prev_state.get("new_cards_count", prev_state.get("today_reviewed_count"))
+            if live_cnt is not None:
+                cards_done = live_cnt
+    except Exception:
+        pass
+
+    if cards_done == 0 and prev_log:
         cards_done = prev_log.get("cards_completed", 0)
+    if prev_log:
         cards_target = prev_log.get("cards_target") or base_quota
+
+    if cards_done > 0 or prev_log:
 
         if cards_done > cards_target:
             surplus = cards_done - cards_target

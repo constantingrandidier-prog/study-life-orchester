@@ -9,15 +9,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.services.anki_desktop_sync import read_live_anki_desktop_state, find_local_anki_collection
 from app.services.anki_backlog_triage import calculate_backlog_triage
 
-CLOUD_URL = 'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/desktop-sync'
-LOCAL_URL = 'http://127.0.0.1:8000/api/v1/schedule/anki/desktop-sync'
-CLOUD_TRIAGE_URL = 'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/triage-sync'
-LOCAL_TRIAGE_URL = 'http://127.0.0.1:8000/api/v1/schedule/anki/triage-sync'
+TARGET_SYNC_URLS = [
+    'https://study-life-orchester.onrender.com/api/v1/schedule/anki/desktop-sync',
+    'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/desktop-sync',
+    'http://127.0.0.1:8000/api/v1/schedule/anki/desktop-sync'
+]
+
+TARGET_TRIAGE_URLS = [
+    'https://study-life-orchester.onrender.com/api/v1/schedule/anki/triage-sync',
+    'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/triage-sync',
+    'http://127.0.0.1:8000/api/v1/schedule/anki/triage-sync'
+]
 
 def sync_now():
     state = read_live_anki_desktop_state()
     data = json.dumps(state).encode('utf-8')
-    for url in [CLOUD_URL, LOCAL_URL]:
+    for url in TARGET_SYNC_URLS:
         try:
             req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'}, method='POST')
             urllib.request.urlopen(req, timeout=10)
@@ -28,7 +35,7 @@ def sync_now():
     try:
         triage = calculate_backlog_triage()
         tdata = json.dumps(triage).encode('utf-8')
-        for url in [CLOUD_TRIAGE_URL, LOCAL_TRIAGE_URL]:
+        for url in TARGET_TRIAGE_URLS:
             try:
                 treq = urllib.request.Request(url, data=tdata, headers={'Content-Type': 'application/json'}, method='POST')
                 urllib.request.urlopen(treq, timeout=10)

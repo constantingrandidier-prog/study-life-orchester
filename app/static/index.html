@@ -545,22 +545,37 @@
         <div id="rolloverScheduleList" style="display: flex; flex-direction: column; gap: 0.35rem;"></div>
       </div>
 
-      <!-- Wissenschaftliches Zeitorchester (Start 08:30 Uhr) -->
+      <!-- Wissenschaftliches Zeitorchester (Start 08:30 Uhr / Phase 1 Neuro-Chronobiologie) -->
       <div id="scienceRhythmBox" style="background: rgba(13, 17, 23, 0.95); border: 1px solid rgba(88, 166, 255, 0.25); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
             <strong style="color: #58a6ff; font-size: 13px;">⏱️ Wissenschaftliches Zeitorchester</strong>
             <span style="padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10.5px; font-weight: 600; background: rgba(56, 139, 253, 0.15); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.3);">
               Lernstart: 08:30 Uhr
             </span>
+            <span style="padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10px; font-weight: 600; background: rgba(210, 168, 255, 0.15); color: #d2a8ff; border: 1px solid rgba(210, 168, 255, 0.3);">
+              💊 Elvanse-Peak: 09:45–11:30
+            </span>
           </div>
-          <span style="font-size: 11px; color: var(--text-muted);" id="scienceRhythmCurrentIndicator">
+          <span style="font-size: 11px; color: #58a6ff; font-weight: 600;" id="scienceRhythmCurrentIndicator">
             Active Recall &bull; Deep Encoding
           </span>
         </div>
 
-        <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 0.65rem; line-height: 1.4;">
-          Wissenschaftlicher Rhythmus für maximales Auswendiglernen: Zuerst Altkarten abräumen (Active Recall), dann nach einer Bildschirmpause 100 neue Karten tief einprägen (Deep Encoding). Sport findet abends statt.
+        <!-- Neuro-Telemetry Strip (Reale Brutto-Lernzeiten) -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.65rem; flex-wrap: wrap; font-size: 11px; background: rgba(255, 255, 255, 0.02); padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05);">
+          <div style="color: #c9d1d9;">🧠 <strong>Altkarten:</strong> ~60m / 100 Reps</div>
+          <div style="color: #d2a8ff;">🔥 <strong>Neue Karten:</strong> ~1h45 / 100 Karten</div>
+          <div style="color: #79c0ff;">🎧 <strong>Podcasts:</strong> 1.2x–1.4x (Nur A-Konzepte)</div>
+          <div style="color: #a371f7;">🏛️ <strong>Praktika:</strong> Präsenzpflicht</div>
+          <div style="color: #3fb950;">🏃 <strong>Sport:</strong> Ab 17:30 (Abend-Puffer)</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem; font-size: 11px;">
+          <span style="color: var(--text-muted);" id="scienceRhythmProgressText">Lade Tagesrhythmus...</span>
+          <button type="button" onclick="copyTriageQueryToClipboard()" class="btn-secondary" style="font-size: 10px; padding: 0.15rem 0.45rem; height: auto; background: rgba(56, 139, 253, 0.1); color: #79c0ff; border-color: rgba(56, 139, 253, 0.3);">
+            📋 1-Klick Anki-Filter kopieren
+          </button>
         </div>
 
         <!-- Schedule Blocks Container -->

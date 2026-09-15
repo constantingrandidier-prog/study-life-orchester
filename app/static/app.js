@@ -487,6 +487,7 @@ async function loadSchedule() {
     updateMetrics(data.summary);
     updateWeekdayDisplays();
     loadStatsComparison();
+    loadScienceRhythm(state.targetDate);
     if (dom.timelineStatusBadge) {
       if (state.fixedEvents.length === 0) {
         dom.timelineStatusBadge.textContent = 'Vorlesungsfrei (0 Vorlesungen)';
@@ -3370,31 +3371,88 @@ async function loadScienceRhythm(targetDate) {
   }
 }
 
+function toggleRhythmBlockDone(dateStr, blockId) {
+  const key = `sl_rhythm_${dateStr}_${blockId}`;
+  const cur = localStorage.getItem(key) === 'true';
+  localStorage.setItem(key, String(!cur));
+  loadScienceRhythm(dateStr);
+}
+
 function renderScienceRhythm(data) {
   const container = document.getElementById('scienceRhythmBlocksContainer');
   if (!container || !data || !data.blocks) return;
+
+  const now = new Date();
+  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const isToday = (data.date === todayIso);
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  let activeBlockTitle = '';
+  let activeMinsLeft = 0;
+  let doneCount = 0;
+
+  data.blocks.forEach(b => {
+    const key = `sl_rhythm_${data.date}_${b.id}`;
+    if (localStorage.getItem(key) === 'true') doneCount++;
+  });
+
+  const progressEl = document.getElementById('scienceRhythmProgressText');
+  if (progressEl) {
+    progressEl.innerHTML = `<strong>${doneCount} von ${data.blocks.length}</strong> Abschnitten erledigt &bull; Geplante Lernzeit: <strong>${Math.round(data.total_study_minutes / 60)}h ${data.total_study_minutes % 60}m</strong>`;
+  }
 
   let html = '';
   data.blocks.forEach(b => {
     const isBreak = b.is_break;
     const isMandatory = b.is_mandatory;
-    const borderLeft = isMandatory ? '4px solid #a371f7' : (isBreak ? '3px solid #3fb950' : `3px solid ${b.color}`);
-    const bg = isMandatory ? 'rgba(163, 113, 247, 0.12)' : (isBreak ? 'rgba(63, 185, 80, 0.04)' : 'rgba(255, 255, 255, 0.02)');
+    const key = `sl_rhythm_${data.date}_${b.id}`;
+    const isCompleted = localStorage.getItem(key) === 'true';
+
+    // Parse start and end time (HH:MM)
+    const [sh, sm] = b.start_time.split(':').map(Number);
+    const [eh, em] = b.end_time.split(':').map(Number);
+    const startM = sh * 60 + sm;
+    const endM = eh * 60 + em;
+
+    const isCurrent = isToday && (nowMinutes >= startM && nowMinutes < endM);
+    if (isCurrent) {
+      activeBlockTitle = b.title;
+      activeMinsLeft = endM - nowMinutes;
+    }
+
+    let borderLeft = isMandatory ? '4px solid #a371f7' : (isBreak ? '3px solid #3fb950' : `3px solid ${b.color}`);
+    let bg = isMandatory ? 'rgba(163, 113, 247, 0.12)' : (isBreak ? 'rgba(63, 185, 80, 0.04)' : 'rgba(255, 255, 255, 0.02)');
+    let activeStyle = '';
+    if (isCurrent) {
+      activeStyle = 'border-color: #58a6ff !important; box-shadow: 0 0 12px rgba(88, 166, 255, 0.28); background: rgba(56, 139, 253, 0.12) !important;';
+    }
+
+    const compStyle = isCompleted ? 'opacity: 0.55;' : '';
 
     html += `
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); border-left: ${borderLeft}; background: ${bg}; gap: 0.5rem;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); border-left: ${borderLeft}; background: ${bg}; gap: 0.5rem; ${activeStyle} ${compStyle}">
         <div style="display: flex; align-items: center; gap: 0.5rem; min-width: 0;">
-          <span style="font-size: 14px;">${b.icon}</span>
+          <!-- Checkbox -->
+          <div onclick="toggleRhythmBlockDone('${data.date}', '${b.id}')" style="cursor: pointer; flex-shrink: 0; width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid ${isCompleted ? '#3fb950' : 'rgba(255,255,255,0.3)'}; background: ${isCompleted ? '#238636' : 'transparent'}; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff;" title="${isCompleted ? 'Als offen markieren' : 'Als erledigt markieren'}">
+            ${isCompleted ? '✓' : ''}
+          </div>
+
+          <span style="font-size: 14px; flex-shrink: 0;">${b.icon}</span>
+
           <div style="min-width: 0;">
             <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
-              <strong style="color: ${isMandatory ? '#d2a8ff' : '#e6edf3'}; font-size: 11.5px;">${escapeHtml(b.title)}</strong>
+              <strong style="color: ${isMandatory ? '#d2a8ff' : (isCompleted ? 'var(--text-muted)' : '#e6edf3')}; font-size: 11.5px; ${isCompleted ? 'text-decoration: line-through;' : ''}">
+                ${escapeHtml(b.title)}
+              </strong>
               ${b.badge ? `<span style="font-size: 9px; padding: 0.06rem 0.3rem; border-radius: 3px; font-weight: 600; background: ${b.color}25; color: ${b.color}; border: 1px solid ${b.color}40;">${escapeHtml(b.badge)}</span>` : ''}
+              ${isCurrent ? `<span style="font-size: 9px; padding: 0.06rem 0.35rem; border-radius: 3px; font-weight: 700; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);">🔴 JETZT AKTIV (${activeMinsLeft}m übrig)</span>` : ''}
             </div>
-            <div style="font-size: 10.5px; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 500px;">
+            <div style="font-size: 10.5px; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 480px;">
               ${escapeHtml(b.description)}
             </div>
           </div>
         </div>
+
         <div style="text-align: right; flex-shrink: 0; font-family: monospace; font-size: 11px; color: #8b949e;">
           <strong style="color: #c9d1d9;">${b.start_time} - ${b.end_time}</strong>
           <div style="font-size: 9.5px; color: var(--text-muted);">${b.duration_minutes}m</div>
@@ -3404,6 +3462,17 @@ function renderScienceRhythm(data) {
   });
 
   container.innerHTML = html;
+
+  const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
+  if (indicatorEl) {
+    if (activeBlockTitle) {
+      indicatorEl.innerHTML = `<span style="color: #f87171;">🔴 JETZT AKTIV:</span> ${escapeHtml(activeBlockTitle)} (${activeMinsLeft}m)`;
+    } else if (isToday && nowMinutes >= 17 * 60 + 30) {
+      indicatorEl.innerHTML = `🎉 Feierabend & Sport am Abend!`;
+    } else {
+      indicatorEl.textContent = `Active Recall • Deep Encoding`;
+    }
+  }
 }
 
 // Global window bindings for inline HTML onclicks
@@ -3436,6 +3505,7 @@ window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
 window.loadWorkloadForecast = loadWorkloadForecast;
 window.selectForecastDay = selectForecastDay;
 window.loadScienceRhythm = loadScienceRhythm;
+window.toggleRhythmBlockDone = toggleRhythmBlockDone;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {

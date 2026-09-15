@@ -1026,6 +1026,52 @@ def get_curriculum_roadmap_endpoint() -> CurriculumRoadmapResponse:
     return CurriculumRoadmapResponse(**res)
 
 
+# ============================================================================
+# PHASE 4: ANKI DESKTOP DIRECT SYNC (No AnkiWeb, Automatic Progress)
+# ============================================================================
+
+from app.services.anki_desktop_sync import (
+    read_live_anki_desktop_state,
+    cache_desktop_sync_state,
+    get_cached_desktop_sync_state,
+)
+
+@router.get(
+    "/anki/desktop-status",
+    summary="Get live Anki Desktop connection status and today's auto-tracked reviews",
+    description="Directly reads collection.anki2 to automatically count reviews done today and cards due tomorrow for repetition.",
+)
+def get_anki_desktop_status_endpoint():
+    """Retrieve live stats directly from local Anki desktop collection."""
+    return read_live_anki_desktop_state()
+
+
+@router.post(
+    "/anki/desktop-sync",
+    summary="Receive sync payload from laptop background watcher",
+    description="Allows local laptop sync script to push live reviews and due forecast to cloud server.",
+)
+def post_anki_desktop_sync_endpoint(payload: dict):
+    """Receive live sync payload from local Anki watcher."""
+    cache_desktop_sync_state(payload)
+    today_cnt = payload.get("today_reviewed_count", 0)
+    today_mins = int(payload.get("today_time_minutes", 0))
+    if today_cnt > 0:
+        try:
+            repository.save_daily_progress(
+                target_date=date.today(),
+                cards_completed=today_cnt,
+                minutes_spent=today_mins,
+                source="anki_desktop_auto",
+                notes=f"Auto-Sync Anki Desktop ({today_cnt} Karten)",
+                user_id="student",
+            )
+        except Exception:
+            pass
+    return {"status": "ok", "synced": True, "cards_logged": today_cnt}
+
+
+
 
 
 

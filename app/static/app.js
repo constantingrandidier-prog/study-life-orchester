@@ -2940,6 +2940,115 @@ function switchMobileView(view) {
   }
 }
 
+// ============================================================================
+// PHASE 4: ANKI DESKTOP DIRECT AUTO-SYNC & TOMORROW'S REPETITIONS
+// ============================================================================
+
+async function loadAnkiDesktopStatus(showFeedback = false) {
+  try {
+    const res = await fetch(`${API_BASE}/anki/desktop-status`);
+    if (!res.ok) return;
+    const data = await res.json();
+    renderAnkiDesktopWidget(data);
+    if (showFeedback) {
+      const msg = `Anki Desktop synchronisiert: ${data.today_reviewed_count || 0} Karten heute erledigt, ${data.due_tomorrow_count || 0} morgen fällig.`;
+      if (typeof showToast === 'function') showToast(msg);
+    }
+  } catch (err) {
+    console.warn('Anki desktop status fetch warning:', err);
+  }
+}
+
+async function syncAnkiDesktopNow(showFeedback = true) {
+  const btn = document.querySelector('#ankiDesktopLiveCard button');
+  if (btn) btn.textContent = '⏳ Lade...';
+  await loadAnkiDesktopStatus(showFeedback);
+  if (typeof loadCurriculumToday === 'function') await loadCurriculumToday(false);
+  if (typeof loadExamPacing === 'function') await loadExamPacing();
+  if (btn) btn.textContent = '⚡ Jetzt abgleichen';
+}
+
+function renderAnkiDesktopWidget(data) {
+  if (!data) return;
+  const countEl = document.getElementById('ankiTodayCount');
+  const breakdownEl = document.getElementById('ankiTodayBreakdownText');
+  const timeEl = document.getElementById('ankiTodayTimeSpent');
+  const tomCountEl = document.getElementById('ankiTomorrowCount');
+  const tomSubEl = document.getElementById('ankiTomorrowSubtext');
+  const tomTopicPreviewEl = document.getElementById('ankiTomorrowPreviewTopic');
+  const tomListEl = document.getElementById('ankiTomorrowTopicsList');
+  const tomTotalTopicsEl = document.getElementById('ankiTomorrowTotalTopics');
+  const profileEl = document.getElementById('ankiSyncStatusProfile');
+  const lastSyncEl = document.getElementById('ankiLastSyncTime');
+
+  if (profileEl && data.source) {
+    profileEl.textContent = data.source;
+  }
+  if (lastSyncEl) {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    lastSyncEl.textContent = `Zuletzt: ${timeStr}`;
+  }
+
+  const todayCnt = data.today_reviewed_count || 0;
+  if (countEl) countEl.textContent = todayCnt;
+  if (breakdownEl) {
+    breakdownEl.textContent = `(${data.today_new_count || 0} neu, ${data.today_review_count || 0} wiederholt)`;
+  }
+  if (timeEl) {
+    const mins = data.today_time_minutes || 0;
+    timeEl.textContent = `${mins} Min. Lernzeit heute in Anki`;
+  }
+
+  const tomCnt = data.due_tomorrow_count || 0;
+  if (tomCountEl) tomCountEl.textContent = tomCnt;
+  if (tomSubEl) {
+    tomSubEl.textContent = tomCnt === 1 ? 'Karte für morgen' : 'Karten für morgen';
+  }
+
+  const topics = data.due_tomorrow_topics || [];
+  if (tomTotalTopicsEl) {
+    tomTotalTopicsEl.textContent = `${topics.length} Thema${topics.length !== 1 ? 'en' : ''}`;
+  }
+
+  if (tomTopicPreviewEl) {
+    if (topics.length > 0) {
+      const topTopic = topics[0];
+      tomTopicPreviewEl.textContent = `Hauptfokus morgen: ${topTopic.deck} (${topTopic.count} Karten)`;
+    } else {
+      tomTopicPreviewEl.textContent = 'Keine fälligen Wiederholungen morgen';
+    }
+  }
+
+  if (tomListEl) {
+    if (topics.length === 0) {
+      tomListEl.innerHTML = '<span style="color: var(--text-muted);">Keine Wiederholungen für morgen fällig – du bist optimal im Plan!</span>';
+    } else {
+      tomListEl.innerHTML = topics.map(t => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0.4rem; background: rgba(255,255,255,0.03); border-radius: 4px;">
+          <span style="color: #e6edf3; font-weight: 500;">📖 ${escapeHtml(t.deck)}</span>
+          <span style="color: #d2a8ff; font-weight: 700; background: rgba(210,168,255,0.15); padding: 0.1rem 0.4rem; border-radius: 4px;">${t.count} Karten</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  const kpiCompleted = document.getElementById('pacingCardsCompleted');
+  if (kpiCompleted && todayCnt > 0) {
+    kpiCompleted.textContent = todayCnt;
+  }
+}
+
+function toggleTomorrowAnkiDetails() {
+  const box = document.getElementById('ankiTomorrowDetailsBox');
+  const btn = document.getElementById('btnToggleTomorrowDetails');
+  if (!box) return;
+  const isHidden = box.style.display === 'none' || !box.style.display;
+  box.style.display = isHidden ? 'block' : 'none';
+  if (btn) {
+    btn.textContent = isHidden ? 'Details verbergen ▲' : 'Details anzeigen ▼';
+  }
+}
+
 // Global window bindings for inline HTML onclicks
 window.handleQuickAddCards = handleQuickAddCards;
 window.handleMarkAllTargetDone = handleMarkAllTargetDone;
@@ -2960,11 +3069,24 @@ window.closeCurriculumRoadmapModal = closeCurriculumRoadmapModal;
 window.handleFilterRoadmap = handleFilterRoadmap;
 window.handleToggleSlotDone = handleToggleSlotDone;
 window.switchMobileView = switchMobileView;
+window.loadAnkiDesktopStatus = loadAnkiDesktopStatus;
+window.syncAnkiDesktopNow = syncAnkiDesktopNow;
+window.toggleTomorrowAnkiDetails = toggleTomorrowAnkiDetails;
+
+// Auto-sync Anki desktop periodically every 30 seconds
+setInterval(() => {
+  loadAnkiDesktopStatus(false);
+}, 30000);
 
 // Run on page load (support immediate execution if DOM is already ready)
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+    loadAnkiDesktopStatus(false);
+  });
 } else {
   init();
+  loadAnkiDesktopStatus(false);
 }
+
 

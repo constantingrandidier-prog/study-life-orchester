@@ -1098,8 +1098,27 @@ def post_anki_triage_sync_endpoint(payload: dict):
     return {"status": "ok", "cached": True}
 
 
+from app.services.workload_forecast import (
+    get_workload_forecast,
+    cache_workload_forecast,
+)
+
+@router.get(
+    "/anki/workload-forecast",
+    summary="Get 14-day Anki workload forecast and spike warnings",
+    description="Forecasts upcoming review volumes per day for the next 14 days, identifying load peaks and smoothing tips.",
+)
+def get_anki_workload_forecast_endpoint(days_ahead: int = Query(14, ge=1, le=30)):
+    """Retrieve 14-day review forecast from local Anki collection or cloud cache."""
+    return get_workload_forecast(days_ahead=days_ahead)
 
 
-
-
-
+@router.post(
+    "/anki/workload-sync",
+    summary="Receive workload forecast payload from laptop background watcher",
+    description="Syncs pre-calculated 14-day workload curve to cloud server.",
+)
+def post_anki_workload_sync_endpoint(payload: dict):
+    """Cache workload forecast state on cloud."""
+    cache_workload_forecast(payload)
+    return {"status": "ok", "cached": True}

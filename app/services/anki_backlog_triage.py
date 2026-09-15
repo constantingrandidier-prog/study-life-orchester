@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import sqlite3
 from datetime import datetime, date
@@ -113,6 +113,7 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = None) 
             action = "Kann bei Zeitmangel problemlos auf morgen geschoben werden"
 
         anki_filter_query = f'deck:"{dname}" is:due'
+        anki_hard_query = f'deck:"{dname}" is:due (prop:ease<2.3 or lapses>1)'
 
         topics.append({
             "deck_id": did,
@@ -131,6 +132,7 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = None) 
             "color": color,
             "action_recommendation": action,
             "anki_filter_query": anki_filter_query,
+            "anki_hard_query": anki_hard_query,
         })
 
     topics.sort(key=lambda x: x["urgency_score"], reverse=True)
@@ -139,6 +141,14 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = None) 
     deferrable_topics = [t for t in topics if t["urgency_level"] == "STABIL"]
 
     is_overloaded = (total_due_today >= 500 or total_due_tomorrow >= 500)
+
+    # Generate combined filter query for top urgent decks (up to 4 decks)
+    top_urgent = urgent_topics[:4] if urgent_topics else topics[:3]
+    if top_urgent:
+        clauses = " or ".join([f'deck:"{t["deck_name"]}"' for t in top_urgent])
+        urgent_combined_anki_query = f'({clauses}) is:due'
+    else:
+        urgent_combined_anki_query = "is:due"
 
     if total_due_today >= 500:
         summary_advice = f"🚨 Achtung: Du hast heute {total_due_today} Wiederholungen! Konzentriere dich nur auf die {len(urgent_topics)} rot markierten Themen mit höchstem Vergessensrisiko."
@@ -157,6 +167,7 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = None) 
         "topics": topics,
         "urgent_topics": urgent_topics,
         "deferrable_topics": deferrable_topics,
+        "urgent_combined_anki_query": urgent_combined_anki_query,
         "summary_advice": summary_advice,
     }
 
@@ -172,6 +183,8 @@ def _apply_budget(result: Dict[str, Any], budget: int):
     deferred = []
     for t in result.get("topics", []):
         needed = max(t.get("due_today", 0), t.get("due_tomorrow", 0))
+        if needed == 0:
+            continue
         if accumulated + needed <= budget or not selected:
             selected.append(t)
             accumulated += needed
@@ -180,6 +193,12 @@ def _apply_budget(result: Dict[str, Any], budget: int):
     result["budget_selected_topics"] = selected
     result["budget_deferred_topics"] = deferred
     result["budget_accumulated_cards"] = accumulated
+    result["max_capacity"] = budget
+    if selected:
+        deck_clauses = " or ".join([f'deck:"{t["deck_name"]}"' for t in selected])
+        result["budget_combined_anki_query"] = f'({deck_clauses}) is:due'
+    else:
+        result["budget_combined_anki_query"] = "is:due"
 
 def cache_triage(data: Dict[str, Any]):
     try:

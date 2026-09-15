@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.services.anki_desktop_sync import read_live_anki_desktop_state, find_local_anki_collection
 from app.services.anki_backlog_triage import calculate_backlog_triage
+from app.services.workload_forecast import get_workload_forecast
 
 TARGET_SYNC_URLS = [
     'https://study-life-orchester.onrender.com/api/v1/schedule/anki/desktop-sync',
@@ -19,6 +20,12 @@ TARGET_TRIAGE_URLS = [
     'https://study-life-orchester.onrender.com/api/v1/schedule/anki/triage-sync',
     'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/triage-sync',
     'http://127.0.0.1:8000/api/v1/schedule/anki/triage-sync'
+]
+
+TARGET_FORECAST_URLS = [
+    'https://study-life-orchester.onrender.com/api/v1/schedule/anki/workload-sync',
+    'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/workload-sync',
+    'http://127.0.0.1:8000/api/v1/schedule/anki/workload-sync'
 ]
 
 def sync_now():
@@ -60,10 +67,23 @@ def sync_now():
     except Exception:
         pass
 
+    # 4. Also sync 14-day workload forecast
+    try:
+        forecast = get_workload_forecast()
+        fdata = json.dumps(forecast).encode('utf-8')
+        for url in TARGET_FORECAST_URLS:
+            try:
+                freq = urllib.request.Request(url, data=fdata, headers={'Content-Type': 'application/json'}, method='POST')
+                urllib.request.urlopen(freq, timeout=10)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
     revs = state.get('today_reviewed_count', 0)
     reps = state.get('repetition_cards_count', 0)
     done = state.get('due_tomorrow_count', 0)
-    print(f'Synced: {revs} new cards, {reps} repetitions, {done} due tomorrow (Triage updated).')
+    print(f'Synced: {revs} new cards, {reps} repetitions, {done} due tomorrow (Triage & Forecast updated).')
 
 if __name__ == '__main__':
     if '--once' in sys.argv:

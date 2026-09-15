@@ -4,8 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="StudyLife Orchestrator - Professioneller akademischer Tages- und Lernplaner für Studierende.">
-  <title>StudyLife Orchestrator | Tages- und Lernplaner</title>
-  <link rel="stylesheet" href="/static/style.css?v=10.0">
+  <link rel="stylesheet" href="/static/style.css?v=11.0">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#161b22">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Orchester">
 </head>
 <body>
 
@@ -174,6 +178,36 @@
         </div>
       </div>
 
+      <!-- 14-Tage Retentions-Radar & Workload-Vorschau -->
+      <div id="ankiWorkloadForecastBox" style="background: rgba(13, 17, 23, 0.95); padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(88, 166, 255, 0.25); font-size: 12px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <strong style="color: #58a6ff; font-size: 13px;">📈 14-Tage Retentions-Radar (Fälligkeits-Vorschau)</strong>
+            <span id="forecastSpikeBadge" style="display: none; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10.5px; font-weight: 600; background: rgba(248,81,73,0.2); color: #ff7b72; border: 1px solid rgba(248,81,73,0.4);">⚠️ Spike erkannt</span>
+          </div>
+          <div style="display: flex; gap: 0.75rem; font-size: 11px; color: var(--text-muted);">
+            <span>14-Tage Summe: <strong id="forecastTotalVal" style="color: #e6edf3;">--</strong></span>
+            <span>Ø Tag: <strong id="forecastAvgVal" style="color: #e6edf3;">--</strong></span>
+            <span>Spitze: <strong id="forecastPeakVal" style="color: #e6edf3;">--</strong></span>
+          </div>
+        </div>
+
+        <!-- 14-Day Bar Chart Track -->
+        <div id="forecastBarsContainer" style="display: flex; gap: 5px; align-items: flex-end; height: 75px; padding-top: 15px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px;">
+          <!-- Dynamically populated 15 bars (Today + 14 Days) -->
+        </div>
+
+        <!-- Selected Day Tooltip/Detail Drawer -->
+        <div id="forecastSelectedDayDrawer" style="display: none; background: rgba(22, 27, 34, 0.8); border-radius: 6px; padding: 0.4rem 0.6rem; margin-top: 0.4rem; font-size: 11px;">
+          <!-- Shows deck breakdown for clicked bar -->
+        </div>
+
+        <!-- Smoothing Advice Footer -->
+        <div id="forecastAdviceFooter" style="margin-top: 0.45rem; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem;">
+          <span>💡</span> <span id="forecastAdviceText">Lade 14-Tage-Prognose aus Anki...</span>
+        </div>
+      </div>
+
       <!-- Aufklappbare Notfall-Triage & Priorisierungs-Box bei >500 Reviews / Zeitmangel -->
       <div id="ankiBacklogTriageBox" style="display: none; background: rgba(22, 27, 34, 0.98); padding: 1rem; border-radius: 8px; border: 1px solid rgba(248, 81, 73, 0.5); font-size: 12px; margin-top: 0.5rem; margin-bottom: 0.75rem; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
@@ -194,6 +228,16 @@
           <button type="button" class="btn-triage-cap" onclick="setTriageBudget(100, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 100</button>
           <button type="button" class="btn-triage-cap" onclick="setTriageBudget(200, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 200</button>
           <button type="button" class="btn-triage-cap" onclick="setTriageBudget(300, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 300</button>
+        </div>
+
+        <!-- Combined Query 1-Click Copy Bar -->
+        <div id="triageCombinedQueryBar" style="display: none; background: rgba(56, 139, 253, 0.1); border: 1px solid rgba(56, 139, 253, 0.35); padding: 0.5rem 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; align-items: center; justify-content: space-between; gap: 0.5rem;">
+          <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; font-size: 11px; color: #58a6ff;" id="triageCombinedQueryText">
+            (deck:"...") is:due
+          </div>
+          <button type="button" id="btnCopyCombinedQuery" onclick="copyTriageQueryToClipboard()" style="flex-shrink: 0; background: #238636; border: none; color: #fff; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>📋</span> <span>Anki-Suchstring kopieren</span>
+          </button>
         </div>
 
         <div id="triageAdviceBanner" style="padding: 0.45rem 0.65rem; border-radius: 6px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.25); color: #ff7b72; font-size: 11.5px; margin-bottom: 0.75rem;">
@@ -920,6 +964,15 @@
     <span id="toastText">Aktion erfolgreich</span>
   </div>
 
-  <script src="/static/app.js?v=10.0"></script>
+  <script src="/static/app.js?v=11.0"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js')
+          .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+          .catch(err => console.warn('PWA registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>

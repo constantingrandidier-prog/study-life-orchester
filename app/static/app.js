@@ -2969,6 +2969,7 @@ async function syncAnkiDesktopNow(showFeedback = true) {
   await loadAnkiDesktopStatus(showFeedback);
   if (typeof loadCurriculumToday === 'function') await loadCurriculumToday(false);
   if (typeof loadExamPacing === 'function') await loadExamPacing();
+  if (typeof loadWorkloadForecast === 'function') await loadWorkloadForecast(false);
   if (btn) btn.textContent = '🔄 Aktualisieren';
 }
 
@@ -3117,6 +3118,16 @@ async function loadBacklogTriage(maxCapacity) {
       adviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
     }
 
+    // 1-Click Copy Bar for combined query
+    const combinedBar = document.getElementById('triageCombinedQueryBar');
+    const combinedText = document.getElementById('triageCombinedQueryText');
+    const combinedQuery = data.budget_combined_anki_query || data.urgent_combined_anki_query;
+    if (combinedBar && combinedText && combinedQuery) {
+      combinedText.textContent = combinedQuery;
+      combinedText.setAttribute('title', combinedQuery);
+      combinedBar.style.display = 'flex';
+    }
+
     const topicsToShow = maxCapacity && data.budget_selected_topics 
       ? data.budget_selected_topics 
       : (data.topics || []);
@@ -3183,6 +3194,29 @@ async function loadBacklogTriage(maxCapacity) {
   }
 }
 
+function copyTriageQueryToClipboard() {
+  const textEl = document.getElementById('triageCombinedQueryText');
+  const btn = document.getElementById('btnCopyCombinedQuery');
+  if (!textEl) return;
+  const query = textEl.textContent.trim();
+  navigator.clipboard.writeText(query).then(() => {
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span>✅</span> <span>Kopiert!</span>';
+      btn.style.background = '#2ea043';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '#238636';
+      }, 2500);
+    }
+    if (typeof showToast === 'function') {
+      showToast('Anki-Filter kopiert! In Anki: Werkzeuge ➔ Gefilterten Stapel erstellen');
+    }
+  }).catch(() => {
+    prompt('Kopiere diesen Suchbegriff für Anki:', query);
+  });
+}
+
 function copyAnkiQuery(encodedQuery, btn) {
   const query = decodeURIComponent(encodedQuery);
   navigator.clipboard.writeText(query).then(() => {
@@ -3196,6 +3230,110 @@ function copyAnkiQuery(encodedQuery, btn) {
   }).catch(() => {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
   });
+}
+
+// ============================================================================
+// PHASE 5: 14-TAGE RETENTIONS-RADAR & WORKLOAD-VORSCHAU
+// ============================================================================
+
+let currentForecastData = null;
+
+async function loadWorkloadForecast(showFeedback = false) {
+  try {
+    const res = await fetch('/api/v1/schedule/anki/workload-forecast');
+    if (!res.ok) return;
+    const data = await res.json();
+    currentForecastData = data;
+    renderWorkloadForecast(data);
+    if (showFeedback && typeof showToast === 'function') {
+      showToast('14-Tage Retentions-Radar aktualisiert.');
+    }
+  } catch (err) {
+    console.warn('Workload forecast fetch failed:', err);
+  }
+}
+
+function renderWorkloadForecast(data) {
+  if (!data || !data.days) return;
+
+  const totalEl = document.getElementById('forecastTotalVal');
+  const avgEl = document.getElementById('forecastAvgVal');
+  const peakEl = document.getElementById('forecastPeakVal');
+  const spikeBadge = document.getElementById('forecastSpikeBadge');
+  const adviceEl = document.getElementById('forecastAdviceText');
+  const container = document.getElementById('forecastBarsContainer');
+
+  if (totalEl) totalEl.textContent = `${data.total_due_14d || 0} Karten`;
+  if (avgEl) avgEl.textContent = `${Math.round(data.average_daily_due || 0)}`;
+  if (peakEl) peakEl.textContent = `${data.max_day_cards || 0} max`;
+  if (spikeBadge) spikeBadge.style.display = data.has_spike ? 'inline-block' : 'none';
+  if (adviceEl) adviceEl.textContent = data.smoothing_advice || 'Workload stabil.';
+
+  if (!container) return;
+
+  const maxVal = Math.max(data.max_day_cards || 1, 100);
+  const trackHeight = 55; // max height in pixels
+
+  let html = '';
+  data.days.forEach((day, idx) => {
+    const cnt = day.total_due;
+    const pct = Math.max(6, Math.round((cnt / maxVal) * trackHeight));
+    const isToday = (idx === 0);
+    const isTomorrow = (idx === 1);
+    const dayLabel = isToday ? 'Heute' : (isTomorrow ? 'Morgen' : day.day_name);
+
+    html += `
+      <div onclick="selectForecastDay(${idx})" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; cursor: pointer; position: relative; height: 100%; group" title="${day.formatted_date}: ${cnt} Wiederholungen">
+        <span style="font-size: 9.5px; font-weight: 600; color: ${cnt > 0 ? '#e6edf3' : 'var(--text-muted)'}; margin-bottom: 2px;">
+          ${cnt > 0 ? cnt : ''}
+        </span>
+        <div style="width: 100%; max-width: 22px; height: ${pct}px; background: ${day.level_color}; border-radius: 3px 3px 1px 1px; transition: height 0.3s ease, opacity 0.2s; opacity: ${isToday ? '0.7' : '1'}; border: ${isToday ? '1px dashed #fff' : 'none'};"></div>
+        <span style="font-size: 9px; color: ${isToday ? '#58a6ff' : 'var(--text-muted)'}; margin-top: 3px; font-weight: ${isToday ? '700' : '400'};">
+          ${dayLabel}
+        </span>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function selectForecastDay(dayIdx) {
+  if (!currentForecastData || !currentForecastData.days) return;
+  const day = currentForecastData.days[dayIdx];
+  if (!day) return;
+
+  const drawer = document.getElementById('forecastSelectedDayDrawer');
+  if (!drawer) return;
+
+  if (day.total_due === 0) {
+    drawer.style.display = 'block';
+    drawer.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: #3fb950; font-weight: 600;">📅 ${day.formatted_date}: Keine Repetitionen fällig</span>
+        <button type="button" onclick="document.getElementById('forecastSelectedDayDrawer').style.display='none'" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
+      </div>
+    `;
+    return;
+  }
+
+  let breakdownHtml = day.deck_breakdown.map(d => `
+    <div style="display: flex; justify-content: space-between; color: #c9d1d9; padding: 2px 0;">
+      <span>📖 ${escapeHtml(d.deck_name)}</span>
+      <strong style="color: #58a6ff;">${d.count} Karten</strong>
+    </div>
+  `).join('');
+
+  drawer.style.display = 'block';
+  drawer.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; margin-bottom: 4px;">
+      <span style="font-weight: 600; color: ${day.level_color};">📅 ${day.formatted_date}: ${day.total_due} Karten fällig (${day.workload_level})</span>
+      <button type="button" onclick="document.getElementById('forecastSelectedDayDrawer').style.display='none'" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px; max-height: 120px; overflow-y: auto;">
+      ${breakdownHtml}
+    </div>
+  `;
 }
 
 // Global window bindings for inline HTML onclicks
@@ -3224,10 +3362,14 @@ window.toggleTomorrowAnkiDetails = toggleTomorrowAnkiDetails;
 window.toggleBacklogTriageModal = toggleBacklogTriageModal;
 window.setTriageBudget = setTriageBudget;
 window.copyAnkiQuery = copyAnkiQuery;
+window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
+window.loadWorkloadForecast = loadWorkloadForecast;
+window.selectForecastDay = selectForecastDay;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {
   loadAnkiDesktopStatus(false);
+  loadWorkloadForecast(false);
 }, 30000);
 
 // Run on page load (support immediate execution if DOM is already ready)
@@ -3235,10 +3377,12 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     init();
     loadAnkiDesktopStatus(false);
+    loadWorkloadForecast(false);
   });
 } else {
   init();
   loadAnkiDesktopStatus(false);
+  loadWorkloadForecast(false);
 }
 
 

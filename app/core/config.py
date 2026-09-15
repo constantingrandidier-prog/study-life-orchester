@@ -2,15 +2,17 @@
 
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 from pydantic import BaseModel
-
-# Load .env file from project root if it exists
-env_path = Path(__file__).resolve().parent.parent.parent / ".env"
-if env_path.exists():
-    load_dotenv(dotenv_path=env_path)
-else:
-    load_dotenv()
+try:
+    from dotenv import load_dotenv
+    # Load .env file from project root if it exists
+    env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+    if env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+    else:
+        load_dotenv()
+except ImportError:
+    pass
 
 
 class Settings(BaseModel):

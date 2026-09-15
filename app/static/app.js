@@ -1022,6 +1022,10 @@ function renderTimeline() {
     if (isMandatory) {
       card.style.borderLeft = '4px solid #a371f7';
       card.style.background = 'rgba(163, 113, 247, 0.08)';
+    } else if (block.type === 'lecture') {
+      card.style.borderLeft = '3px solid rgba(88, 166, 255, 0.7)';
+      card.style.background = 'rgba(56, 139, 253, 0.05)';
+      card.style.borderColor = 'rgba(56, 139, 253, 0.18)';
     }
 
     // Lecture ROI advice snippet

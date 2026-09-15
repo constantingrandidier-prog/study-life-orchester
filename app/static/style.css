@@ -502,7 +502,24 @@ body {
 }
 
 .task-card.type-lecture {
-  border-left-color: var(--status-lecture);
+  background: rgba(56, 139, 253, 0.05);
+  border-color: rgba(56, 139, 253, 0.16);
+  border-left: 3px solid rgba(88, 166, 255, 0.7);
+}
+
+.task-card.type-lecture:hover {
+  background: rgba(56, 139, 253, 0.09);
+  border-color: rgba(56, 139, 253, 0.28);
+}
+
+.task-card.mandatory-practical {
+  background: rgba(163, 113, 247, 0.08) !important;
+  border-color: rgba(163, 113, 247, 0.25) !important;
+  border-left: 4px solid #a371f7 !important;
+}
+
+.task-card.mandatory-practical:hover {
+  background: rgba(163, 113, 247, 0.13) !important;
 }
 
 .task-card.type-study {

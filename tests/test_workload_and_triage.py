@@ -86,11 +86,11 @@ def test_daily_science_rhythm_starts_at_830():
     # Block 1 starts at 08:30
     assert blocks[0]["start_time"] == "08:30"
     assert "Morgen-Repetitionen" in blocks[0]["title"]
-    # Pause 1 at 09:15
-    assert blocks[1]["start_time"] == "09:15"
+    # Pause 1 at 09:30
+    assert blocks[1]["start_time"] == "09:30"
     assert blocks[1]["is_break"] is True
-    # Block 2 (New cards) starts at 09:30
-    assert blocks[2]["start_time"] == "09:30"
+    # Block 2 (New cards) starts at 09:45
+    assert blocks[2]["start_time"] == "09:45"
     assert "100 Neue Karten" in blocks[2]["title"]
 
 def test_api_daily_rhythm_endpoint():

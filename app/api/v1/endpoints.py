@@ -1041,9 +1041,9 @@ from app.services.anki_desktop_sync import (
     summary="Get live Anki Desktop connection status and today's auto-tracked reviews",
     description="Directly reads collection.anki2 to automatically count reviews done today and cards due tomorrow for repetition.",
 )
-def get_anki_desktop_status_endpoint():
+def get_anki_desktop_status_endpoint(target_date: Optional[str] = Query(None, description="Date in YYYY-MM-DD")):
     """Retrieve live stats directly from local Anki desktop collection."""
-    return read_live_anki_desktop_state()
+    return read_live_anki_desktop_state(target_date_str=target_date)
 
 
 @router.post(

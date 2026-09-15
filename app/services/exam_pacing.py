@@ -119,15 +119,24 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     else:
         daily_target_cards = math.ceil(remaining_curriculum_cards / max(1, learning_days_remaining))
 
-    # Today's actual logged cards
+    # Today's actual logged cards (auto-synchronized with Anki Desktop)
     today_log = get_daily_progress_for_date(curr_date, user_id=user_id)
     cards_completed_today = today_log["cards_completed"] if today_log else 0
+    if cards_completed_today == 0:
+        try:
+            from app.services.anki_desktop_sync import read_live_anki_desktop_state
+            sync_res = read_live_anki_desktop_state(target_date_str=curr_date.isoformat())
+            auto_cnt = sync_res.get("today_reviewed_count", 0)
+            if auto_cnt > 0:
+                cards_completed_today = auto_cnt
+        except Exception:
+            pass
     cards_remaining_today = max(0, daily_target_cards - cards_completed_today)
 
     if daily_target_cards > 0:
         completion_percentage_today = round(min(100.0, (cards_completed_today / daily_target_cards) * 100), 1)
     else:
-        completion_percentage_today = 100.0 if is_rest_day else 0.0
+        completion_percentage_today = 100.0 if (is_rest_day or cards_completed_today > 0) else 0.0
 
     overall_progress_percentage = round(
         min(100.0, (total_cards_completed / total_curriculum_cards) * 100), 1
@@ -168,10 +177,10 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     # Tailored Advice
     if is_rest_day:
         advice = f"Genieße deine Pause! {rest_day_reason}. Deine tägliche Pacing-Kurve hat diesen Ruhetag bereits eingerechnet."
-    elif cards_remaining_today == 0 and daily_target_cards > 0:
-        advice = f"Perfekt! Du hast dein heutiges Tagesziel von {daily_target_cards} Karten erreicht. Weiter so Richtung Prüfung!"
+    elif cards_completed_today >= daily_target_cards and daily_target_cards > 0:
+        advice = f"🎉 Exzellent! Du hast {cards_completed_today} Karten in Anki gemeistert (Tagesziel von {daily_target_cards} zu {round(cards_completed_today/daily_target_cards*100)}% übererfüllt). Voll auf Kurs!"
     elif cards_completed_today > 0:
-        advice = f"Guter Fortschritt: Noch {cards_remaining_today} Karten bis zum Tagesziel ({daily_target_cards} Karten)."
+        advice = f"🟢 Live aus Anki: {cards_completed_today} Karten erledigt – noch {cards_remaining_today} Karten bis zum Tagesziel ({daily_target_cards} Karten)."
     else:
         advice = f"Heutiges Soll: {daily_target_cards} neue Karten + {due_reviews} Wiederholungen ({total_daily_cards_needed} gesamt). Exakt im Plan für den 19.01.2027!"
 

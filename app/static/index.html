@@ -86,61 +86,8 @@
         <span>🔥</span>
         <span id="curriculumSummaryText" style="flex: 1; font-weight: 500;">Tag 1/97: 100 neue Karten (48× Hämoglobin + 24× Hämoglobin Teil 2 + 28× CO2-Transport) im Modul 1. Blut &amp; Immunsystem.</span>
       </div>
-      <!-- Anki Desktop Live Integration Banner -->
-      <div class="anki-desktop-live-card" id="ankiDesktopLiveCard" style="background: rgba(31, 111, 235, 0.08); border: 1px solid rgba(56, 139, 253, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 8px #3fb950;"></span>
-            <strong style="color: #58a6ff; font-size: 13px;">Anki App Direkt-Verbindung</strong>
-            <span style="font-size: 11px; background: rgba(56, 139, 253, 0.2); padding: 0.15rem 0.45rem; border-radius: 4px; color: #79c0ff;" id="ankiSyncStatusProfile">Benutzer 1 (Aktiv)</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 11px; color: var(--text-muted);" id="ankiLastSyncTime">Auto-Sync aktiv</span>
-            <button type="button" class="btn-secondary" onclick="syncAnkiDesktopNow(true)" style="font-size: 11px; padding: 0.25rem 0.55rem; cursor: pointer; border-radius: 4px;">
-              ⚡ Jetzt abgleichen
-            </button>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;">
-          <!-- 1. Heute automatisch erfasst -->
-          <div style="background: rgba(13, 17, 23, 0.7); padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-            <div style="font-size: 11px; color: var(--text-muted);">Heute automatisch in Anki erledigt</div>
-            <div style="font-size: 16px; font-weight: 700; color: #3fb950; margin: 0.2rem 0;">
-              <span id="ankiTodayCount">0</span> Karten
-              <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);" id="ankiTodayBreakdownText">(0 neu, 0 wiederholt)</span>
-            </div>
-            <div style="font-size: 10.5px; color: var(--text-muted);" id="ankiTodayTimeSpent">0 Min. Lernzeit heute in Anki</div>
-          </div>
-
-          <!-- 2. Morgen zur Repetition fällig -->
-          <div style="background: rgba(13, 17, 23, 0.7); padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-size: 11px; color: var(--text-muted);">Morgen zur Repetition fällig</span>
-              <a href="javascript:void(0)" onclick="toggleTomorrowAnkiDetails()" id="btnToggleTomorrowDetails" style="color: #58a6ff; font-size: 11px; text-decoration: none; font-weight: 500;">Details anzeigen ▼</a>
-            </div>
-            <div style="font-size: 16px; font-weight: 700; color: #d2a8ff; margin: 0.2rem 0;">
-              <span id="ankiTomorrowCount">0</span> Karten
-              <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);" id="ankiTomorrowSubtext">für morgen eingeplant</span>
-            </div>
-            <div style="font-size: 10.5px; color: var(--text-muted);" id="ankiTomorrowPreviewTopic">Aus deiner Anki-App berechnet</div>
-          </div>
-        </div>
-
-        <!-- Aufklappbare Themenliste für Morgen -->
-        <div id="ankiTomorrowDetailsBox" style="display: none; background: rgba(13, 17, 23, 0.95); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px dashed rgba(210, 168, 255, 0.3); font-size: 11.5px; margin-top: 0.25rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <strong style="color: #d2a8ff;">📋 Morgen zu repetierende Themen (Fälligkeits-Vorschau):</strong>
-            <span style="font-size: 10.5px; color: var(--text-muted);" id="ankiTomorrowTotalTopics">0 Themen</span>
-          </div>
-          <div id="ankiTomorrowTopicsList" style="display: flex; flex-direction: column; gap: 0.3rem; max-height: 180px; overflow-y: auto;">
-            <span style="color: var(--text-muted);">Keine Wiederholungen für morgen fällig.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Unified 4-KPI Overview Grid -->
-      <div class="mission-kpi-grid">
+      <!-- Unified 5-KPI Overview Grid with Direct Anki Integration -->
+      <div class="mission-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
         <!-- 1. Tages-Soll -->
         <div class="mission-kpi-box">
           <span class="mission-kpi-label">🎯 Tagesziel (Soll)</span>
@@ -154,23 +101,39 @@
           <span class="mission-kpi-sub" id="pacingTargetSub">Bei 6 Lerntagen/Woche</span>
         </div>
 
-        <!-- 2. Heute geschafft & Schnellerfassung -->
-        <div class="mission-kpi-box">
-          <span class="mission-kpi-label">✅ Heute geschafft (Ist)</span>
+        <!-- 2. In Anki erledigt (Ist) -->
+        <div class="mission-kpi-box" style="border: 1px solid rgba(63, 185, 80, 0.4); background: rgba(63, 185, 80, 0.05);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="mission-kpi-label" style="color: #3fb950; font-weight: 700;">✅ In Anki erledigt (Ist)</span>
+            <span style="font-size: 10px; background: rgba(63, 185, 80, 0.2); color: #3fb950; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 600;">🟢 Live Anki</span>
+          </div>
           <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="pacingCardsCompleted" style="color: var(--status-free);">0</span>
+            <span class="mission-kpi-val" id="pacingCardsCompleted" style="color: #3fb950;">0</span>
             <span class="mission-kpi-unit">/ <span id="pacingCardsTargetMini">100</span></span>
           </div>
-          <div id="pacingRemainingSub" class="mission-kpi-sub" style="color: var(--status-free);">Noch 100 Karten offen</div>
-          <div class="mission-quick-buttons">
-            <button type="button" class="btn-mini-add" onclick="handleQuickAddCards(10)">+10</button>
-            <button type="button" class="btn-mini-add" onclick="handleQuickAddCards(25)">+25</button>
-            <button type="button" class="btn-mini-add" onclick="handleQuickAddCards(50)">+50</button>
-            <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()">✓ Fertig</button>
+          <div id="pacingRemainingSub" class="mission-kpi-sub" style="color: #3fb950; font-weight: 500;">Aus Anki-App automatisch erfasst</div>
+          <div id="pacingTimeSpentSub" class="mission-kpi-sub" style="color: var(--text-muted); font-size: 10.5px; margin-top: 0.2rem;">
+            ⏱️ 0 Min. Lernzeit heute
           </div>
         </div>
 
-        <!-- 3. Zeit gespart heute & Streak -->
+        <!-- 3. Morgen zu repetieren (SRS Fälligkeit) -->
+        <div class="mission-kpi-box" style="border: 1px solid rgba(210, 168, 255, 0.4); background: rgba(210, 168, 255, 0.05);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="mission-kpi-label" style="color: #d2a8ff; font-weight: 700;">🔄 Repetition morgen</span>
+            <span style="font-size: 10px; background: rgba(210, 168, 255, 0.2); color: #d2a8ff; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 600;">Vorschau</span>
+          </div>
+          <div class="mission-kpi-value-row">
+            <span class="mission-kpi-val" id="kpiTomorrowCount" style="color: #d2a8ff;">0</span>
+            <span class="mission-kpi-unit">Karten</span>
+          </div>
+          <div id="kpiTomorrowTopicsSub" class="mission-kpi-sub" style="color: #d2a8ff; font-weight: 500;">Aus Anki-App berechnet</div>
+          <button type="button" onclick="toggleTomorrowAnkiDetails()" id="btnToggleTomorrowKpi" style="margin-top: 0.25rem; background: rgba(210,168,255,0.15); color: #d2a8ff; border: 1px solid rgba(210,168,255,0.3); border-radius: 4px; font-size: 10.5px; padding: 0.2rem 0.45rem; cursor: pointer; text-align: left; width: 100%;">
+            📋 Themen anzeigen ▼
+          </button>
+        </div>
+
+        <!-- 4. Zeit gespart heute & Streak -->
         <div class="mission-kpi-box">
           <span class="mission-kpi-label">⚡ Zeit gespart</span>
           <div class="mission-kpi-value-row">
@@ -182,16 +145,27 @@
           </div>
         </div>
 
-        <!-- 4. Examen & Puffer -->
+        <!-- 5. Examen & Puffer -->
         <div class="mission-kpi-box">
           <span class="mission-kpi-label">⏳ Examen 19.01.2027</span>
           <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="pacingCountdownPill" style="font-size: 20px; color: #d2a8ff;">127 Tage</span>
+            <span class="mission-kpi-val" id="pacingCountdownPill" style="font-size: 18px; color: #d2a8ff;">127 Tage</span>
           </div>
-          <span class="mission-kpi-sub" id="pacingBufferSub">15 Tage Revisionspuffer ab 04.01.</span>
+          <span class="mission-kpi-sub" id="pacingBufferSub">14 Tage Puffer ab 05.01.</span>
           <div class="mission-kpi-sub" style="margin-top: 0.3rem;">
             Readiness: <strong id="pacingReadinessVal" style="color: var(--status-study);">0.0%</strong>
           </div>
+        </div>
+      </div>
+
+      <!-- Aufklappbare Detail-Box für Morgen (Repetitionen) -->
+      <div id="ankiTomorrowDetailsBox" style="display: none; background: rgba(13, 17, 23, 0.95); padding: 0.75rem 1rem; border-radius: 8px; border: 1px dashed rgba(210, 168, 255, 0.4); font-size: 12px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <strong style="color: #d2a8ff; font-size: 13px;">📋 Welche Anki-Karten sind morgen zu repetieren?</strong>
+          <span style="font-size: 11px; color: var(--text-muted);" id="ankiTomorrowTotalTopics">0 Themen</span>
+        </div>
+        <div id="ankiTomorrowTopicsList" style="display: flex; flex-direction: column; gap: 0.35rem; max-height: 200px; overflow-y: auto;">
+          <span style="color: var(--text-muted);">Keine Wiederholungen für morgen fällig – du bist voll im Plan!</span>
         </div>
       </div>
 

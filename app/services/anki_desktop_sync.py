@@ -1,12 +1,12 @@
 import os
 import json
 import sqlite3
-from datetime import datetime, date, timezone
+from datetime import datetime, date
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from app.db.repository import save_daily_progress, get_db_connection
 
-def find_local_anki_collection() -> Optional[Path]:
+def find_local_anki_collection():
     appdata = os.environ.get('APPDATA')
     if appdata:
         p = Path(appdata) / 'Anki2' / 'Benutzer 1' / 'collection.anki2'
@@ -21,21 +21,29 @@ def find_local_anki_collection() -> Optional[Path]:
     bundled = Path(__file__).resolve().parent.parent / 'data' / 'anki' / 'Benutzer 1' / 'collection.anki2'
     if bundled.exists():
         return bundled
-    
     bundled_alt = Path(__file__).resolve().parent.parent / 'data' / 'collection.anki2'
     if bundled_alt.exists():
         return bundled_alt
-
     return None
 
-def clean_deck_name(dname: str) -> str:
+def clean_deck_name(dname):
     clean = dname.replace(chr(31), ' :: ')
     clean = clean.replace('1year :: 1. Semester :: ', '').replace('1year :: 2.Semester :: ', '').replace('1year :: ', '')
     return clean
 
-def read_live_anki_desktop_state(col_path: Optional[str] = None) -> Dict[str, Any]:
+def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     target_path = Path(col_path) if col_path else find_local_anki_collection()
     now = datetime.now()
+
+    if target_date_str:
+        try:
+            query_date = datetime.strptime(target_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            query_date = date.today()
+    else:
+        query_date = date.today()
+
+    is_today = (query_date == date.today())
 
     if not target_path or not target_path.exists():
         last_state = get_cached_desktop_sync_state()
@@ -45,6 +53,7 @@ def read_live_anki_desktop_state(col_path: Optional[str] = None) -> Dict[str, An
             'connected': False,
             'source': 'None',
             'collection_path': None,
+            'target_date': query_date.isoformat(),
             'today_reviewed_count': 0,
             'today_time_minutes': 0.0,
             'today_lapses_count': 0,
@@ -73,11 +82,12 @@ def read_live_anki_desktop_state(col_path: Optional[str] = None) -> Dict[str, An
     for did, dname in cur.execute('SELECT id, name FROM decks').fetchall():
         decks[did] = clean_deck_name(dname)
 
-    today_4am = now.replace(hour=4, minute=0, second=0, microsecond=0)
-    today_start_ms = int(today_4am.timestamp() * 1000)
+    day_start_dt = datetime(query_date.year, query_date.month, query_date.day, 4, 0, 0)
+    day_start_ms = int(day_start_dt.timestamp() * 1000)
+    day_end_ms = day_start_ms + (86400 * 1000)
 
-    rev_sql = 'SELECT r.id, r.cid, c.did, r.ease, r.ivl, r.lastIvl, r.time, r.type, n.sfld FROM revlog r JOIN cards c ON r.cid = c.id JOIN notes n ON c.nid = n.id WHERE r.id >= ? ORDER BY r.id DESC'
-    revs_rows = cur.execute(rev_sql, (today_start_ms,)).fetchall()
+    rev_sql = 'SELECT r.id, r.cid, c.did, r.ease, r.ivl, r.lastIvl, r.time, r.type, n.sfld FROM revlog r JOIN cards c ON r.cid = c.id JOIN notes n ON c.nid = n.id WHERE r.id >= ? AND r.id < ? ORDER BY r.id DESC'
+    revs_rows = cur.execute(rev_sql, (day_start_ms, day_end_ms)).fetchall()
 
     today_count = len(revs_rows)
     today_time_mins = round(sum(r[6] for r in revs_rows) / 1000 / 60, 1)
@@ -129,6 +139,8 @@ def read_live_anki_desktop_state(col_path: Optional[str] = None) -> Dict[str, An
     result = {
         'connected': True,
         'source': 'Anki Desktop (Benutzer 1)',
+        'target_date': query_date.isoformat(),
+        'is_today': is_today,
         'collection_path': str(target_path),
         'today_reviewed_count': today_count,
         'today_time_minutes': today_time_mins,
@@ -147,22 +159,23 @@ def read_live_anki_desktop_state(col_path: Optional[str] = None) -> Dict[str, An
         'current_day_index': current_day,
     }
 
-    try:
-        save_daily_progress(
-            target_date=date.today(),
-            cards_completed=today_count,
-            minutes_spent=int(today_time_mins),
-            source='anki_desktop_auto',
-            notes=f'Auto-Sync Anki Desktop ({today_count} Karten, {today_time_mins}m)',
-            user_id='student',
-        )
-    except Exception:
-        pass
+    if today_count > 0:
+        try:
+            save_daily_progress(
+                target_date=query_date,
+                cards_completed=today_count,
+                minutes_spent=int(today_time_mins),
+                source='anki_desktop_auto',
+                notes=f'Auto-Sync Anki Desktop ({today_count} Karten, {today_time_mins}m)',
+                user_id='student',
+            )
+        except Exception:
+            pass
 
     cache_desktop_sync_state(result)
     return result
 
-def cache_desktop_sync_state(state: Dict[str, Any]) -> None:
+def cache_desktop_sync_state(state):
     try:
         with get_db_connection() as conn:
             cur = conn.cursor()
@@ -171,7 +184,7 @@ def cache_desktop_sync_state(state: Dict[str, Any]) -> None:
     except Exception:
         pass
 
-def get_cached_desktop_sync_state() -> Optional[Dict[str, Any]]:
+def get_cached_desktop_sync_state():
     try:
         with get_db_connection() as conn:
             cur = conn.cursor()

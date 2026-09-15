@@ -1046,6 +1046,11 @@ def get_anki_desktop_status_endpoint(target_date: Optional[str] = Query(None, de
     return read_live_anki_desktop_state(target_date_str=target_date)
 
 
+from app.services.anki_backlog_triage import (
+    calculate_backlog_triage,
+    cache_triage,
+)
+
 @router.post(
     "/anki/desktop-sync",
     summary="Receive sync payload from laptop background watcher",
@@ -1069,6 +1074,27 @@ def post_anki_desktop_sync_endpoint(payload: dict):
         except Exception:
             pass
     return {"status": "ok", "synced": True, "cards_logged": today_cnt}
+
+
+@router.get(
+    "/anki/backlog-triage",
+    summary="Get Anki Backlog Triage and Emergency Priority for Topics",
+    description="Analyzes due review burden, lapse rates, and time since review to prioritize topics when daily reviews exceed capacity (>500 reviews).",
+)
+def get_anki_backlog_triage_endpoint(max_capacity: Optional[int] = Query(None, description="Max cards student can manage today")):
+    """Retrieve backlog triage and priority ranking for Anki topics."""
+    return calculate_backlog_triage(max_capacity=max_capacity)
+
+
+@router.post(
+    "/anki/triage-sync",
+    summary="Receive triage payload from laptop background watcher",
+    description="Syncs pre-calculated triage matrix to cloud server.",
+)
+def post_anki_triage_sync_endpoint(payload: dict):
+    """Cache triage state on cloud."""
+    cache_triage(payload)
+    return {"status": "ok", "cached": True}
 
 
 

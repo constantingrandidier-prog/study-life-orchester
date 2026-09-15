@@ -3070,6 +3070,134 @@ function toggleTomorrowAnkiDetails() {
   }
 }
 
+let currentTriageBudget = null;
+
+async function toggleBacklogTriageModal() {
+  const box = document.getElementById('ankiBacklogTriageBox');
+  if (!box) return;
+  const isHidden = box.style.display === 'none' || !box.style.display;
+  box.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    await loadBacklogTriage(currentTriageBudget);
+  }
+}
+
+async function setTriageBudget(capacity, btnElement) {
+  currentTriageBudget = capacity;
+  document.querySelectorAll('.btn-triage-cap').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = '#8b949e';
+    b.classList.remove('active');
+  });
+  if (btnElement) {
+    btnElement.style.background = 'rgba(255,255,255,0.15)';
+    btnElement.style.color = '#fff';
+    btnElement.classList.add('active');
+  }
+  await loadBacklogTriage(capacity);
+}
+
+async function loadBacklogTriage(maxCapacity) {
+  const listEl = document.getElementById('triageTopicsList');
+  const adviceEl = document.getElementById('triageAdviceBanner');
+  if (!listEl) return;
+
+  try {
+    const url = maxCapacity 
+      ? `/api/v1/schedule/anki/backlog-triage?max_capacity=${maxCapacity}`
+      : '/api/v1/schedule/anki/backlog-triage';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    if (adviceEl) {
+      adviceEl.textContent = data.summary_advice || 'Themen priorisiert nach Dringlichkeit.';
+      adviceEl.style.borderColor = data.is_overloaded ? 'rgba(248,81,73,0.4)' : 'rgba(88,166,255,0.3)';
+      adviceEl.style.background = data.is_overloaded ? 'rgba(248,81,73,0.12)' : 'rgba(56,139,253,0.1)';
+      adviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
+    }
+
+    const topicsToShow = maxCapacity && data.budget_selected_topics 
+      ? data.budget_selected_topics 
+      : (data.topics || []);
+
+    const deferredToShow = maxCapacity && data.budget_deferred_topics 
+      ? data.budget_deferred_topics 
+      : [];
+
+    if (topicsToShow.length === 0) {
+      listEl.innerHTML = '<div style="color: var(--text-muted); padding: 0.5rem;">Keine fälligen Karten gefunden.</div>';
+      return;
+    }
+
+    let html = '';
+    if (maxCapacity && deferredToShow.length > 0) {
+      html += `<div style="font-size: 11px; font-weight: 600; color: #ff7b72; margin-bottom: 0.25rem;">
+        🔥 Priorisierte Themen (Summe: ${data.budget_accumulated_cards || 0} Karten von ${maxCapacity} Budget):
+      </div>`;
+    }
+
+    html += topicsToShow.map((t, idx) => `
+      <div style="padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid ${t.color}40; display: flex; flex-direction: column; gap: 0.35rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: ${t.color}; background: ${t.color}20; padding: 0.1rem 0.4rem; border-radius: 4px;">
+              #${idx + 1} ${t.level_badge}
+            </span>
+            <strong style="color: #e6edf3; font-size: 12.5px;">${escapeHtml(t.deck_name)}</strong>
+          </div>
+          <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(t.anki_filter_query)}', this)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #c9d1d9; border-radius: 4px; font-size: 10px; padding: 0.2rem 0.45rem; cursor: pointer;">
+            📋 Anki-Filter kopieren
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 1rem; font-size: 11px; color: var(--text-muted); flex-wrap: wrap;">
+          <span>📦 <strong>${t.due_today} heute</strong> / <strong>${t.due_tomorrow} morgen</strong> fällig</span>
+          <span>⚠️ Fehlerquote: <strong style="color: ${t.fail_rate_pct > 30 ? '#ff7b72' : '#e6edf3'};">${t.fail_rate_pct}%</strong></span>
+          <span>⏱️ Zuletzt vor <strong>${t.days_since_last_review} Tagen</strong></span>
+          <span>🧠 Stabilität: <strong>${t.avg_ease_pct}%</strong></span>
+          <span>⚡ Dringlichkeits-Score: <strong style="color: ${t.color};">${t.urgency_score}/100</strong></span>
+        </div>
+
+        <div style="font-size: 11px; color: ${t.color}; font-weight: 500;">
+          💡 ${escapeHtml(t.action_recommendation)}
+        </div>
+      </div>
+    `).join('');
+
+    if (maxCapacity && deferredToShow.length > 0) {
+      html += `<div style="font-size: 11px; font-weight: 600; color: #3fb950; margin-top: 0.75rem; margin-bottom: 0.25rem;">
+        💤 Auf morgen verschiebbar (Geringes Vergessensrisiko):
+      </div>`;
+      html += deferredToShow.map(t => `
+        <div style="padding: 0.45rem 0.65rem; background: rgba(63,185,80,0.03); border-radius: 6px; border: 1px dashed rgba(63,185,80,0.3); display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+          <span style="color: #8b949e;">📖 ${escapeHtml(t.deck_name)} (${t.due_tomorrow} Karten fällig)</span>
+          <span style="color: #3fb950; font-weight: 600;">✅ Kann warten (Stabilität ${t.avg_ease_pct}%)</span>
+        </div>
+      `).join('');
+    }
+
+    listEl.innerHTML = html;
+  } catch (err) {
+    if (listEl) listEl.innerHTML = `<div style="color: #ff7b72; padding: 0.5rem;">Fehler beim Laden der Triage: ${err.message}</div>`;
+  }
+}
+
+function copyAnkiQuery(encodedQuery, btn) {
+  const query = decodeURIComponent(encodedQuery);
+  navigator.clipboard.writeText(query).then(() => {
+    const origText = btn.textContent;
+    btn.textContent = '✅ Kopiert!';
+    btn.style.color = '#3fb950';
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.style.color = '#c9d1d9';
+    }, 2000);
+  }).catch(() => {
+    prompt('Kopiere diesen Suchbegriff für Anki:', query);
+  });
+}
+
 // Global window bindings for inline HTML onclicks
 window.handleQuickAddCards = handleQuickAddCards;
 window.handleMarkAllTargetDone = handleMarkAllTargetDone;
@@ -3093,6 +3221,9 @@ window.switchMobileView = switchMobileView;
 window.loadAnkiDesktopStatus = loadAnkiDesktopStatus;
 window.syncAnkiDesktopNow = syncAnkiDesktopNow;
 window.toggleTomorrowAnkiDetails = toggleTomorrowAnkiDetails;
+window.toggleBacklogTriageModal = toggleBacklogTriageModal;
+window.setTriageBudget = setTriageBudget;
+window.copyAnkiQuery = copyAnkiQuery;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {

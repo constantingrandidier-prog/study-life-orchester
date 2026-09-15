@@ -1,0 +1,44 @@
+import sys
+import os
+import time
+import json
+import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from app.services.anki_desktop_sync import read_live_anki_desktop_state, find_local_anki_collection
+
+CLOUD_URL = 'https://study-life-orchester-8gci.onrender.com/api/v1/schedule/anki/desktop-sync'
+LOCAL_URL = 'http://127.0.0.1:8000/api/v1/schedule/anki/desktop-sync'
+
+def sync_now():
+    state = read_live_anki_desktop_state()
+    data = json.dumps(state).encode('utf-8')
+    for url in [CLOUD_URL, LOCAL_URL]:
+        try:
+            req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'}, method='POST')
+            urllib.request.urlopen(req, timeout=10)
+        except Exception:
+            pass
+    revs = state.get('today_reviewed_count', 0)
+    reps = state.get('repetition_cards_count', 0)
+    done = state.get('due_tomorrow_count', 0)
+    print(f'Synced: {revs} new cards, {reps} repetitions, {done} due tomorrow.')
+
+if __name__ == '__main__':
+    if '--once' in sys.argv:
+        sync_now()
+    else:
+        col = find_local_anki_collection()
+        last_mtime = 0
+        print('Anki Live Sync Agent running in background (monitoring collection.anki2)...')
+        while True:
+            try:
+                if col and col.exists():
+                    m = col.stat().st_mtime
+                    if m != last_mtime:
+                        sync_now()
+                        last_mtime = m
+            except Exception:
+                pass
+            time.sleep(15)

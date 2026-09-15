@@ -29,7 +29,9 @@ def find_local_anki_collection():
 def clean_deck_name(dname):
     clean = dname.replace(chr(31), ' :: ')
     clean = clean.replace('1year :: 1. Semester :: ', '').replace('1year :: 2.Semester :: ', '').replace('1year :: ', '')
-    return clean
+    clean = clean.replace('2. SJ - 1 :: ', '').replace('2. SJ - 1 TB ', 'TB ')
+    clean = clean.replace('Einf\ufffdhrung', 'Einführung').replace('Einfhrung', 'Einführung')
+    return clean.strip()
 
 def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     target_path = Path(col_path) if col_path else find_local_anki_collection()
@@ -83,6 +85,8 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
 
     crt = cur.execute('SELECT crt FROM col').fetchone()[0]
     current_day = int((now.timestamp() - crt) // 86400)
+    target_day = int((datetime(query_date.year, query_date.month, query_date.day, 12, 0, 0).timestamp() - crt) // 86400)
+    next_day = target_day + 1
 
     decks = {}
     for did, dname in cur.execute('SELECT id, name FROM decks').fetchall():
@@ -95,12 +99,36 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     rev_sql = 'SELECT r.id, r.cid, c.did, r.ease, r.ivl, r.lastIvl, r.time, r.type, n.sfld FROM revlog r JOIN cards c ON r.cid = c.id JOIN notes n ON c.nid = n.id WHERE r.id >= ? AND r.id < ? ORDER BY r.id DESC'
     revs_rows = cur.execute(rev_sql, (day_start_ms, day_end_ms)).fetchall()
 
-    today_count = len(revs_rows)
+    total_reviews_count = len(revs_rows)
     today_time_mins = round(sum(r[6] for r in revs_rows) / 1000 / 60, 1)
     today_lapses = sum(1 for r in revs_rows if r[3] == 1)
-    today_new = sum(1 for r in revs_rows if r[7] == 0)
-    today_review = sum(1 for r in revs_rows if r[7] == 1)
-    today_relearn = sum(1 for r in revs_rows if r[7] == 2)
+
+    # Unique cards breakdown:
+    # type = 0: new card (first learn) -> THIS counts towards the new cards pacing goal!
+    # type in (1, 2): repetition / review / relearn
+    unique_new_cids = set(r[1] for r in revs_rows if r[7] == 0)
+    unique_rep_cids = set(r[1] for r in revs_rows if r[7] in (1, 2))
+
+    new_cards_count = len(unique_new_cids)
+    repetition_cards_count = len(unique_rep_cids)
+
+    # Breakdown by deck for new cards
+    new_by_deck = {}
+    seen_new = set()
+    for r in revs_rows:
+        if r[7] == 0 and r[1] not in seen_new:
+            seen_new.add(r[1])
+            dname = decks.get(r[2], 'Unbekanntes Deck')
+            new_by_deck[dname] = new_by_deck.get(dname, 0) + 1
+
+    # Breakdown by deck for repetition cards
+    rep_by_deck = {}
+    seen_rep = set()
+    for r in revs_rows:
+        if r[7] in (1, 2) and r[1] not in seen_rep:
+            seen_rep.add(r[1])
+            dname = decks.get(r[2], 'Unbekanntes Deck')
+            rep_by_deck[dname] = rep_by_deck.get(dname, 0) + 1
 
     today_breakdown = {}
     recent_sample = []
@@ -109,18 +137,21 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         today_breakdown[dname] = today_breakdown.get(dname, 0) + 1
         if idx < 10:
             rev_time_str = datetime.fromtimestamp(r[0] / 1000).strftime('%H:%M:%S')
+            type_label = 'Neu' if r[7] == 0 else ('Wiederholung' if r[7] == 1 else 'Wiederlernen')
             recent_sample.append({
                 'time': rev_time_str,
                 'deck': dname,
                 'ease': r[3],
                 'ease_label': {1: 'Nochmal', 2: 'Schwer', 3: 'Gut', 4: 'Einfach'}.get(r[3], 'Gut'),
+                'type_label': type_label,
                 'front': r[8][:90] if r[8] else 'Karte',
             })
 
     due_today_cnt = cur.execute('SELECT count(*) FROM cards WHERE queue=2 AND due <= ?', (current_day,)).fetchone()[0]
 
+    # Dynamically select cards due tomorrow relative to target query date!
     tom_sql = 'SELECT c.id, c.did, n.sfld FROM cards c JOIN notes n ON c.nid = n.id WHERE c.queue = 2 AND c.due = ?'
-    due_tomorrow_rows = cur.execute(tom_sql, (current_day + 1,)).fetchall()
+    due_tomorrow_rows = cur.execute(tom_sql, (next_day,)).fetchall()
 
     tomorrow_breakdown = {}
     tomorrow_sample = []
@@ -144,8 +175,13 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     today_4am_dt = datetime.now().replace(hour=4, minute=0, second=0, microsecond=0)
     today_4am_ms = int(today_4am_dt.timestamp() * 1000)
     yesterday_4am_ms = today_4am_ms - (86400 * 1000)
+
+    y_new_rows = cur.execute('SELECT DISTINCT cid FROM revlog WHERE id >= ? AND id < ? AND type = 0', (yesterday_4am_ms, today_4am_ms)).fetchall()
+    yesterday_new_cards = len(y_new_rows)
+    y_rep_rows = cur.execute('SELECT DISTINCT cid FROM revlog WHERE id >= ? AND id < ? AND type IN (1, 2)', (yesterday_4am_ms, today_4am_ms)).fetchall()
+    yesterday_rep_cards = len(y_rep_rows)
     y_rows = cur.execute('SELECT count(*), sum(time)/1000/60 FROM revlog WHERE id >= ? AND id < ?', (yesterday_4am_ms, today_4am_ms)).fetchone()
-    yesterday_count = y_rows[0] or 0
+    yesterday_total_reviews = y_rows[0] or 0
     yesterday_time_mins = round(y_rows[1] or 0.0, 1)
 
     result = {
@@ -154,14 +190,21 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'target_date': query_date.isoformat(),
         'is_today': is_today,
         'collection_path': str(target_path),
-        'today_reviewed_count': today_count,
+        'today_reviewed_count': new_cards_count,  # Primary number for "In Anki erledigt" is NEW cards
+        'new_cards_count': new_cards_count,
+        'repetition_cards_count': repetition_cards_count,
+        'total_reviews_count': total_reviews_count,
         'today_time_minutes': today_time_mins,
         'today_lapses_count': today_lapses,
-        'today_new_count': today_new,
-        'today_review_count': today_review,
-        'today_relearn_count': today_relearn,
+        'today_new_count': new_cards_count,
+        'today_review_count': repetition_cards_count,
         'today_deck_breakdown': today_breakdown,
-        'yesterday_reviewed_count': yesterday_count,
+        'new_by_deck': new_by_deck,
+        'rep_by_deck': rep_by_deck,
+        'yesterday_reviewed_count': yesterday_new_cards,
+        'yesterday_new_cards_count': yesterday_new_cards,
+        'yesterday_repetition_cards_count': yesterday_rep_cards,
+        'yesterday_total_reviews_count': yesterday_total_reviews,
         'yesterday_time_minutes': yesterday_time_mins,
         'due_today_count': due_today_cnt,
         'due_tomorrow_count': tomorrow_count,
@@ -171,16 +214,18 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'due_tomorrow_sample': tomorrow_sample,
         'last_sync_timestamp': now.isoformat(),
         'current_day_index': current_day,
+        'target_day_index': target_day,
+        'next_day_index': next_day,
     }
 
-    if today_count > 0:
+    if total_reviews_count > 0 or new_cards_count > 0:
         try:
             save_daily_progress(
                 target_date=query_date,
-                cards_completed=today_count,
+                cards_completed=new_cards_count,
                 minutes_spent=int(today_time_mins),
                 source='anki_desktop_auto',
-                notes=f'Auto-Sync Anki Desktop ({today_count} Karten, {today_time_mins}m)',
+                notes=f'Auto-Sync Anki Desktop ({new_cards_count} neue Karten, {repetition_cards_count} Repetitionen, {today_time_mins}m)',
                 user_id='student',
             )
         except Exception:

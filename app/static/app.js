@@ -1815,8 +1815,8 @@ function renderExamPacing(data) {
       remainingSub.textContent = '🎉 Tagesziel erreicht!';
       remainingSub.style.color = 'var(--status-free)';
     } else {
-      remainingSub.textContent = `Noch ${data.cards_remaining_today} Karten offen`;
-      remainingSub.style.color = 'var(--text-muted)';
+      remainingSub.textContent = `Noch ${data.cards_remaining_today} neue Karten offen`;
+      remainingSub.style.color = '#58a6ff';
     }
   }
 
@@ -2974,7 +2974,9 @@ async function syncAnkiDesktopNow(showFeedback = true) {
 
 function renderAnkiDesktopWidget(data) {
   if (!data) return;
-  const todayCnt = data.today_reviewed_count || 0;
+  const newCnt = data.new_cards_count != null ? data.new_cards_count : (data.today_reviewed_count || 0);
+  const repCnt = data.repetition_cards_count || 0;
+  const totalReviews = data.total_reviews_count || (newCnt + repCnt);
   const mins = data.today_time_minutes || 0;
   const tomCnt = data.due_tomorrow_count || 0;
   const topics = data.due_tomorrow_topics || [];
@@ -2987,30 +2989,31 @@ function renderAnkiDesktopWidget(data) {
   const barFill = document.getElementById('pacingBarFill');
 
   if (completedEl) {
-    completedEl.textContent = todayCnt;
+    completedEl.textContent = newCnt;
   }
 
   const targetQuota = targetMini ? parseInt(targetMini.textContent || '100', 10) : 100;
   if (remainingSub) {
-    if (todayCnt >= targetQuota && targetQuota > 0) {
-      const pct = Math.round((todayCnt / targetQuota) * 100);
-      remainingSub.textContent = `🎉 Tagesziel zu ${pct}% übererfüllt!`;
+    if (newCnt >= targetQuota && targetQuota > 0) {
+      const pct = Math.round((newCnt / targetQuota) * 100);
+      remainingSub.textContent = `🎉 Tagesziel zu ${pct}% erreicht (${newCnt}/${targetQuota} neu)!`;
       remainingSub.style.color = '#3fb950';
-    } else if (todayCnt > 0) {
-      remainingSub.textContent = `Noch ${Math.max(0, targetQuota - todayCnt)} Karten bis zum Tagesziel`;
+    } else if (newCnt > 0) {
+      const rem = Math.max(0, targetQuota - newCnt);
+      remainingSub.textContent = `Noch ${rem} neue Karten offen`;
       remainingSub.style.color = '#58a6ff';
     } else {
-      remainingSub.textContent = 'Aus Anki-App automatisch erfasst';
+      remainingSub.textContent = `Noch ${targetQuota} neue Karten offen`;
       remainingSub.style.color = 'var(--text-muted)';
     }
   }
 
   if (timeSpentSub) {
-    timeSpentSub.textContent = `⏱️ ${mins} Min. Lernzeit heute in Anki (${data.today_new_count || 0} neu, ${data.today_review_count || 0} wiederholt)`;
+    timeSpentSub.textContent = `⏱️ ${mins} Min. Lernzeit • ${repCnt} Repetitionen (${totalReviews} Reviews)`;
   }
 
   if (barFill && targetQuota > 0) {
-    const fillPct = Math.min(100, Math.round((todayCnt / targetQuota) * 100));
+    const fillPct = Math.min(100, Math.round((newCnt / targetQuota) * 100));
     barFill.style.width = `${fillPct}%`;
   }
 

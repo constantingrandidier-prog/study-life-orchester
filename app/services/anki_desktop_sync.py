@@ -44,11 +44,17 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         query_date = date.today()
 
     is_today = (query_date == date.today())
+    is_cloud = (os.environ.get('APPDATA') is None)
+
+    # In cloud (Render) or when laptop pushed a live sync payload:
+    cached = get_cached_desktop_sync_state()
+    if is_cloud and cached:
+        if is_today or cached.get('target_date') == query_date.isoformat():
+            return cached
 
     if not target_path or not target_path.exists():
-        last_state = get_cached_desktop_sync_state()
-        if last_state:
-            return last_state
+        if cached:
+            return cached
         return {
             'connected': False,
             'source': 'None',
@@ -134,7 +140,13 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         for k, v in sorted(tomorrow_breakdown.items(), key=lambda x: x[1], reverse=True)
     ]
 
-    conn.close()
+    # Calculate yesterday's stats relative to today 04:00 AM
+    today_4am_dt = datetime.now().replace(hour=4, minute=0, second=0, microsecond=0)
+    today_4am_ms = int(today_4am_dt.timestamp() * 1000)
+    yesterday_4am_ms = today_4am_ms - (86400 * 1000)
+    y_rows = cur.execute('SELECT count(*), sum(time)/1000/60 FROM revlog WHERE id >= ? AND id < ?', (yesterday_4am_ms, today_4am_ms)).fetchone()
+    yesterday_count = y_rows[0] or 0
+    yesterday_time_mins = round(y_rows[1] or 0.0, 1)
 
     result = {
         'connected': True,
@@ -149,6 +161,8 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'today_review_count': today_review,
         'today_relearn_count': today_relearn,
         'today_deck_breakdown': today_breakdown,
+        'yesterday_reviewed_count': yesterday_count,
+        'yesterday_time_minutes': yesterday_time_mins,
         'due_today_count': due_today_cnt,
         'due_tomorrow_count': tomorrow_count,
         'due_tomorrow_deck_breakdown': tomorrow_breakdown,

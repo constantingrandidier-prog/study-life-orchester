@@ -43,6 +43,9 @@
       <div class="weekday-badge" id="headerWeekdayDisplay">Montag, 14. September 2026</div>
 
       <button class="btn-secondary" id="btnRefresh" title="Zeitplan neu synchronisieren">Aktualisieren</button>
+      <button type="button" class="btn-primary" id="btnOpenConfigDrawer" onclick="toggleConfigDrawer(true)" title="Stundenplan-Import, Kalender-URL &amp; VAM Einstellungen" style="font-size: 11.5px; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+        <span>⚙️</span> <span>Stundenplan &amp; Setup</span>
+      </button>
     </div>
   </header>
 
@@ -497,102 +500,73 @@
 
     <!-- Left Column: Timeline & Task Execution List -->
     <section class="timeline-panel">
-      <div class="timeline-header">
-          <h2 class="timeline-title">
-            Tagesablauf & Aufgaben
-            <span class="timeline-weekday-sub" id="timelineDateSub"></span>
+      <!-- Unified Master Daily Schedule -->
+      <div class="timeline-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <h2 class="timeline-title" style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-main);">
+            ⏱️ Tagesplan &amp; Zeitorchester
           </h2>
-          <span class="panel-badge" id="timelineStatusBadge" style="font-size: 11px; color: var(--text-dim);">Lade...</span>
+          <span class="timeline-weekday-sub" id="timelineDateSub" style="font-size: 12px; color: var(--text-muted);"></span>
         </div>
-
-        <!-- Task Filter: All / Pending / Completed -->
-        <div class="filter-group">
-          <button class="filter-btn active" data-filter="all" id="filterAll">Alle (<span id="filterAllCount">0</span>)</button>
-          <button class="filter-btn" data-filter="pending" id="filterPending">Zu erledigen (<span id="filterPendingCount">0</span>)</button>
-          <button class="filter-btn" data-filter="completed" id="filterCompleted">Erledigt (<span id="filterCompletedCount">0</span>)</button>
-        </div>
-      </div>
-
-      <!-- Action Recommendations Box -->
-      <div class="recommendations-box" id="recommendationsBox" style="display: none; margin-bottom: 1rem; background: var(--bg-base); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-blue); padding: 0.75rem 1rem; border-radius: var(--radius-sm);">
-        <div style="font-weight: 600; font-size: 12px; color: var(--text-main); margin-bottom: 0.3rem;">
-          Priorisierte Empfehlungen für heute:
-        </div>
-        <div id="recommendationsList" style="font-size: 11px; color: var(--text-muted); line-height: 1.45;"></div>
-      </div>
-
-      <!-- Study Goal Tracker & Rollover Bar -->
-      <div id="studyGoalTracker" style="display: none; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-          <span style="font-weight: 600; font-size: 12px; color: var(--text-main);">Lernziel-Fortschritt</span>
-          <span id="studyGoalCount" style="font-size: 11px; font-weight: 600; color: var(--status-study);">0/0 abgeschlossen</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-          <div style="font-size: 11px; color: var(--text-muted);" id="studyClusterSummary">Fokus: Zusammenhängende Themen</div>
-          <button class="btn-secondary" id="btnTriggerRollover" style="font-size: 11px; padding: 0.3rem 0.6rem;">
-            Offene Aufgaben auf Folgetage verteilen
-          </button>
-        </div>
-      </div>
-
-      <!-- Rollover Redistribution Plan Box -->
-      <div id="rolloverPlanBox" style="display: none; background: var(--bg-base); border: 1px solid var(--border-muted); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-          <strong style="color: var(--text-main); font-size: 12px;">Umverteilung auf Folgetage</strong>
-          <button id="btnCloseRollover" style="background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 13px;">✕</button>
-        </div>
-        <div id="rolloverAdviceText" style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.4;"></div>
-        <div id="rolloverScheduleList" style="display: flex; flex-direction: column; gap: 0.35rem;"></div>
-      </div>
-
-      <!-- Wissenschaftliches Zeitorchester (Start 08:30 Uhr / Phase 1 Neuro-Chronobiologie) -->
-      <div id="scienceRhythmBox" style="background: rgba(13, 17, 23, 0.95); border: 1px solid rgba(88, 166, 255, 0.25); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
-          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-            <strong style="color: #58a6ff; font-size: 13px;">⏱️ Wissenschaftliches Zeitorchester</strong>
-            <span style="padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10.5px; font-weight: 600; background: rgba(56, 139, 253, 0.15); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.3);">
-              Lernstart: 08:30 Uhr
-            </span>
-            <span style="padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10px; font-weight: 600; background: rgba(210, 168, 255, 0.15); color: #d2a8ff; border: 1px solid rgba(210, 168, 255, 0.3);">
-              💊 Elvanse-Peak: 09:45–11:30
-            </span>
-          </div>
-          <span style="font-size: 11px; color: #58a6ff; font-weight: 600;" id="scienceRhythmCurrentIndicator">
-            Active Recall &bull; Deep Encoding
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span id="scienceRhythmCurrentIndicator" style="font-size: 11px; font-weight: 600; color: #58a6ff; background: rgba(56, 139, 253, 0.1); padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid rgba(56, 139, 253, 0.25);">
+            Lernstart: 08:30 Uhr
           </span>
         </div>
-
-        <!-- Neuro-Telemetry Strip (Versetzte 24h-Methode & Reale Brutto-Lernzeiten) -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.65rem; flex-wrap: wrap; font-size: 11px; background: rgba(255, 255, 255, 0.02); padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05);">
-          <div style="color: #c9d1d9;">🧠 <strong>Morgen:</strong> ~60m / 100 Reps</div>
-          <div style="color: #d2a8ff;">🔥 <strong>Vormittag (Elvanse):</strong> ~1h45 Neue Karten (Gestern vorbereitet)</div>
-          <div style="color: #79c0ff;">🎧 <strong>Nachmittag:</strong> Podcast für MORGEN (1.2x–1.4x) / Praktika</div>
-          <div style="color: #3fb950;">🏃 <strong>Abend:</strong> Sport ab 17:30 (Rebound-Puffer)</div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem; font-size: 11px;">
-          <span style="color: var(--text-muted);" id="scienceRhythmProgressText">Lade Tagesrhythmus...</span>
-          <button type="button" onclick="copyTriageQueryToClipboard()" class="btn-secondary" style="font-size: 10px; padding: 0.15rem 0.45rem; height: auto; background: rgba(56, 139, 253, 0.1); color: #79c0ff; border-color: rgba(56, 139, 253, 0.3);">
-            📋 1-Klick Anki-Filter kopieren
-          </button>
-        </div>
-
-        <!-- Schedule Blocks Container -->
-        <div id="scienceRhythmBlocksContainer" style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <!-- Dynamically populated from /schedule/daily-rhythm -->
-        </div>
       </div>
 
-      <!-- Interactive Timeline List Container -->
-      <div class="timeline-container" id="timelineContainer">
-        <div style="text-align: center; color: var(--text-dim); padding: 2.5rem 0; font-size: 12px;">
-          Lade Tagesablauf...
+      <!-- Compact Neuro-Status Strip -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.75rem; background: rgba(255, 255, 255, 0.02); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 0.75rem; font-size: 11px; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem; color: var(--text-muted); flex-wrap: wrap;">
+          <span style="color: #c9d1d9;">🧠 <strong>Morgen:</strong> Altkarten (~60m)</span>
+          <span style="color: var(--text-dim);">&bull;</span>
+          <span style="color: #d2a8ff;">💊 <strong>Vormittag:</strong> Neue Karten (1h45 Peak)</span>
+          <span style="color: var(--text-dim);">&bull;</span>
+          <span style="color: #79c0ff;">🎧 <strong>Nachmittag:</strong> Podcast für morgen / Praktika</span>
         </div>
+        <button type="button" onclick="copyTriageQueryToClipboard()" class="btn-secondary" style="font-size: 10px; padding: 0.15rem 0.5rem; height: auto; background: rgba(56, 139, 253, 0.1); color: #79c0ff; border-color: rgba(56, 139, 253, 0.3);">
+          📋 1-Klick Anki-Filter
+        </button>
       </div>
+
+      <!-- Schedule Progress Summary -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 11px; color: var(--text-muted);">
+        <span id="scienceRhythmProgressText">Lade Tagesrhythmus...</span>
+      </div>
+
+      <!-- Unified Master Schedule Blocks Container -->
+      <div id="scienceRhythmBlocksContainer" style="display: flex; flex-direction: column; gap: 0.4rem;">
+        <!-- Clean horizontal cards rendered via app.js -->
+      </div>
+
+      <!-- Hidden legacy containers for JS DOM safety -->
+      <div id="timelineContainer" style="display: none;"></div>
+      <div class="filter-group" style="display: none;">
+        <button class="filter-btn active" data-filter="all" id="filterAll"><span id="filterAllCount">0</span></button>
+        <button class="filter-btn" data-filter="pending" id="filterPending"><span id="filterPendingCount">0</span></button>
+        <button class="filter-btn" data-filter="completed" id="filterCompleted"><span id="filterCompletedCount">0</span></button>
+      </div>
+      <div id="timelineStatusBadge" style="display: none;"></div>
+      <div id="recommendationsBox" style="display: none;"><div id="recommendationsList"></div></div>
+      <div id="studyGoalTracker" style="display: none;"><span id="studyGoalCount"></span><div id="studyClusterSummary"></div><button id="btnTriggerRollover"></button></div>
+      <div id="rolloverPlanBox" style="display: none;"><button id="btnCloseRollover"></button><div id="rolloverAdviceText"></div><div id="rolloverScheduleList"></div></div>
     </section>
+  </main>
 
-    <!-- Right Column: Control Center -->
-    <section class="control-panel">
+  <!-- Sliding Config & Calendar Setup Drawer Modal -->
+  <div id="configDrawerBackdrop" class="config-drawer-backdrop" style="display: none;" onclick="handleConfigDrawerBackdrop(event)">
+    <div class="config-drawer-content" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.45rem;">
+          <span>⚙️</span> Stundenplan-Import &amp; Einstellungen
+        </h3>
+        <button type="button" onclick="toggleConfigDrawer(false)" style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-muted); border-radius: 4px; padding: 0.3rem 0.7rem; color: var(--text-main); cursor: pointer; font-size: 11.5px; font-weight: 600;">
+          ✕ Schliessen
+        </button>
+      </div>
+
+      <!-- Control Center Inside Drawer -->
+      <section class="control-panel" style="background: transparent; border: none; padding: 0;">
       
       <nav class="tabs-nav" role="tablist">
         <button class="tab-btn active" data-tab="tab-schedule" id="btnTabSchedule">Stundenplan & URL</button>
@@ -899,9 +873,9 @@
         </div>
       </div>
 
-    </section>
-
-  </main>
+      </section>
+    </div>
+  </div>
 
   <!-- Anki Deck Tree Modal (AnkiWeb Hierarchical View) -->
   <div id="ankiDeckTreeModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdropClick(event)">

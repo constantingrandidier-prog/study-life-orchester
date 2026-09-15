@@ -22,6 +22,22 @@ TARGET_TRIAGE_URLS = [
 ]
 
 def sync_now():
+    from datetime import date, timedelta
+    # 1. Sync yesterday's state (ensures roadmap quota calculation has exact count)
+    try:
+        yesterday_str = (date.today() - timedelta(days=1)).isoformat()
+        y_state = read_live_anki_desktop_state(target_date_str=yesterday_str)
+        y_data = json.dumps(y_state).encode('utf-8')
+        for url in TARGET_SYNC_URLS:
+            try:
+                req = urllib.request.Request(url, data=y_data, headers={'Content-Type': 'application/json'}, method='POST')
+                urllib.request.urlopen(req, timeout=10)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    # 2. Sync today's state
     state = read_live_anki_desktop_state()
     data = json.dumps(state).encode('utf-8')
     for url in TARGET_SYNC_URLS:
@@ -31,7 +47,7 @@ def sync_now():
         except Exception:
             pass
 
-    # Also sync triage
+    # 3. Also sync triage
     try:
         triage = calculate_backlog_triage()
         tdata = json.dumps(triage).encode('utf-8')

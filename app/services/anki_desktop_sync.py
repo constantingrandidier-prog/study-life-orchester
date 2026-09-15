@@ -49,13 +49,13 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     is_cloud = (os.environ.get('APPDATA') is None)
 
     # In cloud (Render) or when laptop pushed a live sync payload:
-    cached = get_cached_desktop_sync_state()
+    cached = get_cached_desktop_sync_state(target_date_str=query_date.isoformat())
     if is_cloud and cached:
-        if is_today or cached.get('target_date') == query_date.isoformat():
+        if cached.get('target_date') == query_date.isoformat():
             return cached
 
     if not target_path or not target_path.exists():
-        if cached:
+        if cached and cached.get('target_date') == query_date.isoformat():
             return cached
         return {
             'connected': False,
@@ -234,21 +234,49 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     cache_desktop_sync_state(result)
     return result
 
+def _ensure_cache_table(conn):
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS anki_desktop_sync_cache (
+            target_date TEXT PRIMARY KEY,
+            state_json TEXT NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ''')
+    cols = [r[1] for r in cur.execute('PRAGMA table_info(anki_desktop_sync_cache)').fetchall()]
+    if 'target_date' not in cols:
+        cur.execute('DROP TABLE anki_desktop_sync_cache')
+        cur.execute('''
+            CREATE TABLE anki_desktop_sync_cache (
+                target_date TEXT PRIMARY KEY,
+                state_json TEXT NOT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
 def cache_desktop_sync_state(state):
     try:
+        t_date = state.get('target_date') or date.today().isoformat()
         with get_db_connection() as conn:
+            _ensure_cache_table(conn)
             cur = conn.cursor()
-            cur.execute('CREATE TABLE IF NOT EXISTS anki_desktop_sync_cache (id INTEGER PRIMARY KEY CHECK (id = 1), state_json TEXT NOT NULL, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);')
-            cur.execute('INSERT INTO anki_desktop_sync_cache (id, state_json, updated_at) VALUES (1, ?, CURRENT_TIMESTAMP) ON CONFLICT(id) DO UPDATE SET state_json = excluded.state_json, updated_at = CURRENT_TIMESTAMP;', (json.dumps(state),))
+            cur.execute('''
+                INSERT INTO anki_desktop_sync_cache (target_date, state_json, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(target_date) DO UPDATE SET
+                    state_json = excluded.state_json,
+                    updated_at = CURRENT_TIMESTAMP;
+            ''', (t_date, json.dumps(state)))
     except Exception:
         pass
 
-def get_cached_desktop_sync_state():
+def get_cached_desktop_sync_state(target_date_str: Optional[str] = None):
+    t_date = target_date_str or date.today().isoformat()
     try:
         with get_db_connection() as conn:
+            _ensure_cache_table(conn)
             cur = conn.cursor()
-            cur.execute('CREATE TABLE IF NOT EXISTS anki_desktop_sync_cache (id INTEGER PRIMARY KEY CHECK (id = 1), state_json TEXT NOT NULL, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);')
-            row = cur.execute('SELECT state_json FROM anki_desktop_sync_cache WHERE id = 1').fetchone()
+            row = cur.execute('SELECT state_json FROM anki_desktop_sync_cache WHERE target_date = ?', (t_date,)).fetchone()
             if row:
                 return json.loads(row[0])
     except Exception:

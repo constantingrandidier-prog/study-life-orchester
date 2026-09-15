@@ -1062,8 +1062,10 @@ def post_anki_desktop_sync_endpoint(payload: dict):
     new_cnt = payload.get("new_cards_count", payload.get("today_reviewed_count", 0))
     today_mins = int(payload.get("today_time_minutes", 0))
     try:
+        t_date_str = payload.get("target_date")
+        p_date = date.fromisoformat(t_date_str) if t_date_str else date.today()
         repository.save_daily_progress(
-            target_date=date.today(),
+            target_date=p_date,
             cards_completed=new_cnt,
             minutes_spent=today_mins,
             source="anki_desktop_auto",

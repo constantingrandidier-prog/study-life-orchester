@@ -1059,21 +1059,20 @@ from app.services.anki_backlog_triage import (
 def post_anki_desktop_sync_endpoint(payload: dict):
     """Receive live sync payload from local Anki watcher."""
     cache_desktop_sync_state(payload)
-    today_cnt = payload.get("today_reviewed_count", 0)
+    new_cnt = payload.get("new_cards_count", payload.get("today_reviewed_count", 0))
     today_mins = int(payload.get("today_time_minutes", 0))
-    if today_cnt > 0:
-        try:
-            repository.save_daily_progress(
-                target_date=date.today(),
-                cards_completed=today_cnt,
-                minutes_spent=today_mins,
-                source="anki_desktop_auto",
-                notes=f"Auto-Sync Anki Desktop ({today_cnt} Karten)",
-                user_id="student",
-            )
-        except Exception:
-            pass
-    return {"status": "ok", "synced": True, "cards_logged": today_cnt}
+    try:
+        repository.save_daily_progress(
+            target_date=date.today(),
+            cards_completed=new_cnt,
+            minutes_spent=today_mins,
+            source="anki_desktop_auto",
+            notes=f"Auto-Sync Anki Desktop ({new_cnt} neue Karten)",
+            user_id="student",
+        )
+    except Exception:
+        pass
+    return {"status": "ok", "synced": True, "cards_logged": new_cnt}
 
 
 @router.get(

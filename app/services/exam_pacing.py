@@ -119,18 +119,23 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     else:
         daily_target_cards = math.ceil(remaining_curriculum_cards / max(1, learning_days_remaining))
 
-    # Today's actual logged cards (auto-synchronized with Anki Desktop)
-    today_log = get_daily_progress_for_date(curr_date, user_id=user_id)
-    cards_completed_today = today_log["cards_completed"] if today_log else 0
-    if cards_completed_today == 0:
-        try:
-            from app.services.anki_desktop_sync import read_live_anki_desktop_state
-            sync_res = read_live_anki_desktop_state(target_date_str=curr_date.isoformat())
-            auto_cnt = sync_res.get("today_reviewed_count", 0)
-            if auto_cnt > 0:
+    # Today's actual logged cards (auto-synchronized with Anki Desktop - ONLY NEW CARDS)
+    cards_completed_today = 0
+    try:
+        from app.services.anki_desktop_sync import read_live_anki_desktop_state
+        sync_res = read_live_anki_desktop_state(target_date_str=curr_date.isoformat())
+        if sync_res and sync_res.get("connected"):
+            auto_cnt = sync_res.get("new_cards_count", sync_res.get("today_reviewed_count", 0))
+            if auto_cnt is not None:
                 cards_completed_today = auto_cnt
-        except Exception:
-            pass
+    except Exception:
+        pass
+
+    if cards_completed_today == 0:
+        today_log = get_daily_progress_for_date(curr_date, user_id=user_id)
+        if today_log:
+            cards_completed_today = today_log.get("cards_completed", 0)
+
     cards_remaining_today = max(0, daily_target_cards - cards_completed_today)
 
     if daily_target_cards > 0:

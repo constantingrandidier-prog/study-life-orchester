@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StudyLife Orchestrator - Professioneller akademischer Tages- und Lernplaner für Studierende.">
+  <title>StudyLife Orchestrator | Tages- und Lernplaner</title>
+  <link rel="stylesheet" href="/static/style.css?v=10.0">
+</head>
+<body>
+
+  <!-- Minimalist Executive Header -->
+  <header class="app-header">
+    <div class="brand-wrapper">
+      <div class="brand-badge">SL</div>
+      <div>
+        <h1 class="brand-title">StudyLife Orchestrator</h1>
+        <div class="brand-subtitle">Akademischer Tages- und Lernplaner</div>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div class="date-navigator">
+        <button class="nav-step-btn" id="btnPrevDay" title="Vorheriger Tag (‹)">‹</button>
+        <button class="nav-today-btn" id="btnToday" title="Zu Heute springen">Heute</button>
+        <button class="nav-step-btn" id="btnNextDay" title="Nächster Tag (›)">›</button>
+
+        <div class="date-pill">
+          <input type="date" id="targetDateInput" class="date-input" value="2026-09-14" title="Datum auswählen">
+        </div>
+      </div>
+
+      <div class="device-indicator-pill" title="Automatische Layout-Anpassung">
+        <span class="device-lbl-mobile">📱 iPhone-Optimiert</span>
+        <span class="device-lbl-tablet">📱 iPad-Dashboard</span>
+        <span class="device-lbl-desktop">💻 Desktop-Cockpit</span>
+      </div>
+
+      <div class="weekday-badge" id="headerWeekdayDisplay">Montag, 14. September 2026</div>
+
+      <button class="btn-secondary" id="btnRefresh" title="Zeitplan neu synchronisieren">Aktualisieren</button>
+    </div>
+  </header>
+
+  <!-- Mobile Segmented Quick View Switcher (Auto-displayed on iPhone/Mobile) -->
+  <nav class="mobile-view-tabs" role="tablist">
+    <button type="button" class="mobile-view-btn active" data-view="mission" onclick="switchMobileView('mission')">🎯 Tages-Auftrag</button>
+    <button type="button" class="mobile-view-btn" data-view="schedule" onclick="switchMobileView('schedule')">📅 Vorlesungen</button>
+    <button type="button" class="mobile-view-btn" data-view="stats" onclick="switchMobileView('stats')">📊 Pacing &amp; Tools</button>
+  </nav>
+
+  <!-- =========================================================================
+       EXECUTIVE MISSION CONTROL & STRUCTURED DIDACTIC TABLE
+       ========================================================================= -->
+  <section class="executive-mission-section" id="executiveMissionSection">
+    <div class="executive-mission-card">
+      
+      <!-- Top Meta & Title Bar -->
+      <div class="mission-hero-header">
+        <div class="mission-title-group">
+          <span class="mission-day-badge" id="curriculumDayBadge">Tag 1 von 97</span>
+          <h2 class="mission-main-title">🎯 Dein heutiger Lernauftrag (<span id="curriculumTargetQuota">100</span> neue Karten)</h2>
+          <span class="mission-module-tag" id="curriculumModuleTag">1. Blut &amp; Immunsystem</span>
+        </div>
+        <div class="mission-actions">
+          <button type="button" class="btn-secondary" id="btnRefreshCurriculum" onclick="loadCurriculumToday(true)" style="font-size: 11.5px; padding: 0.35rem 0.65rem;" title="Lernauftrag neu laden">
+            🔄 Aktualisieren
+          </button>
+          <button type="button" class="btn-primary" onclick="openCurriculumRoadmapModal()" style="font-size: 12px; padding: 0.35rem 0.8rem; background: linear-gradient(135deg, #1f6feb, #238636); border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+            <span>🗺️</span> Roadmap
+          </button>
+          <button type="button" class="btn-pacing-joker" id="btnToggleJokerDay" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Diesen Tag als Ruhetag markieren">
+            🏖️ Joker
+          </button>
+          <button type="button" class="btn-pacing-config" id="btnOpenPacingSettings" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Pacing-Einstellungen anpassen">
+            ⚙️ Optionen
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Quota Adjustment Banner (Surplus / Deficit explained) -->
+      <div class="curriculum-adjustment-banner" id="curriculumAdjustmentBanner" style="display: none;"></div>
+
+      <!-- Motivational Briefing Box -->
+      <div class="mission-motivational-banner" id="curriculumSummaryBox">
+        <span>🔥</span>
+        <span id="curriculumSummaryText" style="flex: 1; font-weight: 500;">Tag 1/97: 100 neue Karten (48× Hämoglobin + 24× Hämoglobin Teil 2 + 28× CO2-Transport) im Modul 1. Blut &amp; Immunsystem.</span>
+      </div>
+
+      <!-- Unified 4-KPI Overview Grid -->
+      <div class="mission-kpi-grid">
+        <!-- 1. Tages-Soll -->
+        <div class="mission-kpi-box">
+          <span class="mission-kpi-label">🎯 Tagesziel (Soll)</span>
+          <div class="mission-kpi-value-row">
+            <span class="mission-kpi-val" id="pacingDailyTarget">100</span>
+            <span class="mission-kpi-unit">Karten</span>
+          </div>
+          <div id="pacingTargetBreakdown" class="mission-kpi-sub">
+            <span id="pacingNewTargetVal">100</span> neu + <span id="pacingDueReviewsVal">0</span> fällig
+          </div>
+          <span class="mission-kpi-sub" id="pacingTargetSub">Bei 6 Lerntagen/Woche</span>
+        </div>
+
+        <!-- 2. Heute geschafft & Schnellerfassung -->
+        <div class="mission-kpi-box">
+          <span class="mission-kpi-label">✅ Heute geschafft (Ist)</span>
+          <div class="mission-kpi-value-row">
+            <span class="mission-kpi-val" id="pacingCardsCompleted" style="color: var(--status-free);">0</span>
+            <span class="mission-kpi-unit">/ <span id="pacingCardsTargetMini">100</span></span>
+          </div>
+          <div id="pacingRemainingSub" class="mission-kpi-sub" style="color: var(--status-free);">Noch 100 Karten offen</div>
+          <div class="mission-quick-buttons">
+            <button type="button" class="btn-mini-add" onclick="handleQuickAddCards(10)">+10</button>
+            <button type="button" class="btn-mini-add" onclick="handleQuickAddCards(25)">+25</button>
+            <button type="button" class="btn-mini-add" onclick="handleQuickAddCards(50)">+50</button>
+            <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()">✓ Fertig</button>
+          </div>
+        </div>
+
+        <!-- 3. Zeit gespart heute & Streak -->
+        <div class="mission-kpi-box">
+          <span class="mission-kpi-label">⚡ Zeit gespart</span>
+          <div class="mission-kpi-value-row">
+            <span class="mission-kpi-val" id="statTimeSaved" style="color: var(--status-free);">2 Std.</span>
+          </div>
+          <span class="mission-kpi-sub" id="statTimeSavedSub">Durch 2.0x/1.5x Vorlesungs-Speed</span>
+          <div class="mission-kpi-sub" style="margin-top: 0.3rem;">
+            🔥 Streak: <strong id="statStreakDays" style="color: #ff9b54;">1 Tag aktiv</strong>
+          </div>
+        </div>
+
+        <!-- 4. Examen & Puffer -->
+        <div class="mission-kpi-box">
+          <span class="mission-kpi-label">⏳ Examen 19.01.2027</span>
+          <div class="mission-kpi-value-row">
+            <span class="mission-kpi-val" id="pacingCountdownPill" style="font-size: 20px; color: #d2a8ff;">127 Tage</span>
+          </div>
+          <span class="mission-kpi-sub" id="pacingBufferSub">15 Tage Revisionspuffer ab 04.01.</span>
+          <div class="mission-kpi-sub" style="margin-top: 0.3rem;">
+            Readiness: <strong id="pacingReadinessVal" style="color: var(--status-study);">0.0%</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Motivational Progress Bar & Status Advice -->
+      <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+        <div class="mission-progress-track">
+          <div class="mission-progress-fill" id="pacingBarFill" style="width: 0%;"></div>
+        </div>
+        <div class="mission-advice-bar">
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <span>💡</span>
+            <span id="pacingAdviceText" style="font-weight: 500; color: var(--text-main);">Noch 100 Karten offen – starte deinen 1. Lerntag mit 1 Hämoglobin!</span>
+          </div>
+          <span class="pacing-status-indicator" id="pacingStatusBadge">🟢 Lerntag aktiv</span>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           STRUCTURED MISSION TABLE (DESKTOP/IPAD: TABLE, MOBILE: CARD LIST)
+           ===================================================================== -->
+      <div id="curriculumTopicsContainer">
+        <!-- Initial pre-rendered Day 1 Table for 0ms loading latency -->
+        <div class="table-responsive-wrapper">
+          <table class="mission-table">
+            <thead>
+              <tr>
+                <th style="width: 32%;">Thema &amp; Fach</th>
+                <th style="width: 26%;">Vorlesungs-Strategie</th>
+                <th style="width: 18%;">Folie</th>
+                <th style="width: 12%; text-align: center;">Anki-Soll</th>
+                <th style="width: 12%; text-align: right;">Aktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="mission-slot-row" id="mission-row-0">
+                <td class="td-topic">
+                  <div class="mission-topic-title">1 Hämoglobin</div>
+                  <div class="mission-topic-meta">
+                    <span class="curriculum-lecturer-badge">👨‍🏫 Prof. Manatschal</span>
+                    <span style="color: var(--text-dim);">📁 Blut &amp; Immunsystem</span>
+                  </div>
+                  <div class="curriculum-slot-reason">💡 Deskriptiver Überblick &amp; Dozentenschwerpunkte. Auf 2.0x High-Speed mitnehmen!</div>
+                </td>
+                <td class="td-strategy">
+                  <span class="curriculum-speed-badge">🟡 2.0x High-Speed (+45m gespart)</span>
+                </td>
+                <td class="td-slide">
+                  <span class="curriculum-slide-link" title="01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf">📄 01_Haemoglobin_Myoglobin...</span>
+                </td>
+                <td class="td-quota" style="text-align: center;">
+                  <div class="curriculum-card-pill"><span>⚡</span> <strong>48</strong> Karten</div>
+                </td>
+                <td class="td-action" style="text-align: right;">
+                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_0', 48, '1 Hämoglobin')">Erledigen</button>
+                </td>
+              </tr>
+              <tr class="mission-slot-row" id="mission-row-1">
+                <td class="td-topic">
+                  <div class="mission-topic-title">Hämoglobin Teil 2</div>
+                  <div class="mission-topic-meta">
+                    <span class="curriculum-lecturer-badge">👨‍🏫 Prof. Manatschal</span>
+                    <span style="color: var(--text-dim);">📁 Blut &amp; Immunsystem</span>
+                  </div>
+                  <div class="curriculum-slot-reason">💡 Deskriptiver Überblick &amp; Dozentenschwerpunkte. Auf 2.0x High-Speed mitnehmen!</div>
+                </td>
+                <td class="td-strategy">
+                  <span class="curriculum-speed-badge">🟡 2.0x High-Speed (+45m gespart)</span>
+                </td>
+                <td class="td-slide">
+                  <span class="curriculum-slide-link" title="01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf">📄 01_Haemoglobin_Myoglobin...</span>
+                </td>
+                <td class="td-quota" style="text-align: center;">
+                  <div class="curriculum-card-pill"><span>⚡</span> <strong>24</strong> Karten</div>
+                </td>
+                <td class="td-action" style="text-align: right;">
+                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_1', 24, 'Hämoglobin Teil 2')">Erledigen</button>
+                </td>
+              </tr>
+              <tr class="mission-slot-row" id="mission-row-2">
+                <td class="td-topic">
+                  <div class="mission-topic-title">2 CO2-Transport</div>
+                  <div class="mission-topic-meta">
+                    <span class="curriculum-lecturer-badge">👨‍🏫 Prof. Manatschal</span>
+                    <span style="color: var(--text-dim);">📁 Blut &amp; Immunsystem</span>
+                  </div>
+                  <div class="curriculum-slot-reason">💡 ⚠️ Physiologischer Prüfungsschwerpunkt (Gasaustausch)! Auf 1.5x aktiv durcharbeiten.</div>
+                </td>
+                <td class="td-strategy">
+                  <span class="curriculum-focus-badge">🟠 1.5x Focus Stream (+30m gespart)</span>
+                </td>
+                <td class="td-slide">
+                  <span class="curriculum-slide-link" title="02_CO2-Transport_Saure-Base_HS24_Manatschal.pdf">📄 02_CO2-Transport_Saure-Base...</span>
+                </td>
+                <td class="td-quota" style="text-align: center;">
+                  <div class="curriculum-card-pill"><span>⚡</span> <strong>28</strong> Karten</div>
+                </td>
+                <td class="td-action" style="text-align: right;">
+                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_2', 28, '2 CO2-Transport')">Erledigen</button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="mission-table-total-row">
+                <td colspan="2">
+                  <strong>GESAMT HEUTE (3 Vorlesungsthemen)</strong>
+                </td>
+                <td>
+                  <span class="badge-total-saved">⚡ 2 Std. 00 Min. gespart</span>
+                </td>
+                <td style="text-align: center;">
+                  <strong style="color: var(--accent-blue); font-size: 14px;">100</strong> Karten
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()" style="padding: 0.35rem 0.75rem; font-size: 11.5px;">✓ Alle erledigt</button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Semester Progress Bar Footer Strip -->
+      <div class="curriculum-footer-strip">
+        <div class="curriculum-footer-item">
+          <span class="curr-footer-label">Semester-Gesamtfortschritt:</span>
+          <strong id="currCardsProgress">100 / 9'633 Karten (1.0%)</strong>
+        </div>
+        <div class="curriculum-footer-bar">
+          <div class="curriculum-footer-fill" id="currProgressBarFill" style="width: 1%;"></div>
+        </div>
+        <div class="curriculum-footer-item">
+          <span class="curr-footer-label">Prüfungs-Countdown:</span>
+          <strong id="currCountdownDays" style="color: var(--status-study);">127 Tage bis 19.01.2027</strong>
+          <span style="color: var(--text-muted); font-size: 11px;">(15 Tage Revisionspuffer)</span>
+        </div>
+      </div>
+
+      <!-- Telemetry Strip (Vortag, 7-Tage-Schnitt, Streak, Zeit gespart) -->
+      <div class="pacing-stats-strip" id="pacingComparisonStrip">
+        <div class="pacing-stat-item">
+          <span class="pacing-stat-label">📊 Vortagsvergleich</span>
+          <span class="pacing-stat-val" id="statDiffCards">Lädt...</span>
+          <span class="pacing-stat-sub" id="statDiffPercent">Vergleich zu gestern</span>
+        </div>
+        <div class="pacing-stat-item">
+          <span class="pacing-stat-label">📈 7-Tage-Schnitt</span>
+          <span class="pacing-stat-val" id="statWeekAvg">-- / Tag</span>
+          <span class="pacing-stat-sub">Wochendurchschnitt</span>
+        </div>
+        <div class="pacing-stat-item">
+          <span class="pacing-stat-label">🔥 Lern-Streak</span>
+          <span class="pacing-stat-val">1 Tag</span>
+          <span class="pacing-stat-sub">Aktivität in Folge</span>
+        </div>
+        <div class="pacing-stat-item">
+          <span class="pacing-stat-label">🎯 Exam-Readiness</span>
+          <span class="pacing-stat-val" style="color: var(--status-study);">0.0%</span>
+          <span class="pacing-stat-sub">Semester-Start</span>
+        </div>
+      </div>
+
+      <!-- Anki Weakness & Deck Baum Strip -->
+      <div class="pacing-weakness-strip" id="pacingWeaknessStrip" style="display: none;">
+        <div class="weakness-strip-header">
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="weakness-icon">📚</span>
+            <strong>Anki-Lernstand &amp; Wiederholungen</strong>
+            <span class="weakness-due-pill" id="weaknessDuePill">0 fällige Karten</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <button type="button" class="btn-primary" onclick="openAnkiDeckTreeModal()" style="font-size: 11.5px; padding: 0.25rem 0.65rem; border-radius: var(--radius-xs); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; background: #238636; border: 1px solid rgba(240,246,252,0.1);">
+              <span>📂</span> Anki-Deckbaum öffnen (wie AnkiWeb)
+            </button>
+            <button type="button" class="btn-secondary" id="btnToggleWeaknessSummary" onclick="toggleWeaknessSummaryInline()" style="font-size: 11px; padding: 0.25rem 0.5rem; display: none;">
+              ▼ Details
+            </button>
+          </div>
+        </div>
+        <div class="weakness-strip-body" id="weaknessStripBody" style="display: none; max-height: 200px; overflow-y: auto;"></div>
+      </div>
+
+      <!-- Collapsible Pacing Settings Drawer -->
+      <div class="pacing-settings-drawer" id="pacingSettingsDrawer" style="display: none;">
+        <div class="settings-drawer-title">⚙️ Lernrhythmus &amp; Freie Tage Konfiguration</div>
+        <div class="settings-drawer-grid">
+          <label class="settings-toggle">
+            <input type="checkbox" id="chkSundayFree" checked onchange="handlePacingConfigChange()">
+            <span>Sonntag grundsätzlich als Ruhetag einrechnen (empfohlen: ~100 Karten/Tag)</span>
+          </label>
+          <label class="settings-toggle">
+            <input type="checkbox" id="chkSaturdayFree" onchange="handlePacingConfigChange()">
+            <span>Samstag auch frei (5-Tage-Woche: ~120 Karten/Tag)</span>
+          </label>
+          <div class="settings-input-group">
+            <span style="color: var(--text-muted); font-size: 11px;">Pufferphase vor Prüfung (Tage reines Wiederholen):</span>
+            <input type="number" id="inputRevisionBuffer" value="15" min="7" max="30" style="width: 60px;" class="pacing-input" onchange="handlePacingConfigChange()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden compatibility inputs for existing handlers -->
+      <div style="display: none;">
+        <input type="number" id="manualCardsInput" value="0">
+        <button id="btnSaveManualProgress" onclick="handleSaveManualProgress()"></button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Executive KPI Strip & Progress Tracker -->
+  <section class="metrics-strip">
+    <div class="kpi-grid">
+      <div class="kpi-item">
+        <span class="kpi-label">Zu erledigen</span>
+        <span class="kpi-value" id="valPendingCount">0</span>
+        <span class="kpi-sub">Offene Lerneinheiten & Termine</span>
+      </div>
+
+      <div class="kpi-item">
+        <span class="kpi-label">Erledigt</span>
+        <span class="kpi-value" id="valCompletedCount" style="color: var(--status-done);">0</span>
+        <span class="kpi-sub" id="valProgressPercent">0% abgeschlossen</span>
+      </div>
+
+      <div class="kpi-item">
+        <span class="kpi-label">Verfügbare Lernzeit</span>
+        <span class="kpi-value" id="valFreeMinutes">--</span>
+        <span class="kpi-sub">Freie Lücken zwischen Terminen</span>
+      </div>
+
+      <div class="kpi-item">
+        <span class="kpi-label">Vorlesungen heute</span>
+        <span class="kpi-value" id="valBusyMinutes">--</span>
+        <span class="kpi-sub" id="valLectureCount">0 Termine</span>
+      </div>
+    </div>
+
+    <!-- Hairline Daily Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+      <span class="progress-text" id="progressText">0 von 0 Aufgaben abgeschlossen</span>
+    </div>
+  </section>
+
+  <!-- Main Dashboard Workspace -->
+  <main class="dashboard-grid">
+
+    <!-- Left Column: Timeline & Task Execution List -->
+    <section class="timeline-panel">
+      <div class="timeline-header">
+          <h2 class="timeline-title">
+            Tagesablauf & Aufgaben
+            <span class="timeline-weekday-sub" id="timelineDateSub"></span>
+          </h2>
+          <span class="panel-badge" id="timelineStatusBadge" style="font-size: 11px; color: var(--text-dim);">Lade...</span>
+        </div>
+
+        <!-- Task Filter: All / Pending / Completed -->
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all" id="filterAll">Alle (<span id="filterAllCount">0</span>)</button>
+          <button class="filter-btn" data-filter="pending" id="filterPending">Zu erledigen (<span id="filterPendingCount">0</span>)</button>
+          <button class="filter-btn" data-filter="completed" id="filterCompleted">Erledigt (<span id="filterCompletedCount">0</span>)</button>
+        </div>
+      </div>
+
+      <!-- Action Recommendations Box -->
+      <div class="recommendations-box" id="recommendationsBox" style="display: none; margin-bottom: 1rem; background: var(--bg-base); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-blue); padding: 0.75rem 1rem; border-radius: var(--radius-sm);">
+        <div style="font-weight: 600; font-size: 12px; color: var(--text-main); margin-bottom: 0.3rem;">
+          Priorisierte Empfehlungen für heute:
+        </div>
+        <div id="recommendationsList" style="font-size: 11px; color: var(--text-muted); line-height: 1.45;"></div>
+      </div>
+
+      <!-- Study Goal Tracker & Rollover Bar -->
+      <div id="studyGoalTracker" style="display: none; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <span style="font-weight: 600; font-size: 12px; color: var(--text-main);">Lernziel-Fortschritt</span>
+          <span id="studyGoalCount" style="font-size: 11px; font-weight: 600; color: var(--status-study);">0/0 abgeschlossen</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <div style="font-size: 11px; color: var(--text-muted);" id="studyClusterSummary">Fokus: Zusammenhängende Themen</div>
+          <button class="btn-secondary" id="btnTriggerRollover" style="font-size: 11px; padding: 0.3rem 0.6rem;">
+            Offene Aufgaben auf Folgetage verteilen
+          </button>
+        </div>
+      </div>
+
+      <!-- Rollover Redistribution Plan Box -->
+      <div id="rolloverPlanBox" style="display: none; background: var(--bg-base); border: 1px solid var(--border-muted); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+          <strong style="color: var(--text-main); font-size: 12px;">Umverteilung auf Folgetage</strong>
+          <button id="btnCloseRollover" style="background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 13px;">✕</button>
+        </div>
+        <div id="rolloverAdviceText" style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.4;"></div>
+        <div id="rolloverScheduleList" style="display: flex; flex-direction: column; gap: 0.35rem;"></div>
+      </div>
+
+      <!-- Interactive Timeline List Container -->
+      <div class="timeline-container" id="timelineContainer">
+        <div style="text-align: center; color: var(--text-dim); padding: 2.5rem 0; font-size: 12px;">
+          Lade Tagesablauf...
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Control Center -->
+    <section class="control-panel">
+      
+      <nav class="tabs-nav" role="tablist">
+        <button class="tab-btn active" data-tab="tab-schedule" id="btnTabSchedule">Stundenplan & URL</button>
+        <button class="tab-btn" data-tab="tab-activity" id="btnTabActivity">Aktivitäten</button>
+        <button class="tab-btn" data-tab="tab-anki" id="btnTabAnki">Anki-Planung</button>
+        <button class="tab-btn" data-tab="tab-efficiency" id="btnTabEfficiency">Vorlesungs-Effizienz</button>
+      </nav>
+
+      <!-- TAB 1: Stundenplan & URL-Sync -->
+      <div class="tab-content active" id="tab-schedule">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 1rem;">
+          Synchronisiere deinen Stundenplan per <strong>Webcal / iCal URL</strong> (z.&nbsp;B. UZH Vorlesungsverzeichnis, Google Calendar, Outlook) oder lade eine <strong>.ics-Datei</strong> hoch.
+        </div>
+
+        <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+          <div class="form-label" style="margin-bottom: 0.4rem;">Kalender-URL synchronisieren</div>
+          <div class="form-group" style="margin-bottom: 0.6rem;">
+            <input type="url" id="calendarUrlInput" class="form-input" placeholder="webcal://... oder https://... (UZH, Google, Outlook)">
+          </div>
+          <button class="btn-primary" id="btnSyncCalendarUrl" onclick="handleSyncCalendarUrl()" style="width: 100%;">
+            Stundenplan von URL laden
+          </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.6rem; margin: 1rem 0; color: var(--text-dim); font-size: 11px;">
+          <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+          <span>ODER DATEI IMPORTIEREN</span>
+          <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+        </div>
+
+        <div class="dropzone-box" id="icsDropzone">
+          <div class="dropzone-title">Stundenplan-Datei (.ics) auswählen</div>
+          <div class="dropzone-hint">Hier ablegen oder klicken</div>
+          <input type="file" id="icsFileInput" accept=".ics" style="display: none;">
+        </div>
+
+        <div id="scheduleSummaryDetails" style="font-size: 11px; color: var(--text-muted); background: var(--bg-base); padding: 0.75rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: none; margin-top: 0.75rem;"></div>
+
+        <!-- Phase 2: UZH VAM & OpenOLAT Connector Card -->
+        <div class="olat-status-card" id="olatStatusCard" style="margin-top: 1rem; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <div style="display: flex; align-items: center; gap: 0.45rem; font-weight: 600; font-size: 12px; color: var(--text-main);">
+              <span>🏥</span> VAM – Virtuelle Ausbildungsplattform Medizin (UZH)
+            </div>
+            <span class="status-badge" id="olatOnlineBadge" style="font-size: 10px;">Lade Status...</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.65rem;" id="olatStatusDesc">
+            Kurs <strong>2. Studienjahr (2. SJ B Med)</strong> indexiert (<a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" style="color: var(--accent-blue);">VAM Kurs #666697737 öffnen</a>).
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 11px; margin-bottom: 0.65rem;">
+            <div style="display: flex; justify-content: space-between; color: var(--text-dim);">
+              <span>Vorlesungsfolien &amp; Skripte:</span>
+              <strong style="color: var(--text-main);" id="olatSlidesCount">25+ PDFs lokal indexiert</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--text-dim);">
+              <span>WebDAV Anmeldename:</span>
+              <span style="color: var(--status-done); font-family: monospace; font-size: 10.5px;" id="olatWebdavStatus">553131393539353502@uzh.ch</span>
+            </div>
+          </div>
+          <div id="olatVpnNotice" style="display: none; font-size: 10.5px; color: #d29922; background: rgba(210, 153, 34, 0.1); border: 1px solid rgba(210, 153, 34, 0.25); padding: 0.5rem 0.7rem; border-radius: var(--radius-xs); margin-bottom: 0.65rem; line-height: 1.4;"></div>
+          <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+            <a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" class="btn-primary" style="flex: 1; text-align: center; text-decoration: none; font-size: 11px; padding: 0.4rem 0.6rem;">🎬 VAM-Archiv &amp; Aufzeichnungen</a>
+            <a href="https://lms.uzh.ch/url/RepositoryEntry/666697737" target="_blank" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 11px; padding: 0.4rem 0.6rem;">📄 Kursordner</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Manuelle Aktivitäten -->
+      <div class="tab-content" id="tab-activity">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 1rem;">
+          Erfasse Mahlzeiten, Sport, Pendelzeiten oder Pausen, um reale freie Arbeitsfenster zu ermitteln.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kategorie</label>
+          <div class="category-group">
+            <button type="button" class="cat-btn active" data-cat="gym">Sport / ASVZ</button>
+            <button type="button" class="cat-btn" data-cat="meal">Mahlzeit</button>
+            <button type="button" class="cat-btn" data-cat="commute">Pendeln</button>
+            <button type="button" class="cat-btn" data-cat="break">Pause</button>
+            <button type="button" class="cat-btn" data-cat="custom">Sonstiges</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="actTitle">Bezeichnung</label>
+          <input type="text" id="actTitle" class="form-input" placeholder="z. B. Krafttraining ASVZ Irchel">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="actStart">Startzeit</label>
+            <input type="time" id="actStart" class="form-input" value="12:15">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="actEnd">Endzeit</label>
+            <input type="time" id="actEnd" class="form-input" value="13:30">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="actNotes">Ort / Notiz (optional)</label>
+          <input type="text" id="actNotes" class="form-input" placeholder="z. B. Mensa Polyterrasse">
+        </div>
+
+        <button class="btn-primary" id="btnAddActivity" style="width: 100%;">
+          Aktivität eintragen
+        </button>
+
+        <div id="manualActivitiesList" style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.85rem;"></div>
+      </div>
+
+      <!-- TAB 3: Anki Analyzer & Smart Planer -->
+      <div class="tab-content" id="tab-anki">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 0.85rem;">
+          Synchronisiere direkt mit deiner lokalen <strong>Anki-Desktop</strong> Sammlung oder nutze <strong>AnkiWeb</strong> / Dateiupload.
+        </div>
+
+        <!-- Lokale Anki-Sammlung Box (Empfohlen) -->
+        <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <div class="form-label" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.4rem;">
+              <span style="color: #6366f1;">⚡</span> Anki Deck-Fokus (Nur das Deck, das du jetzt brauchst)
+            </div>
+            <span id="localAnkiBadge" class="status-badge badge-study" style="font-size: 10px;">9'319 Karten (2. SJ)</span>
+          </div>
+
+          <!-- Deck-Scope Selector: Nur dieses Deck anzeigen -->
+          <div style="margin: 0.6rem 0; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-xs); padding: 0.6rem 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label for="ankiDeckScopeSelect" style="font-size: 11px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 0.35rem;">
+                <span>🎯</span> Aktives Deck für Statistiken:
+              </label>
+              <span class="status-badge badge-study" id="scopedDeckBadge" style="font-size: 9.5px;">2. SJ</span>
+            </div>
+            <select id="ankiDeckScopeSelect" class="form-input" style="font-size: 11.5px; padding: 0.3rem 0.5rem; width: 100%; background: var(--bg-base);" onchange="handleDeckScopeChange(this.value)">
+              <option value="curriculum" selected>🎯 Gesamtes Curriculum (2. SJ &amp; Vorklinik) – 9'676 Karten</option>
+              <option value="biochemie">🧪 NEU: Vorklinik – 1. Biochemie Mündlich – 947 Karten</option>
+              <option value="module">🩸 TB Blut &amp; Immunsystem – 1'218 Karten (Semesterstart)</option>
+              <option value="herz">🫀 TB Herz-Kreislauf – 1'226 Karten</option>
+              <option value="atmung">🫁 TB Atmung &amp; Lunge – 1'551 Karten</option>
+              <option value="verdauung">🥗 TB Verdauung &amp; Ernährung – 2'894 Karten</option>
+              <option value="stoffwechsel">⚡ TB Stoffwechsel – 863 Karten</option>
+              <option value="all">🌐 Alle Decks der Sammlung (Gesamt: 9'676 Karten)</option>
+            </select>
+            <div id="scopedDeckTelemetrySnippet" style="margin-top: 0.45rem; font-size: 11px; color: var(--text-muted); line-height: 1.45; background: var(--bg-base); padding: 0.45rem 0.6rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle);">
+              Lade Deck-Statistiken (seit immer)...
+            </div>
+          </div>
+
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.65rem;" id="localAnkiSubtext">
+            Statistiken basieren exklusiv auf den Reviews des ausgewählten Decks seit immer.
+          </div>
+          <button class="btn-primary" id="btnSyncLocalAnki" onclick="handleSyncLocalAnki()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+            <span>⚡</span> Gewähltes Deck synchronisieren
+          </button>
+          <div id="localAnkiSyncStatus" style="margin-top: 0.5rem; font-size: 11px; color: var(--status-done); display: none;"></div>
+        </div>
+
+        <!-- Info Guide Box -->
+        <div style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-sm); padding: 0.7rem 0.85rem; margin-bottom: 1rem; font-size: 11px; color: var(--text-muted); line-height: 1.45;">
+          <div style="font-weight: 600; color: var(--text-main); margin-bottom: 0.3rem;">💡 Wie synchronisiert sich Anki?</div>
+          <div>• <strong>1-Klick (Empfohlen)</strong>: Klick auf <em>Lokale Anki-Sammlung synchronisieren</em> liest deine echten Decks &amp; Reviews direkt von deinem PC ein.</div>
+          <div>• <strong>AnkiWeb</strong>: Wenn du unterwegs gelernt hast, in Anki Desktop einfach <em>Synchronisieren</em> drücken und danach hier den Button anklicken.</div>
+          <div>• <strong>AnkiConnect</strong>: Optionales Add-on <code>2055492159</code> für automatische Hintergrund-Updates während des Lernens.</div>
+        </div>
+
+        <!-- AnkiWeb Cloud Sync Box -->
+        <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+          <div class="form-label" style="margin-bottom: 0.4rem;">AnkiWeb Cloud-Synchronisation</div>
+          <div class="form-group" style="margin-bottom: 0.6rem;">
+            <input type="email" id="ankiWebEmailInputTab3" class="form-input" placeholder="AnkiWeb E-Mail (z. B. constantingrandidier@gmail.com)" value="constantingrandidier@gmail.com">
+          </div>
+          <button class="btn-secondary" id="btnSyncAnkiWebTab3" onclick="handleSyncAnkiWebFromTab3()" style="width: 100%;">
+            Mit AnkiWeb abgleichen
+          </button>
+          <div id="ankiWebSyncStatusTab3" style="margin-top: 0.5rem; font-size: 11px; color: var(--status-done); display: none;"></div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.6rem; margin: 1rem 0; color: var(--text-dim); font-size: 11px;">
+          <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+          <span>ODER DATEI IMPORTIEREN (.APKG / .TXT)</span>
+          <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+        </div>
+
+        <div class="dropzone-box" id="ankiDropzone">
+          <div class="dropzone-title">Anki-Deck (.apkg, .txt, .csv) hochladen</div>
+          <div class="dropzone-hint">Hier ablegen oder klicken</div>
+          <input type="file" id="ankiFileInput" accept=".apkg,.zip,.txt,.csv,.tsv" style="display: none;">
+        </div>
+
+        <!-- Anki Deck Summary Card -->
+        <div id="ankiDeckInfo" style="display: none; background: var(--bg-base); padding: 0.85rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); margin-top: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <strong id="ankiDeckName" style="color: var(--text-main); font-size: 12px;">--</strong>
+            <span class="status-badge badge-study" id="ankiTotalBadge">0 Karten</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.6rem;" id="ankiEstTime">
+            Geschätzte Wiederholungszeit: -- Min
+          </div>
+
+          <div style="font-size: 11px; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">
+            Erkannte Themen:
+          </div>
+          <div class="topic-list" id="ankiTopicsList" style="display: flex; flex-direction: column; gap: 0.35rem;"></div>
+
+          <button class="btn-primary" style="width: 100%; margin-top: 0.85rem;" id="btnOrchestrateStudy">
+            Lernstoff in freie Slots einplanen
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 4: Lecture ROI & Efficiency Analyzer -->
+      <div class="tab-content" id="tab-efficiency">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 1rem;">
+          Empirische Analyse: Spart dir der Vorlesungsbesuch mehr Wiederholungszeit ein als 90 Minuten Anwesenheit kosten?
+        </div>
+
+        <!-- Global Summary -->
+        <div id="efficiencyOverallCard" class="roi-summary-strip">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <span style="font-weight: 700; font-size: 12px; color: var(--text-main);" id="overallSpeedupBadge">2.3x Lerntempo</span>
+            <span style="font-size: 11px; color: var(--text-dim);">Globaler Schnitt</span>
+          </div>
+          <div class="roi-kpi-row">
+            <div class="roi-kpi-box">
+              <div class="form-label" style="margin-bottom: 0.15rem;">Mit Vorlesung</div>
+              <div style="font-weight: 700; font-size: 13px; color: var(--text-main);" id="overallWithLecture">-- s/Karte</div>
+              <div style="font-size: 11px; color: var(--status-done);" id="overallWithRet">--% Behalten</div>
+            </div>
+            <div class="roi-kpi-box">
+              <div class="form-label" style="margin-bottom: 0.15rem;">Ohne Vorlesung</div>
+              <div style="font-weight: 700; font-size: 13px; color: var(--text-main);" id="overallWithoutLecture">-- s/Karte</div>
+              <div style="font-size: 11px; color: var(--text-muted);" id="overallWithoutRet">--% Behalten</div>
+            </div>
+          </div>
+          <div class="roi-conclusion-box" id="overallConclusion">Lade Effizienzdaten...</div>
+        </div>
+
+        <!-- Modules ROI List -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span class="form-label" style="margin: 0;">Modul-Bewertungen</span>
+          <button class="btn-secondary" id="btnRefreshEfficiency" style="padding: 0.2rem 0.5rem; font-size: 10px;">Neu berechnen</button>
+        </div>
+        <div id="efficiencyModulesContainer" style="margin-bottom: 1.25rem;"></div>
+
+        <!-- Quick Log Form -->
+        <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+          <div style="font-weight: 600; font-size: 12px; color: var(--text-main); margin-bottom: 0.2rem;">Lerneinheit protokollieren</div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.65rem;">Erfasse deine Session, um die Vorlesungsempfehlungen zu schärfen.</div>
+
+          <div class="form-group">
+            <label class="form-label" for="logModuleInput">Modul</label>
+            <input type="text" id="logModuleInput" class="form-input" placeholder="z. B. Informatik I">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="logTopicInput">Thema</label>
+            <input type="text" id="logTopicInput" class="form-input" placeholder="z. B. Sortieralgorithmen">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="logCardsInput">Karten</label>
+              <input type="number" id="logCardsInput" class="form-input" value="80" min="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="logDurationInput">Minuten</label>
+              <input type="number" id="logDurationInput" class="form-input" value="25" min="1">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="logRetentionInput">Behalten (%)</label>
+              <input type="number" id="logRetentionInput" class="form-input" value="90" min="1" max="100">
+            </div>
+            <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
+              <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 11px; color: var(--text-main); cursor: pointer; padding-bottom: 0.5rem;">
+                <input type="checkbox" id="logLectureAttended" checked style="accent-color: var(--accent-blue);">
+                <span>Vorlesung besucht</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="btnSubmitStudyLog" style="width: 100%;">
+            Lerneinheit speichern
+          </button>
+        </div>
+
+        <!-- AnkiWeb Cloud Sync Box -->
+        <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.4rem; font-weight: 600; font-size: 12px; color: var(--text-main);">
+              <span>🌐</span> AnkiWeb Cloud-Telemetrie
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 0.2rem;" id="ankiWebSyncText">
+              Konto: <strong>constantingrandidier@gmail.com</strong> • 0% des 2. SJ Stoffes gemacht (9'633 offen)
+            </div>
+          </div>
+          <button class="btn-secondary" id="btnSyncAnkiWeb" onclick="handleSyncAnkiWeb()" style="font-size: 11px; padding: 0.35rem 0.75rem; display: flex; align-items: center; gap: 0.35rem;">
+            <span>⚡</span> AnkiWeb synchronisieren
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Anki Deck Tree Modal (AnkiWeb Hierarchical View) -->
+  <div id="ankiDeckTreeModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdropClick(event)">
+    <div class="deck-tree-modal" onclick="event.stopPropagation()">
+      <div class="deck-tree-header">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 22px;">📚</span>
+          <div>
+            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-main);">Anki-Deckhierarchie &amp; Lernstand</h3>
+            <div style="font-size: 11.5px; color: var(--text-dim);" id="deckTreeModalSub">
+              Strukturierte AnkiWeb-Baumansicht • 9'633 Ziel-Karten
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeAnkiDeckTreeModal()" title="Schliessen">✕</button>
+      </div>
+
+      <!-- Toolbar: Search & Expand/Collapse -->
+      <div class="deck-tree-toolbar">
+        <div class="deck-search-wrap">
+          <span style="opacity: 0.6;">🔍</span>
+          <input type="text" id="deckTreeSearchInput" placeholder="Deck oder Vorlesung suchen (z. B. Magen, Hämoglobin, Stockmann)..." oninput="handleFilterDeckTree(this.value)">
+        </div>
+        <div style="display: flex; gap: 0.4rem;">
+          <button type="button" class="btn-secondary" onclick="expandAllDeckTree()" style="font-size: 11px; padding: 0.3rem 0.65rem;">📂 Alles aufklappen</button>
+          <button type="button" class="btn-secondary" onclick="collapseAllDeckTree()" style="font-size: 11px; padding: 0.3rem 0.65rem;">📁 Alles zuklappen</button>
+        </div>
+      </div>
+
+      <!-- Tree Container with smooth scrolling -->
+      <div class="deck-tree-container" id="deckTreeContainer">
+        <!-- Dynamically rendered hierarchical tree -->
+      </div>
+
+      <div style="padding: 0.75rem 1.25rem; background: var(--bg-surface-elevated, #161b22); border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 11.5px; color: var(--text-muted);" id="deckTreeFooterStats">
+          140 Decks synchronisiert • 74.6% durch Vorlesungsfolien abgedeckt
+        </span>
+        <button type="button" class="btn-secondary" onclick="closeAnkiDeckTreeModal()" style="font-size: 11.5px; padding: 0.3rem 0.8rem;">
+          Schliessen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3: CURRICULUM SEMESTER ROADMAP MODAL -->
+  <div id="curriculumRoadmapModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdropClick(event)">
+    <div class="roadmap-modal-content" onclick="event.stopPropagation()">
+      <div class="roadmap-modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 24px;">🗺️</span>
+          <div>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main);">Didaktische Semester-Roadmap (2. Studienjahr)</h3>
+            <div style="font-size: 11.5px; color: var(--text-dim);" id="roadmapHeaderSub">
+              9'633 Karten • 111 Decks • 6 Module • 100 Karten/Tag • Examen: 19.01.2027
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeCurriculumRoadmapModal()" title="Schliessen">✕</button>
+      </div>
+
+      <!-- 6 Didactic Modules Overview Grid -->
+      <div class="roadmap-modules-grid" id="roadmapModulesGrid">
+        <!-- Dynamically rendered milestones -->
+      </div>
+
+      <!-- Roadmap Search & Filter Toolbar -->
+      <div class="deck-tree-toolbar" style="border-top: 1px solid var(--border-subtle);">
+        <div class="deck-search-wrap">
+          <span style="opacity: 0.6;">🔍</span>
+          <input type="text" id="roadmapSearchInput" placeholder="Roadmap durchsuchen (z. B. Tag 20, Herz, Magen, 2026-10-15)..." oninput="handleFilterRoadmap(this.value)">
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🏖️ Sonntage = Ruhetage</span>
+          <span>•</span>
+          <span>🎯 Mo-Sa = 100 Karten/Tag</span>
+        </div>
+      </div>
+
+      <!-- Days List -->
+      <div class="roadmap-days-list" id="roadmapDaysList">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div style="padding: 0.75rem 1.25rem; background: var(--bg-surface-elevated, #161b22); border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 11.5px; color: var(--text-muted);" id="roadmapFooterText">
+          Fertigstellung: 04.01.2027 • Revisionspuffer: 15 freie Tage vor Examen am 19.01.2027
+        </span>
+        <button type="button" class="btn-secondary" onclick="closeCurriculumRoadmapModal()" style="font-size: 11.5px; padding: 0.3rem 0.85rem;">
+          Schliessen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Toast Notification -->
+  <div class="toast" id="toastMessage">
+    <span id="toastText">Aktion erfolgreich</span>
+  </div>
+
+  <script src="/static/app.js?v=10.0"></script>
+</body>
+</html>

@@ -31,30 +31,27 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Network first for API calls, Cache first with network fallback for static assets
-  const url = new URL(event.request.url);
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return new Response(JSON.stringify({ error: 'Offline mode: server unavailable' }), {
-          headers: { 'Content-Type': 'application/json' }
+  // Strict Network-First for ALL requests (zero-stale guarantee)
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET') {
+          const resClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        // Fallback to cache only when offline
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          if (event.request.url.includes('/api/')) {
+            return new Response(JSON.stringify({ error: 'Offline mode: server unavailable' }), {
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+          return new Response('Offline', { headers: { 'Content-Type': 'text/plain' } });
         });
       })
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          // Fetch update in background
-          fetch(event.request).then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
-            }
-          }).catch(() => {});
-          return cachedResponse;
-        }
-        return fetch(event.request);
-      })
-    );
-  }
+  );
 });

@@ -25,6 +25,7 @@ class CalendarEvent(BaseModel):
     badge_color: Optional[str] = Field(None, description="Badge highlight color")
     matched_slide_filename: Optional[str] = Field(None, description="Filename of matching local lecture slide PDF")
     slide_coverage_pct: Optional[float] = Field(None, description="Measured percentage overlap with Anki cards")
+    is_mandatory: Optional[bool] = Field(False, description="True if mandatory in-person session with attendance check (Praktikum, Testat)")
 
     @property
     def start(self) -> datetime:

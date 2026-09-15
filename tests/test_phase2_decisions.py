@@ -30,8 +30,8 @@ def test_evaluate_lecture_ampel():
         duration_minutes=90,
     )
     assert anat["recommendation"] == "attend"
-    assert "Besuchen" in anat["badge_label"]
-    assert anat["badge_color"] == "#3fb950"
+    assert "OBLIGATORISCH" in anat["badge_label"]
+    assert anat["badge_color"] == "#a371f7"
     assert "Praktikum" in anat["reason"]
 
     # 1b. High Anki Failure Rate Lecture -> Stream 1.5x Focus

@@ -53,3 +53,51 @@ def test_api_backlog_triage_with_budget():
     data = resp.json()
     assert "budget_selected_topics" in data
     assert "budget_combined_anki_query" in data
+
+from app.services.daily_rhythm_service import (
+    generate_daily_science_rhythm,
+    is_mandatory_practical,
+    tag_event_mandatory_status,
+)
+from app.models import CalendarEvent
+from datetime import datetime
+
+def test_mandatory_practical_detection():
+    assert is_mandatory_practical("Praktikum klinische Anatomie") is True
+    assert is_mandatory_practical("Untersuchungskurs Kardiologie") is True
+    assert is_mandatory_practical("Vorlesung Physiologie Blut") is False
+    assert is_mandatory_practical("Testat Histologie") is True
+
+    ev = CalendarEvent(
+        title="Praktikum Hämatologie",
+        start_time=datetime(2026, 9, 15, 14, 0),
+        end_time=datetime(2026, 9, 15, 16, 0),
+    )
+    tagged = tag_event_mandatory_status(ev)
+    assert tagged.is_mandatory is True
+    assert tagged.badge_color == "#a371f7"
+    assert "OBLIGATORISCH" in tagged.badge_label
+
+def test_daily_science_rhythm_starts_at_830():
+    rhythm = generate_daily_science_rhythm(target_date=date(2026, 9, 15))
+    assert rhythm["start_time"] == "08:30"
+    blocks = rhythm["blocks"]
+    assert len(blocks) >= 6
+    # Block 1 starts at 08:30
+    assert blocks[0]["start_time"] == "08:30"
+    assert "Morgen-Repetitionen" in blocks[0]["title"]
+    # Pause 1 at 09:15
+    assert blocks[1]["start_time"] == "09:15"
+    assert blocks[1]["is_break"] is True
+    # Block 2 (New cards) starts at 09:30
+    assert blocks[2]["start_time"] == "09:30"
+    assert "100 Neue Karten" in blocks[2]["title"]
+
+def test_api_daily_rhythm_endpoint():
+    resp = client.get("/api/v1/schedule/daily-rhythm?target_date=2026-09-15")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["start_time"] == "08:30"
+    assert "blocks" in data
+    assert len(data["blocks"]) >= 6
+

@@ -1122,3 +1122,36 @@ def post_anki_workload_sync_endpoint(payload: dict):
     """Cache workload forecast state on cloud."""
     cache_workload_forecast(payload)
     return {"status": "ok", "cached": True}
+
+
+from app.services.daily_rhythm_service import generate_daily_science_rhythm
+
+@router.get(
+    "/daily-rhythm",
+    summary="Get 08:30 scientific daily study rhythm with mandatory practicals",
+    description="Calculates the science-backed study schedule starting at 08:30 AM (Active Recall -> Pause -> Deep Encoding -> Pause -> Concept Stream). Highlights mandatory UZH practicals in violet.",
+)
+def get_daily_rhythm_endpoint(target_date: Optional[str] = Query(None, description="Target date YYYY-MM-DD")):
+    """Returns the 08:30 scientific study schedule for the student."""
+    t_date = None
+    if target_date:
+        try:
+            t_date = datetime.strptime(target_date, "%Y-%m-%d").date()
+        except ValueError:
+            pass
+    t_date = t_date or date.today()
+    
+    from app.db import repository
+    events_raw = repository.get_events_for_date(t_date) if hasattr(repository, "get_events_for_date") else []
+    cal_events = [CalendarEvent(**e) for e in events_raw] if events_raw else []
+
+    from app.services.anki_desktop_sync import read_live_anki_desktop_state
+    anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
+    due_today = anki_st.get("due_today_count", 100) or 100
+    
+    return generate_daily_science_rhythm(
+        target_date=t_date,
+        events=cal_events,
+        cards_due_today=due_today,
+        new_cards_target=100,
+    )

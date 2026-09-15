@@ -247,8 +247,8 @@ def evaluate_lecture_value(
     if any(k in combined for k in mandatory_in_person_keywords):
         recommendation = "attend"
         recommended_mode = "live"
-        badge_label = "🏛️ Präsenzpflicht UZH (Besuchen)"
-        badge_color = "#3fb950"
+        badge_label = "🏛️ OBLIGATORISCH (Präsenzpflicht)"
+        badge_color = "#a371f7"  # Distinct bright violet for mandatory UZH practicals
         reason = (
             "Offizielles Praktikum / Testatkurs an der UZH. Hier gilt Anwesenheitspflicht vor Ort! "
             "Praktische Fertigkeiten (Untersuchung, Perkussion, Palpation, Präparation) lassen sich nicht digital ersetzen."

@@ -545,6 +545,30 @@
         <div id="rolloverScheduleList" style="display: flex; flex-direction: column; gap: 0.35rem;"></div>
       </div>
 
+      <!-- Wissenschaftliches Zeitorchester (Start 08:30 Uhr) -->
+      <div id="scienceRhythmBox" style="background: rgba(13, 17, 23, 0.95); border: 1px solid rgba(88, 166, 255, 0.25); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <strong style="color: #58a6ff; font-size: 13px;">⏱️ Wissenschaftliches Zeitorchester</strong>
+            <span style="padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10.5px; font-weight: 600; background: rgba(56, 139, 253, 0.15); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.3);">
+              Lernstart: 08:30 Uhr
+            </span>
+          </div>
+          <span style="font-size: 11px; color: var(--text-muted);" id="scienceRhythmCurrentIndicator">
+            Active Recall &bull; Deep Encoding
+          </span>
+        </div>
+
+        <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 0.65rem; line-height: 1.4;">
+          Wissenschaftlicher Rhythmus für maximales Auswendiglernen: Zuerst Altkarten abräumen (Active Recall), dann nach einer Bildschirmpause 100 neue Karten tief einprägen (Deep Encoding). Sport findet abends statt.
+        </div>
+
+        <!-- Schedule Blocks Container -->
+        <div id="scienceRhythmBlocksContainer" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <!-- Dynamically populated from /schedule/daily-rhythm -->
+        </div>
+      </div>
+
       <!-- Interactive Timeline List Container -->
       <div class="timeline-container" id="timelineContainer">
         <div style="text-align: center; color: var(--text-dim); padding: 2.5rem 0; font-size: 12px;">

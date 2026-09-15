@@ -218,6 +218,7 @@ function stepDate(delta) {
   loadAnkiWeaknesses();
   loadCurriculumToday();
   loadAnkiDesktopStatus();
+  loadScienceRhythm(nextIso);
 }
 
 function goToToday() {
@@ -235,6 +236,7 @@ function goToToday() {
   loadAnkiWeaknesses();
   loadCurriculumToday();
   loadAnkiDesktopStatus();
+  loadScienceRhythm(todayIso);
 }
 
 // Initialize Application
@@ -885,27 +887,30 @@ function renderTimeline() {
     const eDate = new Date(e);
     const durationMin = Math.max(15, Math.round((eDate - sDate) / 60000)) || 45;
 
+    const isMandatory = (ev.is_mandatory === true) || /praktikum|untersuchungskurs|präparier|praeparier|visite|testat|klinischer|blockkurs|skills lab/i.test(ev.title || '');
+
     allBlocks.push({
       id: id,
       eventId: ev.id,
       eventIndex: idx,
       type: 'lecture',
-      typeClass: 'type-lecture',
+      typeClass: isMandatory ? 'type-mandatory-practical' : 'type-lecture',
       isTask: true,
+      isMandatory: isMandatory,
       title: ev.title,
       start: s,
       end: e,
       durationMinutes: durationMin,
-      desc: ev.location ? `Ort: ${ev.location}` : (ev.description || 'Reguläre Lehrveranstaltung'),
-      tag: 'Vorlesung',
-      badgeClass: 'badge-lecture',
+      desc: ev.location ? `Ort: ${ev.location}` : (ev.description || (isMandatory ? 'Offizielles Pflicht-Praktikum (Präsenz vor Ort)' : 'Reguläre Lehrveranstaltung')),
+      tag: isMandatory ? 'Praktikum' : 'Vorlesung',
+      badgeClass: isMandatory ? 'badge-mandatory' : 'badge-lecture',
       completed: !!state.taskCompletions[id],
-      recommendation: ev.recommendation || 'stream',
-      recommendation_reason: ev.recommendation_reason || '',
-      badge_label: ev.badge_label || '',
-      badge_color: ev.badge_color || '',
-      consumption_mode: ev.consumption_mode || 'live_1_0',
-      speed_factor: ev.speed_factor || 1.0,
+      recommendation: isMandatory ? 'attend' : (ev.recommendation || 'stream'),
+      recommendation_reason: isMandatory ? 'Offizielles Praktikum / Testatkurs an der UZH. Hier gilt Anwesenheitspflicht vor Ort!' : (ev.recommendation_reason || ''),
+      badge_label: isMandatory ? '🏛️ OBLIGATORISCH (Präsenzpflicht)' : (ev.badge_label || ''),
+      badge_color: isMandatory ? '#a371f7' : (ev.badge_color || ''),
+      consumption_mode: isMandatory ? 'live' : (ev.consumption_mode || 'live_1_0'),
+      speed_factor: isMandatory ? 1.0 : (ev.speed_factor || 1.0),
       time_saved_minutes: ev.time_saved_minutes || 0,
       matched_slide_filename: ev.matched_slide_filename || null,
       slide_coverage_pct: ev.slide_coverage_pct !== undefined ? ev.slide_coverage_pct : null,
@@ -1011,7 +1016,13 @@ function renderTimeline() {
 
     const card = document.createElement('div');
     const compClass = block.completed ? 'completed' : '';
-    card.className = `task-card ${block.typeClass} ${compClass}`;
+    const isMandatory = block.isMandatory || block.typeClass === 'type-mandatory-practical';
+    const mandatoryClass = isMandatory ? 'mandatory-practical' : '';
+    card.className = `task-card ${block.typeClass} ${compClass} ${mandatoryClass}`;
+    if (isMandatory) {
+      card.style.borderLeft = '4px solid #a371f7';
+      card.style.background = 'rgba(163, 113, 247, 0.08)';
+    }
 
     // Lecture ROI advice snippet
     let lectureRoiSnippet = '';
@@ -3336,6 +3347,61 @@ function selectForecastDay(dayIdx) {
   `;
 }
 
+// ============================================================================
+// PHASE 6: 08:30 SCIENTIFIC STUDY RHYTHM & MANDATORY PRACTICALS
+// ============================================================================
+
+async function loadScienceRhythm(targetDate) {
+  const container = document.getElementById('scienceRhythmBlocksContainer');
+  if (!container) return;
+
+  const dateStr = targetDate || state.targetDate || '';
+  try {
+    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    renderScienceRhythm(data);
+  } catch (err) {
+    console.warn('Daily science rhythm fetch failed:', err);
+  }
+}
+
+function renderScienceRhythm(data) {
+  const container = document.getElementById('scienceRhythmBlocksContainer');
+  if (!container || !data || !data.blocks) return;
+
+  let html = '';
+  data.blocks.forEach(b => {
+    const isBreak = b.is_break;
+    const isMandatory = b.is_mandatory;
+    const borderLeft = isMandatory ? '4px solid #a371f7' : (isBreak ? '3px solid #3fb950' : `3px solid ${b.color}`);
+    const bg = isMandatory ? 'rgba(163, 113, 247, 0.12)' : (isBreak ? 'rgba(63, 185, 80, 0.04)' : 'rgba(255, 255, 255, 0.02)');
+
+    html += `
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); border-left: ${borderLeft}; background: ${bg}; gap: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; min-width: 0;">
+          <span style="font-size: 14px;">${b.icon}</span>
+          <div style="min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+              <strong style="color: ${isMandatory ? '#d2a8ff' : '#e6edf3'}; font-size: 11.5px;">${escapeHtml(b.title)}</strong>
+              ${b.badge ? `<span style="font-size: 9px; padding: 0.06rem 0.3rem; border-radius: 3px; font-weight: 600; background: ${b.color}25; color: ${b.color}; border: 1px solid ${b.color}40;">${escapeHtml(b.badge)}</span>` : ''}
+            </div>
+            <div style="font-size: 10.5px; color: var(--text-muted); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 500px;">
+              ${escapeHtml(b.description)}
+            </div>
+          </div>
+        </div>
+        <div style="text-align: right; flex-shrink: 0; font-family: monospace; font-size: 11px; color: #8b949e;">
+          <strong style="color: #c9d1d9;">${b.start_time} - ${b.end_time}</strong>
+          <div style="font-size: 9.5px; color: var(--text-muted);">${b.duration_minutes}m</div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
 // Global window bindings for inline HTML onclicks
 window.handleQuickAddCards = handleQuickAddCards;
 window.handleMarkAllTargetDone = handleMarkAllTargetDone;
@@ -3365,6 +3431,7 @@ window.copyAnkiQuery = copyAnkiQuery;
 window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
 window.loadWorkloadForecast = loadWorkloadForecast;
 window.selectForecastDay = selectForecastDay;
+window.loadScienceRhythm = loadScienceRhythm;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {
@@ -3378,11 +3445,13 @@ if (document.readyState === 'loading') {
     init();
     loadAnkiDesktopStatus(false);
     loadWorkloadForecast(false);
+    loadScienceRhythm();
   });
 } else {
   init();
   loadAnkiDesktopStatus(false);
   loadWorkloadForecast(false);
+  loadScienceRhythm();
 }
 
 

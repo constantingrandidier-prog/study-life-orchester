@@ -9,16 +9,17 @@ from app.core.config import settings
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
+import asyncio
 from contextlib import asynccontextmanager
 from app.services.curriculum_roadmap_service import generate_curriculum_roadmap
 
 @asynccontextmanager
 async def lifespan(app_instance: FastAPI):
-    # Pre-warm curriculum roadmap in background so requests respond in <5ms
+    # Non-blocking pre-warm: opens HTTP socket instantly so health checks & browser never wait
     try:
-        generate_curriculum_roadmap()
+        asyncio.create_task(asyncio.to_thread(generate_curriculum_roadmap))
     except Exception as e:
-        print("Roadmap pre-warm note:", e)
+        print("Roadmap pre-warm scheduling note:", e)
     yield
 
 app = FastAPI(

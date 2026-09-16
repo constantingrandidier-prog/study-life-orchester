@@ -633,11 +633,24 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
     return None
 
 
+ROADMAP_CACHE_FILE = Path(__file__).resolve().parent.parent / "data" / "cached_curriculum_roadmap.json"
+
 def generate_curriculum_roadmap() -> Dict[str, Any]:
     """Generate the full deterministic semester roadmap for 2. Studienjahr with concept chunking and lecture synergy."""
     global _CACHED_ROADMAP
     if _CACHED_ROADMAP is not None:
         return _CACHED_ROADMAP
+
+    # Instant load from disk cache (sub-5ms startup guarantee)
+    if ROADMAP_CACHE_FILE.exists():
+        try:
+            with open(ROADMAP_CACHE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if data and "schedule" in data and len(data["schedule"]) > 50:
+                    _CACHED_ROADMAP = data
+                    return _CACHED_ROADMAP
+        except Exception as e:
+            print("Roadmap disk cache read note:", e)
 
     decks = get_all_curriculum_decks()
     total_curriculum_cards = sum(d["card_count"] for d in decks)
@@ -949,6 +962,13 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
         "modules": milestones,
         "schedule": schedule_days,
     }
+
+    try:
+        ROADMAP_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(ROADMAP_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(_CACHED_ROADMAP, f, ensure_ascii=False)
+    except Exception as e:
+        print("Roadmap disk cache write notice:", e)
 
     return _CACHED_ROADMAP
 

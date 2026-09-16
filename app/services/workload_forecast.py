@@ -45,15 +45,18 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
     for did, dname in cur.execute("SELECT id, name FROM decks").fetchall():
         decks[did] = clean_deck_name(dname)
 
-    # Fetch daily due sums and deck breakdown for the next N days
+    # Fetch daily due sums and deck breakdown for the next N days.
+    # Group any overdue cards (due <= curr_day) and active learning cards (queue=1) into today's bucket.
     sql_due = """
-    SELECT c.due, c.did, COUNT(*) as card_count
+    SELECT CASE WHEN c.due <= ? THEN ? ELSE c.due END as effective_due,
+           c.did,
+           COUNT(*) as card_count
     FROM cards c
-    WHERE c.queue = 2 AND c.due >= ? AND c.due <= ?
-    GROUP BY c.due, c.did
-    ORDER BY c.due ASC, card_count DESC
+    WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1)
+    GROUP BY effective_due, c.did
+    ORDER BY effective_due ASC, card_count DESC
     """
-    rows = cur.execute(sql_due, (curr_day, end_day)).fetchall()
+    rows = cur.execute(sql_due, (curr_day, curr_day, end_day)).fetchall()
 
     day_data: Dict[int, Dict[str, Any]] = {}
     for offset in range(days_ahead + 1):

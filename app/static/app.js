@@ -3275,7 +3275,7 @@ let currentForecastData = null;
 
 async function loadWorkloadForecast(showFeedback = false) {
   try {
-    const res = await fetch('/api/v1/schedule/anki/workload-forecast');
+    const res = await fetch(`/api/v1/schedule/anki/workload-forecast?_t=${Date.now()}`);
     if (!res.ok) return;
     const data = await res.json();
     currentForecastData = data;
@@ -3291,20 +3291,31 @@ async function loadWorkloadForecast(showFeedback = false) {
 function renderWorkloadForecast(data) {
   if (!data || !data.days) return;
 
-  const totalEl = document.getElementById('forecastTotalVal');
-  const avgEl = document.getElementById('forecastAvgVal');
-  const peakEl = document.getElementById('forecastPeakVal');
-  const spikeBadge = document.getElementById('forecastSpikeBadge');
-  const adviceEl = document.getElementById('forecastAdviceText');
-  const container = document.getElementById('forecastBarsContainer');
+  const totalText = `${data.total_due_14d || 0} Karten`;
+  const avgText = `${Math.round(data.average_daily_due || 0)}`;
+  const peakText = `${data.max_day_cards || 0} max`;
+  const adviceText = data.smoothing_advice || 'Workload stabil.';
 
-  if (totalEl) totalEl.textContent = `${data.total_due_14d || 0} Karten`;
-  if (avgEl) avgEl.textContent = `${Math.round(data.average_daily_due || 0)}`;
-  if (peakEl) peakEl.textContent = `${data.max_day_cards || 0} max`;
-  if (spikeBadge) spikeBadge.style.display = data.has_spike ? 'inline-block' : 'none';
-  if (adviceEl) adviceEl.textContent = data.smoothing_advice || 'Workload stabil.';
-
-  if (!container) return;
+  ['forecastTotalVal', 'pageForecastTotalVal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = totalText;
+  });
+  ['forecastAvgVal', 'pageForecastAvgVal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = avgText;
+  });
+  ['forecastPeakVal', 'pageForecastPeakVal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = peakText;
+  });
+  ['forecastSpikeBadge', 'pageForecastSpikeBadge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = data.has_spike ? 'inline-block' : 'none';
+  });
+  ['forecastAdviceText', 'pageForecastAdviceText'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = adviceText;
+  });
 
   const maxVal = Math.max(data.max_day_cards || 1, 100);
   const trackHeight = 55; // max height in pixels
@@ -3318,7 +3329,7 @@ function renderWorkloadForecast(data) {
     const dayLabel = isToday ? 'Heute' : (isTomorrow ? 'Morgen' : day.day_name);
 
     html += `
-      <div onclick="selectForecastDay(${idx})" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; cursor: pointer; position: relative; height: 100%; group" title="${day.formatted_date}: ${cnt} Wiederholungen">
+      <div onclick="selectForecastDay(${idx})" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; cursor: pointer; position: relative; height: 100%;" title="${day.formatted_date}: ${cnt} Wiederholungen">
         <span style="font-size: 9.5px; font-weight: 600; color: ${cnt > 0 ? '#e6edf3' : 'var(--text-muted)'}; margin-bottom: 2px;">
           ${cnt > 0 ? cnt : ''}
         </span>
@@ -3330,7 +3341,10 @@ function renderWorkloadForecast(data) {
     `;
   });
 
-  container.innerHTML = html;
+  ['forecastBarsContainer', 'pageForecastBarsContainer'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  });
 }
 
 function selectForecastDay(dayIdx) {
@@ -3338,17 +3352,23 @@ function selectForecastDay(dayIdx) {
   const day = currentForecastData.days[dayIdx];
   if (!day) return;
 
-  const drawer = document.getElementById('forecastSelectedDayDrawer');
-  if (!drawer) return;
+  const drawers = [
+    document.getElementById('forecastSelectedDayDrawer'),
+    document.getElementById('pageForecastSelectedDayDrawer')
+  ].filter(Boolean);
+
+  if (drawers.length === 0) return;
 
   if (day.total_due === 0) {
-    drawer.style.display = 'block';
-    drawer.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: #3fb950; font-weight: 600;">📅 ${day.formatted_date}: Keine Repetitionen fällig</span>
-        <button type="button" onclick="document.getElementById('forecastSelectedDayDrawer').style.display='none'" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
-      </div>
-    `;
+    drawers.forEach(d => {
+      d.style.display = 'block';
+      d.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #3fb950; font-weight: 600;">📅 ${day.formatted_date}: Keine Repetitionen fällig</span>
+          <button type="button" onclick="closeForecastDrawers()" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
+        </div>
+      `;
+    });
     return;
   }
 
@@ -3359,17 +3379,27 @@ function selectForecastDay(dayIdx) {
     </div>
   `).join('');
 
-  drawer.style.display = 'block';
-  drawer.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; margin-bottom: 4px;">
-      <span style="font-weight: 600; color: ${day.level_color};">📅 ${day.formatted_date}: ${day.total_due} Karten fällig (${day.workload_level})</span>
-      <button type="button" onclick="document.getElementById('forecastSelectedDayDrawer').style.display='none'" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 2px; max-height: 120px; overflow-y: auto;">
-      ${breakdownHtml}
-    </div>
-  `;
+  drawers.forEach(d => {
+    d.style.display = 'block';
+    d.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; margin-bottom: 4px;">
+        <span style="font-weight: 600; color: ${day.level_color};">📅 ${day.formatted_date}: ${day.total_due} Karten fällig (${day.workload_level})</span>
+        <button type="button" onclick="closeForecastDrawers()" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px; max-height: 120px; overflow-y: auto;">
+        ${breakdownHtml}
+      </div>
+    `;
+  });
 }
+
+function closeForecastDrawers() {
+  ['forecastSelectedDayDrawer', 'pageForecastSelectedDayDrawer'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+}
+window.closeForecastDrawers = closeForecastDrawers;
 
 // ============================================================================
 // PHASE 6: 08:30 SCIENTIFIC STUDY RHYTHM & MANDATORY PRACTICALS
@@ -4058,16 +4088,10 @@ async function renderPageRoadmap() {
 }
 
 async function renderPageAnalytics() {
-  const barsContainer = document.getElementById('pageForecastBarsContainer');
-  const modalBars = document.getElementById('forecastBarsContainer');
-  if (barsContainer && modalBars && modalBars.children.length > 0) {
-    barsContainer.innerHTML = modalBars.innerHTML;
-  }
-
-  const adviceFooter = document.getElementById('pageForecastAdviceFooter');
-  const modalAdvice = document.getElementById('forecastAdviceFooter');
-  if (adviceFooter && modalAdvice) {
-    adviceFooter.innerHTML = modalAdvice.innerHTML;
+  if (currentForecastData) {
+    renderWorkloadForecast(currentForecastData);
+  } else {
+    await loadWorkloadForecast(false);
   }
 
   const pageTree = document.getElementById('pageDeckTreeContainer');

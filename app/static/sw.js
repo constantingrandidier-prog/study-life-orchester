@@ -1,4 +1,4 @@
-const CACHE_NAME = 'study-life-orchester-v11';
+const CACHE_NAME = 'study-life-orchester-v12';
 const STATIC_ASSETS = [
   '/',
   '/static/style.css',

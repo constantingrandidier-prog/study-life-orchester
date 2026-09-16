@@ -1,0 +1,1202 @@
+[
+  {
+    "deck_id": 1789378222942,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Einführung und Abschluss Atmung",
+    "card_count": 40,
+    "new_cards": 40,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222950,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Atmung_Physiologie_Wenger",
+    "card_count": 292,
+    "new_cards": 292,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222966,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Lungen- und Zwerchfellentwicklung / Sommer",
+    "card_count": 28,
+    "new_cards": 28,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222967,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Einführung und Abschluss",
+    "card_count": 23,
+    "new_cards": 0,
+    "mastered_cards": 23,
+    "learning_cards": 0,
+    "is_completed": true,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222968,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+    "card_count": 41,
+    "new_cards": 41,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222969,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Sommer :: 3 Bauchfellverhältnisse  ⚫",
+    "card_count": 141,
+    "new_cards": 141,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222970,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+    "card_count": 165,
+    "new_cards": 165,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222971,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 3 Wagner+ :: Regulation des Ca- und Phosphatstoffwechsels / Wagner",
+    "card_count": 97,
+    "new_cards": 97,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222972,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 3 Wagner+ :: Nebennierenphysiologie / Wagner",
+    "card_count": 49,
+    "new_cards": 49,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222973,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Kauen, Schmecken, Riechen / Wagner",
+    "card_count": 69,
+    "new_cards": 69,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222974,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Schlucken, Propulsion Peristaltik des Oesophagus / Wagner",
+    "card_count": 18,
+    "new_cards": 18,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222975,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Magenfüllung und Magensaftsekretion / Wagner",
+    "card_count": 42,
+    "new_cards": 42,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222976,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Exokrine Pankreasfunktion / Wagner",
+    "card_count": 34,
+    "new_cards": 34,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222977,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Leber, Gallenproduktion und -sekretion / Wagner",
+    "card_count": 46,
+    "new_cards": 46,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222978,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Dünndarmfunktion: Verdauung und Absoption / Wagner",
+    "card_count": 44,
+    "new_cards": 44,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222979,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Dickdarmfunktion: Verdauung, Absorption, Defäkation / Wagner",
+    "card_count": 39,
+    "new_cards": 39,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222980,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Hunger und Sättigung / Wagner",
+    "card_count": 39,
+    "new_cards": 39,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222981,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Wagner :: Regulation und Koordination der Verdauung / Wagner",
+    "card_count": 30,
+    "new_cards": 30,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222982,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+    "card_count": 285,
+    "new_cards": 285,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222983,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne Teil 2 / Stockmann",
+    "card_count": 250,
+    "new_cards": 250,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222984,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+    "card_count": 50,
+    "new_cards": 0,
+    "mastered_cards": 50,
+    "learning_cards": 0,
+    "is_completed": true,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222985,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
+    "card_count": 123,
+    "new_cards": 123,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222986,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+    "card_count": 50,
+    "new_cards": 50,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222987,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+    "card_count": 172,
+    "new_cards": 172,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222988,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
+    "card_count": 173,
+    "new_cards": 173,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222989,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+    "card_count": 132,
+    "new_cards": 85,
+    "mastered_cards": 47,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": true
+  },
+  {
+    "deck_id": 1789378222990,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Sommer :: Gefässentwicklung / Sommer",
+    "card_count": 25,
+    "new_cards": 25,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222991,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 3 Wagner+ :: Schilddrüsenhormone / Wagner",
+    "card_count": 63,
+    "new_cards": 63,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222992,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Sommer :: Herzentwicklung / Sommer",
+    "card_count": 37,
+    "new_cards": 37,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222993,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+    "card_count": 24,
+    "new_cards": 24,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222994,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+    "card_count": 76,
+    "new_cards": 76,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222995,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+    "card_count": 79,
+    "new_cards": 79,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222996,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+    "card_count": 63,
+    "new_cards": 63,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222997,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
+    "card_count": 35,
+    "new_cards": 0,
+    "mastered_cards": 35,
+    "learning_cards": 0,
+    "is_completed": true,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222998,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
+    "card_count": 324,
+    "new_cards": 324,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378222999,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
+    "card_count": 71,
+    "new_cards": 71,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223000,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+    "card_count": 52,
+    "new_cards": 52,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223001,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+    "card_count": 54,
+    "new_cards": 54,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223002,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
+    "card_count": 120,
+    "new_cards": 120,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223003,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
+    "card_count": 70,
+    "new_cards": 70,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223004,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu",
+    "card_count": 43,
+    "new_cards": 43,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223005,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Lymphsystem / Loffing",
+    "card_count": 19,
+    "new_cards": 19,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223006,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Mediastinum und Perikard / Loffing",
+    "card_count": 61,
+    "new_cards": 61,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223007,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing",
+    "card_count": 62,
+    "new_cards": 62,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223008,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+    "card_count": 104,
+    "new_cards": 104,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223009,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
+    "card_count": 50,
+    "new_cards": 50,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223010,
+    "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+    "card_count": 212,
+    "new_cards": 212,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223013,
+    "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
+    "card_count": 133,
+    "new_cards": 133,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223014,
+    "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+    "card_count": 125,
+    "new_cards": 125,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223015,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Lunge / Loffing",
+    "card_count": 201,
+    "new_cards": 201,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223016,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
+    "card_count": 233,
+    "new_cards": 233,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223017,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+    "card_count": 64,
+    "new_cards": 64,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223018,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+    "card_count": 52,
+    "new_cards": 52,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223019,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
+    "card_count": 68,
+    "new_cards": 68,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223020,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
+    "card_count": 72,
+    "new_cards": 72,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223021,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+    "card_count": 197,
+    "new_cards": 197,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223022,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+    "card_count": 97,
+    "new_cards": 97,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223023,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 1 Jelezarov :: 1 Einführung Hormone",
+    "card_count": 71,
+    "new_cards": 71,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223024,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing",
+    "card_count": 50,
+    "new_cards": 50,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223025,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Trachea und Bronchien / Loffing",
+    "card_count": 68,
+    "new_cards": 68,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223026,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak :: Das angeborene und erworbene Immunsystem",
+    "card_count": 42,
+    "new_cards": 42,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223027,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak :: Rekombination adaptiver Immunrezeptoren",
+    "card_count": 20,
+    "new_cards": 20,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223028,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak :: Zellentstehung und Reifung",
+    "card_count": 59,
+    "new_cards": 59,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223029,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak :: Immuntoleranz",
+    "card_count": 20,
+    "new_cards": 20,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223030,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak :: Autoimmunität und Entzündung",
+    "card_count": 32,
+    "new_cards": 32,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223031,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak :: Monoklonale Antikörper in Diagnostik und Therapie",
+    "card_count": 22,
+    "new_cards": 22,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223032,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing",
+    "card_count": 222,
+    "new_cards": 222,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223033,
+    "deck_name": "2. SJ - 1 :: TB Atmung :: Atmung_Physiologie_Wenger :: Energieumsatz & Thermoregulation ⚫",
+    "card_count": 93,
+    "new_cards": 93,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223034,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
+    "card_count": 36,
+    "new_cards": 36,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223035,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: Einführung/Abschluss :: Einführung",
+    "card_count": 31,
+    "new_cards": 31,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223036,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
+    "card_count": 50,
+    "new_cards": 50,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223037,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Sommer :: 2 Gesichtsentwicklung ⚫",
+    "card_count": 109,
+    "new_cards": 109,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223038,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
+    "card_count": 77,
+    "new_cards": 77,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223039,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 4 Sommer :: 1 Entwicklung endokriner Organe",
+    "card_count": 59,
+    "new_cards": 59,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223040,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
+    "card_count": 120,
+    "new_cards": 120,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223041,
+    "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
+    "card_count": 57,
+    "new_cards": 57,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223042,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 2 Hall :: 1 Disseminiertes endokrines System ⚫",
+    "card_count": 66,
+    "new_cards": 66,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223043,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 1 Jelezarov :: 2 Hormone des endokrinen Pankreas",
+    "card_count": 74,
+    "new_cards": 74,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223044,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 2 Hall :: 4 Nebennieren  🟢",
+    "card_count": 43,
+    "new_cards": 43,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223045,
+    "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+    "card_count": 130,
+    "new_cards": 130,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223046,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 1 Jelezarov :: 3 Hypothalamische und hypophyäre Hormone 🟢",
+    "card_count": 130,
+    "new_cards": 130,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223047,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 1 Jelezarov :: 5 Steroidhormone Nebennierenrinde  ⚫",
+    "card_count": 125,
+    "new_cards": 125,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223048,
+    "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
+    "card_count": 109,
+    "new_cards": 109,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223049,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 1 Jelezarov :: 6 Katecholamine",
+    "card_count": 82,
+    "new_cards": 82,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223050,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: Einführung/Abschluss :: Abschluss",
+    "card_count": 21,
+    "new_cards": 21,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223051,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 2 Hall :: 3 Hypothalamo-hypophysäres System 🟢",
+    "card_count": 133,
+    "new_cards": 133,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223052,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Lukic :: 1 Kaumuskelbeschwerden ⚫",
+    "card_count": 19,
+    "new_cards": 19,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223054,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 2 Hall :: 2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
+    "card_count": 112,
+    "new_cards": 112,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223055,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Sommer :: 1 Schlunddarmentwicklung ⚫",
+    "card_count": 123,
+    "new_cards": 123,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223056,
+    "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
+    "card_count": 48,
+    "new_cards": 48,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223057,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Oesophagus bis Dünndarm :: Oesophagus und Magen / Stockmann",
+    "card_count": 227,
+    "new_cards": 227,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223059,
+    "deck_name": "2. SJ - 1 :: TB Endokrinologie :: 2 Hall :: 4 Nebennieren  🟢 :: 3 Nebennieren 🟢",
+    "card_count": 90,
+    "new_cards": 90,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223060,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Oesophagus bis Dünndarm :: Dünndarm / Stockmann",
+    "card_count": 93,
+    "new_cards": 93,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223061,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+    "card_count": 56,
+    "new_cards": 56,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223062,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+    "card_count": 142,
+    "new_cards": 142,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223063,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
+    "card_count": 137,
+    "new_cards": 137,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223064,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+    "card_count": 131,
+    "new_cards": 131,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378223065,
+    "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
+    "card_count": 42,
+    "new_cards": 42,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254591,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Aminosäuren",
+    "card_count": 40,
+    "new_cards": 40,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254602,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: 2. Zeichnen",
+    "card_count": 38,
+    "new_cards": 38,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254605,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: PCR und Restriktion :: Versuch",
+    "card_count": 11,
+    "new_cards": 11,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254606,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Enzymkinetik :: Theorie",
+    "card_count": 39,
+    "new_cards": 39,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254607,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Verdauungsenzyme :: Versuch",
+    "card_count": 25,
+    "new_cards": 25,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254608,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Enzymaktivität :: Theorie",
+    "card_count": 52,
+    "new_cards": 52,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254611,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Photometrieren :: Theorie",
+    "card_count": 87,
+    "new_cards": 87,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254620,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Proteinreinigung :: Versuch",
+    "card_count": 13,
+    "new_cards": 13,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254621,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Hämoglobin :: Versuch",
+    "card_count": 21,
+    "new_cards": 21,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254622,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Enzymaktivität :: Versuch",
+    "card_count": 25,
+    "new_cards": 25,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254623,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: SDS-Page :: Theorie",
+    "card_count": 64,
+    "new_cards": 64,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254625,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Bakteriologie :: Theorie",
+    "card_count": 89,
+    "new_cards": 89,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254626,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Verdauungsenzyme :: Theorie",
+    "card_count": 84,
+    "new_cards": 84,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254627,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: PCR und Restriktion :: Theorie",
+    "card_count": 52,
+    "new_cards": 52,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254628,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Bakteriologie :: Versuch",
+    "card_count": 21,
+    "new_cards": 21,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254629,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: SDS-Page :: Versuch",
+    "card_count": 16,
+    "new_cards": 16,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254630,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Enzymkinetik :: Versuch",
+    "card_count": 12,
+    "new_cards": 12,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254631,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Proteinreinigung :: Theorie",
+    "card_count": 91,
+    "new_cards": 91,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254632,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Pufferlösungen :: Theorie",
+    "card_count": 54,
+    "new_cards": 54,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254633,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Pufferlösungen :: Versuch",
+    "card_count": 22,
+    "new_cards": 22,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254634,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Photometrieren :: Versuch",
+    "card_count": 17,
+    "new_cards": 17,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  },
+  {
+    "deck_id": 1789378254635,
+    "deck_name": "Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: Hämoglobin :: Theorie",
+    "card_count": 74,
+    "new_cards": 74,
+    "mastered_cards": 0,
+    "learning_cards": 0,
+    "is_completed": false,
+    "is_in_progress": false
+  }
+]

@@ -6,6 +6,7 @@ with Sundays as rest days, and linking each topic to real lecture slides.
 """
 
 from datetime import date, datetime, timedelta
+import json
 import os
 from pathlib import Path
 import re
@@ -338,51 +339,67 @@ def _get_anki_collection_path() -> Optional[Path]:
 
 
 def _extract_decks_from_anki() -> List[Dict[str, Any]]:
-    """Query real Anki database for the 2. Studienjahr deck hierarchy and actual card completion stats."""
+    """Query real Anki database for the 2. Studienjahr deck hierarchy and actual card completion stats.
+    Falls back to committed snapshot (app/data/curriculum_anki_snapshot.json) when running in cloud/Render.
+    """
+    snapshot_path = Path(__file__).resolve().parent.parent / "data" / "curriculum_anki_snapshot.json"
     anki_db = _get_anki_collection_path()
-    if not anki_db or not anki_db.exists():
-        return []
+    if anki_db and anki_db.exists():
+        uri = f"file:///{anki_db.as_posix()}?mode=ro&immutable=1"
+        try:
+            conn = sqlite3.connect(uri, uri=True)
+            # Handle unicase collation used by Anki schema
+            conn.create_collation("unicase", lambda a, b: 0)
 
-    uri = f"file:///{anki_db.as_posix()}?mode=ro&immutable=1"
-    try:
-        conn = sqlite3.connect(uri, uri=True)
-        # Handle unicase collation used by Anki schema
-        conn.create_collation("unicase", lambda a, b: 0)
+            # Get all decks
+            d_map = dict(conn.execute("SELECT id, name FROM decks").fetchall())
+            card_stats = conn.execute("""
+                SELECT did,
+                       count(*) as total,
+                       sum(case when reps = 0 and queue = 0 then 1 else 0 end) as new_cnt,
+                       sum(case when reps > 0 then 1 else 0 end) as mastered_cnt,
+                       sum(case when queue in (1, 3) then 1 else 0 end) as learning_cnt
+                FROM cards
+                GROUP BY did
+            """).fetchall()
+            conn.close()
 
-        # Get all decks
-        d_map = dict(conn.execute("SELECT id, name FROM decks").fetchall())
-        card_stats = conn.execute("""
-            SELECT did,
-                   count(*) as total,
-                   sum(case when reps = 0 and queue = 0 then 1 else 0 end) as new_cnt,
-                   sum(case when reps > 0 then 1 else 0 end) as mastered_cnt,
-                   sum(case when queue in (1, 3) then 1 else 0 end) as learning_cnt
-            FROM cards
-            GROUP BY did
-        """).fetchall()
-        conn.close()
+            decks = []
+            for did, total, new_cnt, mastered_cnt, learning_cnt in card_stats:
+                raw_name = d_map.get(did, "").replace("\x1f", " :: ")
+                if not raw_name:
+                    continue
+                name_lower = raw_name.lower()
+                # Must belong to 2. SJ / 3. Semester / HS 2021
+                if ("2. sj" in name_lower) or ("hs 2021" in name_lower) or ("3. semester" in name_lower):
+                    decks.append({
+                        "deck_id": did,
+                        "deck_name": raw_name,
+                        "card_count": total,
+                        "new_cards": new_cnt or 0,
+                        "mastered_cards": mastered_cnt or 0,
+                        "learning_cards": learning_cnt or 0,
+                        "is_completed": (new_cnt == 0 and mastered_cnt > 0),
+                        "is_in_progress": (new_cnt > 0 and mastered_cnt > 0),
+                    })
+            if decks:
+                try:
+                    snapshot_path.parent.mkdir(parents=True, exist_ok=True)
+                    snapshot_path.write_text(json.dumps(decks, ensure_ascii=False, indent=2), encoding="utf-8")
+                except Exception:
+                    pass
+                return decks
+        except Exception:
+            pass
 
-        decks = []
-        for did, total, new_cnt, mastered_cnt, learning_cnt in card_stats:
-            raw_name = d_map.get(did, "").replace("\x1f", " :: ")
-            if not raw_name:
-                continue
-            name_lower = raw_name.lower()
-            # Must belong to 2. SJ / 3. Semester / HS 2021
-            if ("2. sj" in name_lower) or ("hs 2021" in name_lower) or ("3. semester" in name_lower):
-                decks.append({
-                    "deck_id": did,
-                    "deck_name": raw_name,
-                    "card_count": total,
-                    "new_cards": new_cnt or 0,
-                    "mastered_cards": mastered_cnt or 0,
-                    "learning_cards": learning_cnt or 0,
-                    "is_completed": (new_cnt == 0 and mastered_cnt > 0),
-                    "is_in_progress": (new_cnt > 0 and mastered_cnt > 0),
-                })
-        return decks
-    except Exception:
-        return []
+    # Cloud / Render container fallback
+    if snapshot_path.exists():
+        try:
+            return json.loads(snapshot_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    return []
 
 
 def _generate_synthetic_decks() -> List[Dict[str, Any]]:

@@ -203,7 +203,7 @@ def init_db() -> None:
                 user_id TEXT NOT NULL DEFAULT 'student',
                 subject_name TEXT NOT NULL,
                 exam_date TEXT NOT NULL,
-                target_cards INTEGER NOT NULL DEFAULT 9633,
+                target_cards INTEGER NOT NULL DEFAULT 8729,
                 notes TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
@@ -217,7 +217,7 @@ def init_db() -> None:
                 free_weekdays TEXT NOT NULL DEFAULT '[6]', -- 6 = Sonntag frei (0=Mo, 6=So)
                 joker_dates TEXT NOT NULL DEFAULT '[]',     -- Spezifische freie Tage ['2026-10-15', ...]
                 revision_buffer_days INTEGER NOT NULL DEFAULT 14, -- 14 Tage vor Prüfung reines Wiederholen
-                total_curriculum_cards INTEGER NOT NULL DEFAULT 9633,
+                total_curriculum_cards INTEGER NOT NULL DEFAULT 8729,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """)
@@ -280,8 +280,8 @@ def init_db() -> None:
             cursor.execute("""
                 INSERT INTO exams (user_id, subject_name, exam_date, target_cards, notes)
                 VALUES 
-                ('student', 'Medizin 2. SJ – Prüfung 1', '2027-01-19', 9633, 'Erste Modulprüfung 2. Studienjahr UZH'),
-                ('student', 'Medizin 2. SJ – Prüfung 2', '2027-01-21', 9633, 'Zweite Modulprüfung 2. Studienjahr UZH');
+                ('student', 'Medizin 2. SJ – Prüfung 1', '2027-01-19', 8729, 'Erste Modulprüfung 2. Studienjahr UZH'),
+                ('student', 'Medizin 2. SJ – Prüfung 2', '2027-01-21', 8729, 'Zweite Modulprüfung 2. Studienjahr UZH');
             """)
 
         # Seed default schedule config if not present
@@ -291,7 +291,7 @@ def init_db() -> None:
                 INSERT INTO study_schedule_config (
                     user_id, free_weekdays, joker_dates, revision_buffer_days, total_curriculum_cards
                 ) VALUES (
-                    'student', '[6]', '[]', 14, 9633
+                    'student', '[6]', '[]', 14, 8729
                 );
             """)
 

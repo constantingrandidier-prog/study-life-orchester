@@ -265,7 +265,7 @@ class ExamItem(BaseModel):
     id: int
     subject_name: str
     exam_date: str
-    target_cards: int = 9633
+    target_cards: int = 8729
     days_left: int
     notes: Optional[str] = None
 
@@ -274,7 +274,7 @@ class ExamCreateRequest(BaseModel):
     """Payload to create or update an exam."""
     subject_name: str = Field(..., description="Name of module or exam")
     exam_date: str = Field(..., description="Date in YYYY-MM-DD format")
-    target_cards: int = Field(default=9633, description="Target card volume")
+    target_cards: int = Field(default=8729, description="Target card volume")
     notes: Optional[str] = None
 
 
@@ -283,7 +283,7 @@ class PacingConfigModel(BaseModel):
     free_weekdays: List[int] = Field(default_factory=lambda: [6], description="List of free weekdays (0=Mon, 6=Sun)")
     joker_dates: List[str] = Field(default_factory=list, description="List of specific off-dates (YYYY-MM-DD)")
     revision_buffer_days: int = Field(default=14, description="Days before exam reserved for pure revision")
-    total_curriculum_cards: int = Field(default=9633, description="Total active cards in curriculum")
+    total_curriculum_cards: int = Field(default=8729, description="Total active cards in curriculum")
 
 
 class PacingConfigUpdateRequest(BaseModel):
@@ -499,7 +499,7 @@ class DailyCurriculumAssignment(BaseModel):
     cumulative_cards_learned: int = Field(0, description="Total cumulative cards learned up to and including today")
     actual_cards_learned: int = Field(0, description="Actual real cards newly learned in curriculum so far")
     planned_cumulative_cards: int = Field(0, description="Theoretical planned cumulative cards according to schedule")
-    total_curriculum_cards: int = Field(9633, description="Total cards in the 2. SJ curriculum")
+    total_curriculum_cards: int = Field(8729, description="Total cards in the 2. SJ curriculum")
     curriculum_progress_pct: float = Field(0.0, description="Percentage of entire semester curriculum completed")
     current_module: str = Field("", description="Active medical module name")
     summary: str = Field("", description="Action-oriented daily briefing")

@@ -37,8 +37,8 @@ def sync_ankiweb_data(
     """
     account_email = email or get_real_anki_email()
 
-    # Curriculum scope: 9'319 from 2. SJ + 314 from HS 2021
-    total_curriculum_cards = 9633
+    # Curriculum scope: 8'372 from 2. SJ (excluding Biochemie Mündlich) + 357 from HS 2021
+    total_curriculum_cards = 8729
     cards_completed = 0
     cards_remaining = total_curriculum_cards
     curriculum_progress_percentage = 0.0

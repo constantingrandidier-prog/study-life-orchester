@@ -375,7 +375,7 @@ def get_exams(user_id: str = "student") -> List[Dict[str, Any]]:
 def save_exam(
     subject_name: str,
     exam_date: str,
-    target_cards: int = 9633,
+    target_cards: int = 8729,
     notes: Optional[str] = None,
     user_id: str = "student"
 ) -> int:
@@ -420,7 +420,7 @@ def get_pacing_config(user_id: str = "student") -> Dict[str, Any]:
             "free_weekdays": [6],
             "joker_dates": [],
             "revision_buffer_days": 14,
-            "total_curriculum_cards": 9633,
+            "total_curriculum_cards": 8729,
         }
 
 

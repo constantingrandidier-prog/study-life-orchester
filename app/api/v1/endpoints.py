@@ -914,7 +914,7 @@ def list_exams_endpoint() -> List[ExamItem]:
                 id=ex["id"],
                 subject_name=ex["subject_name"],
                 exam_date=ex["exam_date"],
-                target_cards=ex.get("target_cards", 9633),
+                target_cards=ex.get("target_cards", 8729),
                 days_left=days_left,
                 notes=ex.get("notes"),
             )

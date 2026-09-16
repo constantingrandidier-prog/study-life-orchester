@@ -1501,7 +1501,7 @@ async function handleSyncAnkiWeb(e) {
     const data = await res.json();
 
     const email = data.account_email || 'constantingrandidier@gmail.com';
-    const totalCards = data.total_cards ?? 9633;
+    const totalCards = data.total_cards ?? 8729;
     const cardsDone = data.cards_completed ?? data.total_cards_reviewed ?? 0;
     const progressPct = data.curriculum_progress_percentage ?? 0.0;
 
@@ -1657,7 +1657,7 @@ async function handleSyncAnkiWebFromTab3(e) {
     const data = await res.json();
 
     const emailRes = data.account_email || email || 'constantingrandidier@gmail.com';
-    const totalCards = data.total_cards ?? 9633;
+    const totalCards = data.total_cards ?? 8729;
     const cardsDone = data.cards_completed ?? 0;
     const progressPct = data.curriculum_progress_percentage ?? 0.0;
 
@@ -3402,7 +3402,7 @@ async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
 
   // Recalculate running cumulative progress
   let cum = 0;
-  const totalCards = _cachedRoadmapData.total_cards || 9633;
+  const totalCards = _cachedRoadmapData.total_cards || 8729;
   _cachedRoadmapData.schedule.forEach(d => {
     if (!d.is_rest_day) {
       cum += (d.target_cards || 0);

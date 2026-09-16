@@ -28,12 +28,12 @@ def test_exam_pacing_defaults():
     assert res["target_date"] == "2026-09-14"
     assert res["calendar_days_to_exam"] == 127
     assert res["learning_days_remaining"] == 97  # 113 - 16 Sundays
-    assert res["daily_target_cards"] >= 99
+    assert res["daily_target_cards"] >= 88
     assert res["is_rest_day"] is False
     assert "7_days_week" in res["pacing_scenarios"]
     assert "6_days_week" in res["pacing_scenarios"]
     assert "5_days_week" in res["pacing_scenarios"]
-    assert res["total_curriculum_cards"] == 9633
+    assert res["total_curriculum_cards"] == 8729
 
 
 def test_sunday_scheduled_rest_day():
@@ -82,7 +82,7 @@ def test_pacing_rest_api_endpoints(client):
     assert resp.status_code == 200
     data = resp.json()
     assert data["calendar_days_to_exam"] == 127
-    assert data["total_curriculum_cards"] == 9633
+    assert data["total_curriculum_cards"] == 8729
 
     # 2. POST Log Progress
     log_resp = client.post(

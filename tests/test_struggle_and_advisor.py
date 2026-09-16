@@ -188,11 +188,11 @@ def test_real_cards_progress_counter():
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     from datetime import date
     day = get_daily_curriculum_assignment(date(2026, 9, 16))
-    assert day["actual_cards_learned"] == 155
-    assert day["cumulative_cards_learned"] == 155
-    assert day["planned_cumulative_cards"] == 476
-    assert day["curriculum_progress_pct"] == 1.6
-    assert day["total_curriculum_cards"] == 9676
+    assert day["actual_cards_learned"] == 185
+    assert day["cumulative_cards_learned"] == 185
+    assert day["planned_cumulative_cards"] == 433
+    assert day["curriculum_progress_pct"] == 2.1
+    assert day["total_curriculum_cards"] == 8729
 
 
 def test_lecture_date_and_slide_paths_in_curriculum_assignment():

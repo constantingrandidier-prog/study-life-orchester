@@ -19,7 +19,7 @@ from app.services.lecture_advisor_service import search_lecture_advisor
 # Semester milestone constants
 SEMESTER_START_DATE = date(2026, 9, 14)  # Monday
 TARGET_EXAM_DATE = date(2027, 1, 19)     # Tuesday
-DAILY_CARD_QUOTA = 100
+DAILY_CARD_QUOTA = 90
 
 # Didactic medical module progression for 2. Studienjahr
 DIDACTIC_MODULES = [
@@ -372,6 +372,8 @@ def _extract_decks_from_anki() -> List[Dict[str, Any]]:
                 name_lower = raw_name.lower()
                 # Must belong to 2. SJ / 3. Semester / HS 2021
                 if ("2. sj" in name_lower) or ("hs 2021" in name_lower) or ("3. semester" in name_lower):
+                    if "mündlich" in name_lower or "muendlich" in name_lower:
+                        continue
                     decks.append({
                         "deck_id": did,
                         "deck_name": raw_name,
@@ -530,10 +532,15 @@ def _generate_synthetic_decks() -> List[Dict[str, Any]]:
 
 
 def get_all_curriculum_decks() -> List[Dict[str, Any]]:
-    """Retrieve and classify all 111 decks from real Anki or synthetic fallback, preserving card states."""
+    """Retrieve and classify all curriculum decks from real Anki or snapshot, preserving card states."""
     raw_decks = _extract_decks_from_anki()
+    # Ensure any Biochemie Mündlich decks are excluded
+    raw_decks = [
+        d for d in raw_decks
+        if "mündlich" not in d["deck_name"].lower() and "muendlich" not in d["deck_name"].lower()
+    ]
     total_found = sum(d["card_count"] for d in raw_decks)
-    if total_found < 8000:
+    if total_found < 6000:
         synth = _generate_synthetic_decks()
         raw_decks = [{
             **d,
@@ -1019,7 +1026,7 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
                         d["original_day_number"] = assigned_num
 
             # Recalculate cumulative cards & progress percentages cleanly
-            total_curriculum_cards = base_data.get("total_cards", 9633)
+            total_curriculum_cards = base_data.get("total_cards", 8729)
             running_cum = 0
             for d in schedule_days:
                 if not d.get("is_rest_day"):

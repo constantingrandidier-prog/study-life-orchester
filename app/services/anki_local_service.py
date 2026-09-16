@@ -50,10 +50,10 @@ def get_anki_base_dirs() -> List[Path]:
 
 
 # Target curriculum scope specified by student:
-# Only include 9'319 cards from 2. SJ and 314 cards from HS 2021
-SCOPED_2SJ_CARDS = 9319
-SCOPED_HS2021_CARDS = 314
-TOTAL_SCOPED_CARDS = SCOPED_2SJ_CARDS + SCOPED_HS2021_CARDS  # 9633
+# Only include 8'372 cards from 2. SJ (excluding Biochemie Mündlich) and 357 cards from HS 2021
+SCOPED_2SJ_CARDS = 8372
+SCOPED_HS2021_CARDS = 357
+TOTAL_SCOPED_CARDS = SCOPED_2SJ_CARDS + SCOPED_HS2021_CARDS  # 8729
 
 
 def detect_local_anki_profiles() -> List[Dict[str, Any]]:
@@ -106,7 +106,7 @@ def detect_local_anki_profiles() -> List[Dict[str, Any]]:
                                 "deck_count": deck_count,
                                 "last_modified": last_mod,
                                 "is_default": (entry.name.lower() in ["benutzer 1", "user 1", "main"]),
-                                "scope_description": f"9'319 Karten vom 2. SJ + 314 Karten von HS 2021 (Gesamt: {TOTAL_SCOPED_CARDS:,})",
+                                "scope_description": f"8'372 Karten vom 2. SJ (ohne Mündlich) + 357 Karten von HS 2021 (Gesamt: {TOTAL_SCOPED_CARDS:,})",
                             }
                         )
         except Exception:

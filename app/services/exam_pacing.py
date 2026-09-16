@@ -34,8 +34,8 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     exams_raw = get_exams(user_id=user_id)
     if not exams_raw:
         # Seed default exams if missing
-        save_exam("Medizin 2. SJ – Prüfung 1", "2027-01-19", 9633, "Erste Modulprüfung 2. Studienjahr UZH", user_id)
-        save_exam("Medizin 2. SJ – Prüfung 2", "2027-01-21", 9633, "Zweite Modulprüfung 2. Studienjahr UZH", user_id)
+        save_exam("Medizin 2. SJ – Prüfung 1", "2027-01-19", 8729, "Erste Modulprüfung 2. Studienjahr UZH", user_id)
+        save_exam("Medizin 2. SJ – Prüfung 2", "2027-01-21", 8729, "Zweite Modulprüfung 2. Studienjahr UZH", user_id)
         exams_raw = get_exams(user_id=user_id)
 
     formatted_exams: List[Dict[str, Any]] = []
@@ -51,7 +51,7 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
             "id": ex["id"],
             "subject_name": ex["subject_name"],
             "exam_date": ex["exam_date"],
-            "target_cards": ex.get("target_cards", 9633),
+            "target_cards": ex.get("target_cards", 8729),
             "days_left": days_left,
             "notes": ex.get("notes"),
         }
@@ -75,7 +75,7 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     free_weekdays = set(cfg.get("free_weekdays", [6]))  # 6 = Sunday
     joker_dates = set(cfg.get("joker_dates", []))
     revision_buffer_days = int(cfg.get("revision_buffer_days", 14))
-    total_curriculum_cards = int(cfg.get("total_curriculum_cards", 9633))
+    total_curriculum_cards = int(cfg.get("total_curriculum_cards", 8729))
 
     revision_start_date = max(curr_date, exam_target_date - timedelta(days=revision_buffer_days))
 

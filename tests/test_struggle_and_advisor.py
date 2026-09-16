@@ -112,14 +112,14 @@ def test_diagnose_struggle_cause():
 
 def test_dynamic_daily_science_rhythm():
     """Verify that start time, lunch duration, and lecture toggle properly calculate Feierabend."""
-    # Standard 08:30 start with 75m lunch and lecture
-    sched1 = generate_daily_science_rhythm(start_time_str="08:30", lunch_duration_mins=75, include_lecture=True)
+    # Standard 08:30 start with 75m lunch and lecture (using day without fixed calendar events)
+    sched1 = generate_daily_science_rhythm(target_date=date(2027, 5, 1), start_time_str="08:30", lunch_duration_mins=75, include_lecture=True)
     assert sched1["start_time"] == "08:30"
     assert sched1["lunch_duration_minutes"] == 75
     assert sched1["feierabend_time"] == "16:00"
 
     # Spätstart 09:30, Express Lunch 30m, No lecture
-    sched2 = generate_daily_science_rhythm(start_time_str="09:30", lunch_duration_mins=30, include_lecture=False)
+    sched2 = generate_daily_science_rhythm(target_date=date(2027, 5, 1), start_time_str="09:30", lunch_duration_mins=30, include_lecture=False)
     assert sched2["start_time"] == "09:30"
     assert sched2["lunch_duration_minutes"] == 30
     assert sched2["feierabend_time"] == "13:45"
@@ -128,7 +128,7 @@ def test_dynamic_daily_science_rhythm():
 
 def test_api_daily_rhythm_endpoint():
     """Test the daily-rhythm endpoint via FastAPI TestClient."""
-    resp = client.get("/api/v1/schedule/daily-rhythm?start_time=09:00&lunch_duration=45&include_lecture=false")
+    resp = client.get("/api/v1/schedule/daily-rhythm?target_date=2027-05-01&start_time=09:00&lunch_duration=45&include_lecture=false")
     assert resp.status_code == 200
     data = resp.json()
     assert data["start_time"] == "09:00"

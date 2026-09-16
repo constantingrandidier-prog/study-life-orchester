@@ -321,6 +321,8 @@ def generate_daily_science_rhythm(
             "podcast_folder_name": p.get("podcast_folder_name"),
             "slide_filename": p.get("slide_filename"),
             "slide_rel_path": p.get("slide_rel_path"),
+            "local_podcast_folder_path": p.get("local_podcast_folder_path") or (f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\Podcasts\\{p.get('podcast_folder_name')}" if p.get("podcast_folder_name") else None),
+            "local_slide_file_path": p.get("local_slide_file_path") or (f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\{p.get('slide_rel_path').replace('/', chr(92))}" if p.get("slide_rel_path") else None),
             "tomorrow_lecture_title": p.get("tomorrow_lecture_title") or clean_title,
         })
 
@@ -375,6 +377,8 @@ def generate_daily_science_rhythm(
             "podcast_folder_name": tomorrow_data.get("podcast_folder_name"),
             "slide_filename": tomorrow_data.get("slide_filename"),
             "slide_rel_path": tomorrow_data.get("slide_rel_path"),
+            "local_podcast_folder_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\Podcasts\\{tomorrow_data.get('podcast_folder_name')}" if tomorrow_data.get("podcast_folder_name") else None,
+            "local_slide_file_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\{tomorrow_data.get('slide_rel_path').replace('/', chr(92))}" if tomorrow_data.get("slide_rel_path") else None,
         })
 
     # 9. Fixed Mandatory In-Person Sessions (Praktika, Tutorate, Testate, Klinische Kurse)

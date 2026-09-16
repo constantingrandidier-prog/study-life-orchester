@@ -4137,6 +4137,38 @@ async function openStruggleSlidesQuick(path, page) {
   }
 }
 
+async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei') {
+  if (!folderOrFilePath) {
+    showToast(`⚠️ Kein Pfad für ${label} hinterlegt.`);
+    return;
+  }
+  showToast(`📂 Öffne Windows Explorer für ${label}...`);
+  try {
+    const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderOrFilePath)}`);
+    const data = await res.json();
+    if (data && data.success) {
+      if (data.queued) {
+        showToast(`💻 Windows Explorer wird auf deinem Laptop geöffnet (${label})!`);
+      } else {
+        showToast(`✅ ${data.message || `${label} im Windows Explorer geöffnet!`}`);
+      }
+    } else {
+      showToast(`⚠️ Hinweis: ${data?.message || 'Konnte Windows Explorer nicht öffnen.'}`);
+    }
+  } catch (err) {
+    try {
+      await fetch('/api/v1/schedule/system/queue-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'open_explorer', path: folderOrFilePath })
+      });
+      showToast(`💻 Windows Explorer wird auf deinem Laptop geöffnet (${label})!`);
+    } catch (e2) {
+      showToast(`⚠️ Fehler beim Öffnen: ${err.message}`);
+    }
+  }
+}
+
 async function openPodcastFolder(folderName) {
   if (!folderName) {
     showToast('Kein Podcast-Ordner hinterlegt');
@@ -4155,6 +4187,7 @@ async function openSlideModalQuick(path, title = '') {
   } catch (e) {}
 }
 
+window.handleOpenLocalFolder = handleOpenLocalFolder;
 window.openPodcastFolder = openPodcastFolder;
 window.openSlideModalQuick = openSlideModalQuick;
 
@@ -4933,15 +4966,15 @@ function renderScienceRhythm(data) {
                 🎬 VAM-Archiv
               </a>
             ` : ''}
-            ${b.podcast_folder_name ? `
-              <button type="button" class="btn-secondary" onclick="openPodcastFolder('${escapeHtml(b.podcast_folder_name)}')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet den lokalen Podcast-Ordner zur Folienansicht im Windows Explorer">
-                📁 Ordner (Folienansicht)
+            ${(b.local_podcast_folder_path || b.podcast_folder_name) ? `
+              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungsvideo (Folienansicht)')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet das Folienansicht-Video direkt markiert im Windows Datei-Explorer auf deinem Laptop">
+                📂 Vorlesung (Explorer)
               </button>
             ` : ''}
-            ${(b.slide_rel_path || b.slide_filename) ? `
-              <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent(b.slide_rel_path || b.slide_filename)}" target="_blank" rel="noopener" onclick="openSlideModalQuick('${escapeHtml(b.slide_rel_path || b.slide_filename)}', '${escapeHtml(b.tomorrow_lecture_title || '')}');" class="btn-secondary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Folien ansehen (öffnet Folie direkt im Browser & PDF-Viewer)">
-                📄 Folien
-              </a>
+            ${(b.local_slide_file_path || b.slide_rel_path || b.slide_filename) ? `
+              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_slide_file_path || b.slide_rel_path || b.slide_filename)}', 'Vorlesungs-Folie')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien-PDF direkt markiert im Windows Datei-Explorer auf deinem Laptop">
+                📄 Folie (Explorer)
+              </button>
             ` : ''}
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
               ${isPostponed ? '🧠 Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}

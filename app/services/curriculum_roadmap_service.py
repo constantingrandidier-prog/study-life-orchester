@@ -1095,15 +1095,12 @@ def get_daily_curriculum_assignment(
 
             # Master exam pacing target alignment:
             # If multi-topic greedy packing caused scheduled_quota to exceed master daily target (e.g. 117 instead of 101):
-            try:
-                from app.services.exam_pacing import calculate_exam_pacing
-                pacing_info = calculate_exam_pacing(target_date=target_date, user_id=user_id)
-                master_pacing = pacing_info.get("daily_target_cards") or DAILY_CARD_QUOTA
-            except Exception:
-                master_pacing = DAILY_CARD_QUOTA
+            master_dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=DAILY_CARD_QUOTA)
+            master_pacing = master_dyn["adjusted_target_cards"]
 
-            if len(day["topic_slots"]) > 1 and adj_target > master_pacing and dyn["deficit_distributed"] == 0:
+            if len(day["topic_slots"]) > 1 and adj_target > master_pacing:
                 adj_target = master_pacing
+                dyn = master_dyn
 
             day_copy = dict(day)
             day_copy["base_quota"] = dyn["base_quota"]

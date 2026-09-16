@@ -2819,8 +2819,8 @@ function renderCurriculumToday(data) {
               🎬 VAM-Archiv
             </a>
             ${slot.local_podcast_folder_path ? `
-              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Podcast-Ordner (${escapeHtml(slot.podcast_folder_name || '')})')" title="Lokalen Podcast-Ordner auf dem PC öffnen (${escapeHtml(slot.local_podcast_folder_path)})">
-                📁 Ordner
+              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})')" title="Vorlesungsvideo direkt im Windows Datei-Explorer auf deinem Laptop öffnen">
+                📂 Vorlesung (Explorer)
               </button>
             ` : ''}
           </div>
@@ -3005,36 +3005,53 @@ async function handleOpenLocalFolder(folderPath, label = 'Ordner') {
     showToast('Kein lokaler Pfad hinterlegt');
     return;
   }
-  try {
-    await navigator.clipboard.writeText(folderPath);
-  } catch (e) {
-    console.debug('Clipboard write error', e);
-  }
+  showToast(`📂 Öffne ${label} im Windows Explorer...`, 3000);
 
+  // 1. Try local server direct (127.0.0.1:8000) for instant execution if available
+  let opened = false;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 600);
+    const localRes = await fetch(`http://127.0.0.1:8000/api/v1/schedule/folder/open?path=${encodeURIComponent(folderPath)}`, {
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if (localRes.ok) {
+      const data = await localRes.json();
+      if (data.success) {
+        showToast(`📂 ${label} im Explorer geöffnet!`, 4000);
+        opened = true;
+        return;
+      }
+    }
+  } catch (_) {}
+
+  // 2. Relay via cloud backend (queues to local Windows agent polling Render)
   try {
     const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderPath)}`);
     const data = await res.json();
-    if (data.success) {
-      showToast(`📂 ${label} im Explorer geöffnet & Pfad kopiert!`);
-    } else {
-      showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Öffnen)`);
+    if (data.success || data.queued) {
+      showToast(`📂 Explorer öffnet sich jetzt auf deinem Laptop!`, 4000);
+      opened = true;
     }
   } catch (err) {
+    console.debug('Folder open relay note:', err);
+  }
+
+  // 3. Fallback: also copy path to clipboard
+  try {
+    await navigator.clipboard.writeText(folderPath);
+  } catch (_) {}
+
+  if (!opened) {
     showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Öffnen)`);
   }
 }
 
 async function handleOpenSlidePdf(relPath, localFilePath) {
-  if (localFilePath) {
-    try {
-      await navigator.clipboard.writeText(localFilePath);
-    } catch (e) {}
-  }
-  try {
-    await fetch(`/api/v1/schedule/slides/open?path=${encodeURIComponent(relPath)}&page=1`);
-  } catch (err) {
-    console.debug('Slide local open error', err);
-  }
+  const target = localFilePath || relPath;
+  if (!target) return;
+  await handleOpenLocalFolder(target, 'Folien-PDF');
 }
 
 let _cachedRoadmapData = null;
@@ -4125,18 +4142,7 @@ async function openPodcastFolder(folderName) {
     showToast('Kein Podcast-Ordner hinterlegt');
     return;
   }
-  showToast('Öffne Podcast-Folienansicht im Explorer...');
-  try {
-    const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderName)}`);
-    const data = await res.json();
-    if (data.success) {
-      showToast(`📂 ${data.message || 'Folienansicht im Explorer markiert!'}`);
-    } else {
-      showToast(`📋 Hinweis: ${data.message || 'Ordner konnte nicht geöffnet werden'}`);
-    }
-  } catch (err) {
-    showToast('Konnte Podcast-Ordner nicht anfordern: ' + err.message);
-  }
+  await handleOpenLocalFolder(folderName, 'Podcast-Folienansicht');
 }
 
 async function openSlideModalQuick(path, title = '') {

@@ -2,7 +2,7 @@
 
 from datetime import date, datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Body, File, HTTPException, Query, UploadFile, status
 from pydantic import BaseModel, Field
 import httpx
@@ -1402,41 +1402,50 @@ def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
     return None
 
 
+_PENDING_SYSTEM_COMMANDS: List[Dict[str, Any]] = []
+
+
 @router.get(
     "/slides/open",
-    summary="Opens or locates a lecture PDF slide",
-    description="Locates the UZH lecture slide PDF on disk and opens it in the default system viewer at the specified page.",
+    summary="Opens or locates a lecture PDF slide in Windows Explorer",
+    description="Locates the UZH lecture slide PDF on disk and selects it in Windows Explorer or opens it.",
 )
 def open_slide_endpoint(
     path: str = Query(..., description="Relative path or name of the slide PDF"),
     page: Optional[int] = Query(1, description="Target page number"),
 ):
     import os
+    import time
+    import subprocess
+    global _PENDING_SYSTEM_COMMANDS
+
     found_file = _resolve_uzh_file_or_folder(path)
+    if found_file and found_file.exists() and os.name == "nt":
+        try:
+            subprocess.Popen(["explorer.exe", f"/select,{str(found_file)}"])
+            return {
+                "success": True,
+                "message": f"Folie '{found_file.name}' im Windows Explorer markiert!",
+                "file": str(found_file),
+                "page": page or 1,
+            }
+        except Exception as exc:
+            pass
 
-    if not found_file or not found_file.exists():
-        return {
-            "success": False,
-            "message": f"Folie '{path}' lokal noch nicht abgelegt.",
-            "path": path,
-            "page": page or 1,
-        }
-
-    try:
-        os.startfile(str(found_file))
-        return {
-            "success": True,
-            "message": f"Folie '{found_file.name}' auf Seite {page or 1} geöffnet!",
-            "file": str(found_file),
-            "page": page or 1,
-        }
-    except Exception as exc:
-        return {
-            "success": False,
-            "error": str(exc),
-            "file": str(found_file),
-            "page": page or 1,
-        }
+    # Cloud fallback: queue action for the local Windows sync agent
+    action_obj = {
+        "id": f"act_{int(time.time() * 1000)}",
+        "action": "open_explorer",
+        "path": path,
+        "timestamp": time.time(),
+    }
+    _PENDING_SYSTEM_COMMANDS.append(action_obj)
+    return {
+        "success": True,
+        "queued": True,
+        "message": f"Folie '{path}' wird im Windows Explorer auf deinem PC geöffnet...",
+        "path": path,
+    }
 
 
 @router.get(
@@ -1468,77 +1477,97 @@ def open_folder_endpoint(
     path: Optional[str] = Query(None, description="Path to folder or file"),
 ):
     import os
+    import time
     import subprocess
     from pathlib import Path
+    global _PENDING_SYSTEM_COMMANDS
 
     found = _resolve_uzh_file_or_folder(path)
-    if not found or not found.exists():
-        base = Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app")
-        if base.exists():
-            found = base
-        else:
-            return {
-                "success": False,
-                "message": f"Pfad '{path}' konnte lokal nicht gefunden werden.",
-                "path": path,
-            }
-
-    try:
-        if found.is_file():
-            subprocess.Popen(["explorer.exe", f"/select,{str(found)}"])
-            return {
-                "success": True,
-                "message": f"Datei '{found.name}' im Windows Explorer markiert!",
-                "path": str(found),
-                "folder": str(found.parent),
-            }
-        else:
-            # Check if this podcast folder contains a Folienansicht MP4 video
-            folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4"))
-            if folien_vids:
-                target_file = folien_vids[0]
-                subprocess.Popen(["explorer.exe", f"/select,{str(target_file)}"])
+    if found and found.exists() and os.name == "nt":
+        try:
+            if found.is_file():
+                subprocess.Popen(["explorer.exe", f"/select,{str(found)}"])
                 return {
                     "success": True,
-                    "message": f"Folienansicht '{target_file.name}' im Explorer markiert!",
-                    "path": str(target_file),
-                    "folder": str(found),
+                    "message": f"Datei '{found.name}' im Windows Explorer markiert!",
+                    "path": str(found),
+                    "folder": str(found.parent),
                 }
-            os.startfile(str(found))
-            return {
-                "success": True,
-                "message": f"Ordner '{found.name}' im Windows Explorer geöffnet!",
-                "path": str(found),
-            }
-    except Exception as exc:
-        return {
-            "success": False,
-            "error": str(exc),
-            "path": str(found),
-        }
+            else:
+                folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4")) or list(found.glob("*.pdf"))
+                if folien_vids:
+                    target_file = folien_vids[0]
+                    subprocess.Popen(["explorer.exe", f"/select,{str(target_file)}"])
+                    return {
+                        "success": True,
+                        "message": f"Folienansicht '{target_file.name}' im Explorer markiert!",
+                        "path": str(target_file),
+                        "folder": str(found),
+                    }
+                os.startfile(str(found))
+                return {
+                    "success": True,
+                    "message": f"Ordner '{found.name}' im Windows Explorer geöffnet!",
+                    "path": str(found),
+                }
+        except Exception:
+            pass
+
+    # Cloud / Render fallback: Queue for local background sync agent
+    action_obj = {
+        "id": f"act_{int(time.time() * 1000)}",
+        "action": "open_explorer",
+        "path": path or "",
+        "timestamp": time.time(),
+    }
+    _PENDING_SYSTEM_COMMANDS.append(action_obj)
+
+    return {
+        "success": True,
+        "queued": True,
+        "message": f"Windows Explorer wird auf deinem Laptop geöffnet ({path})...",
+        "path": path,
+    }
 
 
 @router.get(
     "/podcast/open",
-    summary="Directly launches the podcast Folienansicht MP4 video",
+    summary="Directly launches the podcast Folienansicht MP4 video in Windows Explorer",
 )
 def open_podcast_video_endpoint(
     path: Optional[str] = Query(None, description="Folder or video name"),
 ):
-    import os
-    found = _resolve_uzh_file_or_folder(path)
-    if found:
-        if found.is_dir():
-            folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4"))
-            if folien_vids:
-                found = folien_vids[0]
-        if found.is_file():
-            try:
-                os.startfile(str(found))
-                return {"success": True, "message": f"Video '{found.name}' gestartet!", "file": str(found)}
-            except Exception as e:
-                return {"success": False, "error": str(e)}
-    return {"success": False, "message": "Podcast-Video konnte lokal nicht geöffnet werden."}
+    return open_folder_endpoint(path=path)
+
+
+@router.get(
+    "/system/poll-actions",
+    summary="Polls pending desktop actions for the local Windows sync agent",
+)
+def poll_system_actions_endpoint():
+    import time
+    global _PENDING_SYSTEM_COMMANDS
+    now = time.time()
+    valid = [a for a in _PENDING_SYSTEM_COMMANDS if now - a.get("timestamp", 0) < 60]
+    _PENDING_SYSTEM_COMMANDS = []
+    return {"actions": valid}
+
+
+@router.post(
+    "/system/queue-action",
+    summary="Queue a desktop action from browser to local agent",
+)
+def queue_system_action_endpoint(payload: dict = Body(...)):
+    import time
+    global _PENDING_SYSTEM_COMMANDS
+    action_obj = {
+        "id": f"act_{int(time.time() * 1000)}",
+        "action": payload.get("action", "open_explorer"),
+        "path": payload.get("path", ""),
+        "timestamp": time.time(),
+    }
+    _PENDING_SYSTEM_COMMANDS.append(action_obj)
+    return {"success": True, "queued": True, "action": action_obj}
 
 
 

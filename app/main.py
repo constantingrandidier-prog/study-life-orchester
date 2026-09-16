@@ -54,20 +54,19 @@ if STATIC_DIR.exists():
 
 @app.get("/", tags=["Frontend"])
 def root(request: Request):
-    """Serve web application UI to browsers or API status to API clients."""
+    """Serve web application UI. Returns HTML unless client explicitly requests application/json."""
     accept = request.headers.get("accept", "")
-    ua = request.headers.get("user-agent", "").lower()
     index_file = STATIC_DIR / "index.html"
-    is_browser = any(b in ua for b in ["mozilla", "safari", "chrome", "edge", "iphone", "android", "mobile"])
-    if index_file.exists() and (("text/html" in accept or "text/*" in accept) or (is_browser and "application/json" not in accept)):
-        return FileResponse(index_file)
-    return {
-        "status": "online",
-        "app": settings.app_name,
-        "version": settings.app_version,
-        "docs": "/docs",
-        "quick_test": f"{settings.api_v1_prefix}/schedule/today",
-    }
+    # Only return JSON when client explicitly asks for it (e.g. curl -H "Accept: application/json")
+    if "application/json" in accept and "text/html" not in accept:
+        return {
+            "status": "online",
+            "app": settings.app_name,
+            "version": settings.app_version,
+            "docs": "/docs",
+            "quick_test": f"{settings.api_v1_prefix}/schedule/today",
+        }
+    return FileResponse(index_file)
 
 
 @app.get("/app", tags=["Frontend"])

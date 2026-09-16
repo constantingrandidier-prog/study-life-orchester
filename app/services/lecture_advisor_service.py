@@ -3,12 +3,15 @@
 Provides intelligent lookup and decision guidance:
 - Maps Anki topics, decks, and medical keywords to the exact 38 UZH medical lectures.
 - Delivers precise cognitive-load-based recommendations: Skip (0x), 1.0x, 1.2x, 1.4x.
+- Dynamic video timestamp budgeting: Calculates exact timecodes (e.g. 00:00 - 36:38)
+  for targeted Anki cards (e.g. 100 cards), saving dozens of minutes of study time.
+- Robust typo tolerance & fuzzy search for lecturers, topics, and medical concepts.
 - Grounded strictly in the 38 podcast recordings and 51 official course PDFs.
-- Provides 3 pure Anki high-yield facts for skipped lectures and audio-only guidance.
 """
 
 from pathlib import Path
 import re
+import difflib
 from typing import Any, Dict, List, Optional
 
 # Base directories
@@ -16,9 +19,6 @@ DOCS_DIR = Path(r"c:\Users\Constantin Grandidie\OneDrive - Universität Zürich 
 PODCASTS_DIR = DOCS_DIR / "Podcasts"
 
 LECTURES_DATA: List[Dict[str, Any]] = [
-    # =========================================================================
-    # 1. THEMENBLOCK BLUT & IMMUNSYSTEM (KW 38 - 39)
-    # =========================================================================
     {
         "id": "2025-09-15_Einfuehrung_Anatomie_TB_Blut",
         "date": "2025-09-15",
@@ -40,11 +40,79 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Hauptbildungsort der Blutzellen beim Erwachsenen: Rotes Knochenmark der platten Knochen (Beckenkamm/Os ilium, Sternum, Wirbelkörper)."
         ],
         "keywords": [
-            "anatomie", "einführung", "blut", "hämatologie", "erythrozyt", "hämatokrit", "hct",
-            "mcv", "mch", "mchc", "knochenmark", "hämatopoese", "leukozyten", "thrombozyten", "referenzbereich"
+            "anatomie",
+            "einführung",
+            "blut",
+            "hämatologie",
+            "erythrozyt",
+            "hämatokrit",
+            "hct",
+            "mcv",
+            "mch",
+            "mchc",
+            "knochenmark",
+            "hämatopoese",
+            "leukozyten",
+            "thrombozyten",
+            "referenzbereich"
         ],
-        "associated_decks": ["1 Einführung Anatomie", "Grundlagen Hämatologie", "2. SJ :: 1. Blut & Immunsystem :: Einführung"],
+        "associated_decks": [
+            "1 Einführung Anatomie",
+            "Grundlagen Hämatologie",
+            "2. SJ :: 1. Blut & Immunsystem :: Einführung"
+        ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "total_anki_cards": 120,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "26:30",
+                "duration_min": 26,
+                "title": "Einführung, Nomenklatur & Organisation (Skip)",
+                "cards_count": 15,
+                "cards_range": "1–15",
+                "slide_range": "Folien 1–15",
+                "topics": [
+                    "Organisation",
+                    "Studienplan",
+                    "Terminologie"
+                ],
+                "summary": "Behandelt die Folien Folien 1–15 mit 15 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "26:30",
+                "end": "55:00",
+                "duration_min": 29,
+                "title": "Erythrozyten-Indices & Hämatokrit-Referenzwerte",
+                "cards_count": 55,
+                "cards_range": "16–70",
+                "slide_range": "Folien 16–34",
+                "topics": [
+                    "Hämatokrit",
+                    "MCV",
+                    "MCH",
+                    "MCHC",
+                    "Erythrozyten"
+                ],
+                "summary": "Behandelt die Folien Folien 16–34 mit 55 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "55:00",
+                "end": "82:00",
+                "duration_min": 27,
+                "title": "Hämatopoese & Stammzell-Differenzierung im Knochenmark",
+                "cards_count": 50,
+                "cards_range": "71–120",
+                "slide_range": "Folien 35–48",
+                "topics": [
+                    "Hämatopoese",
+                    "Rotes Knochenmark",
+                    "Myelopoese",
+                    "EPO"
+                ],
+                "summary": "Behandelt die Folien Folien 35–48 mit 50 prüfungsrelevanten Anki-Karten."
+            }
+        ]
     },
     {
         "id": "2025-09-18_TB_Blut_-_Immunsystem",
@@ -67,11 +135,96 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Fetales Hämoglobin (HbF, alpha2-gamma2): Besitzt Serin statt Histidin an Position 143 (gamma-Kette), bindet 2,3-BPG schwächer und hat daher höhere O2-Affinität als HbA."
         ],
         "keywords": [
-            "hämoglobin", "myoglobin", "sauerstoff", "o2", "hbf", "hba", "2,3-bpg", "allosterie",
-            "t-form", "r-form", "kooperativität", "hill-koeffizient", "sigmoide bindungskurve", "p50-wert"
+            "hämoglobin",
+            "myoglobin",
+            "sauerstoff",
+            "o2",
+            "hbf",
+            "hba",
+            "2,3-bpg",
+            "allosterie",
+            "t-form",
+            "r-form",
+            "kooperativität",
+            "hill-koeffizient",
+            "sigmoide bindungskurve",
+            "p50-wert"
         ],
-        "associated_decks": ["1 Hämoglobin", "Hämoglobin Teil 2", "2. SJ :: 1. Blut & Immunsystem :: Hämoglobin"],
+        "associated_decks": [
+            "1 Hämoglobin",
+            "Hämoglobin Teil 2",
+            "2. SJ :: 1. Blut & Immunsystem :: Hämoglobin"
+        ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "total_anki_cards": 245,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "24:30",
+                "duration_min": 25,
+                "title": "Struktur & Faltung: Myoglobin vs. Tetrameres Hämoglobin",
+                "cards_count": 65,
+                "cards_range": "1–65",
+                "slide_range": "Folien 1–18",
+                "topics": [
+                    "Myoglobin",
+                    "Hämoglobin",
+                    "Globin-Faltung",
+                    "Häm-Tasche",
+                    "Fe2+"
+                ],
+                "summary": "Behandelt die Folien Folien 1–18 mit 65 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "24:30",
+                "end": "54:00",
+                "duration_min": 30,
+                "title": "Kooperativität & T- zu R-Übergang (Sigmoide Bindungskurve)",
+                "cards_count": 85,
+                "cards_range": "66–150",
+                "slide_range": "Folien 19–35",
+                "topics": [
+                    "Kooperativität",
+                    "T-Form",
+                    "R-Form",
+                    "Hill-Koeffizient",
+                    "P50-Wert"
+                ],
+                "summary": "Behandelt die Folien Folien 19–35 mit 85 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "54:00",
+                "end": "72:15",
+                "duration_min": 18,
+                "title": "Allosterische Modulation: 2,3-BPG & Fetales HbF",
+                "cards_count": 55,
+                "cards_range": "151–205",
+                "slide_range": "Folien 36–44",
+                "topics": [
+                    "2,3-BPG",
+                    "HbF",
+                    "gamma-Kette",
+                    "Rechtsverschiebung"
+                ],
+                "summary": "Behandelt die Folien Folien 36–44 mit 55 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "72:15",
+                "end": "88:30",
+                "duration_min": 16,
+                "title": "Klinische Pathologie: HbS, Methämoglobin & CO-Vergiftung",
+                "cards_count": 40,
+                "cards_range": "206–245",
+                "slide_range": "Folien 45–52",
+                "topics": [
+                    "Sichelzellanämie",
+                    "HbS",
+                    "Methämoglobinämie",
+                    "Kohlenmonoxid"
+                ],
+                "summary": "Behandelt die Folien Folien 45–52 mit 40 prüfungsrelevanten Anki-Karten."
+            }
+        ]
     },
     {
         "id": "2025-09-19_TB_Blut_-_Immunsystem",
@@ -94,11 +247,96 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Hamburger-Shift (Chlorid-Shift): Bicarbonat (HCO3-) verlässt Erythrozyten im Austausch gegen Cl- via AE1 (Band 3), um das Membranpotenzial neutral zu halten."
         ],
         "keywords": [
-            "säure-base", "co2-transport", "bohr-effekt", "haldane-effekt", "hamburger-shift", "carboanhydrase",
-            "bicarbonat", "hco3-", "pco2", "ph-wert", "henderson-hasselbalch", "azidose", "alkalose", "ae1"
+            "säure-base",
+            "co2-transport",
+            "bohr-effekt",
+            "haldane-effekt",
+            "hamburger-shift",
+            "carboanhydrase",
+            "bicarbonat",
+            "hco3-",
+            "pco2",
+            "ph-wert",
+            "henderson-hasselbalch",
+            "azidose",
+            "alkalose",
+            "ae1"
         ],
-        "associated_decks": ["2 CO2-Transport", "Säure-Basen-Haushalt", "2. SJ :: 1. Blut & Immunsystem :: CO2-Transport"],
+        "associated_decks": [
+            "2 CO2-Transport",
+            "Säure-Basen-Haushalt",
+            "2. SJ :: 1. Blut & Immunsystem :: CO2-Transport"
+        ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/5_CM_Saure-Base_CO2-Transport.pdf",
+        "total_anki_cards": 220,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "22:00",
+                "duration_min": 22,
+                "title": "Grundlagen Säure-Basen & Carboanhydrase-Gleichgewicht",
+                "cards_count": 50,
+                "cards_range": "1–50",
+                "slide_range": "Folien 1–15",
+                "topics": [
+                    "Carboanhydrase",
+                    "Bicarbonat",
+                    "HCO3-",
+                    "pCO2",
+                    "Henderson-Hasselbalch"
+                ],
+                "summary": "Behandelt die Folien Folien 1–15 mit 50 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "22:00",
+                "end": "48:30",
+                "duration_min": 26,
+                "title": "Bohr-Effekt: Protonen- und CO2-Einfluss auf die O2-Affinität",
+                "cards_count": 75,
+                "cards_range": "51–125",
+                "slide_range": "Folien 16–30",
+                "topics": [
+                    "Bohr-Effekt",
+                    "Protonenbindung",
+                    "Gewebe-O2-Abgabe",
+                    "Rechtsverschiebung"
+                ],
+                "summary": "Behandelt die Folien Folien 16–30 mit 75 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "48:30",
+                "end": "68:00",
+                "duration_min": 20,
+                "title": "Haldane-Effekt & Alveoläre CO2-Freisetzung",
+                "cards_count": 55,
+                "cards_range": "126–180",
+                "slide_range": "Folien 31–42",
+                "topics": [
+                    "Haldane-Effekt",
+                    "Carbamat",
+                    "Desoxygeniertes Hb",
+                    "CO2-Abgabe"
+                ],
+                "summary": "Behandelt die Folien Folien 31–42 mit 55 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "68:00",
+                "end": "86:00",
+                "duration_min": 18,
+                "title": "Hamburger-Shift (Anionenaustauscher AE1) & Säure-Basen-Störungen",
+                "cards_count": 40,
+                "cards_range": "181–220",
+                "slide_range": "Folien 43–52",
+                "topics": [
+                    "Hamburger-Shift",
+                    "Chlorid-Shift",
+                    "AE1",
+                    "Band 3",
+                    "Azidose"
+                ],
+                "summary": "Behandelt die Folien Folien 43–52 mit 40 prüfungsrelevanten Anki-Karten."
+            }
+        ]
     },
     {
         "id": "2025-09-22_TB_Blut_-_Immunsystem",
@@ -121,11 +359,79 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Pharmakologische Targets: ASS hemmt irreversibel COX-1 (TxA2-Synthese); Clopidogrel/Prasugrel blockieren P2Y12 (ADP-Rezeptor)."
         ],
         "keywords": [
-            "hämostase", "blutstillung", "thrombozyten", "thrombozytenaktivierung", "vwf", "von-willebrand",
-            "gp ib", "gp iib/iiia", "adp", "thromboxan", "txa2", "ass", "clopidogrel", "primäre hämostase"
+            "hämostase",
+            "blutstillung",
+            "thrombozyten",
+            "thrombozytenaktivierung",
+            "vwf",
+            "von-willebrand",
+            "gp ib",
+            "gp iib/iiia",
+            "adp",
+            "thromboxan",
+            "txa2",
+            "ass",
+            "clopidogrel",
+            "primäre hämostase"
         ],
-        "associated_decks": ["3 Hämostase", "Thrombozytenaktivierung", "2. SJ :: 1. Blut & Immunsystem :: Primäre Hämostase"],
+        "associated_decks": [
+            "3 Hämostase",
+            "Thrombozytenaktivierung",
+            "2. SJ :: 1. Blut & Immunsystem :: Primäre Hämostase"
+        ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/6-7_CM_Blutgerinnung.pdf",
+        "total_anki_cards": 210,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "26:00",
+                "duration_min": 26,
+                "title": "Thrombozytenadhäsion: Endothelschaden, Kollagen & vWF",
+                "cards_count": 65,
+                "cards_range": "1–65",
+                "slide_range": "Folien 1–18",
+                "topics": [
+                    "vWF",
+                    "von-Willebrand-Faktor",
+                    "GP Ib-V-IX",
+                    "Subendotheliales Kollagen"
+                ],
+                "summary": "Behandelt die Folien Folien 1–18 mit 65 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "26:00",
+                "end": "55:30",
+                "duration_min": 30,
+                "title": "Thrombozytenaktivierung: Granulafreisetzung & Botenstoffe (TxA2, ADP)",
+                "cards_count": 80,
+                "cards_range": "66–145",
+                "slide_range": "Folien 19–34",
+                "topics": [
+                    "Thromboxan A2",
+                    "TxA2",
+                    "ADP",
+                    "P2Y12",
+                    "Dichte Granula"
+                ],
+                "summary": "Behandelt die Folien Folien 19–34 mit 80 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "55:30",
+                "end": "84:00",
+                "duration_min": 28,
+                "title": "Thrombozytenaggregation: GP IIb/IIIa-Komplex & Hemmstoffe (ASS, Clopidogrel)",
+                "cards_count": 65,
+                "cards_range": "146–210",
+                "slide_range": "Folien 35–48",
+                "topics": [
+                    "GP IIb/IIIa",
+                    "Fibrinogenbrücken",
+                    "ASS",
+                    "Clopidogrel"
+                ],
+                "summary": "Behandelt die Folien Folien 35–48 mit 65 prüfungsrelevanten Anki-Karten."
+            }
+        ]
     },
     {
         "id": "2025-09-25_TB_Blut_-_Immunsystem",
@@ -148,11 +454,96 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Vitamin-K-abhängige Faktoren: II, VII, IX, X sowie inhibitorische Proteine C und S (benötigen posttranslationale gamma-Carboxylierung von Glutamat)."
         ],
         "keywords": [
-            "sekundäre hämostase", "gerinnungskaskade", "fibrinolyse", "thrombin", "fibrin", "faktor x",
-            "faktor viii", "faktor ix", "hämophilie", "vitamin k", "antithrombin", "plasmin", "tpa"
+            "sekundäre hämostase",
+            "gerinnungskaskade",
+            "fibrinolyse",
+            "thrombin",
+            "fibrin",
+            "faktor x",
+            "faktor viii",
+            "faktor ix",
+            "hämophilie",
+            "vitamin k",
+            "antithrombin",
+            "plasmin",
+            "tpa"
         ],
-        "associated_decks": ["4 Gerinnungskaskade", "Fibrinolyse", "2. SJ :: 1. Blut & Immunsystem :: Gerinnung"],
+        "associated_decks": [
+            "4 Gerinnungskaskade",
+            "Fibrinolyse",
+            "2. SJ :: 1. Blut & Immunsystem :: Gerinnung"
+        ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/6-7_CM_Blutgerinnung.pdf",
+        "total_anki_cards": 235,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "25:00",
+                "duration_min": 25,
+                "title": "Extrinsischer Weg & Tenase-Komplex (Tissue Factor & FVIIa)",
+                "cards_count": 60,
+                "cards_range": "1–60",
+                "slide_range": "Folien 1–16",
+                "topics": [
+                    "Extrinsischer Weg",
+                    "Tissue Factor",
+                    "TF",
+                    "Faktor VIIa",
+                    "Faktor X"
+                ],
+                "summary": "Behandelt die Folien Folien 1–16 mit 60 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "25:00",
+                "end": "53:00",
+                "duration_min": 28,
+                "title": "Intrinsischer Weg & Prothrombinase-Komplex (FXa, FVa, Ca2+)",
+                "cards_count": 85,
+                "cards_range": "61–145",
+                "slide_range": "Folien 17–33",
+                "topics": [
+                    "Intrinsischer Weg",
+                    "FXII",
+                    "FIXa-FVIIIa",
+                    "Prothrombinase",
+                    "Thrombin IIa"
+                ],
+                "summary": "Behandelt die Folien Folien 17–33 mit 85 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "53:00",
+                "end": "71:00",
+                "duration_min": 18,
+                "title": "Vitamin-K-Abhängigkeit & Antikoagulation (Cumarine / Heparin)",
+                "cards_count": 50,
+                "cards_range": "146–195",
+                "slide_range": "Folien 34–42",
+                "topics": [
+                    "Vitamin K",
+                    "gamma-Carboxylierung",
+                    "Faktoren 1972",
+                    "Protein C/S"
+                ],
+                "summary": "Behandelt die Folien Folien 34–42 mit 50 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "71:00",
+                "end": "87:30",
+                "duration_min": 17,
+                "title": "Fibrinolyse: Plasminogen, tPA, D-Dimere & Antithrombin III",
+                "cards_count": 40,
+                "cards_range": "196–235",
+                "slide_range": "Folien 43–50",
+                "topics": [
+                    "Fibrinolyse",
+                    "Plasmin",
+                    "tPA",
+                    "D-Dimere",
+                    "Antithrombin III"
+                ],
+                "summary": "Behandelt die Folien Folien 43–50 mit 40 prüfungsrelevanten Anki-Karten."
+            }
+        ]
     },
     {
         "id": "2025-09-26_TB_Blut_-_Immunsystem",
@@ -163,7 +554,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
         "exam_yield": "Low-Yield",
         "visual_dependency": "Niedrig",
         "lecturer_tempo": "Langsam",
-        "silence_ratio": 0.880,
+        "silence_ratio": 0.88,
         "recommendation": "Skip (0x)",
         "badge_color": "var(--status-danger, #f85149)",
         "badge_label": "🛑 Vorlesung skippen (100% Anki)",
@@ -175,16 +566,85 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Membranangriffskomplex (MAC): Besteht aus C5b, C6, C7, C8 und polymerisiertem C9 (Porenbildung und bakterielle Zelllyse)."
         ],
         "keywords": [
-            "komplement", "komplementsystem", "c3", "c3b", "c3a", "c5a", "mac", "membranangriffskomplex",
-            "opsonierung", "anaphylatoxin", "c1q", "mbl", "alternativer weg", "kein prüfungsstoff"
+            "komplement",
+            "komplementsystem",
+            "c3",
+            "c3b",
+            "c3a",
+            "c5a",
+            "mac",
+            "membranangriffskomplex",
+            "opsonierung",
+            "anaphylatoxin",
+            "c1q",
+            "mbl",
+            "alternativer weg",
+            "kein prüfungsstoff"
         ],
-        "associated_decks": ["5 Komplementsystem", "Immunmechanismen", "2. SJ :: 1. Blut & Immunsystem :: Komplement"],
+        "associated_decks": [
+            "5 Komplementsystem",
+            "Immunmechanismen",
+            "2. SJ :: 1. Blut & Immunsystem :: Komplement"
+        ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/8_CM_Komplementsystem.pdf",
+        "total_anki_cards": 190,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "28:00",
+                "duration_min": 28,
+                "title": "Aktivierungswege: Klassisch (C1q), Lektin (MBL) & Alternativ",
+                "cards_count": 65,
+                "cards_range": "1–65",
+                "slide_range": "Folien 1–20",
+                "topics": [
+                    "Klassischer Weg",
+                    "C1q",
+                    "Lektinweg",
+                    "MBL",
+                    "Alternativweg",
+                    "C3-Konvertase"
+                ],
+                "summary": "Behandelt die Folien Folien 1–20 mit 65 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "28:00",
+                "end": "56:00",
+                "duration_min": 28,
+                "title": "Effektormechanismen: Opsonierung (C3b) & Membranangriffskomplex MAC (C5b-9)",
+                "cards_count": 75,
+                "cards_range": "66–140",
+                "slide_range": "Folien 21–38",
+                "topics": [
+                    "MAC",
+                    "C5b-9",
+                    "Opsonierung",
+                    "C3b",
+                    "Phagozytose",
+                    "Zelllyse"
+                ],
+                "summary": "Behandelt die Folien Folien 21–38 mit 75 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "56:00",
+                "end": "82:00",
+                "duration_min": 26,
+                "title": "Anaphylatoxine (C3a, C5a) & Schutz körpereigener Zellen (CD59, DAF)",
+                "cards_count": 50,
+                "cards_range": "141–190",
+                "slide_range": "Folien 39–50",
+                "topics": [
+                    "Anaphylatoxine",
+                    "C3a",
+                    "C5a",
+                    "CD59",
+                    "DAF",
+                    "CD55"
+                ],
+                "summary": "Behandelt die Folien Folien 39–50 mit 50 prüfungsrelevanten Anki-Karten."
+            }
+        ]
     },
-
-    # =========================================================================
-    # 2. THEMENBLOCK HERZ-KREISLAUF (KW 40 - 42)
-    # =========================================================================
     {
         "id": "2025-10-02_TB_Herz_-Kreislauf",
         "date": "2025-10-02",
@@ -206,11 +666,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Klinische Fehlbildung: Endokardkissendefekt (Atrioventrikulärer Septumdefekt / AVSD), typisch bei Trisomie 21."
         ],
         "keywords": [
-            "herzentwicklung", "embryologie herz", "herzschlauch", "looping", "septum primum", "septum secundum",
-            "foramen ovale", "endokardkissen", "avsd", "vsd", "asd", "truncus arteriosus", "fallot"
+            "herzentwicklung",
+            "embryologie herz",
+            "herzschlauch",
+            "looping",
+            "septum primum",
+            "septum secundum",
+            "foramen ovale",
+            "endokardkissen",
+            "avsd",
+            "vsd",
+            "asd",
+            "truncus arteriosus",
+            "fallot"
         ],
-        "associated_decks": ["1 Herzembryologie", "Herzentwicklung", "2. SJ :: 2. Herz-Kreislauf :: Embryologie"],
+        "associated_decks": [
+            "1 Herzembryologie",
+            "Herzentwicklung",
+            "2. SJ :: 2. Herz-Kreislauf :: Embryologie"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-03_TB_Herz_-Kreislauf",
@@ -233,11 +710,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Postnatale Schliessung des Ductus arteriosus: Getriggert durch Sauerstoffanstieg und Bradykinin/Prostaglandin-Abfall (wird zum Ligamentum arteriosum)."
         ],
         "keywords": [
-            "aortenbogen", "fetaler kreislauf", "shunts", "ductus arteriosus", "botalli", "foramen ovale",
-            "ductus venosus", "phrynxkaryenbogen", "prostaglandin", "postnatal", "coarctatio"
+            "aortenbogen",
+            "fetaler kreislauf",
+            "shunts",
+            "ductus arteriosus",
+            "botalli",
+            "foramen ovale",
+            "ductus venosus",
+            "phrynxkaryenbogen",
+            "prostaglandin",
+            "postnatal",
+            "coarctatio"
         ],
-        "associated_decks": ["2 Fetaler Kreislauf", "Aortenbögen", "2. SJ :: 2. Herz-Kreislauf :: Fetaler Kreislauf"],
+        "associated_decks": [
+            "2 Fetaler Kreislauf",
+            "Aortenbögen",
+            "2. SJ :: 2. Herz-Kreislauf :: Fetaler Kreislauf"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-06_TB_Herz_-_Kreislauf",
@@ -260,11 +752,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Physiologische AV-Knoten-Verzögerung: Ca. 0.08–0.12 s Verzögerung, um eine vollständige Vorhofentleerung vor der Ventrikelkontraktion zu sichern."
         ],
         "keywords": [
-            "erregungsleitung", "aktionspotenzial", "sinusknoten", "av-knoten", "funny current", "if",
-            "l-typ ca2+", "refraktärzeit", "his-bündel", "purkinje-fasern", "tawara-schenkel", "arrhythmie"
+            "erregungsleitung",
+            "aktionspotenzial",
+            "sinusknoten",
+            "av-knoten",
+            "funny current",
+            "if",
+            "l-typ ca2+",
+            "refraktärzeit",
+            "his-bündel",
+            "purkinje-fasern",
+            "tawara-schenkel",
+            "arrhythmie"
         ],
-        "associated_decks": ["3 Erregungsleitung", "Kardiales Aktionspotenzial", "2. SJ :: 2. Herz-Kreislauf :: Erregungsleitung"],
+        "associated_decks": [
+            "3 Erregungsleitung",
+            "Kardiales Aktionspotenzial",
+            "2. SJ :: 2. Herz-Kreislauf :: Erregungsleitung"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-08_TB_Herz_-_Kreislauf",
@@ -287,11 +795,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Mustererkennung Schenkelblock: Rechtsschenkelblock (M-Konfiguration / rsR' in V1/V2); Linksschenkelblock (breites, gekerbtes R in I, aVL, V5/V6)."
         ],
         "keywords": [
-            "ekg", "elektrokardiogramm", "cabrera-kreis", "lagetyp", "vektorkardiographie", "p-welle",
-            "qrs-komplex", "t-welle", "pq-zeit", "qt-zeit", "schenkelblock", "st-hebung", "infarkt"
+            "ekg",
+            "elektrokardiogramm",
+            "cabrera-kreis",
+            "lagetyp",
+            "vektorkardiographie",
+            "p-welle",
+            "qrs-komplex",
+            "t-welle",
+            "pq-zeit",
+            "qt-zeit",
+            "schenkelblock",
+            "st-hebung",
+            "infarkt"
         ],
-        "associated_decks": ["4 EKG", "Vektorkardiographie", "2. SJ :: 2. Herz-Kreislauf :: EKG"],
+        "associated_decks": [
+            "4 EKG",
+            "Vektorkardiographie",
+            "2. SJ :: 2. Herz-Kreislauf :: EKG"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-09_TB_Herz_-_Kreislauf",
@@ -314,11 +839,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Frank-Starling-Mechanismus: Erhöhte Vorlast (enddiastolische Faserdehnung) steigert die Ca2+-Sensitivität der Myofilamente und damit die Kontraktionskraft."
         ],
         "keywords": [
-            "herzmechanik", "druck-volumen", "pv-loop", "wiggers-diagramm", "frank-starling", "vorlast",
-            "nachlast", "inotropie", "isovolumetrisch", "schlagvolumen", "ejektionsfraktion", "herztöne"
+            "herzmechanik",
+            "druck-volumen",
+            "pv-loop",
+            "wiggers-diagramm",
+            "frank-starling",
+            "vorlast",
+            "nachlast",
+            "inotropie",
+            "isovolumetrisch",
+            "schlagvolumen",
+            "ejektionsfraktion",
+            "herztöne"
         ],
-        "associated_decks": ["5 Herzmechanik", "Druck-Volumen-Diagramm", "2. SJ :: 2. Herz-Kreislauf :: Herzmechanik"],
+        "associated_decks": [
+            "5 Herzmechanik",
+            "Druck-Volumen-Diagramm",
+            "2. SJ :: 2. Herz-Kreislauf :: Herzmechanik"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-10_TB_Herz_-_Kreislauf",
@@ -341,11 +882,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Hauptwiderstandsgefässe: Die präkapillären Arteriolen sind für über 50% des gesamten peripheren Gefässwiderstandes (TPR) verantwortlich."
         ],
         "keywords": [
-            "hämodynamik", "hagen-poiseuille", "windkessel", "gefässwiderstand", "tpr", "arteriolen",
-            "blutdruck", "compliance", "reynolds-zahl", "turbulenz", "stridor", "strömung"
+            "hämodynamik",
+            "hagen-poiseuille",
+            "windkessel",
+            "gefässwiderstand",
+            "tpr",
+            "arteriolen",
+            "blutdruck",
+            "compliance",
+            "reynolds-zahl",
+            "turbulenz",
+            "stridor",
+            "strömung"
         ],
-        "associated_decks": ["6 Hämodynamik", "Gefässwiderstand", "2. SJ :: 2. Herz-Kreislauf :: Hämodynamik"],
+        "associated_decks": [
+            "6 Hämodynamik",
+            "Gefässwiderstand",
+            "2. SJ :: 2. Herz-Kreislauf :: Hämodynamik"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-13_TB_Herz_-_Kreislauf",
@@ -368,11 +925,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Orthostase-Reaktion: Versacken von Blut in Beinen senkt Vorlast und Schlagvolumen -> Barorezeptorentlastung bewirkt reflektorische Tachykardie und Vasokonstriktion."
         ],
         "keywords": [
-            "kreislaufregulation", "barorezeptor", "barorezeptorreflex", "sinus caroticus", "aortenbogen",
-            "bayliss-effekt", "autoregulation", "orthostase", "sympathikus", "parasympathikus", "raas"
+            "kreislaufregulation",
+            "barorezeptor",
+            "barorezeptorreflex",
+            "sinus caroticus",
+            "aortenbogen",
+            "bayliss-effekt",
+            "autoregulation",
+            "orthostase",
+            "sympathikus",
+            "parasympathikus",
+            "raas"
         ],
-        "associated_decks": ["7 Kreislaufregulation", "Barorezeptorreflex", "2. SJ :: 2. Herz-Kreislauf :: Regulation"],
+        "associated_decks": [
+            "7 Kreislaufregulation",
+            "Barorezeptorreflex",
+            "2. SJ :: 2. Herz-Kreislauf :: Regulation"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-15_TB_Herz_-_Kreislauf",
@@ -395,11 +967,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Vier Hauptursachen für Ödeme: 1. Erhöhter P_kap (z.B. Herzinsuffizienz, Venenstau), 2. Erniedrigter pi_kap (Hypalbuminämie, Leberzirrhose), 3. Erhöhte Kapillarpermeabilität (Histamin/Entzündung), 4. Gestörter Lymphabfluss (Lymphödem)."
         ],
         "keywords": [
-            "mikrozirkulation", "starling-gleichung", "kapillare", "filtration", "reabsorption",
-            "kolloidosmotischer druck", "ödem", "ödemgenese", "albumin", "lymphsystem", "perfusion"
+            "mikrozirkulation",
+            "starling-gleichung",
+            "kapillare",
+            "filtration",
+            "reabsorption",
+            "kolloidosmotischer druck",
+            "ödem",
+            "ödemgenese",
+            "albumin",
+            "lymphsystem",
+            "perfusion"
         ],
-        "associated_decks": ["8 Mikrozirkulation", "Kapillaraustausch", "2. SJ :: 2. Herz-Kreislauf :: Mikrozirkulation"],
+        "associated_decks": [
+            "8 Mikrozirkulation",
+            "Kapillaraustausch",
+            "2. SJ :: 2. Herz-Kreislauf :: Mikrozirkulation"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-16_TB_Herz_-_Kreislauf",
@@ -422,16 +1009,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Koronarreserve: Verhältnis von maximal möglicher Durchblutung (unter Vasodilatation) zur Ruhedurchblutung (Faktor 4–5 bei Gesunden)."
         ],
         "keywords": [
-            "koronardurchblutung", "myokard", "koronarien", "diastolische perfusion", "adenosin", "no",
-            "koronarreserve", "sauerstoffausschöpfung", "angina pectoris", "ischämie"
+            "koronardurchblutung",
+            "myokard",
+            "koronarien",
+            "diastolische perfusion",
+            "adenosin",
+            "no",
+            "koronarreserve",
+            "sauerstoffausschöpfung",
+            "angina pectoris",
+            "ischämie"
         ],
-        "associated_decks": ["9 Koronardurchblutung", "Myokardstoffwechsel", "2. SJ :: 2. Herz-Kreislauf :: Koronarien"],
+        "associated_decks": [
+            "9 Koronardurchblutung",
+            "Myokardstoffwechsel",
+            "2. SJ :: 2. Herz-Kreislauf :: Koronarien"
+        ],
         "slide_pdf": "TB herz-Kreislauf/Archive_1/Anatomie/Sommer_HerzGefaessentwicklung-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
-
-    # =========================================================================
-    # 3. THEMENBLOCK ATMUNG & LUNGE (KW 42 - 44)
-    # =========================================================================
     {
         "id": "2025-10-17_TB_Atmung",
         "date": "2025-10-17",
@@ -453,11 +1050,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Tracheooesophageale Fistel (Ösophagusatresie): Häufigste Form (85%) ist die proximale Ösophagusatresie mit distaler tracheooesophagealer Fistel (Vogt IIIb)."
         ],
         "keywords": [
-            "lungenentwicklung", "embryologie lunge", "surfactant", "pneumozyten typ ii", "alveolen",
-            "trachea", "fistel", "ösophagusatresie", "dppc", "kanalikuläre phase", "sakkuläre phase"
+            "lungenentwicklung",
+            "embryologie lunge",
+            "surfactant",
+            "pneumozyten typ ii",
+            "alveolen",
+            "trachea",
+            "fistel",
+            "ösophagusatresie",
+            "dppc",
+            "kanalikuläre phase",
+            "sakkuläre phase"
         ],
-        "associated_decks": ["1 Lungenembryologie", "Respirationstrakt Entwicklung", "2. SJ :: 3. Atmung & Lunge :: Embryologie"],
+        "associated_decks": [
+            "1 Lungenembryologie",
+            "Respirationstrakt Entwicklung",
+            "2. SJ :: 3. Atmung & Lunge :: Embryologie"
+        ],
         "slide_pdf": "Atmung/Sommer_LungenZwerchentw-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-20_TB_Atmung",
@@ -480,11 +1092,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Pneumothorax: Lufteintritt in den Pleuraspalt hebt den Unterdruck auf; Lunge kollabiert aufgrund ihrer Eigenelastizität, während der Thorax nach aussen federt."
         ],
         "keywords": [
-            "atemmechanik", "pleura", "donders-raum", "intrapleuraler druck", "transpulmonal", "atemarbeit",
-            "zwerchfell", "diaphragma", "n. phrenicus", "pneumothorax", "compliance", "resistance"
+            "atemmechanik",
+            "pleura",
+            "donders-raum",
+            "intrapleuraler druck",
+            "transpulmonal",
+            "atemarbeit",
+            "zwerchfell",
+            "diaphragma",
+            "n. phrenicus",
+            "pneumothorax",
+            "compliance",
+            "resistance"
         ],
-        "associated_decks": ["2 Atemmechanik", "Pleura & Zwerchfell", "2. SJ :: 3. Atmung & Lunge :: Mechanik"],
+        "associated_decks": [
+            "2 Atemmechanik",
+            "Pleura & Zwerchfell",
+            "2. SJ :: 3. Atmung & Lunge :: Mechanik"
+        ],
         "slide_pdf": "Atmung/Sommer_LungenZwerchentw-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-22_TB_Atmung",
@@ -507,11 +1135,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Totraumventilation: Anatomischer Totraum ca. 150 ml (Faustregel: 2 ml pro kg Körpergewicht). Alveoläre Ventilation = (Atemzugvolumen - Totraum) * Atemfrequenz."
         ],
         "keywords": [
-            "lungenvolumina", "spirometrie", "fev1", "tiffeneau", "vitalisationskapazität", "frc",
-            "residualvolumen", "obstruktion", "restriktion", "totraum", "alveoläre ventilation"
+            "lungenvolumina",
+            "spirometrie",
+            "fev1",
+            "tiffeneau",
+            "vitalisationskapazität",
+            "frc",
+            "residualvolumen",
+            "obstruktion",
+            "restriktion",
+            "totraum",
+            "alveoläre ventilation"
         ],
-        "associated_decks": ["3 Spirometrie", "Lungenvolumina", "2. SJ :: 3. Atmung & Lunge :: Spirometrie"],
+        "associated_decks": [
+            "3 Spirometrie",
+            "Lungenvolumina",
+            "2. SJ :: 3. Atmung & Lunge :: Spirometrie"
+        ],
         "slide_pdf": "Atmung/Sommer_LungenZwerchentw-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-24_TB_Atmung",
@@ -534,11 +1177,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Diffusionsbegrenzung vs. Perfusionsbegrenzung: O2-Aufnahme ist unter Ruhebedingungen perfusionsbegrenzt (vollständiger Ausgleich nach 0.25 s bei 0.75 s Kontaktzeit), wird bei Lungenfibrose oder extremer Belastung diffusionsbegrenzt."
         ],
         "keywords": [
-            "gasaustausch", "diffusion", "diffusionskapazität", "fick", "alveolargasgleichung", "euler-liljestrand",
-            "ventilations-perfusions-verhältnis", "va/q", "shunt", "totraum", "hypoxische vasokonstriktion"
+            "gasaustausch",
+            "diffusion",
+            "diffusionskapazität",
+            "fick",
+            "alveolargasgleichung",
+            "euler-liljestrand",
+            "ventilations-perfusions-verhältnis",
+            "va/q",
+            "shunt",
+            "totraum",
+            "hypoxische vasokonstriktion"
         ],
-        "associated_decks": ["4 Gasaustausch", "Diffusionskapazität", "2. SJ :: 3. Atmung & Lunge :: Gasaustausch"],
+        "associated_decks": [
+            "4 Gasaustausch",
+            "Diffusionskapazität",
+            "2. SJ :: 3. Atmung & Lunge :: Gasaustausch"
+        ],
         "slide_pdf": "Atmung/Sommer_LungenZwerchentw-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-10-29_TB_Atmung",
@@ -561,16 +1219,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Wichtigster physiologischer Atemantrieb beim Gesunden: Hyperkapnie (Anstieg des arteriellen pCO2 bereits um 2–3 mmHg), nicht die Hypoxie."
         ],
         "keywords": [
-            "atemregulation", "chemorezeptoren", "glomus caroticum", "glomus aorticum", "medulla oblongata",
-            "hyperkapnie", "hypoxie", "pco2", "liquor", "prüfungsinformation", "hering-breuer"
+            "atemregulation",
+            "chemorezeptoren",
+            "glomus caroticum",
+            "glomus aorticum",
+            "medulla oblongata",
+            "hyperkapnie",
+            "hypoxie",
+            "pco2",
+            "liquor",
+            "prüfungsinformation",
+            "hering-breuer"
         ],
-        "associated_decks": ["5 Atemregulation", "Prüfungsvorbereitung", "2. SJ :: 3. Atmung & Lunge :: Regulation"],
+        "associated_decks": [
+            "5 Atemregulation",
+            "Prüfungsvorbereitung",
+            "2. SJ :: 3. Atmung & Lunge :: Regulation"
+        ],
         "slide_pdf": "Atmung/Sommer_LungenZwerchentw-VAM.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
-
-    # =========================================================================
-    # 4. THEMENBLOCK VERDAUUNG & ERNÄHRUNG (KW 46 - 48)
-    # =========================================================================
     {
         "id": "2025-11-10_TB_Verdauung",
         "date": "2025-11-10",
@@ -592,11 +1261,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Grundumsatz-Faustregel beim Erwachsenen: ca. 1 kcal (4.2 kJ) pro kg Körpergewicht pro Stunde bzw. ca. 100 kJ/kg/Tag."
         ],
         "keywords": [
-            "ernährung", "energiebedarf", "kalorimetrie", "brennwert", "respiratorischer quotient", "rq",
-            "grundumsatz", "leistungsumsatz", "pal-faktor", "bmi", "makronährstoffe"
+            "ernährung",
+            "energiebedarf",
+            "kalorimetrie",
+            "brennwert",
+            "respiratorischer quotient",
+            "rq",
+            "grundumsatz",
+            "leistungsumsatz",
+            "pal-faktor",
+            "bmi",
+            "makronährstoffe"
         ],
-        "associated_decks": ["1 Ernährung & Energiebedarf", "Brennwerte", "2. SJ :: 4. Verdauung & Ernährung :: Grundlagen"],
+        "associated_decks": [
+            "1 Ernährung & Energiebedarf",
+            "Brennwerte",
+            "2. SJ :: 4. Verdauung & Ernährung :: Grundlagen"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-12_TB_Verdauung",
@@ -619,11 +1303,29 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Klassische Mangelerscheinungen: Vit. B1 (Thiamin) -> Beriberi / Wernicke-Enzephalopathie; Vit. B3 (Niacin) -> Pellagra (3-D-Regel: Dermatitis, Diarrhoe, Demenz); Vit. C -> Skorbut."
         ],
         "keywords": [
-            "vitamine", "mikronährstoffe", "b12", "cobalamin", "intrinsic factor", "thiamin", "beriberi",
-            "niacin", "pellagra", "skorbut", "vitamin c", "fettlösliche vitamine", "vitamin d", "vitamin k"
+            "vitamine",
+            "mikronährstoffe",
+            "b12",
+            "cobalamin",
+            "intrinsic factor",
+            "thiamin",
+            "beriberi",
+            "niacin",
+            "pellagra",
+            "skorbut",
+            "vitamin c",
+            "fettlösliche vitamine",
+            "vitamin d",
+            "vitamin k"
         ],
-        "associated_decks": ["2 Vitamine & Spurenelemente", "Mikronährstoffe", "2. SJ :: 4. Verdauung & Ernährung :: Vitamine"],
+        "associated_decks": [
+            "2 Vitamine & Spurenelemente",
+            "Mikronährstoffe",
+            "2. SJ :: 4. Verdauung & Ernährung :: Vitamine"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-13_TB_Verdauung",
@@ -646,11 +1348,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Schluckreflex: Willkürliche orale Phase löst bei Berührung des hinteren Gaumenbogens die unwillkürliche pharyngeale Phase aus (Verschluss Nasopharynx via Gaumensegel, Verschluss Larynx via Epiglottis)."
         ],
         "keywords": [
-            "mundhöhle", "kauapparat", "speicheldrüsen", "parotis", "submandibularis", "schluckakt",
-            "schluckreflex", "amylase", "epiglottis", "n. glossopharyngeus", "chorda tympani"
+            "mundhöhle",
+            "kauapparat",
+            "speicheldrüsen",
+            "parotis",
+            "submandibularis",
+            "schluckakt",
+            "schluckreflex",
+            "amylase",
+            "epiglottis",
+            "n. glossopharyngeus",
+            "chorda tympani"
         ],
-        "associated_decks": ["3 Mundhöhle & Schluckakt", "Speicheldrüsen", "2. SJ :: 4. Verdauung & Ernährung :: Mundhöhle"],
+        "associated_decks": [
+            "3 Mundhöhle & Schluckakt",
+            "Speicheldrüsen",
+            "2. SJ :: 4. Verdauung & Ernährung :: Mundhöhle"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-14_TB_Verdauung",
@@ -673,11 +1390,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Gefässversorgung des Magens: Truncus coeliacus -> A. gastrica sinistra, A. hepatica communis (A. gastrica dextra), A. splenica/lienalis (A. gastroomentalis sinistra, Aa. gastricae breves)."
         ],
         "keywords": [
-            "oesophagus", "magen", "magendrüsen", "belegzellen", "hauptzellen", "nebenzellen", "ecl",
-            "truncus coeliacus", "auerbach-plexus", "meissner-plexus", "peritoneum", "histologie magen"
+            "oesophagus",
+            "magen",
+            "magendrüsen",
+            "belegzellen",
+            "hauptzellen",
+            "nebenzellen",
+            "ecl",
+            "truncus coeliacus",
+            "auerbach-plexus",
+            "meissner-plexus",
+            "peritoneum",
+            "histologie magen"
         ],
-        "associated_decks": ["4 Anatomie Oesophagus & Magen", "Magendrüsen", "2. SJ :: 4. Verdauung & Ernährung :: Magen Anatomie"],
+        "associated_decks": [
+            "4 Anatomie Oesophagus & Magen",
+            "Magendrüsen",
+            "2. SJ :: 4. Verdauung & Ernährung :: Magen Anatomie"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-19_TB_Verdauung",
@@ -688,7 +1421,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
         "exam_yield": "High-Yield",
         "visual_dependency": "Hoch",
         "lecturer_tempo": "Langsam",
-        "silence_ratio": 0.870,
+        "silence_ratio": 0.87,
         "recommendation": "1.2x",
         "badge_color": "var(--status-warning, #d29922)",
         "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
@@ -700,11 +1433,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Inhibitoren: Somatostatin (aus D-Zellen bei pH < 3, hemmt G-Zellen und Belegzellen) und Prostaglandin E2 (PGE2, hemmt Säuresekretion und stimuliert Schleim/Bicarbonat)."
         ],
         "keywords": [
-            "magensekretion", "magensäure", "hcl", "h+/k+-atpase", "belegzelle", "gastrin", "histamin",
-            "acetylcholin", "somatostatin", "prostaglandin", "ppi", "omeprazol", "alkalische gezeiten"
+            "magensekretion",
+            "magensäure",
+            "hcl",
+            "h+/k+-atpase",
+            "belegzelle",
+            "gastrin",
+            "histamin",
+            "acetylcholin",
+            "somatostatin",
+            "prostaglandin",
+            "ppi",
+            "omeprazol",
+            "alkalische gezeiten"
         ],
-        "associated_decks": ["5 Magensekretion", "Säure-Regulation", "2. SJ :: 4. Verdauung & Ernährung :: Magensekretion"],
+        "associated_decks": [
+            "5 Magensekretion",
+            "Säure-Regulation",
+            "2. SJ :: 4. Verdauung & Ernährung :: Magensekretion"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-20_TB_Verdauung",
@@ -727,11 +1477,26 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Rektum-Venendrainage (Portokavale Anastomose): V. rectalis superior drainiert in V. mesenterica inferior (Pfortader); Vv. rectales mediae & inferiores drainieren in V. iliaca interna (V. cava inferior)."
         ],
         "keywords": [
-            "dünndarm", "dickdarm", "rektum", "peritoneum", "retroperitoneal", "mesenterica superior",
-            "mesenterica inferior", "riolan-anastomose", "cannon-böhm", "portokavale anastomose", "hämorrhoiden"
+            "dünndarm",
+            "dickdarm",
+            "rektum",
+            "peritoneum",
+            "retroperitoneal",
+            "mesenterica superior",
+            "mesenterica inferior",
+            "riolan-anastomose",
+            "cannon-böhm",
+            "portokavale anastomose",
+            "hämorrhoiden"
         ],
-        "associated_decks": ["6 Anatomie Darm & Rektum", "Topographie Abdomen", "2. SJ :: 4. Verdauung & Ernährung :: Darm Anatomie"],
+        "associated_decks": [
+            "6 Anatomie Darm & Rektum",
+            "Topographie Abdomen",
+            "2. SJ :: 4. Verdauung & Ernährung :: Darm Anatomie"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-21_TB_Verdauung",
@@ -754,11 +1519,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Enterohepatischer Kreislauf: Ca. 95% der sezernierten Gallensäuren werden im terminalen Ileum via ASBT (apikaler natriumabhängiger Gallensäuretransporter) reabsorbiert und gelangen zur Leber zurück."
         ],
         "keywords": [
-            "pankreas", "exokrines pankreas", "galle", "gallensäuren", "zymogene", "trypsin", "enteropeptidase",
-            "cck", "sekretin", "cftr", "bicarbonat", "enterohepatischer kreislauf", "asbt"
+            "pankreas",
+            "exokrines pankreas",
+            "galle",
+            "gallensäuren",
+            "zymogene",
+            "trypsin",
+            "enteropeptidase",
+            "cck",
+            "sekretin",
+            "cftr",
+            "bicarbonat",
+            "enterohepatischer kreislauf",
+            "asbt"
         ],
-        "associated_decks": ["7 Exokrines Pankreas & Galle", "Gallensäuren", "2. SJ :: 4. Verdauung & Ernährung :: Pankreas & Galle"],
+        "associated_decks": [
+            "7 Exokrines Pankreas & Galle",
+            "Gallensäuren",
+            "2. SJ :: 4. Verdauung & Ernährung :: Pankreas & Galle"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-24_TB_Verdauung",
@@ -781,16 +1563,29 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Lipidresorption: Spaltung durch Pankreaslipase/Colipase, Mizellenbildung, Aufnahme via CD36/NPC1L1; intrazelluläre Re-Esterifizierung und Verpackung in Chylomikronen mit ApoB-48 zur Lymphabgabe."
         ],
         "keywords": [
-            "resorption", "intestinale resorption", "sglt1", "glut2", "glut5", "pept1", "mizellen",
-            "chylomikronen", "apob-48", "fettresorption", "glucoseresorption", "aminosäuren", "bürstensaum"
+            "resorption",
+            "intestinale resorption",
+            "sglt1",
+            "glut2",
+            "glut5",
+            "pept1",
+            "mizellen",
+            "chylomikronen",
+            "apob-48",
+            "fettresorption",
+            "glucoseresorption",
+            "aminosäuren",
+            "bürstensaum"
         ],
-        "associated_decks": ["8 Intestinale Resorption", "Membrantransporter", "2. SJ :: 4. Verdauung & Ernährung :: Resorption"],
+        "associated_decks": [
+            "8 Intestinale Resorption",
+            "Membrantransporter",
+            "2. SJ :: 4. Verdauung & Ernährung :: Resorption"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
-
-    # =========================================================================
-    # 5. THEMENBLOCK STOFFWECHSEL & BIOCHEMIE (KW 48)
-    # =========================================================================
     {
         "id": "2025-11-26_TB_Verdauung",
         "date": "2025-11-26",
@@ -812,11 +1607,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Umgehungsschritte der Glukoneogenese: 1. Pyruvat -> Oxalacetat (Pyruvatcarboxylase, Biotin-abhängig in Mitochondrien) -> PEP (PEPCK); 2. Fructose-1,6-bisphosphat -> F-6-P (FBPase-1); 3. Glucose-6-phosphat -> Glucose (Glucose-6-Phosphatase im ER der Leber)."
         ],
         "keywords": [
-            "stoffwechsel", "glykolyse", "glukoneogenese", "pfk-1", "fructose-2,6-bisphosphat", "pepck",
-            "pyruvatcarboxylase", "fbpase-1", "insulin", "glukagon", "bifunktionelles enzym", "schlüsselenzyme"
+            "stoffwechsel",
+            "glykolyse",
+            "glukoneogenese",
+            "pfk-1",
+            "fructose-2,6-bisphosphat",
+            "pepck",
+            "pyruvatcarboxylase",
+            "fbpase-1",
+            "insulin",
+            "glukagon",
+            "bifunktionelles enzym",
+            "schlüsselenzyme"
         ],
-        "associated_decks": ["1 Glykolyse & Glukoneogenese", "Kohlenhydratstoffwechsel", "2. SJ :: 5. Stoffwechsel & Biochemie :: Glykolyse"],
+        "associated_decks": [
+            "1 Glykolyse & Glukoneogenese",
+            "Kohlenhydratstoffwechsel",
+            "2. SJ :: 5. Stoffwechsel & Biochemie :: Glykolyse"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-27_TB_Verdauung",
@@ -839,11 +1650,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Ketogenese: Findet ausschliesslich in Lebermitochondrien aus Acetyl-CoA statt (HMG-CoA-Synthase ist das Schlüsselenzym); Leber kann selbst keine Ketonkörper verwerten (fehlt Thiophorase/SCOT)."
         ],
         "keywords": [
-            "leberstoffwechsel", "harnstoffzyklus", "cps-1", "otc", "ammoniak", "ornithin", "citrullin",
-            "arginin", "ketogenese", "ketonkörper", "acetyl-coa", "n-acetylglutamat"
+            "leberstoffwechsel",
+            "harnstoffzyklus",
+            "cps-1",
+            "otc",
+            "ammoniak",
+            "ornithin",
+            "citrullin",
+            "arginin",
+            "ketogenese",
+            "ketonkörper",
+            "acetyl-coa",
+            "n-acetylglutamat"
         ],
-        "associated_decks": ["2 Leberstoffwechsel & Harnstoffzyklus", "Ketogenese", "2. SJ :: 5. Stoffwechsel & Biochemie :: Harnstoffzyklus"],
+        "associated_decks": [
+            "2 Leberstoffwechsel & Harnstoffzyklus",
+            "Ketogenese",
+            "2. SJ :: 5. Stoffwechsel & Biochemie :: Harnstoffzyklus"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-11-28_TB_Verdauung",
@@ -866,16 +1693,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Ikterus-Differenzierung: Prähepatisch (indirektes Bilirubin erhöht, z.B. Hämolyse, Morbus Meulengracht); Posthepatisch (direktes Bilirubin erhöht, Cholestase, acholischer Stuhl, dunkler Urin)."
         ],
         "keywords": [
-            "biotransformation", "cyp450", "bilirubin", "häm-abbau", "ikterus", "gelbsucht", "ugt1a1",
-            "glukuronidierung", "meulengracht", "cholestase", "direktes bilirubin", "indirektes bilirubin"
+            "biotransformation",
+            "cyp450",
+            "bilirubin",
+            "häm-abbau",
+            "ikterus",
+            "gelbsucht",
+            "ugt1a1",
+            "glukuronidierung",
+            "meulengracht",
+            "cholestase",
+            "direktes bilirubin",
+            "indirektes bilirubin"
         ],
-        "associated_decks": ["3 Biotransformation & Bilirubin", "Ikterus-Diagnostik", "2. SJ :: 5. Stoffwechsel & Biochemie :: Biotransformation"],
+        "associated_decks": [
+            "3 Biotransformation & Bilirubin",
+            "Ikterus-Diagnostik",
+            "2. SJ :: 5. Stoffwechsel & Biochemie :: Biotransformation"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
-
-    # =========================================================================
-    # 6. THEMENBLOCK ENDOKRINOLOGIE & HORMONE (KW 49 - 51)
-    # =========================================================================
     {
         "id": "2025-12-01_TB_Endokrinologie",
         "date": "2025-12-01",
@@ -897,11 +1736,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Rezeptor-Tyrosinkinasen: Insulin und Wachstumsfaktoren (IGF-1) bewirken Rezeptordimerisierung und Autophosphorylierung -> Rekrutierung von IRS-1 und Aktivierung des PI3K/Akt- und MAP-Kinase-Signalwegs."
         ],
         "keywords": [
-            "hormone", "signaltransduktion", "g-protein", "second messenger", "camp", "pka", "ip3",
-            "dag", "pkc", "tyrosinkinase", "insulinrezeptor", "steroidrezeptor", "endokrinologie"
+            "hormone",
+            "signaltransduktion",
+            "g-protein",
+            "second messenger",
+            "camp",
+            "pka",
+            "ip3",
+            "dag",
+            "pkc",
+            "tyrosinkinase",
+            "insulinrezeptor",
+            "steroidrezeptor",
+            "endokrinologie"
         ],
-        "associated_decks": ["1 Hormonbiochemie", "Signaltransduktion", "2. SJ :: 6. Endokrinologie & Hormone :: Grundlagen"],
+        "associated_decks": [
+            "1 Hormonbiochemie",
+            "Signaltransduktion",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Grundlagen"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-12-04_TB_Endokrinologie",
@@ -924,11 +1780,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Glukagonwirkungen (Alpha-Zellen): Wirkt via Gs-gekoppelten Rezeptor v.a. auf Hepatozyten -> aktiviert Glykogenolyse und Glukoneogenese zur schnellen Blutzuckerhebung."
         ],
         "keywords": [
-            "insulin", "glukagon", "endokrines pankreas", "beta-zelle", "alpha-zelle", "glut2", "glut4",
-            "atp-k-kanal", "glukosehomöostase", "diabetes", "c-peptid", "sulfonylharnstoffe"
+            "insulin",
+            "glukagon",
+            "endokrines pankreas",
+            "beta-zelle",
+            "alpha-zelle",
+            "glut2",
+            "glut4",
+            "atp-k-kanal",
+            "glukosehomöostase",
+            "diabetes",
+            "c-peptid",
+            "sulfonylharnstoffe"
         ],
-        "associated_decks": ["2 Endokrines Pankreas", "Insulin & Glukagon", "2. SJ :: 6. Endokrinologie & Hormone :: Pankreas"],
+        "associated_decks": [
+            "2 Endokrines Pankreas",
+            "Insulin & Glukagon",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Pankreas"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-12-05_TB_Endokrinologie",
@@ -951,11 +1823,27 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Phase 4 (Langzeitfasten > 3 Tage): Ketonkörperbildung in Leber steigt massiv an (beta-Hydroxybutyrat, Acetoacetat); Gehirn adaptiert und deckt bis zu 70% seines Energiebedarfs aus Ketonkörpern -> schont Muskelprotein!"
         ],
         "keywords": [
-            "fasten", "hungerstoffwechsel", "muskelarbeit", "ketonkörper", "glykogenolyse", "glukoneogenese",
-            "cori-zyklus", "glucose-alanin-zyklus", "lipolyse", "beta-hydroxybutyrat", "audio-only", "gehirnenergie"
+            "fasten",
+            "hungerstoffwechsel",
+            "muskelarbeit",
+            "ketonkörper",
+            "glykogenolyse",
+            "glukoneogenese",
+            "cori-zyklus",
+            "glucose-alanin-zyklus",
+            "lipolyse",
+            "beta-hydroxybutyrat",
+            "audio-only",
+            "gehirnenergie"
         ],
-        "associated_decks": ["3 Fasten & Hungeradaptation", "Muskelarbeit", "2. SJ :: 6. Endokrinologie & Hormone :: Fasten"],
+        "associated_decks": [
+            "3 Fasten & Hungeradaptation",
+            "Muskelarbeit",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Fasten"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-12-10_TB_Endokrinologie",
@@ -978,11 +1866,30 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Dopamin als Prolaktin-Statin: Dopamin aus dem Hypothalamus hemmt tonisch die Prolaktinfreisetzung. Bei Hypophysenstieldurchtrennung sinken alle HVL-Hormone, aber Prolaktin steigt massiv an!"
         ],
         "keywords": [
-            "hypophyse", "hypothalamus", "neurohypophyse", "adenohypophyse", "adh", "oxytocin", "crh",
-            "acth", "trh", "tsh", "gnrh", "dopamin", "prolaktin", "wachstumshormon", "rückkopplung"
+            "hypophyse",
+            "hypothalamus",
+            "neurohypophyse",
+            "adenohypophyse",
+            "adh",
+            "oxytocin",
+            "crh",
+            "acth",
+            "trh",
+            "tsh",
+            "gnrh",
+            "dopamin",
+            "prolaktin",
+            "wachstumshormon",
+            "rückkopplung"
         ],
-        "associated_decks": ["4 Hypophyse & Hypothalamus", "Hormonelle Regelkreise", "2. SJ :: 6. Endokrinologie & Hormone :: Hypophyse"],
+        "associated_decks": [
+            "4 Hypophyse & Hypothalamus",
+            "Hormonelle Regelkreise",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Hypophyse"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-12-15_TB_Endokrinologie",
@@ -1005,11 +1912,28 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Aldosteron-Wirkung am distalen Tubulus / Sammelrohr: Bindet intrazellulären Mineralokortikoidrezeptor -> Expression von ENaC und Na+/K+-ATPase -> Na+- und Wasser-Retention, K+- und H+-Ausscheidung."
         ],
         "keywords": [
-            "nebennierenrinde", "steroidsynthese", "cortisol", "aldosteron", "dhea", "glomerulosa",
-            "fasciculata", "reticularis", "ags", "21-hydroxylase", "raas", "cushing", "addison"
+            "nebennierenrinde",
+            "steroidsynthese",
+            "cortisol",
+            "aldosteron",
+            "dhea",
+            "glomerulosa",
+            "fasciculata",
+            "reticularis",
+            "ags",
+            "21-hydroxylase",
+            "raas",
+            "cushing",
+            "addison"
         ],
-        "associated_decks": ["5 Nebennierenrinde", "Steroidhormone", "2. SJ :: 6. Endokrinologie & Hormone :: Nebenniere"],
+        "associated_decks": [
+            "5 Nebennierenrinde",
+            "Steroidhormone",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Nebenniere"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-12-17_TB_Endokrinologie",
@@ -1032,11 +1956,29 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Periphere T4-zu-T3-Aktivierung: T4 (Prohormon, 90% im Blut) wird peripher durch 5'-Dejodase (Typ 1 und 2, selenabhängig) in biologisch aktives T3 umgewandelt."
         ],
         "keywords": [
-            "schilddrüse", "t3", "t4", "thyroxin", "tpo", "thyreoperoxidase", "nis-symporter", "katecholamine",
-            "adrenalin", "noradrenalin", "nebennierenmark", "pnmt", "dejodase", "wolff-chaikoff"
+            "schilddrüse",
+            "t3",
+            "t4",
+            "thyroxin",
+            "tpo",
+            "thyreoperoxidase",
+            "nis-symporter",
+            "katecholamine",
+            "adrenalin",
+            "noradrenalin",
+            "nebennierenmark",
+            "pnmt",
+            "dejodase",
+            "wolff-chaikoff"
         ],
-        "associated_decks": ["6 Schilddrüse & Nebennierenmark", "Katecholamine & T3/T4", "2. SJ :: 6. Endokrinologie & Hormone :: Schilddrüse"],
+        "associated_decks": [
+            "6 Schilddrüse & Nebennierenmark",
+            "Katecholamine & T3/T4",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Schilddrüse"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     },
     {
         "id": "2025-12-18_TB_Endokrinologie",
@@ -1047,7 +1989,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
         "exam_yield": "High-Yield",
         "visual_dependency": "Hoch",
         "lecturer_tempo": "Langsam",
-        "silence_ratio": 0.960,
+        "silence_ratio": 0.96,
         "recommendation": "1.0x",
         "badge_color": "var(--status-done, #3fb950)",
         "badge_label": "🟢 1.0x Voller Fokus (Höchste klinische Relevanz)",
@@ -1059,14 +2001,31 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Regulation via CaSR: Sinkendes ionisiertes Calcium enthemmt die PTH-Sekretion der Hauptzellen; Hyperkalzämie aktiviert CaSR und unterdrückt die PTH-Freisetzung sofort."
         ],
         "keywords": [
-            "calcium", "calciumhaushalt", "phosphathaushalt", "parathormon", "pth", "calcitriol", "vitamin d",
-            "calcitonin", "casr", "rankl", "osteoklasten", "hyperkalzämie", "hypokalzämie", "fgf23"
+            "calcium",
+            "calciumhaushalt",
+            "phosphathaushalt",
+            "parathormon",
+            "pth",
+            "calcitriol",
+            "vitamin d",
+            "calcitonin",
+            "casr",
+            "rankl",
+            "osteoklasten",
+            "hyperkalzämie",
+            "hypokalzämie",
+            "fgf23"
         ],
-        "associated_decks": ["7 Calcium- & Phosphathaushalt", "Parathormon & Vitamin D", "2. SJ :: 6. Endokrinologie & Hormone :: Calcium"],
+        "associated_decks": [
+            "7 Calcium- & Phosphathaushalt",
+            "Parathormon & Vitamin D",
+            "2. SJ :: 6. Endokrinologie & Hormone :: Calcium"
+        ],
         "slide_pdf": "Kurs Klinischer Untersuchungskurs I/Archive/Unterlagen 1. Fachsemester (HS 2025)/2_Klin-Untersuchungskurs_Abdomen.pdf",
+        "total_anki_cards": 200,
+        "chapters": []
     }
 ]
-
 
 def get_all_advisor_lectures() -> List[Dict[str, Any]]:
     """Returns all 38 lectures enriched with local podcast paths."""
@@ -1092,13 +2051,258 @@ def get_all_advisor_lectures() -> List[Dict[str, Any]]:
     return enriched
 
 
-def search_lecture_advisor(query: str, filter_mode: Optional[str] = None, filter_module: Optional[str] = None) -> Dict[str, Any]:
-    """Search engine matching user topic queries against all 38 UZH lectures.
+def calculate_timestamp_budget(
+    chapters: List[Dict[str, Any]],
+    target_cards: int = 100,
+    speed_factor: float = 1.2
+) -> Dict[str, Any]:
+    """Calculates precisely which video timestamp range is needed for target_cards.
     
-    Returns structured decision card and matching lectures.
+    Returns video minutes, effective stream time, saved minutes, and annotated chapters.
+    """
+    if not chapters:
+        return {
+            "target_cards": target_cards,
+            "total_lecture_cards": 0,
+            "start_timestamp": "00:00",
+            "end_timestamp": "00:00",
+            "video_minutes_raw": 0,
+            "video_minutes_effective": 0,
+            "saved_minutes": 0,
+            "guidance_text": "Keine Kapitel für diese Vorlesung vorhanden.",
+            "annotated_chapters": []
+        }
+
+    total_lecture_cards = sum(c.get("cards_count", 0) for c in chapters)
+    total_lecture_dur = sum(c.get("duration_min", 0) for c in chapters)
+
+    # If user wants all or more cards than available in the lecture
+    if target_cards >= total_lecture_cards:
+        eff_dur = max(1, round(total_lecture_dur / max(speed_factor, 1.0)))
+        annotated = []
+        for c in chapters:
+            ca = dict(c)
+            ca["is_needed_for_target"] = True
+            ca["coverage_label"] = f"🟢 Vollständig ansehen (Karten {c.get('cards_range', '')})"
+            annotated.append(ca)
+
+        return {
+            "target_cards": total_lecture_cards,
+            "total_lecture_cards": total_lecture_cards,
+            "start_timestamp": chapters[0]["start"],
+            "end_timestamp": chapters[-1]["end"],
+            "video_minutes_raw": total_lecture_dur,
+            "video_minutes_effective": eff_dur,
+            "saved_minutes": 0,
+            "guidance_text": f"Schau die gesamte Vorlesung ({chapters[0]['start']} – {chapters[-1]['end']}) für alle {total_lecture_cards} Karten (Dauer: {eff_dur}m bei {speed_factor}x).",
+            "annotated_chapters": annotated
+        }
+
+    accumulated = 0
+    raw_minutes = 0
+    end_timestamp = chapters[0]["end"]
+    annotated = []
+
+    for c in chapters:
+        ca = dict(c)
+        c_cards = c.get("cards_count", 0)
+        c_dur = c.get("duration_min", 0)
+
+        # Parse start and end seconds
+        parts_start = [int(p) for p in c["start"].split(":")]
+        start_sec = parts_start[0] * 60 + parts_start[1]
+        parts_end = [int(p) for p in c["end"].split(":")]
+        end_sec = parts_end[0] * 60 + parts_end[1]
+
+        if accumulated + c_cards <= target_cards:
+            accumulated += c_cards
+            raw_minutes += c_dur
+            end_timestamp = c["end"]
+            ca["is_needed_for_target"] = True
+            ca["coverage_label"] = f"🟢 Vollständig ansehen (Karten {c.get('cards_range', '')})"
+        elif accumulated < target_cards:
+            remaining = target_cards - accumulated
+            fraction = remaining / max(c_cards, 1)
+            add_sec = int((end_sec - start_sec) * fraction)
+            target_sec = start_sec + add_sec
+            t_min = target_sec // 60
+            t_sec = target_sec % 60
+            end_timestamp = f"{t_min:02d}:{t_sec:02d}"
+            raw_minutes += max(1, round(c_dur * fraction))
+            ca["is_needed_for_target"] = True
+            ca["coverage_label"] = f"🟡 Bis Minute {end_timestamp} ansehen (deckt Karten {c.get('cards_range', '').split('–')[0]}–{target_cards} ab)"
+            accumulated = target_cards
+        else:
+            ca["is_needed_for_target"] = False
+            ca["coverage_label"] = f"⚪ Nicht nötig für deine {target_cards} Karten (+{c_dur}m gespart)"
+
+        annotated.append(ca)
+
+    eff_minutes = max(1, round(raw_minutes / max(speed_factor, 1.0)))
+    saved_minutes = max(0, total_lecture_dur - eff_minutes)
+
+    return {
+        "target_cards": target_cards,
+        "total_lecture_cards": total_lecture_cards,
+        "start_timestamp": chapters[0]["start"],
+        "end_timestamp": end_timestamp,
+        "video_minutes_raw": raw_minutes,
+        "video_minutes_effective": eff_minutes,
+        "saved_minutes": saved_minutes,
+        "guidance_text": f"Schau nur {chapters[0]['start']} bis {end_timestamp} ({eff_minutes} Min bei {speed_factor}x). Du sparst dir heute {saved_minutes} Minuten Vorlesungszeit!",
+        "annotated_chapters": annotated
+    }
+
+
+# Recognized lecturers with canonical names, exact firstnames, and fuzzy surnames
+LECTURER_CATALOG = {
+    "manatschal": {
+        "canonical": "Prof. Dr. Cristina Manatschal",
+        "surnames": ["manatschal", "manataschal", "manatschel", "manatscha", "manatschat"],
+        "firstnames": ["cristina"]
+    },
+    "ullrich": {
+        "canonical": "Prof. Dr. Oliver Ullrich",
+        "surnames": ["ullrich", "ulrich", "ulricht"],
+        "firstnames": ["oliver"]
+    },
+    "dutzler": {
+        "canonical": "Prof. Raimund Dutzler",
+        "surnames": ["dutzler"],
+        "firstnames": ["raimund"]
+    },
+    "tuzlak": {
+        "canonical": "Dr. Tuzlak",
+        "surnames": ["tuzlak", "tuslak"],
+        "firstnames": []
+    },
+    "sommer": {
+        "canonical": "Prof. Dr. Lutz Sommer",
+        "surnames": ["sommer"],
+        "firstnames": ["lutz"]
+    },
+    "kurt": {
+        "canonical": "Prof. Dr. med. Elisabeth Kurt",
+        "surnames": ["kurt"],
+        "firstnames": ["elisabeth"]
+    },
+    "wenger": {
+        "canonical": "Prof. Dr. Roland Wenger",
+        "surnames": ["wenger"],
+        "firstnames": ["roland"]
+    },
+    "wagner": {
+        "canonical": "Prof. Dr. Carsten Wagner",
+        "surnames": ["wagner"],
+        "firstnames": ["carsten"]
+    },
+    "stockmann": {
+        "canonical": "Prof. Dr. med. Cyrill Stockmann",
+        "surnames": ["stockmann", "stockman", "stokman"],
+        "firstnames": ["cyrill"]
+    }
+}
+
+MODULE_CATALOG = {
+    "blut": "1. Blut & Immunsystem",
+    "immun": "1. Blut & Immunsystem",
+    "immunsystem": "1. Blut & Immunsystem",
+    "hämatologie": "1. Blut & Immunsystem",
+    "herz": "2. Herz-Kreislauf",
+    "kreislauf": "2. Herz-Kreislauf",
+    "kardio": "2. Herz-Kreislauf",
+    "ekg": "2. Herz-Kreislauf",
+    "atmung": "3. Atmung & Lunge",
+    "lunge": "3. Atmung & Lunge",
+    "respiration": "3. Atmung & Lunge",
+    "verdauung": "4. Verdauung & Ernährung",
+    "magen": "4. Verdauung & Ernährung",
+    "darm": "4. Verdauung & Ernährung",
+    "ernährung": "4. Verdauung & Ernährung",
+    "stoffwechsel": "5. Stoffwechsel & Biochemie",
+    "biochemie": "5. Stoffwechsel & Biochemie",
+    "glykolyse": "5. Stoffwechsel & Biochemie",
+    "hormon": "6. Endokrinologie & Hormone",
+    "hormone": "6. Endokrinologie & Hormone",
+    "endokrin": "6. Endokrinologie & Hormone",
+    "endokrinologie": "6. Endokrinologie & Hormone",
+}
+
+STOPWORDS = {
+    "von", "vom", "im", "in", "der", "die", "das", "des", "dem", "den",
+    "ein", "eine", "einer", "eines", "und", "oder", "für", "fuer", "zu",
+    "zum", "zur", "mit", "bei", "über", "ueber", "themenblock", "tb",
+    "vorlesung", "vorlesungen", "prof", "dr", "med", "dozent", "dozenten"
+}
+
+
+def fuzzy_match_token(token: str, candidate_words: List[str], threshold: float = 0.72) -> float:
+    """Computes similarity ratio between a search token and candidate strings."""
+    token = token.lower().strip()
+    if not token:
+        return 0.0
+    best_ratio = 0.0
+    for cand in candidate_words:
+        cand = cand.lower().strip()
+        if not cand:
+            continue
+        if token == cand:
+            return 1.0
+        if token in cand or cand in token:
+            r = len(token) / max(len(cand), 1)
+            if r >= 0.75:
+                best_ratio = max(best_ratio, 0.95)
+        # Difflib sequence matcher
+        sim = difflib.SequenceMatcher(None, token, cand).ratio()
+        if sim > best_ratio:
+            best_ratio = sim
+    return best_ratio if best_ratio >= threshold else 0.0
+
+
+def search_lecture_advisor(
+    query: str,
+    filter_mode: Optional[str] = None,
+    filter_module: Optional[str] = None,
+    target_cards: Optional[int] = 100
+) -> Dict[str, Any]:
+    """Intelligent search engine matching user topic queries against all 38 UZH lectures.
+    
+    Features:
+    - Fuzzy tolerance for lecturer names (e.g. 'manataschal' -> 'Manatschal').
+    - Handles module shortcuts (e.g. 'TB Blut' -> '1. Blut & Immunsystem').
+    - Strips noisy stopwords ('von', 'im', 'der').
+    - Dynamically computes timestamp intervals and saved study minutes for target_cards.
+    - Returns top_matches (list of relevant lectures) and detailed chapter breakdowns.
     """
     all_lectures = get_all_advisor_lectures()
-    q_clean = (query or "").strip().lower()
+    q_raw = (query or "").strip().lower()
+    target_cards_val = int(target_cards) if target_cards and str(target_cards).isdigit() else 100
+
+    # 1. Clean query & extract tokens
+    tokens = [t for t in re.split(r"[\s\-_,;:/]+", q_raw) if t and t not in STOPWORDS]
+
+    # 2. Check if query matches a known lecturer (surnames fuzzy >= 0.78, firstnames exact)
+    matched_lecturer_key = None
+    for l_key, l_data in LECTURER_CATALOG.items():
+        for tok in tokens:
+            if tok in l_data.get("firstnames", []):
+                matched_lecturer_key = l_key
+                break
+            if fuzzy_match_token(tok, l_data.get("surnames", []), threshold=0.78) > 0.0:
+                matched_lecturer_key = l_key
+                break
+        if matched_lecturer_key:
+            break
+
+    # 3. Check if query matches a known module
+    matched_module_val = None
+    for m_key, m_val in MODULE_CATALOG.items():
+        for tok in tokens:
+            if tok == m_key or fuzzy_match_token(tok, [m_key], threshold=0.82) > 0.0:
+                matched_module_val = m_val
+                break
+        if matched_module_val:
+            break
 
     filtered = []
     for l in all_lectures:
@@ -1118,56 +2322,105 @@ def search_lecture_advisor(query: str, filter_mode: Optional[str] = None, filter
                 continue
 
         # Check filter_module
-        if filter_module and filter_module.lower() not in l["module"].lower():
+        if filter_module and filter_module.lower() != "all" and filter_module.lower() not in l["module"].lower():
             continue
 
-        # Calculate relevance score if query is present
+        # Scoring
         score = 0
-        if not q_clean:
+        if not q_raw:
             score = 10
         else:
             title_l = l["title"].lower()
             mod_l = l["module"].lower()
+            lect_l = l.get("lecturer", "").lower()
             keywords = [k.lower() for k in l.get("keywords", [])]
             decks = [d.lower() for d in l.get("associated_decks", [])]
             facts = [f.lower() for f in l.get("anki_facts", [])]
+            chapter_titles = [c["title"].lower() for c in l.get("chapters", [])]
+            chapter_topics = [t.lower() for c in l.get("chapters", []) for t in c.get("topics", [])]
 
-            # 1. Exact query match in title
-            if q_clean in title_l:
-                score += 100
-            
-            # 2. Check query words in title
-            q_words = [w for w in re.split(r"[\s\-_,;:/]+", q_clean) if len(w) > 2]
-            for w in q_words:
-                if w in title_l:
-                    score += 40
-                if any(w in d for d in decks):
+            # A. Lecturer Match (Highest Priority)
+            if matched_lecturer_key:
+                l_aliases = LECTURER_CATALOG[matched_lecturer_key]["surnames"] + LECTURER_CATALOG[matched_lecturer_key]["firstnames"]
+                for alias in l_aliases:
+                    if alias in lect_l:
+                        score += 160
+                        break
+
+            # B. Module Match
+            if matched_module_val and matched_module_val.lower() in mod_l:
+                score += 80
+
+            # C. Exact query in title
+            if q_raw in title_l:
+                score += 120
+
+            # D. Token-based matching
+            for tok in tokens:
+                # Direct in title
+                if tok in title_l:
+                    score += 50
+                # Fuzzy in title words
+                elif fuzzy_match_token(tok, title_l.split(), threshold=0.75) > 0.0:
                     score += 35
-                if any(w in k for k in keywords):
-                    score += 25
-                if any(w in f for f in facts):
-                    score += 15
-                if w in mod_l:
-                    score += 10
 
-            # 3. Direct keyword hits
-            if any(q_clean in k for k in keywords):
-                score += 50
-            if any(q_clean in d for d in decks):
-                score += 60
+                # In lecturer
+                if tok in lect_l:
+                    score += 40
+
+                # In decks
+                if any(tok in d for d in decks):
+                    score += 35
+
+                # In chapter titles / topics
+                if any(tok in ct for ct in chapter_titles):
+                    score += 45
+                if any(tok in ctop for ctop in chapter_topics):
+                    score += 40
+
+                # In keywords
+                if any(tok in k for k in keywords):
+                    score += 30
+                elif fuzzy_match_token(tok, keywords, threshold=0.75) > 0.0:
+                    score += 25
+
+                # In facts
+                if any(tok in f for f in facts):
+                    score += 20
+
+                # In module
+                if tok in mod_l:
+                    score += 25
 
         if score > 0:
             item_copy = dict(l)
             item_copy["relevance_score"] = score
+
+            # Calculate speed float
+            rec_str = l.get("recommendation", "1.2x")
+            speed = 1.0
+            if "1.4x" in rec_str:
+                speed = 1.4
+            elif "1.2x" in rec_str:
+                speed = 1.2
+            elif "skip" in rec_str.lower():
+                speed = 1.0
+
+            # Attach personalized timestamp budget
+            item_copy["timestamp_guidance"] = calculate_timestamp_budget(
+                chapters=l.get("chapters", []),
+                target_cards=target_cards_val,
+                speed_factor=speed
+            )
             filtered.append(item_copy)
 
     # Sort by relevance score descending, then date ascending
     filtered.sort(key=lambda x: (-x.get("relevance_score", 0), x["date"]))
 
-    # Best match for prominent answer card
-    top_hit = filtered[0] if filtered and q_clean else (all_lectures[0] if all_lectures else None)
+    # Top matches (up to 5)
+    top_matches = filtered[:5] if filtered and q_raw else (filtered[:3] if filtered else [])
+    top_hit = filtered[0] if filtered else (all_lectures[0] if all_lectures else None)
 
-    # Calculate summary counts
     summary = {
         "total_lectures": len(all_lectures),
         "total_matching": len(filtered),
@@ -1178,13 +2431,14 @@ def search_lecture_advisor(query: str, filter_mode: Optional[str] = None, filter
         "count_audio_only": sum(1 for x in all_lectures if x.get("is_audio_only")),
     }
 
-    has_filter = bool(q_clean or filter_mode or filter_module)
+    has_filter = bool(q_raw or filter_mode or filter_module)
     return {
         "query": query,
+        "target_cards": target_cards_val,
         "filter_mode": filter_mode,
         "filter_module": filter_module,
         "summary": summary,
         "top_match": top_hit,
+        "top_matches": top_matches,
         "results": filtered if has_filter else all_lectures,
     }
-

@@ -46,3 +46,25 @@ def test_advisor_filter_mode():
     d = resp.json()
     for item in d["results"]:
         assert "Skip" in item["recommendation"]
+
+
+def test_advisor_typo_search_and_timestamps():
+    # Test user query with typo in lecturer: 'TB Blut/ immunsystem von manataschal'
+    resp = client.get("/api/v1/schedule/advisor/search?q=TB%20Blut/%20immunsystem%20von%20manataschal&cards=100")
+    assert resp.status_code == 200
+    d = resp.json()
+    
+    # Must find multiple matches
+    assert len(d["top_matches"]) >= 3
+    # Top matches must all be Prof. Manatschal
+    for m in d["top_matches"][:4]:
+        assert "Manatschal" in m["lecturer"]
+        assert "1. Blut & Immunsystem" in m["module"]
+        # Must have timestamp guidance
+        guidance = m["timestamp_guidance"]
+        assert guidance["target_cards"] == 100
+        assert guidance["start_timestamp"] == "00:00"
+        assert ":" in guidance["end_timestamp"]
+        assert guidance["saved_minutes"] > 0
+        assert len(m["chapters"]) >= 3
+

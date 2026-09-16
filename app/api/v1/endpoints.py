@@ -1171,8 +1171,9 @@ def search_advisor_endpoint(
     q: Optional[str] = Query("", description="Search query for topic, deck, or keyword"),
     mode: Optional[str] = Query(None, description="Filter by recommendation (skip, 1.0x, 1.2x, 1.4x, audio)"),
     module: Optional[str] = Query(None, description="Filter by module"),
+    cards: Optional[int] = Query(100, description="Target Anki cards to calculate required timestamp range"),
 ):
-    return search_lecture_advisor(query=q or "", filter_mode=mode, filter_module=module)
+    return search_lecture_advisor(query=q or "", filter_mode=mode, filter_module=module, target_cards=cards)
 
 
 @router.get(

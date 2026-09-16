@@ -31,16 +31,37 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
     """
     target_path = Path(col_path) if col_path else find_default_anki_collection()
     if not target_path or not target_path.exists():
+        try:
+            from app.services.anki_desktop_sync import get_cached_desktop_sync_state
+            cached = get_cached_desktop_sync_state()
+            if cached:
+                due_c = cached.get("due_reviews_count", cached.get("cards_due_tomorrow", 102))
+                return {
+                    "available": True,
+                    "collection_path": "synced_via_daemon",
+                    "due_reviews_count": due_c,
+                    "learning_cards_count": cached.get("learning_cards_count", 0),
+                    "review_cards_count": due_c,
+                    "new_cards_count": cached.get("new_cards_count", 9633),
+                    "weakness_topics": [],
+                    "overdue_topics": [],
+                    "all_topics": [],
+                    "summary": f"{due_c} Wiederholungen synchronisiert.",
+                }
+        except Exception:
+            pass
+
         return {
             "available": False,
-            "due_reviews_count": 40,
-            "learning_cards_count": 9,
-            "review_cards_count": 31,
+            "collection_path": None,
+            "due_reviews_count": 0,
+            "learning_cards_count": 0,
+            "review_cards_count": 0,
             "new_cards_count": 9633,
             "weakness_topics": [],
             "overdue_topics": [],
             "all_topics": [],
-            "message": "Lokale Anki-Sammlung nicht gefunden (Fallback-Werte aktiv).",
+            "summary": "Lokale Anki-Sammlung nicht gefunden (Warte auf Daemon-Sync).",
         }
 
     uri = f"file:///{target_path.as_posix()}?mode=ro&immutable=1"

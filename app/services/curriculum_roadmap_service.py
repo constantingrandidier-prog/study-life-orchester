@@ -13,6 +13,7 @@ import sqlite3
 from typing import Any, Dict, List, Optional
 
 from app.services.olat_connector import scan_local_uzh_slides
+from app.services.lecture_advisor_service import search_lecture_advisor
 
 # Semester milestone constants
 SEMESTER_START_DATE = date(2026, 9, 14)  # Monday
@@ -159,8 +160,165 @@ def clean_topic_display(raw_deck_name: str, module_name: str) -> Dict[str, Any]:
     }
 
 
+def get_clinical_scaffolding_for_deck(deck_name: str, clean_title: str) -> Dict[str, Any]:
+    """Provides high-yield clinical reasoning, narrative red thread, and exam cross-links."""
+    combined = f"{deck_name} {clean_title}".lower()
+
+    # 1. BLUT & IMMUNSYSTEM
+    if "leukozyt" in combined or "granulozyt" in combined:
+        return {
+            "red_thread": "Erst die Reifungsstufen im Knochenmark (Myeloblast -> Segmentkernige) und Phagozytose verstehen. Das verhindert stumpfes Auswendiglernen im Differentialblutbild.",
+            "cross_links": [
+                "Blutbild-Interpretation: Linksverschiebung bei Infektionen",
+                "Chemotaxis, Opsonierung (C3b) & Respiratory Burst (NADPH-Oxidase)",
+                "Chronische Granulomatose & akute Leukämien (Blastenkrise)"
+            ],
+            "concept_goal": "Zelluläre Primärabwehr, Granulozyten-Differenzierung & Blutbild-Analyse"
+        }
+    elif "hämoglobin" in combined or "myoglobin" in combined or "haemoglobin" in combined:
+        return {
+            "red_thread": "Erst die Sigmoide Bindungskurve und den kooperativen T- zu R-Übergang im Video nachvollziehen. Die Anki-Karten leiten sich dann logisch aus der Allosterie ab.",
+            "cross_links": [
+                "Allosterie & Bohr-Effekt (pH/Protonen- und CO2-Verschiebung)",
+                "2,3-BPG bei chronischer Hypoxie und Höhenanpassung",
+                "Hämoglobinopathien: Sichelzellanämie (HbS Glu6Val) & Thalassämien"
+            ],
+            "concept_goal": "Molekulare Sauerstoffbindung, Allosterie & Hämoglobin-Regulation"
+        }
+    elif "co2" in combined or "säure-base" in combined or "saure-base" in combined:
+        return {
+            "red_thread": "Baut direkt auf dem Hämoglobin auf: Carboanhydrase, Hamburger-Shift (Chlorid-Austausch) und Haldane-Effekt als Kreislauf für Gasaustausch und pH-Puffer begreifen.",
+            "cross_links": [
+                "Blutgas-Analyse (BGA): Henderson-Hasselbalch, Standardbikarbonat & Basenabweichung (BE)",
+                "Respiratorische vs. metabolische Azidose/Alkalose & renale Gegenregulation",
+                "Notfallmedizin: Beatmungseinstellung & CO2-Narkose bei COPD"
+            ],
+            "concept_goal": "CO2-Transportmechanismen & Säure-Basen-Homöostase prüfungsfest vernetzen"
+        }
+    elif "gerinnung" in combined or "hämostase" in combined or "haemostase" in combined or "thrombozyt" in combined:
+        return {
+            "red_thread": "Primäre Hämostase (vWF, Thrombozytenadhäsion via GP Ib, Aktivierung via TxA2/ADP, Aggregation via GP IIb/IIIa) und sekundäre Kaskade (Tenase- & Prothrombinase-Komplex) als sequentiellen Wundverschluss erfassen.",
+            "cross_links": [
+                "Pharmakologie: DOAKs (Faktor Xa-/Thrombin-Hemmer), Heparin (Antithrombin-III) & Cumarine (VKORC1)",
+                "Thrombozytenaggregationshemmer: ASS (COX-1) vs. Clopidogrel (P2Y12)",
+                "Hämophilie A (FVIII) & B (FIX) vs. von-Willebrand-Syndrom (vWS)"
+            ],
+            "concept_goal": "Vollständige Kaskade von Thrombusbildung, Antikoagulation & Fibrinolyse"
+        }
+    elif "erythrozyt" in combined or "anämie" in combined or "anaemie" in combined:
+        return {
+            "red_thread": "Erythrozyten-Indices (MCV, MCH, MCHC) und Eisenstoffwechsel (Ferritin, Transferrin, Hepcidin) als diagnostischen Algorithmus begreifen.",
+            "cross_links": [
+                "Mikrozytäre Anämien: Eisenmangelanämie vs. Anämie chronischer Erkrankungen (ACD)",
+                "Makrozytäre Anämien: Vitamin B12- und Folsäuremangel (DNA-Synthesestörung)",
+                "Hämolytische Anämien: Kugelzellanämie (Sphärozytose) & G6PD-Mangel (Favismus)"
+            ],
+            "concept_goal": "Pathophysiologische Diagnostik aller Anämieformen"
+        }
+    elif "immun" in combined or "tuzlak" in combined or "lymph" in combined or "thymus" in combined:
+        return {
+            "red_thread": "Zusammenspiel von angeborener Immunität (Komplement, TLRs, Phagozyten) und adaptiver Immunität (T-Zell-Rezeptor-Rekombination, B-Zell-Reifung, MHC-I/II-Präsentation).",
+            "cross_links": [
+                "MHC-Restriktion: CD8+ (MHC-I) vs. CD4+ (MHC-II / Th1, Th2, Th17)",
+                "Zentrale vs. periphere Immuntoleranz & Entstehung von Autoimmunerkrankungen",
+                "Monoklonale Antikörper & Checkpoint-Inhibitoren (PD-1, CTLA-4) in der Onkologie"
+            ],
+            "concept_goal": "Immunologische Schutzmechanismen & Autoimmunität"
+        }
+        
+    # 2. HERZ-KREISLAUF
+    elif "ekg" in combined or "erregungsleitung" in combined or "aktionspotenzial" in combined or "arrhythmi" in combined:
+        return {
+            "red_thread": "Aktionspotential-Phasen der Arbeitsmyozyten (Phase 0 Na+, Phase 2 Ca2+-Plateau, Phase 3 K+) direkt mit den EKG-Wellen (P, QRS, ST, T) korrelieren.",
+            "cross_links": [
+                "Vaughan-Williams-Klassifikation der Antiarrhythmika (Klasse I-IV)",
+                "Ischämiezeichen: ST-Hebung (STEMI) vs. ST-Senkung (NSTEMI) & T-Inversion",
+                "Long-QT-Syndrom, Torsades de pointes & Reentry-Kreisläufe"
+            ],
+            "concept_goal": "Elektrophysiologie, EKG-Befundung & Rhythmusstörungen"
+        }
+    elif "herzmechanik" in combined or "druck-volumen" in combined or "wiggers" in combined or "klappen" in combined:
+        return {
+            "red_thread": "Wiggers-Diagramm und PV-Loops (Druck-Volumen-Kurven) Schritt für Schritt nachvollziehen: Isovolumetrische Kontraktion, Austreibung, isovolumetrische Relaxation, Füllung.",
+            "cross_links": [
+                "Frank-Starling-Mechanismus, Vorlast (Enddiastolisches Volumen) vs. Nachlast",
+                "Klappenpathologien: Aortenstenose (Drucküberlastung) vs. Mitralinsuffizienz (Volumenüberlastung)",
+                "Herzinsuffizienz (HFrEF vs. HFpEF) & neurohumorale Kompensation (RAAS, Sympathikus)"
+            ],
+            "concept_goal": "Hämodynamik, Klappenmechanik & Herzzyklus"
+        }
+        
+    # 3. ATMUNG & LUNGE
+    elif "compliance" in combined or "atemmechanik" in combined or "ventilation" in combined or "lunge" in combined:
+        return {
+            "red_thread": "Statische und dynamische Lungenvolumina, transmuraler Druck und Surfactant-Physiologie (Laplace-Gesetz) als mechanische Einheit verstehen.",
+            "cross_links": [
+                "Obstruktive (FEV1/FVC < 70%, Asthma/COPD) vs. restriktive Ventilationsstörungen (Lungenfibrose)",
+                "Ventilations-Perfusions-Verhältnis (V/Q), Totraumventilation & Shunt",
+                "Euler-Liljestrand-Mechanismus (hypoxische pulmonale Vasokonstriktion) & Cor pulmonale"
+            ],
+            "concept_goal": "Respiratorische Mechanik, Lungenfunktion & Gasaustausch"
+        }
+        
+    # 4. VERDAUUNG & ERNÄHRUNG
+    elif "magen" in combined or "darm" in combined or "leber" in combined or "pankreas" in combined or "verdauung" in combined:
+        return {
+            "red_thread": "Sekretion und enzymatische Spaltung entlang des GI-Trakts: Belegzellen (HCl, Intrinsic Factor), Azinuszellen (Zymogene) und Hepatozyten (Gallensäuren).",
+            "cross_links": [
+                "Pharmakologie: Säurehemmung via PPIs (H+/K+-ATPase) & H2-Rezeptor-Antagonisten",
+                "Malabsorption: Zöliakie, exokrine Pankreasinsuffizienz & Gallensäurenverlustsyndrom",
+                "Portale Hypertension: Ösophagusvarizen, Aszites & hepatische Enzephalopathie"
+            ],
+            "concept_goal": "Gastrointestinale Physiologie, Enzymologie & Leberpathologie"
+        }
+        
+    # 5. STOFFWECHSEL & BIOCHEMIE
+    elif "glykolyse" in combined or "stoffwechsel" in combined or "citrat" in combined or "fettsäure" in combined:
+        return {
+            "red_thread": "Schlüsselenzyme und Schrittmacherreaktionen (PFK-1, Pyruvat-Dehydrogenase, Citrat-Synthase) im Zustand von Sattheit (Insulin) vs. Hunger (Glukagon) gegenüberstellen.",
+            "cross_links": [
+                "Ketoazidose bei absolutem Insulinmangel (Diabetes mellitus Typ 1)",
+                "Mitochondriale Myopathien & Entkoppler der Atmungskette (Thermogenin, DNP)",
+                "Inborn errors of metabolism: Glykogenosen, Phenylketonurie & MCAD-Mangel"
+            ],
+            "concept_goal": "Intermediärstoffwechsel, Energiehomöostase & Stoffwechselregulation"
+        }
+        
+    # 6. ENDOKRINOLOGIE & HORMONE
+    elif "hormon" in combined or "hypophys" in combined or "schilddrüs" in combined or "nebennier" in combined or "endokrin" in combined:
+        return {
+            "red_thread": "Hypothalamus-Hypophysen-Achsen (TRH-TSH, CRH-ACTH, GnRH-LH/FSH) mit negativem Feedback-Loop und Hormonrezeptor-Signalwegen (cAMP vs. IP3/DAG vs. nukleäre Rezeptoren) strukturieren.",
+            "cross_links": [
+                "Schilddrüse: Morbus Basedow (TRAK) vs. Hashimoto-Thyreoiditis (TPO-AK)",
+                "Nebenniere: Morbus Cushing vs. Morbus Addison & Conn-Syndrom (Hyperaldosteronismus)",
+                "Calcium-Homöostase: Hyperparathyreoidismus (Hyperkalzämie-Symptome) & Osteoporose"
+            ],
+            "concept_goal": "Endokrine Regelkreise, Feedback-Systeme & Rezeptorpharmakologie"
+        }
+        
+    else:
+        return {
+            "red_thread": "Deskriptives Fachkonzept für den roten Faden der Vorlesung. Im optimierten Standard-Stream (1.2x) mitnehmen.",
+            "cross_links": [
+                "Grundlagenwissen für die klinischen Module des 3. Studienjahres",
+                "Relevante Prüfungskonzepte der UZH-Fakultät"
+            ],
+            "concept_goal": clean_title or "Fachkonzept des Curriculums"
+        }
+
+
 # Cache for the computed semester roadmap
 _CACHED_ROADMAP: Optional[Dict[str, Any]] = None
+_ADVISOR_LOOKUP_CACHE: Dict[str, Dict[str, Any]] = {}
+
+
+def _cached_search_lecture_advisor(query: str, target_cards: int) -> Dict[str, Any]:
+    """In-memory cache for fast advisor query during roadmap generation."""
+    key = f"{query}::{target_cards}"
+    if key not in _ADVISOR_LOOKUP_CACHE:
+        _ADVISOR_LOOKUP_CACHE[key] = search_lecture_advisor(query, target_cards=target_cards)
+    return _ADVISOR_LOOKUP_CACHE[key]
+
 
 
 def _get_anki_collection_path() -> Optional[Path]:
@@ -180,7 +338,7 @@ def _get_anki_collection_path() -> Optional[Path]:
 
 
 def _extract_decks_from_anki() -> List[Dict[str, Any]]:
-    """Query real Anki database for the 2. Studienjahr deck hierarchy."""
+    """Query real Anki database for the 2. Studienjahr deck hierarchy and actual card completion stats."""
     anki_db = _get_anki_collection_path()
     if not anki_db or not anki_db.exists():
         return []
@@ -193,11 +351,19 @@ def _extract_decks_from_anki() -> List[Dict[str, Any]]:
 
         # Get all decks
         d_map = dict(conn.execute("SELECT id, name FROM decks").fetchall())
-        card_counts = conn.execute("SELECT did, count(*) FROM cards GROUP BY did").fetchall()
+        card_stats = conn.execute("""
+            SELECT did,
+                   count(*) as total,
+                   sum(case when reps = 0 and queue = 0 then 1 else 0 end) as new_cnt,
+                   sum(case when reps > 0 then 1 else 0 end) as mastered_cnt,
+                   sum(case when queue in (1, 3) then 1 else 0 end) as learning_cnt
+            FROM cards
+            GROUP BY did
+        """).fetchall()
         conn.close()
 
         decks = []
-        for did, cnt in card_counts:
+        for did, total, new_cnt, mastered_cnt, learning_cnt in card_stats:
             raw_name = d_map.get(did, "").replace("\x1f", " :: ")
             if not raw_name:
                 continue
@@ -207,7 +373,12 @@ def _extract_decks_from_anki() -> List[Dict[str, Any]]:
                 decks.append({
                     "deck_id": did,
                     "deck_name": raw_name,
-                    "card_count": cnt,
+                    "card_count": total,
+                    "new_cards": new_cnt or 0,
+                    "mastered_cards": mastered_cnt or 0,
+                    "learning_cards": learning_cnt or 0,
+                    "is_completed": (new_cnt == 0 and mastered_cnt > 0),
+                    "is_in_progress": (new_cnt > 0 and mastered_cnt > 0),
                 })
         return decks
     except Exception:
@@ -342,13 +513,19 @@ def _generate_synthetic_decks() -> List[Dict[str, Any]]:
 
 
 def get_all_curriculum_decks() -> List[Dict[str, Any]]:
-    """Retrieve and classify all 111 decks from Anki or synthetic fallback."""
+    """Retrieve and classify all 111 decks from real Anki or synthetic fallback, preserving card states."""
     raw_decks = _extract_decks_from_anki()
-    # Check if we got the full set of decks
     total_found = sum(d["card_count"] for d in raw_decks)
     if total_found < 8000:
-        # Fallback to deterministic model
-        raw_decks = _generate_synthetic_decks()
+        synth = _generate_synthetic_decks()
+        raw_decks = [{
+            **d,
+            "new_cards": d["card_count"],
+            "mastered_cards": 0,
+            "learning_cards": 0,
+            "is_completed": False,
+            "is_in_progress": False,
+        } for d in synth]
 
     # Classify each deck into one of the 6 modules
     classified: Dict[str, List[Dict[str, Any]]] = {mod_name: [] for _, mod_name, _ in DIDACTIC_MODULES}
@@ -359,25 +536,34 @@ def get_all_curriculum_decks() -> List[Dict[str, Any]]:
         matched = False
         for _, mod_name, keywords in DIDACTIC_MODULES:
             if any(k in dname_lower for k in keywords):
-                classified[mod_name].append(d)
+                classified[mod_name].append({**d, "module_name": mod_name})
                 matched = True
                 break
         if not matched:
-            unclassified.append(d)
+            unclassified.append({**d, "module_name": "4. Verdauung & Ernährung"})
 
-    # Append unclassified into the most plausible module
     for d in unclassified:
         classified["4. Verdauung & Ernährung"].append(d)
 
-    # Sequence decks module by module, alphabetically within each module
+    # Sequence decks module by module:
+    # In-progress first, then uncompleted in pedagogical order, then fully completed
     ordered_decks = []
     for _, mod_name, _ in DIDACTIC_MODULES:
         mod_decks = classified[mod_name]
-        mod_decks.sort(key=lambda x: x["deck_name"])
+        mod_decks.sort(key=lambda x: (
+            x.get("is_completed", False),
+            not x.get("is_in_progress", False),
+            x["deck_name"]
+        ))
         for d in mod_decks:
             ordered_decks.append({
                 "deck_name": d["deck_name"],
                 "card_count": d["card_count"],
+                "new_cards": d.get("new_cards", d["card_count"]),
+                "mastered_cards": d.get("mastered_cards", 0),
+                "learning_cards": d.get("learning_cards", 0),
+                "is_completed": d.get("is_completed", False),
+                "is_in_progress": d.get("is_in_progress", False),
                 "module_name": mod_name,
             })
 
@@ -423,26 +609,30 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
 
 
 def generate_curriculum_roadmap() -> Dict[str, Any]:
-    """Generate the full deterministic semester roadmap for 2. Studienjahr."""
+    """Generate the full deterministic semester roadmap for 2. Studienjahr with concept chunking and lecture synergy."""
     global _CACHED_ROADMAP
     if _CACHED_ROADMAP is not None:
         return _CACHED_ROADMAP
 
     decks = get_all_curriculum_decks()
     total_curriculum_cards = sum(d["card_count"] for d in decks)
+    already_mastered_initial = sum(d.get("mastered_cards", 0) for d in decks)
 
     # Scan available slides once
     available_slides = scan_local_uzh_slides()
 
-    # Prepare simulation queue
+    # Prepare simulation queue tracking real completion state
     deck_queue = []
     for d in decks:
         is_cycle = any(k in d["deck_name"].lower() for k in CYCLE_KEYWORDS)
         matched_slide = _find_best_slide_match(d["deck_name"], available_slides)
         deck_queue.append({
             "deck_name": d["deck_name"],
-            "remaining": d["card_count"],
+            "remaining": d.get("new_cards", d["card_count"]),
             "total_deck_cards": d["card_count"],
+            "mastered_cards": d.get("mastered_cards", 0),
+            "is_completed": d.get("is_completed", False),
+            "is_in_progress": d.get("is_in_progress", False),
             "module_name": d["module_name"],
             "is_cycle_topic": is_cycle,
             "matched_slide_filename": matched_slide,
@@ -451,7 +641,7 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
     cur_date = SEMESTER_START_DATE
     schedule_days = []
     deck_idx = 0
-    cumulative_cards = 0
+    cumulative_cards = already_mastered_initial
     active_day_counter = 0
 
     module_stats: Dict[str, Dict[str, Any]] = {}
@@ -467,6 +657,11 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
         }
 
     while deck_idx < len(deck_queue):
+        # Skip fully completed decks
+        if deck_queue[deck_idx]["remaining"] == 0:
+            deck_idx += 1
+            continue
+
         is_sunday = (cur_date.weekday() == 6)
         date_str = cur_date.strftime("%Y-%m-%d")
         day_name = GERMAN_WEEKDAYS[cur_date.weekday()]
@@ -483,71 +678,160 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
                 "topic_slots": [],
                 "cumulative_cards_learned": cumulative_cards,
                 "total_curriculum_cards": total_curriculum_cards,
-                "curriculum_progress_pct": round((cumulative_cards / total_curriculum_cards) * 100, 1),
+                "curriculum_progress_pct": round((cumulative_cards / max(1, total_curriculum_cards)) * 100, 1),
                 "current_module": "Regeneration & Erholung",
                 "summary": "🏖️ Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!",
                 "exam_date": TARGET_EXAM_DATE.strftime("%Y-%m-%d"),
                 "days_until_exam": days_until,
                 "revision_buffer_days": 15,
+                "synergy_headline": "🏖️ Ruhetag – Mentale Erholung & kognitive Konsolidierung",
+                "recommended_study_sequence": [
+                    "1. Spaziergang oder Sport an der frischen Luft",
+                    "2. Schlaf & Regeneration zur Festigung der synaptischen Plastizität",
+                    "3. Optional: Kurze Wiederholung fälliger Review-Karten bei Bedarf"
+                ]
             })
             cur_date += timedelta(days=1)
             continue
 
-        # Study day: allocate exactly 100 cards
         active_day_counter += 1
-        cards_needed = DAILY_CARD_QUOTA
-        day_slots = []
         current_day_module = deck_queue[deck_idx]["module_name"]
+        cur_deck = deck_queue[deck_idx]
 
-        while cards_needed > 0 and deck_idx < len(deck_queue):
-            cur_deck = deck_queue[deck_idx]
-            take = min(cards_needed, cur_deck["remaining"])
-            leaf_title = cur_deck["deck_name"].split("::")[-1].strip()
+        # Didactic Concept Chunking:
+        # 1) If deck > 130 cards: split into 2 logical halves
+        # 2) If deck >= 75 cards (or <= 130): full deck as a standalone session
+        # 3) If deck < 75 cards: take full deck, greedily pack with subsequent decks in same module up to max 125 cards
+        candidate_slots = []
+        if cur_deck["remaining"] > 130:
+            take = (cur_deck["remaining"] + 1) // 2
+            candidate_slots.append((cur_deck, take))
+            cur_deck["remaining"] -= take
+        elif cur_deck["remaining"] >= 75:
+            take = cur_deck["remaining"]
+            candidate_slots.append((cur_deck, take))
+            cur_deck["remaining"] = 0
+            deck_idx += 1
+        else:
+            take = cur_deck["remaining"]
+            candidate_slots.append((cur_deck, take))
+            cur_deck["remaining"] = 0
+            deck_idx += 1
+            tot = take
+            while deck_idx < len(deck_queue) and tot < 75:
+                next_d = deck_queue[deck_idx]
+                if next_d["remaining"] == 0:
+                    deck_idx += 1
+                    continue
+                if next_d["module_name"] != cur_deck["module_name"]:
+                    break
+                if next_d["remaining"] > 130:
+                    needed = 100 - tot
+                    take_next = min(needed, next_d["remaining"])
+                    candidate_slots.append((next_d, take_next))
+                    next_d["remaining"] -= take_next
+                    tot += take_next
+                    break
+                elif tot + next_d["remaining"] <= 125:
+                    take_next = next_d["remaining"]
+                    candidate_slots.append((next_d, take_next))
+                    next_d["remaining"] = 0
+                    deck_idx += 1
+                    tot += take_next
+                else:
+                    break
 
-            # Record module timing
-            mod = cur_deck["module_name"]
+        day_slots = []
+        for c_deck, take in candidate_slots:
+            leaf_title = c_deck["deck_name"].split("::")[-1].strip()
+            mod = c_deck["module_name"]
             if module_stats[mod]["start_date"] is None:
                 module_stats[mod]["start_date"] = date_str
             module_stats[mod]["end_date"] = date_str
             module_stats[mod]["card_count"] += take
 
-            clean_info = clean_topic_display(cur_deck["deck_name"], cur_deck["module_name"])
-            didactic_info = classify_topic_didactics(cur_deck["deck_name"], clean_info["clean_title"], cur_deck["module_name"])
+            clean_info = clean_topic_display(c_deck["deck_name"], c_deck["module_name"])
+            didactic_info = classify_topic_didactics(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"])
+            scaffolding = get_clinical_scaffolding_for_deck(c_deck["deck_name"], clean_info["clean_title"])
+
+            adv = _cached_search_lecture_advisor(f"{clean_info['lecturer']} {clean_info['clean_title']}", target_cards=take)
+            top = adv.get("top_match") or {}
+            tb = top.get("timestamp_guidance") or {}
+
+            timecode_guidance = None
+            if tb.get("start_timestamp") and tb.get("end_timestamp"):
+                eff_min = tb.get("video_minutes_effective")
+                saved_min = tb.get("saved_minutes")
+                timecode_guidance = f"{tb.get('start_timestamp')} – {tb.get('end_timestamp')} ({eff_min}m Stream, spart {saved_min}m)"
 
             day_slots.append({
-                "deck_name": cur_deck["deck_name"],
+                "deck_name": c_deck["deck_name"],
                 "short_title": leaf_title,
                 "clean_title": clean_info["clean_title"],
                 "lecturer": clean_info["lecturer"],
                 "breadcrumb": clean_info["breadcrumb"],
-                "module_name": cur_deck["module_name"],
+                "module_name": c_deck["module_name"],
                 "cards_to_learn": take,
-                "total_deck_cards": cur_deck["total_deck_cards"],
-                "deck_progress_pct": round(((cur_deck["total_deck_cards"] - cur_deck["remaining"] + take) / cur_deck["total_deck_cards"]) * 100, 1),
-                "matched_slide_filename": cur_deck["matched_slide_filename"],
-                "slide_coverage_pct": 78.5 if cur_deck["matched_slide_filename"] else 70.0,
+                "total_deck_cards": c_deck["total_deck_cards"],
+                "already_mastered_cards": c_deck.get("mastered_cards", 0),
+                "remaining_new_cards": c_deck["remaining"],
+                "deck_progress_pct": round(((c_deck["total_deck_cards"] - c_deck["remaining"]) / max(1, c_deck["total_deck_cards"])) * 100, 1),
+                "matched_slide_filename": c_deck["matched_slide_filename"],
+                "slide_coverage_pct": 82.0 if c_deck["matched_slide_filename"] else 70.0,
                 "is_cycle_topic": didactic_info["is_cycle_topic"],
                 "recommended_mode": didactic_info["recommended_mode"],
                 "badge_label": didactic_info["badge_label"],
                 "didactic_reason": didactic_info["didactic_reason"],
                 "speed_factor": didactic_info["speed_factor"],
+                "video_timestamp_guidance": timecode_guidance,
+                "video_start_time": tb.get("start_timestamp"),
+                "video_end_time": tb.get("end_timestamp"),
+                "effective_watch_time_min": tb.get("video_minutes_effective"),
+                "video_time_saved_min": tb.get("saved_minutes"),
+                "red_thread": scaffolding.get("red_thread"),
+                "cross_links": scaffolding.get("cross_links"),
+                "concept_goal": scaffolding.get("concept_goal"),
             })
 
-            cur_deck["remaining"] -= take
-            cards_needed -= take
             cumulative_cards += take
 
-            if cur_deck["remaining"] == 0:
-                deck_idx += 1
+        day_total_cards = sum(s["cards_to_learn"] for s in day_slots)
+        first_slot = day_slots[0]
+        primary_title = first_slot.get("clean_title") or first_slot["short_title"]
+        primary_lecturer = first_slot.get("lecturer") or "Dozent"
+
+        if first_slot.get("video_time_saved_min"):
+            synergy_headline = f"🎯 Fokus: {primary_title} ({primary_lecturer}) – Vorlesungs-Priming spart {first_slot['video_time_saved_min']} Minuten!"
+        else:
+            synergy_headline = f"🎯 Fokus: {primary_title} ({primary_lecturer}) – Didaktische Concept Session"
+
+        study_sequence = []
+        if first_slot.get("video_start_time") and first_slot.get("video_end_time"):
+            study_sequence.append(
+                f"1. 🎧 Vorlesungs-Priming: {primary_lecturer} von {first_slot['video_start_time']} bis {first_slot['video_end_time']} im {first_slot['speed_factor']}x Stream sichten"
+            )
+        else:
+            study_sequence.append(
+                f"1. 🎧 Vorlesung im {first_slot['speed_factor']}x Standard-Stream sichten für den roten Faden"
+            )
+        study_sequence.append(
+            f"2. 📇 Aktives Enkodieren: {day_total_cards} neue Karten im Deck '{primary_title}' ohne kognitive Reibung durcharbeiten"
+        )
+        if first_slot.get("cross_links") and len(first_slot["cross_links"]) > 0:
+            study_sequence.append(
+                f"3. 🔗 Quervernetzung: {first_slot['cross_links'][0]}"
+            )
+        else:
+            study_sequence.append(
+                f"3. 🔗 Quervernetzung: Klinische Integration und Pathophysiologie vertiefen"
+            )
 
         days_until = (TARGET_EXAM_DATE - cur_date).days
-        pct_done = round((cumulative_cards / total_curriculum_cards) * 100, 1)
+        pct_done = round((cumulative_cards / max(1, total_curriculum_cards)) * 100, 1)
 
-        # Count active day in module
         if current_day_module in module_stats:
             module_stats[current_day_module]["active_days"] += 1
 
-        day_total_cards = sum(s["cards_to_learn"] for s in day_slots)
         clean_topics_summary = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in day_slots)
         briefing = f"Tag {active_day_counter}/97: {day_total_cards} neue Karten ({clean_topics_summary}) im Modul {current_day_module}."
 
@@ -560,7 +844,7 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
             "target_cards": day_total_cards,
             "base_quota": DAILY_CARD_QUOTA,
             "adjusted_target_cards": day_total_cards,
-            "quota_adjustment_reason": f"Standard-Tagesziel von {DAILY_CARD_QUOTA} neuen Karten.",
+            "quota_adjustment_reason": f"Concept-Session: {day_total_cards} neue Karten.",
             "surplus_deduction": 0,
             "deficit_distributed": 0,
             "topic_slots": day_slots,
@@ -572,6 +856,8 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
             "exam_date": TARGET_EXAM_DATE.strftime("%Y-%m-%d"),
             "days_until_exam": days_until,
             "revision_buffer_days": 15,
+            "synergy_headline": synergy_headline,
+            "recommended_study_sequence": study_sequence,
         })
         cur_date += timedelta(days=1)
 
@@ -725,7 +1011,8 @@ def get_daily_curriculum_assignment(
                 }
 
             # Evaluate dynamic quota based on user's progress
-            dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=DAILY_CARD_QUOTA)
+            scheduled_quota = day["target_cards"]
+            dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=scheduled_quota)
             adj_target = dyn["adjusted_target_cards"]
 
             day_copy = dict(day)

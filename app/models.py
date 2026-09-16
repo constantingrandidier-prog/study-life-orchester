@@ -451,10 +451,21 @@ class CurriculumTopicSlot(BaseModel):
     matched_slide_filename: Optional[str] = Field(None, description="Filename of matching lecture slide PDF")
     slide_coverage_pct: Optional[float] = Field(None, description="Slide coverage percentage")
     is_cycle_topic: bool = Field(False, description="True if topic covers biochemical cycles or cascades")
-    recommended_mode: str = Field("stream_1_5", description="Recommended lecture consumption mode")
+    recommended_mode: str = Field("stream_1_2", description="Recommended lecture consumption mode")
     badge_label: str = Field("Neu", description="Topic badge")
     didactic_reason: Optional[str] = Field(None, description="Medical rationale for recommended speed or skip")
-    speed_factor: Optional[float] = Field(1.5, description="Recommended playback speed (0.0 for skip, 1.5, 2.0)")
+    speed_factor: Optional[float] = Field(1.2, description="Recommended playback speed (0.0 for skip, 1.0, 1.2, 1.4)")
+    # Synergistic Lecture-Anki fields:
+    video_timestamp_guidance: Optional[str] = Field(None, description="Exact lecture video timestamps and chapters for these cards")
+    video_start_time: Optional[str] = Field(None, description="Start timecode (e.g. 00:00)")
+    video_end_time: Optional[str] = Field(None, description="End timecode (e.g. 54:00)")
+    effective_watch_time_min: Optional[int] = Field(None, description="Effective streaming time in minutes")
+    video_time_saved_min: Optional[int] = Field(None, description="Minutes saved by watching on recommended speed")
+    red_thread: Optional[str] = Field(None, description="Narrative red thread explaining conceptual pre-requisites")
+    cross_links: Optional[List[str]] = Field(default_factory=list, description="Clinical and physiological cross-connections")
+    already_mastered_cards: Optional[int] = Field(0, description="Cards already completed in Anki")
+    remaining_new_cards: Optional[int] = Field(0, description="Remaining new cards in this deck")
+    concept_goal: Optional[str] = Field(None, description="Clear daily learning objective")
 
 
 class DailyCurriculumAssignment(BaseModel):
@@ -476,6 +487,8 @@ class DailyCurriculumAssignment(BaseModel):
     curriculum_progress_pct: float = Field(0.0, description="Percentage of entire semester curriculum completed")
     current_module: str = Field("", description="Active medical module name")
     summary: str = Field("", description="Action-oriented daily briefing")
+    synergy_headline: Optional[str] = Field(None, description="Daily synergistic study headline (e.g. 'Vorlesungs-Priming -> Anki-Enkodierung')")
+    recommended_study_sequence: Optional[List[str]] = Field(default_factory=list, description="Step-by-step guidance for today: 1. Vorlesung, 2. Anki, 3. Quervernetzung")
     exam_date: str = Field("2027-01-19", description="Target exam date")
     days_until_exam: int = Field(0, description="Days remaining until the exam")
     revision_buffer_days: int = Field(15, description="Free buffer days before exam after completing all 9,633 cards")

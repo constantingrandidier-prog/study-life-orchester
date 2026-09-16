@@ -2484,73 +2484,57 @@ const DAY1_FALLBACK_ASSIGNMENT = {
   day_number: 1,
   total_active_days: 97,
   is_rest_day: false,
-  target_cards: 100,
+  target_cards: 85,
   base_quota: 100,
-  adjusted_target_cards: 100,
-  quota_adjustment_reason: null,
+  adjusted_target_cards: 85,
+  quota_adjustment_reason: 'Concept-Session: 85 neue Karten.',
   surplus_deduction: 0,
   deficit_distributed: 0,
+  synergy_headline: '🎯 Fokus: Leukozyten I / Ullrich (Stockmann) – Vorlesungs-Priming spart 19 Minuten!',
+  recommended_study_sequence: [
+    '1. 🎧 Vorlesungs-Priming: Stockmann von 00:00 bis 63:06 im 1.2x Stream sichten',
+    '2. 📇 Aktives Enkodieren: 85 neue Karten im Deck \'Leukozyten I / Ullrich\' ohne kognitive Reibung durcharbeiten',
+    '3. 🔗 Quervernetzung: Blutbild-Interpretation: Linksverschiebung bei Infektionen'
+  ],
   topic_slots: [
     {
-      deck_name: '2. SJ :: 3. Semester :: Blut / Immunsystem :: 2 Manatschal :: 1 Hämoglobin',
-      short_title: '1 Hämoglobin',
-      clean_title: 'Hämoglobin',
-      lecturer: 'Prof. Manatschal',
-      breadcrumb: 'Blut & Immunsystem › Manatschal',
+      deck_name: '2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich',
+      short_title: 'Leukozyten I / Ullrich',
+      clean_title: 'Leukozyten I / Ullrich',
+      lecturer: 'Stockmann',
+      breadcrumb: 'Blut & Immunsystem › Stockmann',
       module_name: '1. Blut & Immunsystem',
-      cards_to_learn: 48,
-      total_deck_cards: 48,
-      deck_progress_pct: 0.0,
-      matched_slide_filename: '01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf',
-      slide_coverage_pct: 88.0,
+      cards_to_learn: 85,
+      total_deck_cards: 132,
+      already_mastered_cards: 47,
+      remaining_new_cards: 85,
+      deck_progress_pct: 100.0,
+      matched_slide_filename: null,
+      slide_coverage_pct: 82.0,
       is_cycle_topic: false,
       recommended_mode: 'stream_1_2',
       badge_label: '🟡 1.2x Standard-Stream (+25m gespart)',
       didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!',
-      speed_factor: 1.2
-    },
-    {
-      deck_name: '2. SJ :: 3. Semester :: Blut / Immunsystem :: 2 Manatschal :: Hämoglobin Teil 2',
-      short_title: 'Hämoglobin Teil 2',
-      clean_title: 'Hämoglobin (Teil 2)',
-      lecturer: 'Prof. Manatschal',
-      breadcrumb: 'Blut & Immunsystem › Manatschal',
-      module_name: '1. Blut & Immunsystem',
-      cards_to_learn: 24,
-      total_deck_cards: 24,
-      deck_progress_pct: 0.0,
-      matched_slide_filename: '01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf',
-      slide_coverage_pct: 88.0,
-      is_cycle_topic: false,
-      recommended_mode: 'stream_1_2',
-      badge_label: '🟡 1.2x Standard-Stream (+25m gespart)',
-      didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!',
-      speed_factor: 1.2
-    },
-    {
-      deck_name: '2. SJ :: 3. Semester :: Blut / Immunsystem :: 2 Manatschal :: 2 CO2-Transport',
-      short_title: '2 CO2-Transport',
-      clean_title: 'CO2-Transport & Pufferung',
-      lecturer: 'Prof. Manatschal',
-      breadcrumb: 'Blut & Immunsystem › Manatschal',
-      module_name: '1. Blut & Immunsystem',
-      cards_to_learn: 28,
-      total_deck_cards: 28,
-      deck_progress_pct: 0.0,
-      matched_slide_filename: '02_CO2-Transport_Saure-Base_HS24_Manatschal.pdf',
-      slide_coverage_pct: 84.0,
-      is_cycle_topic: true,
-      recommended_mode: 'stream_1_0',
-      badge_label: '🟠 1.0x Voller Fokus (Prüfungs-Kern)',
-      didactic_reason: '⚠️ Physiologischer Prüfungsschwerpunkt (Gasaustausch & Säure-Basen-Kopplung)! Auf 1.0x aktiv durcharbeiten.',
-      speed_factor: 1.0
+      speed_factor: 1.2,
+      video_timestamp_guidance: '00:00 – 63:06 (63m Stream, spart 19m)',
+      video_start_time: '00:00',
+      video_end_time: '63:06',
+      effective_watch_time_min: 63,
+      video_time_saved_min: 19,
+      red_thread: 'Erst die Reifungsstufen im Knochenmark (Myeloblast -> Segmentkernige) und Phagozytose verstehen. Das verhindert stumpfes Auswendiglernen im Differentialblutbild.',
+      cross_links: [
+        'Blutbild-Interpretation: Linksverschiebung bei Infektionen',
+        'Chemotaxis, Opsonierung (C3b) & Respiratory Burst (NADPH-Oxidase)',
+        'Chronische Granulomatose & akute Leukämien (Blastenkrise)'
+      ],
+      concept_goal: 'Zelluläre Primärabwehr, Granulozyten-Differenzierung & Blutbild-Analyse'
     }
   ],
-  cumulative_cards_learned: 100,
-  total_curriculum_cards: 9633,
-  curriculum_progress_pct: 1.0,
+  cumulative_cards_learned: 240,
+  total_curriculum_cards: 9676,
+  curriculum_progress_pct: 2.5,
   current_module: '1. Blut & Immunsystem',
-  summary: 'Tag 1/97: 100 neue Karten (48× Hämoglobin + 24× Hämoglobin Teil 2 + 28× CO2-Transport) im Modul 1. Blut & Immunsystem.',
+  summary: 'Tag 1/97: 85 neue Karten (85× Leukozyten I / Ullrich) im Modul 1. Blut & Immunsystem.',
   exam_date: '2027-01-19',
   days_until_exam: 127,
   revision_buffer_days: 15
@@ -2675,6 +2659,46 @@ function renderCurriculumToday(data) {
     summaryText.textContent = data.summary;
   }
 
+  // Render Cognitive Synergy Banner & Recommended 3-Step Sequence
+  const synergyCard = document.getElementById('curriculumSynergyCard');
+  const synergyHeadline = document.getElementById('curriculumSynergyHeadline');
+  const studySequence = document.getElementById('curriculumStudySequence');
+
+  if (synergyCard && synergyHeadline && studySequence) {
+    if (data.is_rest_day) {
+      synergyCard.style.display = 'none';
+    } else {
+      synergyCard.style.display = 'block';
+      synergyHeadline.textContent = data.synergy_headline || `🎯 Fokus: ${data.current_module || 'Lernsession'}`;
+      if (Array.isArray(data.recommended_study_sequence) && data.recommended_study_sequence.length > 0) {
+        const icons = ['🎧', '📇', '🔗'];
+        const colors = ['#79c0ff', '#7ee787', '#d2a8ff'];
+        studySequence.innerHTML = data.recommended_study_sequence.map((step, sIdx) => {
+          const icon = icons[sIdx] || '💡';
+          const color = colors[sIdx] || '#e6edf3';
+          return `
+            <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+              <span style="color: ${color}; font-weight: 700; min-width: 18px;">${icon}</span>
+              <span>${escapeHtml(step.replace(/^[0-9]\.\s*(\p{Emoji}|\S+)?\s*/u, ''))}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        studySequence.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span>🎧</span> <span>1. Vorlesung im Standard-Stream (1.2x) sichten</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span>📇</span> <span>2. Anki-Soll konzentriert enkodieren</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span>🔗</span> <span>3. Quervernetzung in klinische Krankheitsbilder einbetten</span>
+          </div>
+        `;
+      }
+    }
+  }
+
   if (topicsContainer) {
     if (data.is_rest_day) {
       topicsContainer.innerHTML = `
@@ -2697,24 +2721,38 @@ function renderCurriculumToday(data) {
       const rowsHtml = data.topic_slots.map((slot, idx) => {
         const slotKey = `${data.date}_${slot.deck_name || idx}`;
         const isDone = Boolean(state.slotCompletions && state.slotCompletions[slotKey]);
-        
+
         let timeSavedMin = 0;
         let didacticBadge = '';
-        if (slot.recommended_mode === 'stream_1_0') {
+        if (slot.video_time_saved_min !== undefined && slot.video_time_saved_min !== null) {
+          timeSavedMin = slot.video_time_saved_min;
+        } else if (slot.recommended_mode === 'stream_1_0') {
           timeSavedMin = 0;
-          didacticBadge = `<span class="curriculum-focus-badge" title="Prüfungsrelevanter Regelkreis/Diagramme">🟠 1.0x Voller Fokus (Kernprüfungskonzept)</span>`;
         } else if (slot.recommended_mode === 'stream_1_4') {
           timeSavedMin = 30;
-          didacticBadge = `<span class="curriculum-speed-badge" title="High-Speed Stream">🟡 1.4x High-Speed (+30m gespart)</span>`;
         } else if (slot.recommended_mode === 'skipped') {
           timeSavedMin = 90;
-          didacticBadge = `<span class="curriculum-skip-badge" title="Reines Faktenwissen / Nomenklatur">🔴 Vorlesung skippen (+90m gespart)</span>`;
         } else {
-          // Standard-Stream 1.2x (spart 25m)
           timeSavedMin = 25;
-          didacticBadge = `<span class="curriculum-speed-badge" title="Standard-Stream & Dozentenschwerpunkte">🟡 1.2x Standard-Stream (+25m gespart)</span>`;
+        }
+
+        if (slot.recommended_mode === 'stream_1_0') {
+          didacticBadge = `<span class="curriculum-focus-badge" title="Prüfungsrelevanter Regelkreis/Diagramme">🟠 1.0x Voller Fokus (Kernprüfungskonzept)</span>`;
+        } else if (slot.recommended_mode === 'stream_1_4') {
+          didacticBadge = `<span class="curriculum-speed-badge" title="High-Speed Stream">🟡 1.4x High-Speed (+${timeSavedMin}m gespart)</span>`;
+        } else if (slot.recommended_mode === 'skipped') {
+          didacticBadge = `<span class="curriculum-skip-badge" title="Reines Faktenwissen / Nomenklatur">🔴 Vorlesung skippen (+${timeSavedMin}m gespart)</span>`;
+        } else {
+          didacticBadge = `<span class="curriculum-speed-badge" title="Standard-Stream & Dozentenschwerpunkte">🟡 ${slot.speed_factor || 1.2}x Stream (+${timeSavedMin}m gespart)</span>`;
         }
         totalTimeSavedMinutes += timeSavedMin;
+
+        // Video Timecode Guidance Pill
+        const timecodePill = slot.video_timestamp_guidance
+          ? `<div style="margin-top: 4px; font-size: 11px; color: #58a6ff; background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.28); border-radius: 4px; padding: 2px 6px; display: inline-flex; align-items: center; gap: 4px;" title="Optimierte Video-Timecodes: Spart Vorlesungszeit!">
+               <span>▶️</span> <strong>${escapeHtml(slot.video_timestamp_guidance)}</strong>
+             </div>`
+          : '';
 
         const slideBadge = slot.matched_slide_filename
           ? `<a class="curriculum-slide-link" title="Lokale Vorlesungsfolie: ${escapeHtml(slot.matched_slide_filename)}" href="#" onclick="showToast('Folie: ${escapeHtml(slot.matched_slide_filename)}'); return false;">
@@ -2726,10 +2764,29 @@ function renderCurriculumToday(data) {
           ? `<span class="curriculum-lecturer-badge">👨‍🏫 ${escapeHtml(slot.lecturer)}</span>`
           : '';
 
+        // Completion & In-Progress status badge
+        const ankiStatusBadge = (slot.already_mastered_cards > 0)
+          ? `<span style="margin-left: 6px; font-size: 10px; color: #7ee787; background: rgba(35, 134, 54, 0.15); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(35, 134, 54, 0.3);">🔄 ${slot.already_mastered_cards} gemeistert • ${slot.cards_to_learn} neu</span>`
+          : '';
+
+        // Scaffolding: Red Thread
+        const redThreadHtml = slot.red_thread
+          ? `<div class="curriculum-slot-redthread" style="margin-top: 5px; font-size: 11px; color: #7ee787; background: rgba(35, 134, 54, 0.08); border-left: 2px solid #238636; padding: 3px 6px; border-radius: 3px; line-height: 1.35;">
+               🧵 <strong>Roter Faden:</strong> ${escapeHtml(slot.red_thread)}
+             </div>`
+          : '';
+
+        // Scaffolding: Clinical Cross-Links
+        const crossLinksHtml = (Array.isArray(slot.cross_links) && slot.cross_links.length > 0)
+          ? `<div class="curriculum-slot-crosslinks" style="margin-top: 4px; font-size: 10.5px; color: #a5d6ff; line-height: 1.35;">
+               🔗 <strong>Quervernetzung:</strong> ${slot.cross_links.map(cl => escapeHtml(cl)).join(' • ')}
+             </div>`
+          : '';
+
         const breadcrumb = slot.breadcrumb || slot.module_name || '';
         const displayTitle = slot.clean_title || slot.short_title || 'Thema';
         const reasonHtml = slot.didactic_reason
-          ? `<div class="curriculum-slot-reason">💡 ${escapeHtml(slot.didactic_reason)}</div>`
+          ? `<div class="curriculum-slot-reason" style="margin-top: 3px;">💡 ${escapeHtml(slot.didactic_reason)}</div>`
           : '';
 
         const cards = slot.cards_to_learn !== undefined ? slot.cards_to_learn : 0;
@@ -2739,15 +2796,21 @@ function renderCurriculumToday(data) {
         return `
           <tr class="mission-slot-row ${isDone ? 'row-completed' : ''}" id="mission-row-${idx}">
             <td class="td-topic">
-              <div class="mission-topic-title">${escapeHtml(displayTitle)}</div>
+              <div class="mission-topic-title" style="display: flex; align-items: center; flex-wrap: wrap;">
+                <span>${escapeHtml(displayTitle)}</span>
+                ${ankiStatusBadge}
+              </div>
               <div class="mission-topic-meta">
                 ${lecturerBadge}
                 <span style="color: var(--text-dim);">${escapeHtml(breadcrumb)}</span>
               </div>
+              ${redThreadHtml}
+              ${crossLinksHtml}
               ${reasonHtml}
             </td>
             <td class="td-strategy">
               ${didacticBadge}
+              ${timecodePill}
             </td>
             <td class="td-slide">
               ${slideBadge}
@@ -2763,7 +2826,6 @@ function renderCurriculumToday(data) {
                 ${isDone ? '✓ Erledigt' : 'Erledigen'}
               </button>
             </td>
-
           </tr>
         `;
       }).join('');

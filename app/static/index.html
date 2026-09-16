@@ -295,6 +295,33 @@
       <div id="ankiBacklogTriageBox" style="display: none;"><div id="triageTopicsList"></div><div id="triageCombinedQueryBar"><span id="triageCombinedQueryText"></span></div><button id="btnCopyCombinedQuery"></button><div id="triageAdviceBanner"></div></div>
 
       <!-- =====================================================================
+           COGNITIVE SYNERGY BANNER (VORLESUNG ↔ ANKI SYMBIOSIS)
+           ===================================================================== -->
+      <div id="curriculumSynergyCard" style="margin-top: 0.75rem; margin-bottom: 0.85rem; padding: 0.85rem 1rem; background: linear-gradient(135deg, rgba(56, 139, 253, 0.08), rgba(35, 134, 54, 0.08)); border: 1px solid rgba(56, 139, 253, 0.25); border-radius: var(--radius-sm, 8px);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 16px;">🧠</span>
+            <strong id="curriculumSynergyHeadline" style="font-size: 13.5px; color: var(--text-main);">🎯 Fokus: Leukozyten I / Ullrich (Stockmann) – Vorlesungs-Priming spart 19 Minuten!</strong>
+          </div>
+          <span style="font-size: 10.5px; font-weight: 600; color: #58a6ff; background: rgba(56, 139, 253, 0.15); padding: 0.15rem 0.55rem; border-radius: 12px; border: 1px solid rgba(56, 139, 253, 0.3);">Symbiose Vorlesung ↔ Anki</span>
+        </div>
+        <div id="curriculumStudySequence" style="margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 12px; color: var(--text-subtle);">
+          <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+            <span style="color: #79c0ff; font-weight: 700; min-width: 18px;">🎧</span>
+            <span><strong>Vorlesungs-Priming:</strong> Stockmann von 00:00 bis 63:06 im 1.2x Stream sichten</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+            <span style="color: #7ee787; font-weight: 700; min-width: 18px;">📇</span>
+            <span><strong>Aktives Enkodieren:</strong> 85 neue Karten im Deck 'Leukozyten I / Ullrich' ohne kognitive Reibung durcharbeiten</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+            <span style="color: #d2a8ff; font-weight: 700; min-width: 18px;">🔗</span>
+            <span><strong>Quervernetzung:</strong> Blutbild-Interpretation: Linksverschiebung bei Infektionen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
            STRUCTURED MISSION TABLE (DESKTOP/IPAD: TABLE, MOBILE: CARD LIST)
            ===================================================================== -->
       <div id="curriculumTopicsContainer">
@@ -313,81 +340,50 @@
             <tbody>
               <tr class="mission-slot-row" id="mission-row-0">
                 <td class="td-topic">
-                  <div class="mission-topic-title">1 Hämoglobin</div>
-                  <div class="mission-topic-meta">
-                    <span class="curriculum-lecturer-badge">👨‍🏫 Prof. Manatschal</span>
-                    <span style="color: var(--text-dim);">📁 Blut &amp; Immunsystem</span>
+                  <div class="mission-topic-title" style="display: flex; align-items: center; flex-wrap: wrap;">
+                    <span>Leukozyten I / Ullrich</span>
+                    <span style="margin-left: 6px; font-size: 10px; color: #7ee787; background: rgba(35, 134, 54, 0.15); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(35, 134, 54, 0.3);">🔄 47 gemeistert • 85 neu</span>
                   </div>
-                  <div class="curriculum-slot-reason">💡 Deskriptiver Überblick &amp; Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!</div>
+                  <div class="mission-topic-meta">
+                    <span class="curriculum-lecturer-badge">👨‍🏫 Stockmann</span>
+                    <span style="color: var(--text-dim);">Blut &amp; Immunsystem › Stockmann</span>
+                  </div>
+                  <div class="curriculum-slot-redthread" style="margin-top: 5px; font-size: 11px; color: #7ee787; background: rgba(35, 134, 54, 0.08); border-left: 2px solid #238636; padding: 3px 6px; border-radius: 3px; line-height: 1.35;">
+                    🧵 <strong>Roter Faden:</strong> Erst die Reifungsstufen im Knochenmark (Myeloblast -> Segmentkernige) und Phagozytose verstehen. Das verhindert stumpfes Auswendiglernen im Differentialblutbild.
+                  </div>
+                  <div class="curriculum-slot-crosslinks" style="margin-top: 4px; font-size: 10.5px; color: #a5d6ff; line-height: 1.35;">
+                    🔗 <strong>Quervernetzung:</strong> Blutbild-Interpretation: Linksverschiebung bei Infektionen • Chemotaxis, Opsonierung (C3b) &amp; Respiratory Burst (NADPH-Oxidase) • Chronische Granulomatose &amp; akute Leukämien (Blastenkrise)
+                  </div>
+                  <div class="curriculum-slot-reason" style="margin-top: 3px;">💡 Deskriptiver Überblick &amp; Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!</div>
                 </td>
                 <td class="td-strategy">
-                  <span class="curriculum-speed-badge">🟡 1.2x Standard-Stream (+25m gespart)</span>
-                </td>
-                <td class="td-slide">
-                  <span class="curriculum-slide-link" title="01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf">📄 01_Haemoglobin_Myoglobin...</span>
-                </td>
-                <td class="td-quota" style="text-align: center;">
-                  <div class="curriculum-card-pill"><span>⚡</span> <strong>48</strong> Karten</div>
-                </td>
-                <td class="td-action" style="text-align: right;">
-                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_0', 48, '1 Hämoglobin')">Erledigen</button>
-                </td>
-              </tr>
-              <tr class="mission-slot-row" id="mission-row-1">
-                <td class="td-topic">
-                  <div class="mission-topic-title">Hämoglobin Teil 2</div>
-                  <div class="mission-topic-meta">
-                    <span class="curriculum-lecturer-badge">👨‍🏫 Prof. Manatschal</span>
-                    <span style="color: var(--text-dim);">📁 Blut &amp; Immunsystem</span>
+                  <span class="curriculum-speed-badge">🟡 1.2x Stream (+19m gespart)</span>
+                  <div style="margin-top: 4px; font-size: 11px; color: #58a6ff; background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.28); border-radius: 4px; padding: 2px 6px; display: inline-flex; align-items: center; gap: 4px;" title="Optimierte Video-Timecodes">
+                    <span>▶️</span> <strong>00:00 – 63:06 (63m Stream, spart 19m)</strong>
                   </div>
-                  <div class="curriculum-slot-reason">💡 Deskriptiver Überblick &amp; Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!</div>
-                </td>
-                <td class="td-strategy">
-                  <span class="curriculum-speed-badge">🟡 1.2x Standard-Stream (+25m gespart)</span>
                 </td>
                 <td class="td-slide">
-                  <span class="curriculum-slide-link" title="01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf">📄 01_Haemoglobin_Myoglobin...</span>
+                  <span style="color: var(--text-dim); font-size: 11px;">–</span>
                 </td>
                 <td class="td-quota" style="text-align: center;">
-                  <div class="curriculum-card-pill"><span>⚡</span> <strong>24</strong> Karten</div>
+                  <div class="curriculum-card-pill"><span>⚡</span> <strong>85</strong> Karten</div>
                 </td>
                 <td class="td-action" style="text-align: right;">
-                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_1', 24, 'Hämoglobin Teil 2')">Erledigen</button>
-                </td>
-              </tr>
-              <tr class="mission-slot-row" id="mission-row-2">
-                <td class="td-topic">
-                  <div class="mission-topic-title">2 CO2-Transport</div>
-                  <div class="mission-topic-meta">
-                    <span class="curriculum-lecturer-badge">👨‍🏫 Prof. Manatschal</span>
-                    <span style="color: var(--text-dim);">📁 Blut &amp; Immunsystem</span>
-                  </div>
-                  <div class="curriculum-slot-reason">💡 ⚠️ Physiologischer Prüfungsschwerpunkt (Gasaustausch)! Auf 1.0x aktiv durcharbeiten.</div>
-                </td>
-                <td class="td-strategy">
-                  <span class="curriculum-focus-badge">🟠 1.0x Voller Fokus</span>
-                </td>
-                <td class="td-slide">
-                  <span class="curriculum-slide-link" title="02_CO2-Transport_Saure-Base_HS24_Manatschal.pdf">📄 02_CO2-Transport_Saure-Base...</span>
-                </td>
-                <td class="td-quota" style="text-align: center;">
-                  <div class="curriculum-card-pill"><span>⚡</span> <strong>28</strong> Karten</div>
-                </td>
-                <td class="td-action" style="text-align: right;">
-                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_2', 28, '2 CO2-Transport')">Erledigen</button>
+                  <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('Leukozyten I / Ullrich')" style="margin-right: 4px; background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.55rem; cursor: pointer;" title="Vorlesung &amp; Empfehlung für dieses Thema prüfen">🔍 Berater</button>
+                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_0', 85, 'Leukozyten I / Ullrich')">Erledigen</button>
                 </td>
               </tr>
             </tbody>
             <tfoot>
               <tr class="mission-table-total-row">
                 <td colspan="2">
-                  <strong>GESAMT HEUTE (3 Vorlesungsthemen)</strong>
+                  <strong>GESAMT HEUTE (1 Vorlesungsthema)</strong>
                 </td>
                 <td>
-                  <span class="badge-total-saved">⚡ 50 Min. gespart</span>
+                  <span class="badge-total-saved">⚡ 19m gespart</span>
                 </td>
                 <td style="text-align: center;">
-                  <strong style="color: var(--accent-blue); font-size: 14px;">100</strong> Karten
+                  <strong style="color: var(--accent-blue); font-size: 14px;">85</strong> Karten
                 </td>
                 <td style="text-align: right;">
                   <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()" style="padding: 0.35rem 0.75rem; font-size: 11.5px;">✓ Alle erledigt</button>

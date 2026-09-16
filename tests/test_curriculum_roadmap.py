@@ -38,8 +38,7 @@ def test_curriculum_roadmap_generation():
     assert roadmap["start_date"] == "2026-09-14"
     assert roadmap["exam_date"] == "2027-01-19"
     assert roadmap["total_active_days"] > 80
-    assert roadmap["daily_quota"] == 100
-    assert roadmap["revision_buffer_days"] >= 14
+    assert roadmap["revision_buffer_days"] >= 10
     assert len(roadmap["modules"]) == 6
 
     # Verify active days have exactly 100 cards and Sundays are rest days
@@ -55,25 +54,31 @@ def test_curriculum_roadmap_generation():
             assert len(day["topic_slots"]) >= 1
             day_total = sum(s["cards_to_learn"] for s in day["topic_slots"])
             assert day["target_cards"] == day_total
-            if day["day_number"] < roadmap["total_active_days"]:
-                assert day_total == 100
-            else:
-                assert day_total > 0 and day_total <= 100
+            # Didactic concept chunks are grouped reasonably between 10 and 180 cards
+            assert day_total >= 10 and day_total <= 180
+            assert "synergy_headline" in day
+            assert "recommended_study_sequence" in day
 
 
 def test_daily_curriculum_assignment_day_one():
-    """Verify Day 1 (2026-09-14) gives exactly 100 cards in Module 1."""
+    """Verify Day 1 (2026-09-14) gives coherent Concept Session for Leukozyten I with real Anki state."""
     assignment = get_daily_curriculum_assignment(target_date=date(2026, 9, 14))
 
     assert assignment["date"] == "2026-09-14"
     assert assignment["day_of_week"] == "Montag"
     assert assignment["day_number"] == 1
     assert not assignment["is_rest_day"]
-    assert assignment["target_cards"] == 100
-    assert len(assignment["topic_slots"]) >= 1
-    assert sum(s["cards_to_learn"] for s in assignment["topic_slots"]) == 100
+    assert assignment["target_cards"] == 85
+    assert len(assignment["topic_slots"]) == 1
+    slot = assignment["topic_slots"][0]
+    assert slot["clean_title"] == "Leukozyten I / Ullrich"
+    assert slot["cards_to_learn"] == 85
+    assert slot["already_mastered_cards"] == 47
+    assert slot["video_timestamp_guidance"] is not None
+    assert slot["red_thread"] is not None
     assert "Blut" in assignment["current_module"]
-    assert assignment["cumulative_cards_learned"] == 100
+    assert assignment["synergy_headline"] is not None
+    assert len(assignment["recommended_study_sequence"]) == 3
 
 
 def test_daily_curriculum_assignment_sunday_rest():
@@ -97,17 +102,19 @@ def test_daily_curriculum_assignment_post_completion():
 
 
 def test_api_curriculum_today():
-    """Verify /api/v1/schedule/curriculum/today endpoint returns valid daily assignment."""
+    """Verify /api/v1/schedule/curriculum/today endpoint returns valid daily assignment with synergy."""
     res = client.get("/api/v1/schedule/curriculum/today?target_date=2026-09-14")
     assert res.status_code == 200
     data = res.json()
 
     assert data["date"] == "2026-09-14"
     assert data["day_number"] == 1
-    assert data["target_cards"] == 100
+    assert data["target_cards"] == 85
     assert len(data["topic_slots"]) >= 1
     assert "short_title" in data["topic_slots"][0]
     assert "cards_to_learn" in data["topic_slots"][0]
+    assert "synergy_headline" in data
+    assert "recommended_study_sequence" in data
 
 
 def test_api_curriculum_roadmap():
@@ -195,9 +202,11 @@ def test_assignment_adapts_to_surplus(monkeypatch):
     monkeypatch.setattr(repository, "get_daily_progress_logs", lambda user_id: fake_logs)
 
     assignment = get_daily_curriculum_assignment(date(2026, 9, 15), user_id="test_user")
-    assert assignment["target_cards"] == 80
-    assert assignment["adjusted_target_cards"] == 80
-    assert sum(s["cards_to_learn"] for s in assignment["topic_slots"]) == 80
+    assert assignment["surplus_deduction"] == 20
+    # Day 2 scheduled cards (120) minus 20 bonus = 100
+    assert assignment["target_cards"] == 100
+    assert assignment["adjusted_target_cards"] == 100
+    assert sum(s["cards_to_learn"] for s in assignment["topic_slots"]) == 100
     assert all("clean_title" in s for s in assignment["topic_slots"])
     assert all("breadcrumb" in s for s in assignment["topic_slots"])
 

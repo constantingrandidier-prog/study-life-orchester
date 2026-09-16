@@ -4187,8 +4187,12 @@ async function loadScienceRhythm(targetDate) {
   const localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
   const remQuery = localRemoved.length ? `&removed_blocks=${encodeURIComponent(localRemoved.join(','))}` : '';
 
+  const orderKey = `sl_rhythm_order_${dateStr}`;
+  const localOrder = JSON.parse(localStorage.getItem(orderKey) || '[]');
+  const orderQuery = localOrder.length ? `&custom_order=${encodeURIComponent(localOrder.join(','))}` : '';
+
   try {
-    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}&start_time=${encodeURIComponent(startTime)}&lunch_duration=${lunchDur}&include_lecture=${incLec}${remQuery}`);
+    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}&start_time=${encodeURIComponent(startTime)}&lunch_duration=${lunchDur}&include_lecture=${incLec}${remQuery}${orderQuery}`);
     if (!res.ok) return;
     const data = await res.json();
     
@@ -4228,6 +4232,30 @@ async function loadScienceRhythm(targetDate) {
           data.postponed_blocks_count = (data.postponed_blocks_count || 0) + 1;
         }
       });
+    }
+
+    // Check if client has custom block order for this date
+    if (localOrder.length > 0 && Array.isArray(data.blocks)) {
+      const blockMap = new Map();
+      data.blocks.forEach(b => blockMap.set(b.id, b));
+      const reordered = [];
+      localOrder.forEach(id => {
+        if (blockMap.has(id)) {
+          reordered.push(blockMap.get(id));
+          blockMap.delete(id);
+        }
+      });
+      // Append any blocks not yet in localOrder
+      blockMap.forEach(b => reordered.push(b));
+      
+      // Keep evening_free at the end
+      const freeIdx = reordered.findIndex(b => b.id === 'evening_free');
+      if (freeIdx >= 0) {
+        const freeItem = reordered.splice(freeIdx, 1)[0];
+        reordered.push(freeItem);
+      }
+      data.blocks = reordered;
+      recalculateRhythmTimes(data);
     }
 
     // Update Feierabend badge
@@ -4396,7 +4424,9 @@ async function executeDeleteRhythmBlock() {
 
 async function restoreRhythmBlocks(dateStr) {
   const removedKey = `sl_rhythm_removed_${dateStr}`;
+  const orderKey = `sl_rhythm_order_${dateStr}`;
   localStorage.removeItem(removedKey);
+  localStorage.removeItem(orderKey);
 
   try {
     await fetch('/api/v1/schedule/rhythm-action/restore', {
@@ -4411,7 +4441,300 @@ async function restoreRhythmBlocks(dateStr) {
   }
 
   await loadScienceRhythm(dateStr);
-  showToast('🔄 Tagesplan erfolgreich auf Ursprungszustand zurückgesetzt.');
+  showToast('🔄 Stundenplan erfolgreich auf Ursprungszustand zurückgesetzt.');
+}
+
+function recalculateRhythmTimes(data) {
+  if (!data || !Array.isArray(data.blocks)) return;
+  const startTimeStr = data.start_time || state.rhythmStartTime || '08:30';
+  const [sh, sm] = startTimeStr.split(':').map(Number);
+  let curM = (sh || 8) * 60 + (sm || 30);
+  let totalStudyM = 0;
+  let totalPauseM = 0;
+
+  data.blocks.forEach(b => {
+    if (!b || !b.id) return;
+    if (b.id === 'evening_free') return;
+
+    if (b.is_mandatory && b.start_time && b.end_time) {
+      const [msh, msm] = b.start_time.split(':').map(Number);
+      const [meh, mem] = b.end_time.split(':').map(Number);
+      const mStartM = (msh || 0) * 60 + (msm || 0);
+      const mEndM = (meh || 0) * 60 + (mem || 0);
+      curM = Math.max(curM, mEndM);
+      totalStudyM += (b.duration_minutes || (mEndM - mStartM));
+    } else {
+      const dur = b.duration_minutes || 45;
+      const startH = String(Math.floor(curM / 60)).padStart(2, '0');
+      const startMin = String(curM % 60).padStart(2, '0');
+      curM += dur;
+      const endH = String(Math.floor(curM / 60)).padStart(2, '0');
+      const endMin = String(curM % 60).padStart(2, '0');
+
+      b.start_time = `${startH}:${startMin}`;
+      b.end_time = `${endH}:${endMin}`;
+
+      if (b.is_break) {
+        totalPauseM += dur;
+      } else {
+        totalStudyM += dur;
+      }
+    }
+  });
+
+  const feierabendH = String(Math.floor(curM / 60)).padStart(2, '0');
+  const feierabendMin = String(curM % 60).padStart(2, '0');
+  const feierabendTime = `${feierabendH}:${feierabendMin}`;
+  data.feierabend_time = feierabendTime;
+  data.total_study_minutes = totalStudyM;
+  data.total_pause_minutes = totalPauseM;
+
+  const feierabendEl = document.getElementById('rhythmFeierabendBadge');
+  if (feierabendEl) {
+    feierabendEl.textContent = `${feierabendTime} Uhr`;
+  }
+
+  const freeBlock = data.blocks.find(b => b.id === 'evening_free');
+  if (freeBlock) {
+    freeBlock.start_time = feierabendTime;
+    freeBlock.end_time = '22:00';
+    freeBlock.duration_minutes = Math.max(60, (22 * 60) - curM);
+    freeBlock.title = `🎉 Feierabend ab ${feierabendTime} & Sport am Abend`;
+  }
+}
+
+async function saveRhythmReorderToBackend(dateStr, orderIds) {
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+        action: 'reorder',
+        block_id: '__custom_order__',
+        block_payload: { order: orderIds },
+      }),
+    });
+  } catch (err) {
+    console.warn('Backend rhythm reorder save failed:', err);
+  }
+}
+
+function moveRhythmBlock(dateStr, blockId, delta) {
+  if (!state.currentScienceRhythmData || !Array.isArray(state.currentScienceRhythmData.blocks)) return;
+  const blocks = state.currentScienceRhythmData.blocks;
+  const idx = blocks.findIndex(b => b.id === blockId);
+  if (idx < 0) return;
+  const targetIdx = idx + delta;
+  const maxIdx = blocks[blocks.length - 1]?.id === 'evening_free' ? blocks.length - 2 : blocks.length - 1;
+  if (targetIdx < 0 || targetIdx > maxIdx) return;
+
+  const item = blocks.splice(idx, 1)[0];
+  blocks.splice(targetIdx, 0, item);
+
+  recalculateRhythmTimes(state.currentScienceRhythmData);
+
+  const orderIds = blocks.map(b => b.id);
+  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
+  saveRhythmReorderToBackend(dateStr, orderIds);
+
+  renderScienceRhythm(state.currentScienceRhythmData);
+  showToast('🔄 Stundenplan angepasst: Neuer Ablauf & Zeiten aktualisiert');
+}
+
+function handleQuickMoveRhythmBlock(dateStr, blockId, delta, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  moveRhythmBlock(dateStr, blockId, delta);
+}
+
+function reorderRhythmBlockTo(dateStr, sourceBlockId, targetBlockId) {
+  if (!state.currentScienceRhythmData || !Array.isArray(state.currentScienceRhythmData.blocks)) return;
+  if (sourceBlockId === targetBlockId) return;
+  const blocks = state.currentScienceRhythmData.blocks;
+  const srcIdx = blocks.findIndex(b => b.id === sourceBlockId);
+  const tgtIdx = blocks.findIndex(b => b.id === targetBlockId);
+  if (srcIdx < 0 || tgtIdx < 0) return;
+  if (blocks[tgtIdx].id === 'evening_free') return;
+
+  const item = blocks.splice(srcIdx, 1)[0];
+  blocks.splice(tgtIdx, 0, item);
+
+  recalculateRhythmTimes(state.currentScienceRhythmData);
+
+  const orderIds = blocks.map(b => b.id);
+  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
+  saveRhythmReorderToBackend(dateStr, orderIds);
+
+  renderScienceRhythm(state.currentScienceRhythmData);
+  showToast('🔄 Stundenplan angepasst: Neuer Ablauf & Zeiten aktualisiert');
+}
+
+let _desktopRhythmDragSource = null;
+let _touchRhythmDragSource = null;
+let _touchRhythmTimer = null;
+let _touchRhythmStartX = 0;
+let _touchRhythmStartY = 0;
+let _isTouchRhythmDragging = false;
+let _lastHighlightedRhythmRow = null;
+
+function initRhythmDragAndDrop() {
+  const container = document.getElementById('scienceRhythmBlocksContainer');
+  if (!container || container._rhythmDndInitialized) return;
+  container._rhythmDndInitialized = true;
+
+  // 1. Desktop Drag & Drop
+  container.addEventListener('dragstart', (e) => {
+    const row = e.target.closest('.rhythm-row-card:not(#rhythmRow-evening_free)');
+    if (!row) return;
+    _desktopRhythmDragSource = row;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', row.dataset.blockId || '');
+    setTimeout(() => row.classList.add('is-dragging-desktop'), 0);
+  });
+
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const row = e.target.closest('.rhythm-row-card:not(#rhythmRow-evening_free)');
+    if (!row || row === _desktopRhythmDragSource) return;
+
+    container.querySelectorAll('.rhythm-row-card').forEach(r => {
+      if (r !== row) r.classList.remove('drag-over-highlight');
+    });
+    row.classList.add('drag-over-highlight');
+  });
+
+  container.addEventListener('dragleave', (e) => {
+    const row = e.target.closest('.rhythm-row-card');
+    if (row && !row.contains(e.relatedTarget)) {
+      row.classList.remove('drag-over-highlight');
+    }
+  });
+
+  container.addEventListener('drop', (e) => {
+    e.preventDefault();
+    container.querySelectorAll('.rhythm-row-card').forEach(r => {
+      r.classList.remove('drag-over-highlight');
+      r.classList.remove('is-dragging-desktop');
+    });
+
+    const targetRow = e.target.closest('.rhythm-row-card:not(#rhythmRow-evening_free)');
+    if (!targetRow || !_desktopRhythmDragSource || targetRow === _desktopRhythmDragSource) {
+      _desktopRhythmDragSource = null;
+      return;
+    }
+
+    const srcId = _desktopRhythmDragSource.dataset.blockId;
+    const tgtId = targetRow.dataset.blockId;
+    _desktopRhythmDragSource = null;
+
+    if (srcId && tgtId && state.currentScienceRhythmData) {
+      reorderRhythmBlockTo(state.currentScienceRhythmData.date, srcId, tgtId);
+    }
+  });
+
+  container.addEventListener('dragend', () => {
+    container.querySelectorAll('.rhythm-row-card').forEach(r => {
+      r.classList.remove('drag-over-highlight');
+      r.classList.remove('is-dragging-desktop');
+    });
+    _desktopRhythmDragSource = null;
+  });
+
+  // 2. Touch Support (Mobile & iPad - Touch & Hold or Drag Handle)
+  container.addEventListener('touchstart', (e) => {
+    const handle = e.target.closest('.rhythm-drag-handle');
+    const row = e.target.closest('.rhythm-row-card:not(#rhythmRow-evening_free)');
+    if (!row) return;
+
+    const isHandle = Boolean(handle);
+    const touch = e.touches[0];
+    _touchRhythmStartX = touch.clientX;
+    _touchRhythmStartY = touch.clientY;
+    _touchRhythmDragSource = row;
+    _isTouchRhythmDragging = false;
+
+    clearTimeout(_touchRhythmTimer);
+    _touchRhythmTimer = setTimeout(() => {
+      _isTouchRhythmDragging = true;
+      if (row) {
+        row.classList.add('is-dragging-touch');
+        if (navigator.vibrate) {
+          try { navigator.vibrate(40); } catch (err) {}
+        }
+      }
+    }, isHandle ? 60 : 320);
+  }, { passive: true });
+
+  container.addEventListener('touchmove', (e) => {
+    if (!_touchRhythmDragSource) return;
+    const touch = e.touches[0];
+    const diffX = Math.abs(touch.clientX - _touchRhythmStartX);
+    const diffY = Math.abs(touch.clientY - _touchRhythmStartY);
+
+    if (!_isTouchRhythmDragging) {
+      if (diffY > 12 || diffX > 12) {
+        clearTimeout(_touchRhythmTimer);
+        _touchRhythmDragSource = null;
+      }
+      return;
+    }
+
+    // Touch dragging active: prevent page scroll
+    e.preventDefault();
+
+    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+    const targetRow = elem ? elem.closest('.rhythm-row-card:not(#rhythmRow-evening_free)') : null;
+
+    if (targetRow && targetRow !== _touchRhythmDragSource) {
+      if (_lastHighlightedRhythmRow && _lastHighlightedRhythmRow !== targetRow) {
+        _lastHighlightedRhythmRow.classList.remove('drag-over-highlight');
+      }
+      _lastHighlightedRhythmRow = targetRow;
+      targetRow.classList.add('drag-over-highlight');
+    } else if (_lastHighlightedRhythmRow) {
+      _lastHighlightedRhythmRow.classList.remove('drag-over-highlight');
+      _lastHighlightedRhythmRow = null;
+    }
+  }, { passive: false });
+
+  container.addEventListener('touchend', () => {
+    clearTimeout(_touchRhythmTimer);
+    if (_touchRhythmDragSource) {
+      _touchRhythmDragSource.classList.remove('is-dragging-touch');
+    }
+    if (_lastHighlightedRhythmRow) {
+      _lastHighlightedRhythmRow.classList.remove('drag-over-highlight');
+    }
+
+    if (_isTouchRhythmDragging && _touchRhythmDragSource && _lastHighlightedRhythmRow) {
+      const srcId = _touchRhythmDragSource.dataset.blockId;
+      const tgtId = _lastHighlightedRhythmRow.dataset.blockId;
+      if (srcId && tgtId && srcId !== tgtId && state.currentScienceRhythmData) {
+        reorderRhythmBlockTo(state.currentScienceRhythmData.date, srcId, tgtId);
+      }
+    }
+
+    _touchRhythmDragSource = null;
+    _lastHighlightedRhythmRow = null;
+    _isTouchRhythmDragging = false;
+  });
+
+  container.addEventListener('touchcancel', () => {
+    clearTimeout(_touchRhythmTimer);
+    if (_touchRhythmDragSource) {
+      _touchRhythmDragSource.classList.remove('is-dragging-touch');
+    }
+    if (_lastHighlightedRhythmRow) {
+      _lastHighlightedRhythmRow.classList.remove('drag-over-highlight');
+    }
+    _touchRhythmDragSource = null;
+    _lastHighlightedRhythmRow = null;
+    _isTouchRhythmDragging = false;
+  });
 }
 
 function renderScienceRhythm(data) {
@@ -4436,8 +4759,10 @@ function renderScienceRhythm(data) {
   });
 
   const removedKey = `sl_rhythm_removed_${data.date}`;
+  const orderKey = `sl_rhythm_order_${data.date}`;
   const localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
-  const hasAdjustments = (data.removed_blocks_count > 0 || localRemoved.length > 0 || data.postponed_blocks_count > 0);
+  const localOrder = JSON.parse(localStorage.getItem(orderKey) || '[]');
+  const hasAdjustments = (data.removed_blocks_count > 0 || localRemoved.length > 0 || data.postponed_blocks_count > 0 || localOrder.length > 0 || (Array.isArray(data.custom_order) && data.custom_order.length > 0));
 
   const progressEl = document.getElementById('scienceRhythmProgressText');
   if (progressEl) {
@@ -4445,7 +4770,7 @@ function renderScienceRhythm(data) {
       <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 0.5rem;">
         <span><strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round((data.total_study_minutes || 0) / 60)}h ${(data.total_study_minutes || 0) % 60}m</strong> (ohne Puffer)</span>
         ${hasAdjustments ? `
-          <button type="button" onclick="restoreRhythmBlocks('${data.date}')" class="btn-secondary" style="font-size: 10.5px; padding: 0.15rem 0.55rem; height: auto; border-color: rgba(56, 139, 253, 0.4); color: #79c0ff; cursor: pointer;" title="Stellt alle gelöschten oder verschobenen Schritte dieses Tages wieder her">
+          <button type="button" onclick="restoreRhythmBlocks('${data.date}')" class="btn-secondary" style="font-size: 10.5px; padding: 0.15rem 0.55rem; height: auto; border-color: rgba(56, 139, 253, 0.4); color: #79c0ff; cursor: pointer;" title="Stellt alle gelöschten, verschobenen oder umgestellten Schritte dieses Tages wieder her">
             🔄 Plan wiederherstellen
           </button>
         ` : ''}
@@ -4504,13 +4829,30 @@ function renderScienceRhythm(data) {
     let bg = isPostponed ? 'rgba(245, 159, 0, 0.08)' : (isMandatory ? 'rgba(163, 113, 247, 0.08)' : (isBreak ? 'rgba(63, 185, 80, 0.03)' : 'rgba(255, 255, 255, 0.02)'));
     let activeClass = isCurrent ? 'active-now' : '';
     let compClass = isCompleted ? 'completed' : '';
+    const isDraggable = (b.id !== 'evening_free');
 
     html += `
-      <div class="rhythm-row-card ${activeClass} ${compClass}" style="border-left: ${borderLeft}; background: ${bg}; flex-direction: column; align-items: stretch; gap: 0.35rem;" title="${escapeHtml(b.description || '')}">
-        <!-- Top Row: Time, Title, Badges, Delete & Checkbox -->
+      <div class="rhythm-row-card ${isDraggable ? 'draggable-active' : ''} ${activeClass} ${compClass}"
+           id="rhythmRow-${b.id}"
+           data-block-id="${b.id}"
+           draggable="${isDraggable ? 'true' : 'false'}"
+           style="border-left: ${borderLeft}; background: ${bg}; flex-direction: column; align-items: stretch; gap: 0.35rem;"
+           title="${isDraggable ? 'Gedrückt halten &amp; ziehen oder ▲ / ▼ nutzen zum Umstellen im Stundenplan • ' : ''}${escapeHtml(b.description || '')}">
+        <!-- Top Row: Drag Handle, Time, Title, Badges, Delete & Checkbox -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.65rem;">
+          <!-- Far Left: Drag Handle & Quick Reorder (unless evening_free) -->
+          ${isDraggable ? `
+            <div style="display: flex; align-items: center; gap: 0.18rem; flex-shrink: 0;">
+              <span class="rhythm-drag-handle" title="Gedrückt halten &amp; ziehen zum Umstellen des Stundenplans">⠿</span>
+              <div style="display: flex; flex-direction: column; gap: 1px;">
+                <button type="button" class="rhythm-quick-btn" onclick="handleQuickMoveRhythmBlock('${data.date}', '${b.id}', -1, event)" title="Einen Schritt nach oben verschieben">▲</button>
+                <button type="button" class="rhythm-quick-btn" onclick="handleQuickMoveRhythmBlock('${data.date}', '${b.id}', 1, event)" title="Einen Schritt nach unten verschieben">▼</button>
+              </div>
+            </div>
+          ` : ''}
+
           <!-- Left: Time & Duration -->
-          <div style="min-width: 90px; flex-shrink: 0;">
+          <div style="min-width: 85px; flex-shrink: 0;">
             <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #f0f6fc;">
               ${b.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${b.end_time}
             </div>
@@ -4668,6 +5010,7 @@ function renderScienceRhythm(data) {
   });
 
   container.innerHTML = tomorrowAlertHtml + html;
+  initRhythmDragAndDrop();
 
   const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
   if (indicatorEl) {
@@ -4727,6 +5070,10 @@ window.closeRhythmBlockActionModal = closeRhythmBlockActionModal;
 window.executePostponeRhythmBlock = executePostponeRhythmBlock;
 window.executeDeleteRhythmBlock = executeDeleteRhythmBlock;
 window.restoreRhythmBlocks = restoreRhythmBlocks;
+window.handleQuickMoveRhythmBlock = handleQuickMoveRhythmBlock;
+window.moveRhythmBlock = moveRhythmBlock;
+window.reorderRhythmBlockTo = reorderRhythmBlockTo;
+window.recalculateRhythmTimes = recalculateRhythmTimes;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {

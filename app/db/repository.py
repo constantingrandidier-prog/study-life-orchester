@@ -587,15 +587,29 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
     Returns rhythm adjustments for a given date:
     - removed_block_ids: blocks deleted or postponed out of this date
     - postponed_blocks: blocks postponed from a previous date INTO this target_date
+    - custom_order: list of block IDs in custom user-reordered sequence
     """
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        # 1. Blocks removed/postponed FROM this date
+        # 1. Blocks removed/postponed/reordered FROM this date
         cursor.execute("""
-            SELECT block_id, action FROM rhythm_block_actions
+            SELECT block_id, action, block_payload FROM rhythm_block_actions
             WHERE user_id = ? AND source_date = ?;
         """, (user_id, target_date))
-        removed_ids = [row["block_id"] for row in cursor.fetchall()]
+        rows = cursor.fetchall()
+        removed_ids = []
+        custom_order = []
+        for row in rows:
+            act = row["action"]
+            bid = row["block_id"]
+            if act in ("delete", "postpone") and bid != "__custom_order__":
+                removed_ids.append(bid)
+            elif act == "reorder" and row["block_payload"]:
+                try:
+                    payload = json.loads(row["block_payload"])
+                    custom_order = payload.get("order", [])
+                except Exception:
+                    custom_order = []
 
         # 2. Blocks postponed INTO this target_date
         cursor.execute("""
@@ -619,6 +633,7 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
     return {
         "removed_block_ids": removed_ids,
         "postponed_blocks": postponed,
+        "custom_order": custom_order,
     }
 
 

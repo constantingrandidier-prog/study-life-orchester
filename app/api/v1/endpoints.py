@@ -1179,6 +1179,7 @@ def get_daily_rhythm_endpoint(
     lunch_duration: int = Query(75, description="Lunch break duration in minutes (30, 45, 60, 75)"),
     include_lecture: bool = Query(True, description="Whether to include lecture/podcast blocks"),
     removed_blocks: Optional[str] = Query(None, description="Comma-separated block IDs to omit"),
+    custom_order: Optional[str] = Query(None, description="Comma-separated block IDs in custom user order"),
 ):
     """Returns the dynamic scientific study schedule for the student."""
     t_date = None
@@ -1202,6 +1203,7 @@ def get_daily_rhythm_endpoint(
     new_target = curr_assign.get("adjusted_target_cards", 101)
 
     rem_list = [b.strip() for b in removed_blocks.split(",") if b.strip()] if removed_blocks else None
+    order_list = [b.strip() for b in custom_order.split(",") if b.strip()] if custom_order else None
 
     return generate_daily_science_rhythm(
         target_date=t_date,
@@ -1213,6 +1215,7 @@ def get_daily_rhythm_endpoint(
         include_lecture=include_lecture if include_lecture is not None else True,
         curriculum_assignment=curr_assign,
         removed_block_ids=rem_list,
+        custom_block_order=order_list,
     )
 
 

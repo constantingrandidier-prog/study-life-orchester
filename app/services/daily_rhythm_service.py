@@ -93,6 +93,7 @@ def generate_daily_science_rhythm(
     curriculum_assignment: Optional[Dict[str, Any]] = None,
     removed_block_ids: Optional[List[str]] = None,
     postponed_blocks: Optional[List[Dict[str, Any]]] = None,
+    custom_block_order: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Generates the scientific ultradian study schedule with precise time arithmetic.
@@ -138,6 +139,8 @@ def generate_daily_science_rhythm(
             removed_set.update(db_actions.get("removed_block_ids", []))
         if postponed_blocks is None:
             active_postponed.extend(db_actions.get("postponed_blocks", []))
+        if not custom_block_order:
+            custom_block_order = db_actions.get("custom_order", [])
     except Exception:
         pass
 
@@ -489,8 +492,56 @@ def generate_daily_science_rhythm(
         "is_mandatory": False,
     })
 
-    # Sort all blocks chronologically by their start time
-    blocks.sort(key=lambda b: _parse_time_to_minutes(b.get("start_time", "08:30")))
+    if custom_block_order and len(custom_block_order) > 0:
+        block_map = {b["id"]: b for b in blocks}
+        ordered_blocks = []
+        for bid in custom_block_order:
+            if bid in block_map:
+                ordered_blocks.append(block_map.pop(bid))
+        # Add any remaining blocks
+        for b in block_map.values():
+            ordered_blocks.append(b)
+
+        # Keep evening_free at the very end
+        free_block = next((b for b in ordered_blocks if b["id"] == "evening_free"), None)
+        if free_block:
+            ordered_blocks.remove(free_block)
+            ordered_blocks.append(free_block)
+
+        # Recalculate sequential start and end times
+        c_m = _parse_time_to_minutes(start_time_str)
+        calc_study = 0
+        calc_pause = 0
+        for b in ordered_blocks:
+            if b["id"] == "evening_free":
+                continue
+            if b.get("is_mandatory") and b.get("start_time") and b.get("end_time"):
+                m_start_m = _parse_time_to_minutes(b["start_time"])
+                m_end_m = _parse_time_to_minutes(b["end_time"])
+                c_m = max(c_m, m_end_m)
+                calc_study += b.get("duration_minutes", m_end_m - m_start_m)
+            else:
+                dur = b.get("duration_minutes", 45)
+                b["start_time"] = _minutes_to_time(c_m)
+                c_m += dur
+                b["end_time"] = _minutes_to_time(c_m)
+                if b.get("is_break"):
+                    calc_pause += dur
+                else:
+                    calc_study += dur
+
+        feierabend_time = _minutes_to_time(c_m)
+        if free_block:
+            free_block["start_time"] = feierabend_time
+            free_block["duration_minutes"] = max(60, (22 * 60) - c_m)
+            free_block["title"] = f"🎉 Feierabend ab {feierabend_time} & Sport am Abend"
+
+        blocks = ordered_blocks
+        total_study_mins = calc_study
+        total_pause_mins = calc_pause
+    else:
+        # Sort all blocks chronologically by their start time
+        blocks.sort(key=lambda b: _parse_time_to_minutes(b.get("start_time", "08:30")))
 
     return {
         "date": t_date.isoformat(),
@@ -503,6 +554,7 @@ def generate_daily_science_rhythm(
         "mandatory_events_count": len(mandatory_events),
         "removed_blocks_count": len(removed_set),
         "postponed_blocks_count": len(active_postponed),
+        "custom_order": custom_block_order or [],
         "blocks": blocks,
         "mandatory_events": [
             {

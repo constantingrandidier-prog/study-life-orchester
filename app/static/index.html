@@ -49,17 +49,37 @@
     </div>
   </header>
 
-  <!-- Mobile Segmented Quick View Switcher (Auto-displayed on iPhone/Mobile) -->
-  <nav class="mobile-view-tabs" role="tablist">
-    <button type="button" class="mobile-view-btn active" data-view="mission" onclick="switchMobileView('mission')">🎯 Tages-Auftrag</button>
-    <button type="button" class="mobile-view-btn" data-view="schedule" onclick="switchMobileView('schedule')">📅 Vorlesungen</button>
-    <button type="button" class="mobile-view-btn" data-view="stats" onclick="switchMobileView('stats')">📊 Pacing &amp; Tools</button>
+  <!-- Top Navigation Bar & Multi-Page View Switcher -->
+  <nav class="app-top-nav" role="navigation" aria-label="Hauptnavigation">
+    <button type="button" class="nav-tab-btn active" id="navBtnToday" data-page="page-today" onclick="switchAppPage('page-today')">
+      <span>🎯</span> <span>Tages-Plan</span>
+      <span class="nav-tab-badge" id="navBadgeQuota">100</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="navBtnAdvisor" data-page="page-advisor" onclick="switchAppPage('page-advisor')">
+      <span>🔍</span> <span>Vorlesungs-Berater</span>
+      <span class="nav-tab-badge" style="background: rgba(88, 166, 255, 0.25); color: #58a6ff;">NEU</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="navBtnRoadmap" data-page="page-roadmap" onclick="switchAppPage('page-roadmap')">
+      <span>🗺️</span> <span>Semester-Roadmap</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="navBtnAnalytics" data-page="page-analytics" onclick="switchAppPage('page-analytics')">
+      <span>📊</span> <span>Anki &amp; Retention</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="navBtnSetup" data-page="page-setup" onclick="switchAppPage('page-setup')">
+      <span>⚙️</span> <span>Stundenplan &amp; Setup</span>
+    </button>
   </nav>
+
+  <!-- =========================================================================
+       PAGE 1: TAGES-PLAN & ZEITORCHESTER
+       ========================================================================= -->
+  <div id="page-today" class="app-page active">
 
   <!-- =========================================================================
        EXECUTIVE MISSION CONTROL & STRUCTURED DIDACTIC TABLE
        ========================================================================= -->
   <section class="executive-mission-section" id="executiveMissionSection">
+
     <div class="executive-mission-card">
       
       <!-- Top Meta & Title Bar -->
@@ -552,6 +572,349 @@
       <div id="rolloverPlanBox" style="display: none;"><button id="btnCloseRollover"></button><div id="rolloverAdviceText"></div><div id="rolloverScheduleList"></div></div>
     </section>
   </main>
+  </div> <!-- ==================== END OF PAGE 1: page-today ==================== -->
+
+  <!-- =========================================================================
+       PAGE 2: VORLESUNGS- & ANKI-BERATER (KOGNITIVE OPTIMIERUNG)
+       ========================================================================= -->
+  <div id="page-advisor" class="app-page">
+    <div class="advisor-page-wrap">
+      
+      <!-- Top Hero Search Card -->
+      <div class="advisor-hero-search-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+              <span>🔍</span> Vorlesungs- &amp; Anki-Berater
+            </h2>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              Gib ein Anki-Thema oder Stichwort ein: Das System sagt dir sofort, welche Vorlesung dazu gehört, ob du sie schauen sollst und mit welchem Tempo.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 11px; color: var(--text-dim);" id="advisorCountBadge">38 Vorlesungen indexiert</span>
+            <button type="button" class="btn-secondary" onclick="clearAdvisorSearch()" style="font-size: 11px; padding: 0.25rem 0.6rem;">
+              ✕ Zurücksetzen
+            </button>
+          </div>
+        </div>
+
+        <!-- Realtime Search Input -->
+        <div class="advisor-search-input-wrap">
+          <span style="font-size: 16px; opacity: 0.7;">🔍</span>
+          <input type="text" id="advisorSearchInput" class="advisor-search-input" placeholder="Thema oder Anki-Deck eingeben (z. B. Hämoglobin, Magen, EKG, Vitamine, Bohr-Effekt, Barorezeptor, Fasten, Komplement, Calcium)..." oninput="handleAdvisorSearch(this.value)">
+          <button type="button" id="advisorClearBtn" onclick="clearAdvisorSearch()" style="display: none; background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer;">✕</button>
+        </div>
+
+        <!-- Quick Topic Filter Chips -->
+        <div style="font-size: 11px; color: var(--text-dim); margin-top: 0.4rem;">Schnellauswahl nach High-Yield Themen:</div>
+        <div class="advisor-chips-row" id="advisorQuickChips">
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Hämoglobin')">🩸 Hämoglobin &amp; O₂</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Bohr-Effekt')">🧪 Säure-Base &amp; Bohr</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Gerinnung')">🩸 Hämostase &amp; Gerinnung</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Komplement')">🛑 Komplementsystem (Skip)</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Herzentwicklung')">🫀 Herz-Embryologie</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('EKG')">📈 EKG &amp; Erregungsleitung</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Herzmechanik')">🫀 Wiggers &amp; PV-Loop</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Barorezeptor')">🔄 Barorezeptorreflex</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Gasaustausch')">🫁 Gasaustausch &amp; Shunts</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Atemregulation')">🛑 Atemregulation (Skip)</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Vitamine')">🛑 Vitamine &amp; B12 (Skip)</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Magensekretion')">🥗 Magen &amp; Säuresekretion</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Resorption')">🥗 Resorption &amp; SGLT1</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Glykolyse')">⚡ Glykolyse &amp; Glukoneogenese</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Fasten')">🎧 Fasten &amp; Hunger (Audio)</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Hypophyse')">🦋 Hypophyse &amp; Hormone</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Calcium')">🦴 Calcium &amp; Parathormon</button>
+        </div>
+
+        <!-- Filter Mode Toolbar -->
+        <div class="advisor-filter-bar">
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-right: 0.25rem;">Strategie-Filter:</span>
+          <button type="button" class="advisor-filter-btn active" data-mode="all" onclick="setAdvisorModeFilter('all', this)">Alle (38)</button>
+          <button type="button" class="advisor-filter-btn" data-mode="skip" onclick="setAdvisorModeFilter('skip', this)">🛑 Skip / 100% Anki (5)</button>
+          <button type="button" class="advisor-filter-btn" data-mode="1.0x" onclick="setAdvisorModeFilter('1.0x', this)">🟢 1.0x Voller Fokus (8)</button>
+          <button type="button" class="advisor-filter-btn" data-mode="1.2x" onclick="setAdvisorModeFilter('1.2x', this)">🟡 1.2x Standard-Stream (21)</button>
+          <button type="button" class="advisor-filter-btn" data-mode="1.4x" onclick="setAdvisorModeFilter('1.4x', this)">⏩ 1.4x High-Speed (4)</button>
+          <button type="button" class="advisor-filter-btn" data-mode="audio" onclick="setAdvisorModeFilter('audio', this)">🎧 Audio-Only</button>
+        </div>
+      </div>
+
+      <!-- Prominent Answer Hero Card (The Answer to "Ob und wie schauen") -->
+      <div id="advisorDecisionHeroContainer">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+
+      <!-- All 38 Lectures Catalog / Accordion Grid -->
+      <div class="advisor-catalog-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-main);">
+              📚 Gesamter Vorlesungskatalog (UZH 2. Studienjahr, HS 2025)
+            </h3>
+            <div style="font-size: 11.5px; color: var(--text-muted);">
+              Klicke auf eine Vorlesung, um die detaillierte Empfehlung, Folien-PDFs und Anki-Prioritäten anzuzeigen.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;" id="advisorModuleFilterBar">
+            <!-- Module tabs injected via app.js -->
+          </div>
+        </div>
+
+        <div id="advisorLecturesListContainer" style="display: flex; flex-direction: column; gap: 0.45rem;">
+          <!-- Injected via app.js -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PAGE 3: DIDAKTISCHE SEMESTER-ROADMAP
+       ========================================================================= -->
+  <div id="page-roadmap" class="app-page">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 1.25rem 1.75rem 2.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      <div class="advisor-hero-search-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+              <span>🗺️</span> Didaktische Semester-Roadmap (2. Studienjahr)
+            </h2>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              9'633 Karten • 111 Decks • 6 Module • 100 Karten/Tag • Examen: 19.01.2027 (15 Tage Revisionspuffer)
+            </div>
+          </div>
+          <button type="button" class="btn-primary" onclick="loadCurriculumToday(true)" style="font-size: 11.5px; padding: 0.35rem 0.75rem;">
+            🔄 Roadmap aktualisieren
+          </button>
+        </div>
+
+        <!-- 6 Didactic Modules Overview Grid -->
+        <div class="roadmap-modules-grid" id="pageRoadmapModulesGrid" style="margin-top: 1rem;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Roadmap Search & Filter Toolbar -->
+        <div class="deck-tree-toolbar" style="border-top: 1px solid var(--border-subtle); margin-top: 1rem; padding-top: 0.75rem;">
+          <div class="deck-search-wrap">
+            <span style="opacity: 0.6;">🔍</span>
+            <input type="text" id="pageRoadmapSearchInput" placeholder="Roadmap durchsuchen (z. B. Tag 20, Herz, Magen, 2026-10-15)..." oninput="handleFilterRoadmap(this.value, 'pageRoadmapDaysList')">
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+            <span>🏖️ Sonntage = Ruhetage</span>
+            <span>•</span>
+            <span>🎯 Mo-Sa = 100 Karten/Tag</span>
+          </div>
+        </div>
+
+        <!-- Days List -->
+        <div class="roadmap-days-list" id="pageRoadmapDaysList" style="max-height: 550px; margin-top: 0.75rem;">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PAGE 4: ANKI & RETENTION RADAR
+       ========================================================================= -->
+  <div id="page-analytics" class="app-page">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 1.25rem 1.75rem 2.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      
+      <!-- Top Analytics Header Card -->
+      <div class="advisor-hero-search-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+              <span>📊</span> Anki-Lernstand, 14-Tage Retentions-Radar &amp; Triage
+            </h2>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              Vollständige Hierarchie deiner 111 Decks, Fälligkeits-Prognose und Notfall-Triage bei >500 Reviews.
+            </div>
+          </div>
+          <button type="button" class="btn-primary" onclick="handleSyncLocalAnki()" style="font-size: 11.5px; padding: 0.35rem 0.75rem;">
+            ⚡ Anki jetzt synchronisieren
+          </button>
+        </div>
+
+        <!-- 14-Tage Retentions-Radar & Workload-Vorschau -->
+        <div style="background: rgba(13, 17, 23, 0.95); padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(88, 166, 255, 0.25); font-size: 12px; margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <strong style="color: #58a6ff; font-size: 13px;">📈 14-Tage Retentions-Radar (Fälligkeits-Vorschau)</strong>
+              <span id="pageForecastSpikeBadge" style="display: none; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10.5px; font-weight: 600; background: rgba(248,81,73,0.2); color: #ff7b72; border: 1px solid rgba(248,81,73,0.4);">⚠️ Spike erkannt</span>
+            </div>
+            <div style="display: flex; gap: 0.75rem; font-size: 11px; color: var(--text-muted);">
+              <span>14-Tage Summe: <strong id="pageForecastTotalVal" style="color: #e6edf3;">--</strong></span>
+              <span>Ø Tag: <strong id="pageForecastAvgVal" style="color: #e6edf3;">--</strong></span>
+              <span>Spitze: <strong id="pageForecastPeakVal" style="color: #e6edf3;">--</strong></span>
+            </div>
+          </div>
+
+          <div id="pageForecastBarsContainer" style="display: flex; gap: 5px; align-items: flex-end; height: 75px; padding-top: 15px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px;">
+            <!-- 15 bars populated dynamically -->
+          </div>
+
+          <div id="pageForecastAdviceFooter" style="margin-top: 0.45rem; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem;">
+            <span>💡</span> <span id="pageForecastAdviceText">Lade 14-Tage-Prognose aus Anki...</span>
+          </div>
+        </div>
+
+        <!-- Notfall Triage Box -->
+        <div style="background: rgba(22, 27, 34, 0.9); padding: 1rem; border-radius: 8px; border: 1px solid rgba(248, 81, 73, 0.4); font-size: 12px; margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+            <div>
+              <span style="color: #ff7b72; font-weight: 700; font-size: 13.5px;">🚨 Notfall-Fokus: Intelligente Themen-Triage</span>
+              <div style="color: var(--text-muted); font-size: 11px; margin-top: 2px;">
+                Bei Zeitmangel oder >500 Reviews: Filtere gezielt nach den fehleranfälligsten Karten.
+              </div>
+            </div>
+            <button type="button" class="btn-secondary" onclick="copyTriageQueryToClipboard()" style="font-size: 11px; padding: 0.25rem 0.65rem; color: #58a6ff;">
+              📋 Anki-Suchstring kopieren
+            </button>
+          </div>
+          <div id="pageTriageTopicsList" style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 220px; overflow-y: auto;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Full Anki Deck Hierarchy Tree Embedded -->
+        <div class="deck-tree-toolbar">
+          <div class="deck-search-wrap">
+            <span style="opacity: 0.6;">🔍</span>
+            <input type="text" id="pageDeckTreeSearchInput" placeholder="Deck oder Vorlesung im Baum suchen..." oninput="handleFilterDeckTree(this.value, 'pageDeckTreeContainer')">
+          </div>
+          <div style="display: flex; gap: 0.4rem;">
+            <button type="button" class="btn-secondary" onclick="expandAllDeckTree('pageDeckTreeContainer')" style="font-size: 11px; padding: 0.3rem 0.65rem;">📂 Alles aufklappen</button>
+            <button type="button" class="btn-secondary" onclick="collapseAllDeckTree('pageDeckTreeContainer')" style="font-size: 11px; padding: 0.3rem 0.65rem;">📁 Alles zuklappen</button>
+          </div>
+        </div>
+
+        <div class="deck-tree-container" id="pageDeckTreeContainer" style="max-height: 500px; margin-top: 0.75rem;">
+          <!-- Dynamically rendered hierarchical tree -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PAGE 5: STUNDENPLAN & SETUP (CONTROL CENTER)
+       ========================================================================= -->
+  <div id="page-setup" class="app-page">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 1.25rem 1.75rem 2.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      <div class="advisor-hero-search-card">
+        <h2 style="margin: 0 0 1rem 0; font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+          <span>⚙️</span> Stundenplan-Import, Kalender-URL &amp; Einstellungen
+        </h2>
+
+        <!-- Control Center Tabs -->
+        <nav class="tabs-nav" role="tablist" style="margin-bottom: 1rem;">
+          <button class="tab-btn active" data-tab="tab-schedule-page" id="btnPageTabSchedule">Stundenplan &amp; URL</button>
+          <button class="tab-btn" data-tab="tab-activity-page" id="btnPageTabActivity">Aktivitäten erfassen</button>
+          <button class="tab-btn" data-tab="tab-anki-page" id="btnPageTabAnki">Anki-Planung</button>
+          <button class="tab-btn" data-tab="tab-efficiency-page" id="btnPageTabEfficiency">Vorlesungs-Effizienz</button>
+        </nav>
+
+        <!-- SUB-TAB 1: Stundenplan & URL-Sync -->
+        <div class="tab-content active" id="tab-schedule-page">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 1rem;">
+            Synchronisiere deinen Stundenplan per <strong>Webcal / iCal URL</strong> (z.&nbsp;B. UZH Vorlesungsverzeichnis, Google Calendar, Outlook) oder lade eine <strong>.ics-Datei</strong> hoch.
+          </div>
+
+          <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+            <div class="form-label" style="margin-bottom: 0.4rem;">Kalender-URL synchronisieren</div>
+            <div class="form-group" style="margin-bottom: 0.6rem;">
+              <input type="url" id="pageCalendarUrlInput" class="form-input" placeholder="webcal://... oder https://... (UZH, Google, Outlook)">
+            </div>
+            <button class="btn-primary" onclick="handleSyncCalendarUrlPage()" style="width: 100%;">
+              Stundenplan von URL laden
+            </button>
+          </div>
+
+          <div class="dropzone-box" id="pageIcsDropzone" onclick="document.getElementById('icsFileInput').click()">
+            <div class="dropzone-title">Stundenplan-Datei (.ics) auswählen</div>
+            <div class="dropzone-hint">Hier ablegen oder klicken</div>
+          </div>
+
+          <!-- UZH VAM & OpenOLAT Card -->
+          <div class="olat-status-card" style="margin-top: 1rem; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <div style="display: flex; align-items: center; gap: 0.45rem; font-weight: 600; font-size: 12px; color: var(--text-main);">
+                <span>🏥</span> VAM – Virtuelle Ausbildungsplattform Medizin (UZH)
+              </div>
+              <span class="status-badge" id="pageOlatOnlineBadge" style="font-size: 10px;">Lade Status...</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 0.65rem;">
+              Kurs <strong>2. Studienjahr (2. SJ B Med)</strong> indexiert (<a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" style="color: var(--accent-blue);">VAM Kurs #666697737 öffnen</a>).
+            </div>
+            <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+              <a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" class="btn-primary" style="flex: 1; text-align: center; text-decoration: none; font-size: 11px; padding: 0.4rem 0.6rem;">🎬 VAM-Archiv &amp; Aufzeichnungen</a>
+              <a href="https://lms.uzh.ch/url/RepositoryEntry/666697737" target="_blank" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 11px; padding: 0.4rem 0.6rem;">📄 Kursordner</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 2: Manuelle Aktivitäten -->
+        <div class="tab-content" id="tab-activity-page">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 1rem;">
+            Erfasse Mahlzeiten, Sport, Pendelzeiten oder Pausen, um reale freie Arbeitsfenster zu ermitteln.
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pageActTitle">Bezeichnung</label>
+            <input type="text" id="pageActTitle" class="form-input" placeholder="z. B. Krafttraining ASVZ Irchel">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="pageActStart">Startzeit</label>
+              <input type="time" id="pageActStart" class="form-input" value="12:15">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pageActEnd">Endzeit</label>
+              <input type="time" id="pageActEnd" class="form-input" value="13:30">
+            </div>
+          </div>
+          <button class="btn-primary" onclick="handleAddManualActivityFromPage()" style="width: 100%;">
+            Aktivität eintragen
+          </button>
+        </div>
+
+        <!-- SUB-TAB 3: Anki-Planung -->
+        <div class="tab-content" id="tab-anki-page">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 0.85rem;">
+            Synchronisiere direkt mit deiner lokalen <strong>Anki-Desktop</strong> Sammlung oder nutze <strong>AnkiWeb</strong>.
+          </div>
+          <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 0.85rem;">
+            <button class="btn-primary" onclick="handleSyncLocalAnki()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+              <span>⚡</span> Lokale Anki-Desktop Sammlung synchronisieren
+            </button>
+          </div>
+          <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem 1rem;">
+            <button class="btn-secondary" onclick="handleSyncAnkiWeb()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+              <span>🌐</span> Mit AnkiWeb Cloud synchronisieren
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 4: Vorlesungs-Effizienz -->
+        <div class="tab-content" id="tab-efficiency-page">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 1rem;">
+            Empirische Analyse: Spart dir der Vorlesungsbesuch mehr Wiederholungszeit ein als 90 Minuten Anwesenheit kosten?
+          </div>
+          <div class="roi-summary-strip">
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-main); margin-bottom: 0.5rem;">
+              2.3x Lerntempo bei 1.2x Vorlesungs-Stream
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+              Die Vorlesungsanalyse zeigt: Bei methodischem Mitdenken mit 1.2x Speed sparst du im Schnitt 25 Minuten pro Vorlesung und reduzierst Anki-Vergessensfehler um bis zu 38%!
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
   <!-- Sliding Config & Calendar Setup Drawer Modal -->
   <div id="configDrawerBackdrop" class="config-drawer-backdrop" style="display: none;" onclick="handleConfigDrawerBackdrop(event)">

@@ -1155,3 +1155,46 @@ def get_daily_rhythm_endpoint(target_date: Optional[str] = Query(None, descripti
         cards_due_today=due_today,
         new_cards_target=100,
     )
+
+
+from app.services.lecture_advisor_service import (
+    get_all_advisor_lectures,
+    search_lecture_advisor,
+)
+
+@router.get(
+    "/advisor/search",
+    summary="Search lecture & Anki advisor recommendations",
+    description="Look up which lecture to watch for which Anki topics, speed recommendations, cognitive load trade-offs, and pure Anki facts.",
+)
+def search_advisor_endpoint(
+    q: Optional[str] = Query("", description="Search query for topic, deck, or keyword"),
+    mode: Optional[str] = Query(None, description="Filter by recommendation (skip, 1.0x, 1.2x, 1.4x, audio)"),
+    module: Optional[str] = Query(None, description="Filter by module"),
+):
+    return search_lecture_advisor(query=q or "", filter_mode=mode, filter_module=module)
+
+
+@router.get(
+    "/advisor/all",
+    summary="Get all 38 UZH lectures with clinical & cognitive recommendations",
+)
+def get_all_advisor_lectures_endpoint():
+    lectures = get_all_advisor_lectures()
+    return {
+        "total": len(lectures),
+        "lectures": lectures,
+    }
+
+
+@router.get(
+    "/advisor/lecture/{lecture_id}",
+    summary="Get specific lecture advisor detail",
+)
+def get_advisor_lecture_detail_endpoint(lecture_id: str):
+    all_l = get_all_advisor_lectures()
+    found = next((l for l in all_l if l["id"] == lecture_id), None)
+    if not found:
+        raise HTTPException(status_code=404, detail=f"Lecture {lecture_id} not found")
+    return found
+

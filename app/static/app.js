@@ -280,31 +280,48 @@ function init() {
   checkLocalAnkiStatus();
   loadSavedProfile();
   loadPersistedAnkiDeck();
+
+  // Multi-Page initial routing
+  let initialPage = 'page-today';
+  if (window.location.hash) {
+    const hashClean = 'page-' + window.location.hash.replace('#', '');
+    if (document.getElementById(hashClean)) {
+      initialPage = hashClean;
+    }
+  } else {
+    const saved = localStorage.getItem('sl_active_page');
+    if (saved && document.getElementById(saved)) {
+      initialPage = saved;
+    }
+  }
+  switchAppPage(initialPage);
+  loadAdvisorData();
 }
 
 // Tab Switching
 function setupTabs() {
   const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabContents = document.querySelectorAll('.tab-content');
 
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
+      const parent = btn.closest('.control-panel') || btn.closest('.advisor-hero-search-card') || document;
+      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
       btn.classList.add('active');
       const tabId = btn.getAttribute('data-tab');
       const targetContent = document.getElementById(tabId);
       if (targetContent) targetContent.classList.add('active');
-      if (tabId === 'tab-anki') {
+      if (tabId === 'tab-anki' || tabId === 'tab-anki-page') {
         checkLocalAnkiStatus();
       }
-      if (tabId === 'tab-efficiency') {
+      if (tabId === 'tab-efficiency' || tabId === 'tab-efficiency-page') {
         loadEfficiencyAnalytics();
       }
     });
   });
 }
+
 
 // Segmented Category Buttons (Sport, Mahlzeit, Pendeln, Pause, Sonstiges)
 function setupCategoryButtons() {
@@ -2695,10 +2712,12 @@ function renderCurriculumToday(data) {
               </div>
             </td>
             <td class="td-action" style="text-align: right;">
+              <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('${escapedTitle}')" style="margin-right: 4px; background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.55rem; cursor: pointer;" title="Vorlesung &amp; Empfehlung für dieses Thema prüfen">🔍 Berater</button>
               <button type="button" class="btn-slot-toggle ${isDone ? 'done' : ''}" onclick="handleToggleSlotDone('${escapedSlotKey}', ${cards}, '${escapedTitle}')">
                 ${isDone ? '✓ Erledigt' : 'Erledigen'}
               </button>
             </td>
+
           </tr>
         `;
       }).join('');
@@ -3545,5 +3564,559 @@ if (document.readyState === 'loading') {
   loadWorkloadForecast(false);
   loadScienceRhythm();
 }
+
+
+// ============================================================================
+// MULTI-PAGE VIEW ROUTER (APP RESTRUCTURING)
+// ============================================================================
+
+function switchAppPage(pageId) {
+  if (!pageId) return;
+  if (!pageId.startsWith('page-')) pageId = 'page-' + pageId;
+
+  const navBtns = document.querySelectorAll('.nav-tab-btn');
+  navBtns.forEach(btn => {
+    if (btn.getAttribute('data-page') === pageId) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  const pages = document.querySelectorAll('.app-page');
+  pages.forEach(p => {
+    if (p.id === pageId) {
+      p.classList.add('active');
+    } else {
+      p.classList.remove('active');
+    }
+  });
+
+  try {
+    localStorage.setItem('sl_active_page', pageId);
+    const hash = pageId.replace('page-', '');
+    if (window.location.hash !== '#' + hash) {
+      history.replaceState(null, '', '#' + hash);
+    }
+  } catch (e) {}
+
+  // Page-specific lazy activations
+  if (pageId === 'page-advisor') {
+    if (!state.advisorData) {
+      loadAdvisorData();
+    }
+  } else if (pageId === 'page-roadmap') {
+    renderPageRoadmap();
+  } else if (pageId === 'page-analytics') {
+    renderPageAnalytics();
+  }
+}
+
+function switchMobileView(view) {
+  if (view === 'mission') switchAppPage('page-today');
+  else if (view === 'schedule') switchAppPage('page-today');
+  else if (view === 'stats') switchAppPage('page-analytics');
+}
+
+window.addEventListener('hashchange', () => {
+  if (window.location.hash) {
+    const hashPage = 'page-' + window.location.hash.replace('#', '');
+    if (document.getElementById(hashPage)) {
+      switchAppPage(hashPage);
+    }
+  }
+});
+
+
+// ============================================================================
+// VORLESUNGS- & ANKI-BERATER (COGNITIVE ADVISOR ENGINE)
+// ============================================================================
+
+state.advisorData = null;
+state.advisorFilterMode = 'all';
+state.advisorFilterModule = 'all';
+state.selectedAdvisorLecture = null;
+
+async function loadAdvisorData(query = '') {
+  try {
+    let url = `${CONFIG.API_BASE}/advisor/search?q=${encodeURIComponent(query)}`;
+    if (state.advisorFilterMode && state.advisorFilterMode !== 'all') {
+      url += `&mode=${encodeURIComponent(state.advisorFilterMode)}`;
+    }
+    if (state.advisorFilterModule && state.advisorFilterModule !== 'all') {
+      url += `&module=${encodeURIComponent(state.advisorFilterModule)}`;
+    }
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    state.advisorData = data;
+
+    const countBadge = document.getElementById('advisorCountBadge');
+    if (countBadge && data.summary) {
+      countBadge.textContent = `${data.summary.total_matching} von ${data.summary.total_lectures} Vorlesungen`;
+    }
+
+    if (query || !state.selectedAdvisorLecture) {
+      state.selectedAdvisorLecture = data.top_match;
+    }
+
+    renderAdvisorHero(state.selectedAdvisorLecture);
+    renderAdvisorCatalog(data.results);
+    renderAdvisorModuleFilters();
+  } catch (err) {
+    console.error('Failed to load advisor data:', err);
+  }
+}
+
+let advisorSearchTimer = null;
+function handleAdvisorSearch(query) {
+  clearTimeout(advisorSearchTimer);
+  const clearBtn = document.getElementById('advisorClearBtn');
+  if (clearBtn) {
+    clearBtn.style.display = query ? 'block' : 'none';
+  }
+  advisorSearchTimer = setTimeout(() => {
+    loadAdvisorData(query);
+  }, 150);
+}
+
+function clearAdvisorSearch() {
+  const input = document.getElementById('advisorSearchInput');
+  if (input) {
+    input.value = '';
+    handleAdvisorSearch('');
+  }
+}
+
+function applyAdvisorChip(topic) {
+  const input = document.getElementById('advisorSearchInput');
+  if (input) {
+    input.value = topic;
+    handleAdvisorSearch(topic);
+    const hero = document.getElementById('advisorDecisionHeroContainer');
+    if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function setAdvisorModeFilter(mode, btnEl) {
+  state.advisorFilterMode = mode;
+  document.querySelectorAll('.advisor-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  const input = document.getElementById('advisorSearchInput');
+  loadAdvisorData(input ? input.value : '');
+}
+
+function setAdvisorModuleFilter(moduleName, btnEl) {
+  state.advisorFilterModule = moduleName;
+  document.querySelectorAll('.advisor-mod-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  const input = document.getElementById('advisorSearchInput');
+  loadAdvisorData(input ? input.value : '');
+}
+
+function selectAdvisorLecture(lectureId) {
+  if (!state.advisorData || !state.advisorData.results) return;
+  const lect = state.advisorData.results.find(l => l.id === lectureId) ||
+               (state.advisorData.top_match && state.advisorData.top_match.id === lectureId ? state.advisorData.top_match : null);
+  if (lect) {
+    state.selectedAdvisorLecture = lect;
+    renderAdvisorHero(lect);
+    const hero = document.getElementById('advisorDecisionHeroContainer');
+    if (hero) {
+      hero.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+}
+
+function renderAdvisorHero(lect) {
+  const container = document.getElementById('advisorDecisionHeroContainer');
+  if (!container) return;
+
+  if (!lect) {
+    container.innerHTML = `
+      <div class="advisor-decision-card" style="text-align: center; padding: 2rem;">
+        <span style="font-size: 32px;">🔍</span>
+        <h3 style="color: var(--text-muted); margin-top: 0.5rem;">Keine Vorlesung gefunden</h3>
+        <p style="font-size: 12px; color: var(--text-dim);">Versuche einen anderen Suchbegriff wie z. B. Hämoglobin, Magen, EKG, Vitamine oder Calcium.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const isSkip = lect.recommendation && lect.recommendation.toLowerCase().includes('skip');
+  const is1_0x = lect.recommendation && lect.recommendation.includes('1.0x');
+  const isAudio = lect.is_audio_only;
+
+  let borderColor = '#d29922';
+  let bannerBg = 'rgba(210, 153, 34, 0.15)';
+  let bannerBorder = 'rgba(210, 153, 34, 0.4)';
+  let bannerText = '#e3b341';
+
+  if (isSkip) {
+    borderColor = '#f85149';
+    bannerBg = 'rgba(248, 81, 73, 0.15)';
+    bannerBorder = 'rgba(248, 81, 73, 0.4)';
+    bannerText = '#ff7b72';
+  } else if (is1_0x) {
+    borderColor = '#3fb950';
+    bannerBg = 'rgba(63, 185, 80, 0.15)';
+    bannerBorder = 'rgba(63, 185, 80, 0.4)';
+    bannerText = '#56d364';
+  } else if (isAudio) {
+    borderColor = '#58a6ff';
+    bannerBg = 'rgba(56, 139, 253, 0.15)';
+    bannerBorder = 'rgba(56, 139, 253, 0.4)';
+    bannerText = '#79c0ff';
+  }
+
+  let factsHtml = '';
+  if (lect.anki_facts && lect.anki_facts.length > 0) {
+    factsHtml = `
+      <div class="advisor-anki-facts-box" style="margin-top: 0.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.35rem;">
+          <strong style="color: ${isSkip ? '#ff7b72' : '#58a6ff'}; font-size: 13px; display: flex; align-items: center; gap: 0.4rem;">
+            <span>${isSkip ? '🚨' : '💡'}</span>
+            ${isSkip ? 'Pure-Anki Prioritäten (Exakt diese 3 Kernfakten lernen):' : 'Zentrale Fokus-Konzepte der Vorlesung:'}
+          </strong>
+          <span style="font-size: 11px; color: var(--text-dim);">Grounded in UZH-Folien</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          ${lect.anki_facts.map((fact, idx) => `
+            <div class="advisor-anki-fact-item">
+              <span style="font-weight: 700; color: ${isSkip ? '#ff7b72' : '#58a6ff'}; font-size: 13px; min-width: 20px;">${idx + 1}.</span>
+              <div style="flex: 1; font-size: 12px; color: var(--text-main); line-height: 1.5;">${escapeHtml(fact)}</div>
+              <button type="button" class="btn-copy-fact" onclick="copyAnkiFactText('${encodeURIComponent(fact)}', this)" title="Fakt für Anki kopieren">
+                📋 Kopieren
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  let mediaHtml = '';
+  if (lect.has_local_podcast) {
+    mediaHtml = `
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 11.5px; color: var(--text-muted); background: var(--bg-base); padding: 0.6rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle);">
+        <span style="color: #3fb950; font-weight: 600;">🎬 Lokaler Podcast verfügbar:</span>
+        <span>📽️ Folien: <strong>${escapeHtml(lect.folien_filename || 'Folien.mp4')}</strong></span>
+        <span>•</span>
+        <span>👨‍🏫 Dozent: <strong>${escapeHtml(lect.prof_filename || 'Prof.mp4')}</strong></span>
+      </div>
+    `;
+  }
+
+  let slideLinkHtml = '';
+  if (lect.slide_pdf) {
+    slideLinkHtml = `
+      <div style="margin-top: 0.35rem; font-size: 11.5px; color: var(--text-dim);">
+        📄 Kurs-Folie: <span style="color: var(--accent-blue); font-family: monospace;">${escapeHtml(lect.slide_pdf)}</span>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="advisor-decision-card" style="border-left: 4px solid ${borderColor};">
+      
+      <div class="advisor-decision-header">
+        <div style="flex: 1; min-width: 260px;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <span style="font-size: 11px; background: var(--bg-surface-active); color: var(--text-muted); padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 600;">
+              📅 ${lect.date}
+            </span>
+            <span style="font-size: 11.5px; color: var(--text-dim); font-weight: 500;">
+              ${escapeHtml(lect.module)}
+            </span>
+          </div>
+          <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: var(--text-main); line-height: 1.35;">
+            ${escapeHtml(lect.title)}
+          </h2>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem;">
+            👨‍🏫 ${escapeHtml(lect.lecturer || 'UZH Dozierende')}
+          </div>
+          ${slideLinkHtml}
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;">
+          <div class="advisor-speed-banner" style="background: ${bannerBg}; border: 1px solid ${bannerBorder}; color: ${bannerText};">
+            <span>${isSkip ? '🛑' : (isAudio ? '🎧' : '⚡')}</span>
+            <span>${escapeHtml(lect.badge_label || lect.recommendation)}</span>
+          </div>
+          <span style="font-size: 11px; color: var(--text-dim);">
+            Empfohlene Geschwindigkeit: <strong style="color: var(--text-main);">${lect.recommendation}</strong>
+          </span>
+        </div>
+      </div>
+
+      <div class="advisor-metrics-grid">
+        <div class="advisor-metric-box">
+          <div class="advisor-metric-label">📊 Prüfungsrelevanz</div>
+          <div class="advisor-metric-val" style="color: ${lect.exam_yield === 'High-Yield' ? '#f85149' : (lect.exam_yield === 'Med-Yield' ? '#d29922' : '#8b949e')};">
+            ${escapeHtml(lect.exam_yield)}
+          </div>
+        </div>
+
+        <div class="advisor-metric-box">
+          <div class="advisor-metric-label">👁️ Visuelle Abhängigkeit</div>
+          <div class="advisor-metric-val" style="color: ${lect.visual_dependency === 'Hoch' ? '#58a6ff' : '#3fb950'};">
+            ${escapeHtml(lect.visual_dependency)} ${lect.visual_dependency === 'Hoch' ? '(Bildschirm zwingend)' : '(Audio möglich)'}
+          </div>
+        </div>
+
+        <div class="advisor-metric-box">
+          <div class="advisor-metric-label">🗣️ Dozenten-Tempo (gemessen)</div>
+          <div class="advisor-metric-val">
+            ${escapeHtml(lect.lecturer_tempo)} <span style="font-size: 11px; font-weight: normal; color: var(--text-dim);">(${Math.round(lect.silence_ratio * 100)}% Pause)</span>
+          </div>
+        </div>
+
+        <div class="advisor-metric-box">
+          <div class="advisor-metric-label">💡 Lern-Strategie</div>
+          <div class="advisor-metric-val" style="color: ${bannerText};">
+            ${isSkip ? '100% Anki' : (isAudio ? 'Audio-Podcast' : 'Aktiv Mitdenken')}
+          </div>
+        </div>
+      </div>
+
+      <div class="advisor-reason-box">
+        <strong style="color: #58a6ff; display: block; margin-bottom: 0.25rem;">
+          🧠 Kognitive Begründung &amp; Zeitersparnis (Cognitive Load Theory):
+        </strong>
+        ${escapeHtml(lect.tradeoff_reason)}
+      </div>
+
+      ${factsHtml}
+      ${mediaHtml}
+
+    </div>
+  `;
+}
+
+function renderAdvisorCatalog(lectures) {
+  const container = document.getElementById('advisorLecturesListContainer');
+  if (!container) return;
+
+  if (!lectures || lectures.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 12px;">
+        Keine Vorlesungen für die gewählten Filterkriterien gefunden.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = lectures.map(l => {
+    const isSelected = state.selectedAdvisorLecture && state.selectedAdvisorLecture.id === l.id;
+    const isSkip = l.recommendation.toLowerCase().includes('skip');
+    const is1_0x = l.recommendation.includes('1.0x');
+    const isAudio = l.is_audio_only;
+
+    let badgeColor = '#d29922';
+    if (isSkip) badgeColor = '#f85149';
+    else if (is1_0x) badgeColor = '#3fb950';
+    else if (isAudio) badgeColor = '#58a6ff';
+
+    return `
+      <div class="advisor-lecture-row" onclick="selectAdvisorLecture('${l.id}')" style="${isSelected ? 'background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.35);' : ''}">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0;">
+          <span style="font-size: 11px; color: var(--text-dim); font-family: monospace; min-width: 72px;">${l.date}</span>
+          <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <strong style="color: var(--text-main); font-size: 13px;">${escapeHtml(l.title)}</strong>
+            <div style="font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis;">
+              ${escapeHtml(l.module)} • ${escapeHtml(l.lecturer || '')}
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+          <span style="font-size: 10.5px; padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid ${badgeColor}; color: ${badgeColor}; font-weight: 600;">
+            ${escapeHtml(l.recommendation)}
+          </span>
+          <button type="button" class="btn-secondary" style="font-size: 11px; padding: 0.2rem 0.5rem;" onclick="event.stopPropagation(); selectAdvisorLecture('${l.id}')">
+            Details ▶
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAdvisorModuleFilters() {
+  const container = document.getElementById('advisorModuleFilterBar');
+  if (!container) return;
+
+  const modules = [
+    { id: 'all', label: 'Alle Module' },
+    { id: 'Blut', label: '1. Blut & Immun' },
+    { id: 'Herz', label: '2. Herz-Kreislauf' },
+    { id: 'Atmung', label: '3. Atmung' },
+    { id: 'Verdauung', label: '4. Verdauung' },
+    { id: 'Stoffwechsel', label: '5. Stoffwechsel' },
+    { id: 'Endokrinologie', label: '6. Endokrinologie' },
+  ];
+
+  container.innerHTML = modules.map(m => `
+    <button type="button" class="advisor-mod-btn ${state.advisorFilterModule === m.id ? 'active' : ''}" onclick="setAdvisorModuleFilter('${m.id}', this)" style="background: ${state.advisorFilterModule === m.id ? 'rgba(56, 139, 253, 0.15)' : 'transparent'}; border: 1px solid ${state.advisorFilterModule === m.id ? '#58a6ff' : 'var(--border-subtle)'}; color: ${state.advisorFilterModule === m.id ? '#58a6ff' : 'var(--text-muted)'}; border-radius: 4px; padding: 0.2rem 0.55rem; font-size: 11px; font-weight: 500; cursor: pointer;">
+      ${m.label}
+    </button>
+  `).join('');
+}
+
+function copyAnkiFactText(encodedText, btnEl) {
+  const text = decodeURIComponent(encodedText);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btnEl.textContent;
+      btnEl.textContent = '✓ Kopiert!';
+      btnEl.style.color = '#3fb950';
+      btnEl.style.borderColor = '#3fb950';
+      setTimeout(() => {
+        btnEl.textContent = orig;
+        btnEl.style.color = '';
+        btnEl.style.borderColor = '';
+      }, 2000);
+    });
+  } else {
+    showToast('Kopieren nicht unterstützt');
+  }
+}
+
+// 1-Click Jump from Today Topic to Advisor
+window.consultAdvisorForTopic = function(topicName) {
+  switchAppPage('page-advisor');
+  const input = document.getElementById('advisorSearchInput');
+  if (input) {
+    const cleaned = topicName.replace(/^\d+\s+/, '').trim();
+    input.value = cleaned;
+    handleAdvisorSearch(cleaned);
+  }
+};
+
+
+// ============================================================================
+// PAGE ROADMAP & ANALYTICS SYNCHRONIZERS
+// ============================================================================
+
+async function renderPageRoadmap() {
+  const grid = document.getElementById('pageRoadmapModulesGrid');
+  const list = document.getElementById('pageRoadmapDaysList');
+  if (!grid || !list) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/curriculum/roadmap`);
+    if (!res.ok) return;
+    const data = await res.json();
+    state.roadmapData = data;
+
+    if (data.modules) {
+      grid.innerHTML = data.modules.map(m => `
+        <div class="roadmap-module-card">
+          <div class="roadmap-mod-header">
+            <span class="roadmap-mod-name">${escapeHtml(m.module_name)}</span>
+            <span class="status-badge" style="font-size: 10px; background: rgba(88,166,255,0.15); color: #58a6ff;">${m.total_cards} Karten</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 0.35rem;">
+            📅 ${m.start_date} bis ${m.end_date} (${m.active_days} Lerntage)
+          </div>
+          <div style="margin-top: 0.5rem; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;">
+            <div style="height: 100%; width: ${m.progress_pct || 0}%; background: var(--status-done);"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    if (data.schedule) {
+      list.innerHTML = data.schedule.map(d => {
+        const isRest = d.is_rest_day;
+        const isToday = d.date === state.targetDate;
+        return `
+          <div class="roadmap-day-card ${isRest ? 'rest-day' : ''} ${isToday ? 'today-highlight' : ''}" style="padding: 0.7rem 0.85rem; background: var(--bg-base); border: 1px solid ${isToday ? 'var(--accent-blue)' : 'var(--border-subtle)'}; border-radius: var(--radius-sm); margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.45rem;">
+                <strong style="color: ${isToday ? 'var(--accent-blue)' : 'var(--text-main)'}; font-size: 12.5px;">
+                  Tag ${d.day_number || '-'}: ${d.day_of_week}, ${d.date}
+                </strong>
+                ${isRest ? '<span style="font-size: 10.5px; color: #d29922; background: rgba(210,153,34,0.15); padding: 0.1rem 0.35rem; border-radius: 3px;">🏖️ Ruhetag</span>' : ''}
+              </div>
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+                ${escapeHtml(d.current_module || '')} • ${d.topic_slots ? d.topic_slots.map(s => escapeHtml(s.clean_title || s.short_title)).join(', ') : ''}
+              </div>
+            </div>
+            <div style="text-align: right; flex-shrink: 0;">
+              <strong style="color: ${isRest ? 'var(--text-dim)' : 'var(--accent-blue)'}; font-size: 13px;">${d.target_cards}</strong>
+              <span style="font-size: 11px; color: var(--text-dim);">Karten</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  } catch (err) {
+    console.warn('Roadmap fetch error:', err);
+  }
+}
+
+async function renderPageAnalytics() {
+  const barsContainer = document.getElementById('pageForecastBarsContainer');
+  const modalBars = document.getElementById('forecastBarsContainer');
+  if (barsContainer && modalBars && modalBars.children.length > 0) {
+    barsContainer.innerHTML = modalBars.innerHTML;
+  }
+
+  const adviceFooter = document.getElementById('pageForecastAdviceFooter');
+  const modalAdvice = document.getElementById('forecastAdviceFooter');
+  if (adviceFooter && modalAdvice) {
+    adviceFooter.innerHTML = modalAdvice.innerHTML;
+  }
+
+  const pageTree = document.getElementById('pageDeckTreeContainer');
+  const modalTree = document.getElementById('deckTreeContainer');
+  if (pageTree && modalTree && modalTree.children.length > 0) {
+    pageTree.innerHTML = modalTree.innerHTML;
+  }
+
+  const pageTriage = document.getElementById('pageTriageTopicsList');
+  const modalTriage = document.getElementById('triageTopicsList');
+  if (pageTriage && modalTriage && modalTriage.children.length > 0) {
+    pageTriage.innerHTML = modalTriage.innerHTML;
+  }
+}
+
+async function handleSyncCalendarUrlPage() {
+  const input = document.getElementById('pageCalendarUrlInput');
+  const origInput = document.getElementById('calendarUrlInput');
+  if (input && origInput) {
+    origInput.value = input.value;
+    await handleSyncCalendarUrl();
+  }
+}
+
+async function handleAddManualActivityFromPage() {
+  const title = document.getElementById('pageActTitle');
+  const start = document.getElementById('pageActStart');
+  const end = document.getElementById('pageActEnd');
+  if (dom.actTitle && title) dom.actTitle.value = title.value;
+  if (dom.actStart && start) dom.actStart.value = start.value;
+  if (dom.actEnd && end) dom.actEnd.value = end.value;
+  await handleAddManualActivity();
+  if (title) title.value = '';
+}
+
+// Window exports
+window.switchAppPage = switchAppPage;
+window.loadAdvisorData = loadAdvisorData;
+window.handleAdvisorSearch = handleAdvisorSearch;
+window.clearAdvisorSearch = clearAdvisorSearch;
+window.applyAdvisorChip = applyAdvisorChip;
+window.setAdvisorModeFilter = setAdvisorModeFilter;
+window.setAdvisorModuleFilter = setAdvisorModuleFilter;
+window.selectAdvisorLecture = selectAdvisorLecture;
+window.copyAnkiFactText = copyAnkiFactText;
+window.renderPageRoadmap = renderPageRoadmap;
+window.renderPageAnalytics = renderPageAnalytics;
+window.handleSyncCalendarUrlPage = handleSyncCalendarUrlPage;
+window.handleAddManualActivityFromPage = handleAddManualActivityFromPage;
+
 
 

@@ -91,7 +91,7 @@ def test_daily_science_rhythm_starts_at_830():
     assert blocks[1]["is_break"] is True
     # Block 2 (New cards) starts at 09:45
     assert blocks[2]["start_time"] == "09:45"
-    assert "100 Neue Karten" in blocks[2]["title"]
+    assert "Neue Karten" in blocks[2]["title"]
 
 def test_api_daily_rhythm_endpoint():
     resp = client.get("/api/v1/schedule/daily-rhythm?target_date=2026-09-15")

@@ -2859,6 +2859,11 @@ function renderCurriculumToday(data) {
               <div class="curriculum-card-pill">
                 <span>⚡</span> <strong>${cards}</strong> Karten
               </div>
+              ${slot.tomorrow_remaining_cards ? `
+                <div style="margin-top: 3px; font-size: 10px; color: #79c0ff; font-weight: 600;" title="Restkarten dieses Decks werden morgen gelernt">
+                  ↳ +${slot.tomorrow_remaining_cards} morgen
+                </div>
+              ` : ''}
             </td>
             <td class="td-action" style="text-align: right;">
               <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('${escapedTitle}')" style="margin-right: 4px; background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.55rem; cursor: pointer;" title="Vorlesung &amp; Empfehlung für dieses Thema prüfen">🔍 Berater</button>
@@ -3885,6 +3890,50 @@ function renderScienceRhythm(data) {
             ${isCompleted ? '✓' : ''}
           </div>
         </div>
+
+        <!-- Subtopics / Decks for Morning New Cards Block -->
+        ${b.id === 'block_new_cards' && b.topic_slots && b.topic_slots.length > 0 ? `
+          <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 11px; font-weight: 700; color: #d2a8ff; display: inline-flex; align-items: center; gap: 4px;">
+              ☀️ Vormittags-Karten:
+            </span>
+            ${b.topic_slots.map(s => `
+              <span style="font-size: 11px; padding: 0.18rem 0.55rem; background: rgba(210, 168, 255, 0.12); border: 1px solid rgba(210, 168, 255, 0.3); color: #d2a8ff; border-radius: 4px; font-weight: 600;">
+                ⚡ <strong>${s.cards_to_learn}×</strong> ${escapeHtml(s.clean_title || s.short_title)}${s.tomorrow_remaining_cards ? ` <span style="font-size: 9.5px; opacity: 0.75; color: #79c0ff;">(+${s.tomorrow_remaining_cards} morgen)</span>` : ''}
+              </span>
+            `).join('')}
+            <span style="font-size: 11px; padding: 0.18rem 0.55rem; background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.3); color: #58a6ff; border-radius: 4px; font-weight: 700;">
+              🎯 Exakt ${b.target_cards || 101} Karten HEUTE
+            </span>
+          </div>
+        ` : ''}
+
+        <!-- Action Strip for Afternoon Flex Block (Lecture for Tomorrow) -->
+        ${b.id === 'block_afternoon_flex' ? `
+          <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 11px; font-weight: 700; color: #79c0ff; display: inline-flex; align-items: center; gap: 4px;">
+              🌅 Vorlesung für MORGEN:
+            </span>
+            ${b.vam_url ? `
+              <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-primary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">
+                🎬 VAM-Archiv
+              </a>
+            ` : ''}
+            ${b.podcast_folder_name ? `
+              <button type="button" class="btn-secondary" onclick="openPodcastFolder('${escapeHtml(b.podcast_folder_name)}')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet den lokalen Podcast-Ordner im Windows Explorer">
+                📁 Ordner
+              </button>
+            ` : ''}
+            ${b.slide_filename ? `
+              <button type="button" class="btn-secondary" onclick="openSlideModalQuick('${escapeHtml(b.slide_rel_path || b.slide_filename)}', '${escapeHtml(b.tomorrow_lecture_title || '')}')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Folien für morgen ansehen">
+                📄 Folien
+              </button>
+            ` : ''}
+            <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
+              🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor
+            </span>
+          </div>
+        ` : ''}
 
         <!-- Special Action Strip & Cards for Lapse Block -->
         ${isLapseBlock ? `

@@ -58,15 +58,33 @@ def generate_daily_science_rhythm(
     start_time_str: str = "08:30",
     lunch_duration_mins: int = 75,
     include_lecture: bool = True,
+    curriculum_assignment: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Generates the scientific ultradian study schedule with precise time arithmetic.
     Fully customizable: start time, lunch break duration, lecture inclusion/skip.
-    Integrates today's struggle cards and precise Feierabend calculation without artificial buffers.
+    Integrates today's struggle cards, morning Anki focus, and afternoon lecture priming for tomorrow.
     """
     t_date = target_date or date.today()
     tagged_events = [tag_event_mandatory_status(ev) for ev in (events or [])]
     mandatory_events = [ev for ev in tagged_events if getattr(ev, "is_mandatory", False)]
+
+    if curriculum_assignment is None:
+        try:
+            from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
+            curriculum_assignment = get_daily_curriculum_assignment(target_date=t_date)
+        except Exception:
+            curriculum_assignment = None
+
+    if curriculum_assignment:
+        new_cards_target = curriculum_assignment.get("adjusted_target_cards", new_cards_target or 101)
+        today_slots = curriculum_assignment.get("topic_slots", [])
+        slot_summary = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in today_slots) if today_slots else f"{new_cards_target} neue Karten"
+        tomorrow_data = curriculum_assignment.get("tomorrow_preview") or {}
+    else:
+        today_slots = []
+        slot_summary = f"{new_cards_target} neue Karten"
+        tomorrow_data = {}
 
     # Time estimates based on gross study time
     rep_gross_mins = max(30, round((cards_due_today * 36.0) / 60.0))
@@ -121,7 +139,7 @@ def generate_daily_science_rhythm(
     cur_m += dur_p1
     total_pause_mins += dur_p1
 
-    # 3. Block 2: Deep Encoding New Cards
+    # 3. Block 2: Deep Encoding New Cards (Curriculum Today)
     dur_new = 105
     s_time = _minutes_to_time(cur_m)
     e_time = _minutes_to_time(cur_m + dur_new)
@@ -130,15 +148,18 @@ def generate_daily_science_rhythm(
         "start_time": s_time,
         "end_time": e_time,
         "duration_minutes": dur_new,
-        "title": "Block 2: 100 Neue Karten (Deep Encoding / Elvanse-Peak)",
-        "subtitle": f"Curriculum Tagesziel ({new_cards_target} neue Karten / Vormittags-Wirkpeak)",
+        "title": f"Block 2: {new_cards_target} Neue Karten HEUTE (Deep Encoding)",
+        "subtitle": f"{slot_summary} • Vormittags-Fokus",
         "focus_type": "deep_encoding",
         "icon": "🔥",
         "color": "#d2a8ff",
         "badge": f"Deep Encoding ({dur_new}m)",
-        "description": f"Absolutes Dopamin- und Konzentrationsfenster: {new_cards_target} neue Karten hochkonzentriert einprägen (~{new_gross_mins} Min. Brutto inkl. Verknüpfungen und Notizen).",
+        "description": f"Absolutes Dopamin- und Konzentrationsfenster: Exakt {new_cards_target} neue Karten für HEUTE hochkonzentriert einprägen ({slot_summary}). Vorlesung wurde bereits gestern Nachmittag geprimed!",
         "is_break": False,
         "is_mandatory": False,
+        "target_cards": new_cards_target,
+        "topic_slots": today_slots,
+        "today_summary": slot_summary,
     })
     cur_m += dur_new
     total_study_mins += dur_new
@@ -241,20 +262,43 @@ def generate_daily_science_rhythm(
         dur_afternoon = 90
         s_time = _minutes_to_time(cur_m)
         e_time = _minutes_to_time(cur_m + dur_afternoon)
+
+        tom_title = tomorrow_data.get("primary_lecture_title") or "Vorlesung für MORGEN"
+        tom_lec = tomorrow_data.get("primary_lecturer") or "Dozententeam"
+        tom_date = tomorrow_data.get("primary_lecture_date")
+        tom_cards = tomorrow_data.get("target_cards", 101)
+        tom_topics = tomorrow_data.get("topics_summary") or "morgige Anki-Karten"
+        tom_speed = tomorrow_data.get("primary_speed_factor", 1.2)
+        tom_timecode = tomorrow_data.get("primary_timecode_guidance")
+
+        title_text = f"Nachmittag: Vorlesung für MORGEN sichten – {tom_title}"
+        subtitle_text = f"👨‍🏫 {tom_lec} • Bereitet {tom_cards} Anki-Karten für morgen vor"
+        desc_text = f"Auditive Vorentlastung für morgen: Vorlesung '{tom_title}'{' (' + tom_date + ')' if tom_date else ''} auf {tom_speed}x sichten{' (' + tom_timecode + ')' if tom_timecode else ''}. Bereitet die morgigen {tom_cards} neuen Karten vor ({tom_topics}). Das Gehirn baut im Schlaf das Schema auf!"
+
         blocks.append({
             "id": "block_afternoon_flex",
             "start_time": s_time,
             "end_time": e_time,
             "duration_minutes": dur_afternoon,
-            "title": "Nachmittag: Podcast für MORGEN (1.2x–1.4x)",
-            "subtitle": "Auditive Vorentlastung des morgigen Anki-Themas",
+            "title": title_text,
+            "subtitle": subtitle_text,
             "focus_type": "afternoon_flex",
             "icon": "🎧",
             "color": "#388bfd",
             "badge": f"24h-Pipeline ({dur_afternoon}m)",
-            "description": "Perfekt für das Nachmittagstief: Den Podcast für morgen auf 1.2x–1.4x hören. Das Gehirn baut im Schlaf das Schema auf, damit du morgen im Elvanse-Peak durch die neuen Karten fliegst!",
+            "description": desc_text,
             "is_break": False,
             "is_mandatory": False,
+            "tomorrow_preview": tomorrow_data,
+            "tomorrow_cards": tom_cards,
+            "tomorrow_topics": tom_topics,
+            "tomorrow_lecture_title": tom_title,
+            "tomorrow_lecture_date": tom_date,
+            "tomorrow_lecturer": tom_lec,
+            "vam_url": tomorrow_data.get("lecture_url"),
+            "podcast_folder_name": tomorrow_data.get("podcast_folder_name"),
+            "slide_filename": tomorrow_data.get("slide_filename"),
+            "slide_rel_path": tomorrow_data.get("slide_rel_path"),
         })
         cur_m += dur_afternoon
         total_study_mins += dur_afternoon

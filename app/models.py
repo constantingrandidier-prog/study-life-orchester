@@ -479,6 +479,7 @@ class CurriculumTopicSlot(BaseModel):
     local_slide_file_path: Optional[str] = Field(None, description="Absolute Windows path to slide PDF file")
     vam_url: Optional[str] = Field("https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983", description="Direct URL to UZH VAM archive")
     olat_url: Optional[str] = Field("https://lms.uzh.ch/url/RepositoryEntry/666697737", description="Direct URL to OpenOLAT course materials")
+    tomorrow_remaining_cards: Optional[int] = Field(None, description="Number of cards from this deck remaining for tomorrow")
 
 
 class DailyCurriculumAssignment(BaseModel):
@@ -507,6 +508,7 @@ class DailyCurriculumAssignment(BaseModel):
     exam_date: str = Field("2027-01-19", description="Target exam date")
     days_until_exam: int = Field(0, description="Days remaining until the exam")
     revision_buffer_days: int = Field(15, description="Free buffer days before exam after completing all 9,633 cards")
+    tomorrow_preview: Optional[Dict[str, Any]] = Field(None, description="Preview of tomorrow's lecture and card assignments")
 
 
 class CurriculumModuleMilestone(BaseModel):

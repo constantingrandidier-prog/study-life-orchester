@@ -1088,13 +1088,26 @@ def get_daily_curriculum_assignment(
                     "curriculum_progress_pct": round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1),
                 }
 
-            # Evaluate dynamic quota based on user's progress
+            # Evaluate dynamic quota based on scheduled quota and user progress
             scheduled_quota = day["target_cards"]
             dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=scheduled_quota)
             adj_target = dyn["adjusted_target_cards"]
 
+            # Master exam pacing target alignment:
+            # If multi-topic greedy packing caused scheduled_quota to exceed master daily target (e.g. 117 instead of 101):
+            try:
+                from app.services.exam_pacing import calculate_exam_pacing
+                pacing_info = calculate_exam_pacing(target_date=target_date, user_id=user_id)
+                master_pacing = pacing_info.get("daily_target_cards") or DAILY_CARD_QUOTA
+            except Exception:
+                master_pacing = DAILY_CARD_QUOTA
+
+            if len(day["topic_slots"]) > 1 and adj_target > master_pacing and dyn["deficit_distributed"] == 0:
+                adj_target = master_pacing
+
             day_copy = dict(day)
             day_copy["base_quota"] = dyn["base_quota"]
+            day_copy["target_cards"] = adj_target
             day_copy["adjusted_target_cards"] = adj_target
             day_copy["quota_adjustment_reason"] = dyn["quota_adjustment_reason"]
             day_copy["surplus_deduction"] = dyn["surplus_deduction"]
@@ -1104,35 +1117,76 @@ def get_daily_curriculum_assignment(
             day_copy["cumulative_cards_learned"] = actual_learned
             day_copy["curriculum_progress_pct"] = round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1)
 
-            # If quota was adjusted (e.g. 80 cards instead of 100), adjust topic slots accordingly
-            if adj_target != day["target_cards"]:
-                day_copy["target_cards"] = adj_target
-                new_slots = []
-                remaining_quota = adj_target
-                orig_slots = day["topic_slots"]
+            # Strictly clamp topic slots so sum(cards_to_learn) == adj_target (e.g. 48 + 53 = 101)
+            orig_slots = day["topic_slots"]
+            new_slots = []
+            remaining_quota = adj_target
 
-                for idx, slot in enumerate(orig_slots):
-                    if remaining_quota <= 0:
-                        break
-                    if idx == len(orig_slots) - 1:
-                        take = remaining_quota
-                    else:
-                        take = min(remaining_quota, max(1, round(slot["cards_to_learn"] * (adj_target / max(1, day["target_cards"])))))
-                        take = min(remaining_quota, max(1, take))
-                    new_slot = dict(slot)
-                    new_slot["cards_to_learn"] = take
-                    new_slots.append(new_slot)
-                    remaining_quota -= take
+            for idx, slot in enumerate(orig_slots):
+                if remaining_quota <= 0:
+                    break
+                orig_cards = slot["cards_to_learn"]
+                take = min(orig_cards, remaining_quota)
+                new_slot = dict(slot)
+                new_slot["cards_to_learn"] = take
+                rem_tom = max(0, orig_cards - take)
+                new_slot["tomorrow_remaining_cards"] = rem_tom
+                new_slots.append(new_slot)
+                remaining_quota -= take
 
-                curr_sum = sum(s["cards_to_learn"] for s in new_slots)
-                diff = adj_target - curr_sum
-                if diff != 0 and len(new_slots) > 0:
-                    new_slots[-1]["cards_to_learn"] += diff
+            # If remaining quota > 0, expand the last slot
+            if remaining_quota > 0 and len(new_slots) > 0:
+                new_slots[-1]["cards_to_learn"] += remaining_quota
 
-                day_copy["topic_slots"] = new_slots
-                clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
-                day_copy["summary"] = f"Tag {day['day_number']}/97: {adj_target} neue Karten ({clean_topics}). {dyn['quota_adjustment_reason']}"
+            day_copy["topic_slots"] = new_slots
+            clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
+            day_copy["summary"] = f"Tag {day['day_number']}/97: {adj_target} neue Karten ({clean_topics}). {dyn['quota_adjustment_reason']}"
 
+            # Compute tomorrow preview for 24h-pipeline
+            next_date = target_date + timedelta(days=1)
+            if next_date.weekday() == 6:  # Skip Sunday
+                next_date += timedelta(days=1)
+
+            tomorrow_day = next((d for d in schedule if d["date"] == next_date.strftime("%Y-%m-%d")), None)
+            tomorrow_preview = None
+            if tomorrow_day and not tomorrow_day.get("is_rest_day"):
+                tom_slots = tomorrow_day.get("topic_slots", [])
+                primary_tom = tom_slots[0] if tom_slots else {}
+
+                leftover_note = []
+                for s in new_slots:
+                    if s.get("tomorrow_remaining_cards", 0) > 0:
+                        leftover_note.append(f"{s['tomorrow_remaining_cards']}× {s.get('clean_title') or s['short_title']} (Abschluss)")
+
+                tom_slot_names = [f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in tom_slots]
+                all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{master_pacing} Karten"
+
+                tom_lec_title = primary_tom.get("display_title_with_date") or primary_tom.get("clean_title") or primary_tom.get("short_title") or "Morgige Vorlesung"
+                tomorrow_preview = {
+                    "date": next_date.strftime("%Y-%m-%d"),
+                    "day_of_week": GERMAN_WEEKDAYS.get(next_date.weekday(), "Morgen"),
+                    "target_cards": master_pacing,
+                    "topics_summary": all_tom_topics,
+                    "primary_lecture_title": tom_lec_title,
+                    "primary_lecture_date": primary_tom.get("lecture_date_formatted"),
+                    "primary_lecturer": primary_tom.get("lecturer") or "Dozententeam",
+                    "primary_speed_factor": primary_tom.get("speed_factor", 1.2),
+                    "primary_timecode_guidance": primary_tom.get("timecode_guidance"),
+                    "lecture_url": primary_tom.get("vam_url") or "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
+                    "podcast_folder_name": primary_tom.get("podcast_folder_name"),
+                    "slide_filename": primary_tom.get("matched_slide_filename"),
+                    "slide_rel_path": primary_tom.get("slide_relative_path"),
+                    "is_cycle_topic": primary_tom.get("is_cycle_topic", False),
+                }
+
+            day_copy["tomorrow_preview"] = tomorrow_preview
+            if tomorrow_preview:
+                day_copy["synergy_headline"] = f"☀️ Vormittag: {adj_target} Anki-Karten heute ({clean_topics}) • 🌅 Nachmittag: Vorlesung für MORGEN sichten"
+                day_copy["recommended_study_sequence"] = [
+                    f"1. 📇 Vormittags-Enkodieren: {adj_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
+                    f"2. 🎧 Nachmittags-Priming für MORGEN: {tomorrow_preview['primary_lecture_title']} auf {tomorrow_preview['primary_speed_factor']}x sichten ({tomorrow_preview['primary_lecturer']})",
+                    f"3. 🔗 Quervernetzung: {new_slots[0].get('cross_links', ['Klinische Integration vertiefen'])[0] if new_slots and new_slots[0].get('cross_links') else 'Klinische Integration vertiefen'}"
+                ]
             return day_copy
 
     # If before semester start

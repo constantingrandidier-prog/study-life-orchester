@@ -1155,14 +1155,19 @@ def get_daily_rhythm_endpoint(
     anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
     due_today = anki_st.get("due_today_count", 100) or 100
     
+    from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
+    curr_assign = get_daily_curriculum_assignment(t_date)
+    new_target = curr_assign.get("adjusted_target_cards", 101)
+
     return generate_daily_science_rhythm(
         target_date=t_date,
         events=cal_events,
         cards_due_today=due_today,
-        new_cards_target=100,
+        new_cards_target=new_target,
         start_time_str=start_time or "08:30",
         lunch_duration_mins=lunch_duration if lunch_duration is not None else 75,
         include_lecture=include_lecture if include_lecture is not None else True,
+        curriculum_assignment=curr_assign,
     )
 
 

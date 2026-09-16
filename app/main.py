@@ -9,17 +9,40 @@ from app.core.config import settings
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
+import os
 import asyncio
 from contextlib import asynccontextmanager
 from app.services.curriculum_roadmap_service import generate_curriculum_roadmap
+
+async def _anki_live_sync_background():
+    """Continuously push local Anki Desktop collection progress to cloud (Render) every 20s or when DB changes."""
+    if not os.environ.get("APPDATA"):
+        return
+    try:
+        from bin.anki_sync_agent import sync_now, find_local_anki_collection
+        col = find_local_anki_collection()
+        last_m = 0
+        await asyncio.to_thread(sync_now)
+        while True:
+            await asyncio.sleep(20)
+            try:
+                m = col.stat().st_mtime if col and col.exists() else 0
+                if m != last_m:
+                    last_m = m
+                    await asyncio.to_thread(sync_now)
+            except Exception:
+                pass
+    except Exception as e:
+        print("Anki live background sync error:", e)
 
 @asynccontextmanager
 async def lifespan(app_instance: FastAPI):
     # Non-blocking pre-warm: opens HTTP socket instantly so health checks & browser never wait
     try:
         asyncio.create_task(asyncio.to_thread(generate_curriculum_roadmap))
+        asyncio.create_task(_anki_live_sync_background())
     except Exception as e:
-        print("Roadmap pre-warm scheduling note:", e)
+        print("Lifespan startup note:", e)
     yield
 
 app = FastAPI(

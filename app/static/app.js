@@ -242,15 +242,17 @@ function goToToday() {
 // Initialize Application
 function init() {
   try {
+    const now = new Date();
+    const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     const savedDate = localStorage.getItem('sl_selected_date');
     if (savedDate && savedDate >= '2026-09-14') {
       state.targetDate = savedDate;
     } else {
-      // Default to Day 1 of Semester: 2026-09-14
-      state.targetDate = '2026-09-14';
+      // Default to today's date if within semester, otherwise 2026-09-14
+      state.targetDate = todayIso >= '2026-09-14' ? todayIso : '2026-09-14';
     }
   } catch (e) {
-    state.targetDate = '2026-09-14';
+    state.targetDate = '2026-09-16';
   }
 
   try {
@@ -1784,8 +1786,120 @@ async function loadExamPacing() {
   }
 }
 
+function updateMissionKpiStrip() {
+  const desktop = state.ankiDesktopData;
+  const pacing = currentPacingData;
+
+  // 1. Box 1: Tagesziel (Neue Karten Soll)
+  const baseNew = pacing ? (pacing.is_rest_day ? 0 : pacing.daily_target_cards) : 101;
+  const targetEl = document.getElementById('pacingDailyTarget');
+  if (targetEl) targetEl.textContent = baseNew;
+  const newTargetEl = document.getElementById('pacingNewTargetVal');
+  if (newTargetEl) newTargetEl.textContent = baseNew;
+
+  // Live Counts from Anki Desktop
+  const newDone = desktop ? (desktop.new_cards_count != null ? desktop.new_cards_count : (desktop.today_reviewed_count || 0)) : (pacing ? (pacing.cards_completed_today || 0) : 0);
+  const repsDone = desktop ? (desktop.repetition_cards_count || 0) : 0;
+  const repsDue = desktop ? (desktop.due_today_count != null ? desktop.due_today_count : 0) : (pacing ? (pacing.due_reviews_today || 0) : 0);
+  const totalReviews = desktop ? (desktop.total_reviews_count || (newDone + repsDone)) : (newDone + repsDone);
+  const mins = desktop ? (desktop.today_time_minutes || 0) : 0;
+
+  const totalTarget = baseNew + repsDone + repsDue;
+  const totalDone = newDone + repsDone;
+
+  // 2. Box 2: ✅ Heute erledigt
+  const completedEl = document.getElementById('pacingCardsCompleted');
+  const targetMini = document.getElementById('pacingCardsTargetMini');
+  const splitReviewsVal = document.getElementById('pacingSplitReviewsVal');
+  const splitReviewsSub = document.getElementById('pacingSplitReviewsSub');
+  const splitNewVal = document.getElementById('pacingSplitNewVal');
+  const splitNewSub = document.getElementById('pacingSplitNewSub');
+  const remainingSub = document.getElementById('pacingRemainingSub');
+  const ratioSub = document.getElementById('pacingCompletedRatioSub');
+  const barFill = document.getElementById('pacingBarFill');
+  const timeSpentSub = document.getElementById('pacingTimeSpentSub');
+
+  if (completedEl) completedEl.textContent = totalDone;
+  if (targetMini) targetMini.textContent = totalTarget;
+
+  if (splitReviewsVal) {
+    splitReviewsVal.textContent = repsDone;
+  }
+  if (splitReviewsSub) {
+    if (repsDue === 0 && repsDone > 0) {
+      splitReviewsSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">✅ alle erledigt</span>`;
+    } else if (repsDue > 0) {
+      splitReviewsSub.textContent = `${repsDone} erledigt (${repsDue} offen)`;
+    } else {
+      splitReviewsSub.textContent = `0 fällig`;
+    }
+  }
+
+  if (splitNewVal) {
+    splitNewVal.textContent = `${newDone} / ${baseNew}`;
+  }
+  if (splitNewSub) {
+    const remNew = Math.max(0, baseNew - newDone);
+    if (remNew === 0 && baseNew > 0) {
+      splitNewSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">🎉 Tagesziel erreicht!</span>`;
+    } else {
+      splitNewSub.textContent = `noch ${remNew} offen`;
+    }
+  }
+
+  const remainingNew = Math.max(0, baseNew - newDone);
+  if (remainingSub) {
+    if (pacing && pacing.is_rest_day) {
+      remainingSub.textContent = 'Ruhetag – Keine Pflichtkarten';
+      remainingSub.style.color = '#d29922';
+    } else if (remainingNew === 0 && repsDue === 0) {
+      remainingSub.textContent = `🎉 Alles erledigt! ${totalDone} Karten gemeistert.`;
+      remainingSub.style.color = '#3fb950';
+    } else if (repsDue === 0) {
+      remainingSub.textContent = `Noch ${remainingNew} neue Karten offen (alle ${repsDone} Repetitionen erledigt! 🎉)`;
+      remainingSub.style.color = '#58a6ff';
+    } else {
+      remainingSub.textContent = `Noch ${remainingNew} neue + ${repsDue} Wiederholungen offen`;
+      remainingSub.style.color = 'var(--text-muted)';
+    }
+  }
+
+  if (ratioSub) {
+    const pct = totalTarget > 0 ? Math.min(100, Math.round((totalDone / totalTarget) * 100)) : 100;
+    ratioSub.textContent = `${pct}%`;
+  }
+  if (barFill && totalTarget > 0) {
+    const pct = Math.min(100, Math.round((totalDone / totalTarget) * 100));
+    barFill.style.width = `${pct}%`;
+  }
+
+  if (timeSpentSub) {
+    if (mins > 0 || repsDone > 0 || newDone > 0) {
+      timeSpentSub.style.display = 'block';
+      timeSpentSub.textContent = `⏱️ ${mins} Min. Lernzeit • ${repsDone} Repetitionen + ${newDone} neue (${totalReviews} Reviews)`;
+    }
+  }
+
+  // 3. Box 3: 🔄 Fällig in Anki
+  const dueDisp = document.getElementById('pacingDueReviewsDisplay');
+  const dueSub = document.getElementById('pacingDueReviewsSub');
+  if (dueDisp) {
+    dueDisp.textContent = repsDue;
+  }
+  if (dueSub) {
+    if (repsDue === 0 && repsDone > 0) {
+      dueSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">Alle erledigt! (${repsDone} revidiert)</span>`;
+    } else if (repsDue === 0) {
+      dueSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">Keine Reviews fällig</span>`;
+    } else {
+      dueSub.textContent = `Repetition • ${repsDue} fällig`;
+    }
+  }
+}
+
 function renderExamPacing(data) {
   if (!data || data.error) return;
+  currentPacingData = data;
 
   // 1. Countdown Pill
   const pill = document.getElementById('pacingCountdownPill');
@@ -1817,30 +1931,10 @@ function renderExamPacing(data) {
     }
   }
 
-  // 3. Soll & Ist Zahlen
-  const targetEl = document.getElementById('pacingDailyTarget');
+  // 3. Update Unified Mission KPI Strip
+  updateMissionKpiStrip();
+
   const targetSub = document.getElementById('pacingTargetSub');
-  const targetMini = document.getElementById('pacingCardsTargetMini');
-  const completedEl = document.getElementById('pacingCardsCompleted');
-  const remainingSub = document.getElementById('pacingRemainingSub');
-  const ratioSub = document.getElementById('pacingCompletedRatioSub');
-  const readinessVal = document.getElementById('pacingReadinessVal');
-  const bufferSub = document.getElementById('pacingBufferSub');
-  const splitReviewsVal = document.getElementById('pacingSplitReviewsVal');
-  const splitNewVal = document.getElementById('pacingSplitNewVal');
-
-  const baseNew = data.is_rest_day ? 0 : data.daily_target_cards;
-  const newTargetEl = document.getElementById('pacingNewTargetVal');
-  if (newTargetEl) newTargetEl.textContent = baseNew;
-  if (targetEl) targetEl.textContent = baseNew;
-
-  const dueVal = state.ankiStats ? (state.ankiStats.due_cards_count ?? 102) : 102;
-  const totalTarget = baseNew + (data.is_rest_day ? 0 : dueVal);
-  if (targetMini) targetMini.textContent = totalTarget;
-  if (completedEl) completedEl.textContent = data.cards_completed_today;
-  if (splitReviewsVal) splitReviewsVal.textContent = dueVal;
-  if (splitNewVal) splitNewVal.textContent = baseNew;
-
   if (targetSub) {
     if (data.is_rest_day) {
       targetSub.textContent = data.rest_day_reason || 'Eingeplanter Ruhetag';
@@ -1849,38 +1943,16 @@ function renderExamPacing(data) {
     }
   }
 
-  const remaining = Math.max(0, totalTarget - data.cards_completed_today);
-  if (remainingSub) {
-    if (data.is_rest_day) {
-      remainingSub.textContent = 'Ruhetag – Keine Pflichtkarten';
-      remainingSub.style.color = '#d29922';
-    } else if (remaining === 0 && totalTarget > 0) {
-      remainingSub.textContent = '🎉 Alles erledigt!';
-      remainingSub.style.color = 'var(--status-free)';
-    } else {
-      remainingSub.textContent = `Noch ${remaining} Karten offen`;
-      remainingSub.style.color = 'var(--text-muted)';
-    }
-  }
-  if (ratioSub) {
-    const pct = totalTarget > 0 ? Math.round((data.cards_completed_today / totalTarget) * 100) : 100;
-    ratioSub.textContent = `${pct}%`;
-  }
-
+  const readinessVal = document.getElementById('pacingReadinessVal');
+  const bufferSub = document.getElementById('pacingBufferSub');
   if (readinessVal) readinessVal.textContent = `${data.exam_readiness_score}%`;
   if (bufferSub) bufferSub.textContent = `${data.revision_buffer_days} Tage Puffer ab ${data.revision_start_date}`;
 
   // 4. Progress Bar & Advice
-  const barFill = document.getElementById('pacingBarFill');
   const adviceEl = document.getElementById('pacingAdviceText');
-
-  if (barFill) {
-    barFill.style.width = `${data.completion_percentage_today}%`;
-  }
-  if (adviceEl) {
+  if (adviceEl && data.advice) {
     adviceEl.textContent = data.advice;
   }
-  loadAnkiWeaknesses();
 }
 
 // Quick progress actions
@@ -2082,36 +2154,9 @@ async function loadAnkiWeaknesses() {
       navBadgeDue.style.display = dueCount > 0 ? 'inline-flex' : 'none';
     }
 
-    const baseNew = currentPacingData ? (currentPacingData.is_rest_day ? 0 : currentPacingData.daily_target_cards) : 100;
-    const newTargetEl = document.getElementById('pacingNewTargetVal');
-    if (newTargetEl) newTargetEl.textContent = baseNew;
-
-    const splitReviewsVal = document.getElementById('pacingSplitReviewsVal');
-    const splitNewVal = document.getElementById('pacingSplitNewVal');
-    if (splitReviewsVal) splitReviewsVal.textContent = dueCount;
-    if (splitNewVal) splitNewVal.textContent = baseNew;
-
-    const totalTarget = baseNew + (currentPacingData && currentPacingData.is_rest_day ? 0 : dueCount);
-    const targetMini = document.getElementById('pacingCardsTargetMini');
-    if (targetMini) targetMini.textContent = totalTarget;
-
-    const completed = currentPacingData ? currentPacingData.cards_completed_today : 0;
-    const remaining = Math.max(0, totalTarget - completed);
-    const remainingSub = document.getElementById('pacingRemainingSub');
-    const ratioSub = document.getElementById('pacingCompletedRatioSub');
-
-    if (remainingSub && (!currentPacingData || !currentPacingData.is_rest_day)) {
-      if (remaining === 0 && totalTarget > 0) {
-        remainingSub.textContent = '🎉 Alles erledigt!';
-        remainingSub.style.color = 'var(--status-free)';
-      } else {
-        remainingSub.textContent = `Noch ${remaining} Karten offen`;
-        remainingSub.style.color = 'var(--text-muted)';
-      }
-    }
-    if (ratioSub) {
-      const pct = totalTarget > 0 ? Math.round((completed / totalTarget) * 100) : 100;
-      ratioSub.textContent = `${pct}%`;
+    // Update KPI strip safely without clobbering live Anki data
+    if (!state.ankiDesktopData) {
+      updateMissionKpiStrip();
     }
 
     // Weakness alert strip in UI
@@ -3190,9 +3235,35 @@ function switchMobileView(view) {
 async function loadAnkiDesktopStatus(showFeedback = false) {
   try {
     const dateQuery = state.targetDate ? `?target_date=${state.targetDate}` : '';
-    const res = await fetch(`${API_BASE}/anki/desktop-status${dateQuery}`);
-    if (!res.ok) return;
-    const data = await res.json();
+    let data = null;
+
+    // 1. If running on Render cloud, probe local laptop server to read fresh Anki collection directly!
+    if (window.location.hostname !== '127.0.0.1' && window.location.hostname !== 'localhost') {
+      try {
+        const localRes = await fetch(`http://127.0.0.1:8000/api/v1/schedule/anki/desktop-status${dateQuery}`, {
+          signal: (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(2000) : undefined
+        });
+        if (localRes.ok) {
+          data = await localRes.json();
+          // Push to cloud Render so cloud server cache is also up to date
+          fetch(`${API_BASE}/anki/desktop-sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          }).catch(() => {});
+        }
+      } catch (localErr) {
+        // Local server not running or blocked, proceed with cloud
+      }
+    }
+
+    if (!data) {
+      const res = await fetch(`${API_BASE}/anki/desktop-status${dateQuery}`);
+      if (!res.ok) return;
+      data = await res.json();
+    }
+
+    state.ankiDesktopData = data;
     renderAnkiDesktopWidget(data);
     if (showFeedback) {
       const msg = `Anki synchronisiert: ${data.today_reviewed_count || 0} Karten für ${state.targetDate} erfasst, ${data.due_tomorrow_count || 0} morgen fällig.`;
@@ -3215,48 +3286,12 @@ async function syncAnkiDesktopNow(showFeedback = true) {
 
 function renderAnkiDesktopWidget(data) {
   if (!data) return;
-  const newCnt = data.new_cards_count != null ? data.new_cards_count : (data.today_reviewed_count || 0);
-  const repCnt = data.repetition_cards_count || 0;
-  const totalReviews = data.total_reviews_count || (newCnt + repCnt);
-  const mins = data.today_time_minutes || 0;
+  state.ankiDesktopData = data;
   const tomCnt = data.due_tomorrow_count || 0;
   const topics = data.due_tomorrow_topics || [];
 
-  // 1. Update Box 2: In Anki erledigt (Ist)
-  const completedEl = document.getElementById('pacingCardsCompleted');
-  const targetMini = document.getElementById('pacingCardsTargetMini');
-  const remainingSub = document.getElementById('pacingRemainingSub');
-  const timeSpentSub = document.getElementById('pacingTimeSpentSub');
-  const barFill = document.getElementById('pacingBarFill');
-
-  if (completedEl) {
-    completedEl.textContent = newCnt;
-  }
-
-  const targetQuota = targetMini ? parseInt(targetMini.textContent || '100', 10) : 100;
-  if (remainingSub) {
-    if (newCnt >= targetQuota && targetQuota > 0) {
-      const pct = Math.round((newCnt / targetQuota) * 100);
-      remainingSub.textContent = `🎉 Tagesziel zu ${pct}% erreicht (${newCnt}/${targetQuota} neu)!`;
-      remainingSub.style.color = '#3fb950';
-    } else if (newCnt > 0) {
-      const rem = Math.max(0, targetQuota - newCnt);
-      remainingSub.textContent = `Noch ${rem} neue Karten offen`;
-      remainingSub.style.color = '#58a6ff';
-    } else {
-      remainingSub.textContent = `Noch ${targetQuota} neue Karten offen`;
-      remainingSub.style.color = 'var(--text-muted)';
-    }
-  }
-
-  if (timeSpentSub) {
-    timeSpentSub.textContent = `⏱️ ${mins} Min. Lernzeit • ${repCnt} Repetitionen (${totalReviews} Reviews)`;
-  }
-
-  if (barFill && targetQuota > 0) {
-    const fillPct = Math.min(100, Math.round((newCnt / targetQuota) * 100));
-    barFill.style.width = `${fillPct}%`;
-  }
+  // 1. Update Mission KPI strip with live Anki counts
+  updateMissionKpiStrip();
 
   // 2. Update Box 3: Repetition morgen
   const kpiTomCount = document.getElementById('kpiTomorrowCount');

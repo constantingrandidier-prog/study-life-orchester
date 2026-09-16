@@ -1823,14 +1823,23 @@ function renderExamPacing(data) {
   const targetMini = document.getElementById('pacingCardsTargetMini');
   const completedEl = document.getElementById('pacingCardsCompleted');
   const remainingSub = document.getElementById('pacingRemainingSub');
+  const ratioSub = document.getElementById('pacingCompletedRatioSub');
   const readinessVal = document.getElementById('pacingReadinessVal');
   const bufferSub = document.getElementById('pacingBufferSub');
+  const splitReviewsVal = document.getElementById('pacingSplitReviewsVal');
+  const splitNewVal = document.getElementById('pacingSplitNewVal');
 
+  const baseNew = data.is_rest_day ? 0 : data.daily_target_cards;
   const newTargetEl = document.getElementById('pacingNewTargetVal');
-  if (newTargetEl) newTargetEl.textContent = data.is_rest_day ? '0' : data.daily_target_cards;
-  if (targetEl) targetEl.textContent = data.is_rest_day ? '0' : data.daily_target_cards;
-  if (targetMini) targetMini.textContent = data.is_rest_day ? '0' : data.daily_target_cards;
+  if (newTargetEl) newTargetEl.textContent = baseNew;
+  if (targetEl) targetEl.textContent = baseNew;
+
+  const dueVal = state.ankiStats ? (state.ankiStats.due_cards_count ?? 102) : 102;
+  const totalTarget = baseNew + (data.is_rest_day ? 0 : dueVal);
+  if (targetMini) targetMini.textContent = totalTarget;
   if (completedEl) completedEl.textContent = data.cards_completed_today;
+  if (splitReviewsVal) splitReviewsVal.textContent = dueVal;
+  if (splitNewVal) splitNewVal.textContent = baseNew;
 
   if (targetSub) {
     if (data.is_rest_day) {
@@ -1840,17 +1849,22 @@ function renderExamPacing(data) {
     }
   }
 
+  const remaining = Math.max(0, totalTarget - data.cards_completed_today);
   if (remainingSub) {
     if (data.is_rest_day) {
       remainingSub.textContent = 'Ruhetag – Keine Pflichtkarten';
       remainingSub.style.color = '#d29922';
-    } else if (data.cards_remaining_today === 0 && data.daily_target_cards > 0) {
-      remainingSub.textContent = '🎉 Tagesziel erreicht!';
+    } else if (remaining === 0 && totalTarget > 0) {
+      remainingSub.textContent = '🎉 Alles erledigt!';
       remainingSub.style.color = 'var(--status-free)';
     } else {
-      remainingSub.textContent = `Noch ${data.cards_remaining_today} neue Karten offen`;
-      remainingSub.style.color = '#58a6ff';
+      remainingSub.textContent = `Noch ${remaining} Karten offen`;
+      remainingSub.style.color = 'var(--text-muted)';
     }
+  }
+  if (ratioSub) {
+    const pct = totalTarget > 0 ? Math.round((data.cards_completed_today / totalTarget) * 100) : 100;
+    ratioSub.textContent = `${pct}%`;
   }
 
   if (readinessVal) readinessVal.textContent = `${data.exam_readiness_score}%`;
@@ -2072,6 +2086,11 @@ async function loadAnkiWeaknesses() {
     const newTargetEl = document.getElementById('pacingNewTargetVal');
     if (newTargetEl) newTargetEl.textContent = baseNew;
 
+    const splitReviewsVal = document.getElementById('pacingSplitReviewsVal');
+    const splitNewVal = document.getElementById('pacingSplitNewVal');
+    if (splitReviewsVal) splitReviewsVal.textContent = dueCount;
+    if (splitNewVal) splitNewVal.textContent = baseNew;
+
     const totalTarget = baseNew + (currentPacingData && currentPacingData.is_rest_day ? 0 : dueCount);
     const targetMini = document.getElementById('pacingCardsTargetMini');
     if (targetMini) targetMini.textContent = totalTarget;
@@ -2079,14 +2098,20 @@ async function loadAnkiWeaknesses() {
     const completed = currentPacingData ? currentPacingData.cards_completed_today : 0;
     const remaining = Math.max(0, totalTarget - completed);
     const remainingSub = document.getElementById('pacingRemainingSub');
+    const ratioSub = document.getElementById('pacingCompletedRatioSub');
+
     if (remainingSub && (!currentPacingData || !currentPacingData.is_rest_day)) {
       if (remaining === 0 && totalTarget > 0) {
-        remainingSub.textContent = '🎉 Tagesziel vollständig erreicht!';
+        remainingSub.textContent = '🎉 Alles erledigt!';
         remainingSub.style.color = 'var(--status-free)';
       } else {
-        remainingSub.textContent = `Noch ${remaining} Karten offen (${dueCount} Wiederholungen)`;
+        remainingSub.textContent = `Noch ${remaining} Karten offen`;
         remainingSub.style.color = 'var(--text-muted)';
       }
+    }
+    if (ratioSub) {
+      const pct = totalTarget > 0 ? Math.round((completed / totalTarget) * 100) : 100;
+      ratioSub.textContent = `${pct}%`;
     }
 
     // Weakness alert strip in UI

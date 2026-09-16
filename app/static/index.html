@@ -209,14 +209,40 @@
           <span id="pacingTargetBreakdown" style="display: none;"></span>
         </div>
 
-        <!-- 2. Erledigt heute -->
-        <div class="mission-kpi-box" style="padding: 0.75rem 1rem; border: 1px solid rgba(63, 185, 80, 0.35); background: rgba(63, 185, 80, 0.04);">
-          <span class="mission-kpi-label" style="color: #3fb950; font-weight: 600;">✅ Heute erledigt</span>
-          <div class="mission-kpi-value-row" style="margin-top: 2px;">
-            <span class="mission-kpi-val" id="pacingCardsCompleted" style="color: #3fb950; font-size: 1.5rem;">0</span>
-            <span class="mission-kpi-unit">/ <span id="pacingCardsTargetMini">100</span></span>
+        <!-- 2. Erledigt heute (Aufgeteilt: Neue & Wiederholungen) -->
+        <div class="mission-kpi-box" style="padding: 0.65rem 0.85rem; border: 1px solid rgba(63, 185, 80, 0.35); background: rgba(63, 185, 80, 0.04);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+            <span class="mission-kpi-label" style="color: #3fb950; font-weight: 600; margin: 0;">✅ Heute erledigt</span>
+            <span style="font-size: 11px; font-weight: 700; color: #3fb950; background: rgba(63, 185, 80, 0.12); padding: 0.1rem 0.45rem; border-radius: 4px;">
+              <span id="pacingCardsCompleted">0</span> / <span id="pacingCardsTargetMini">203</span>
+            </span>
           </div>
-          <span class="mission-kpi-sub" id="pacingRemainingSub" style="color: #3fb950; font-size: 10.5px;">Live aus Anki</span>
+
+          <!-- Aufteilung: Wiederholungen & Neue Karten -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin: 0.25rem 0;">
+            <!-- Wiederholungen -->
+            <div style="background: rgba(210, 168, 255, 0.08); border: 1px solid rgba(210, 168, 255, 0.22); border-radius: 5px; padding: 0.3rem 0.45rem; text-align: center;">
+              <div style="font-size: 9.5px; font-weight: 700; color: #d2a8ff; text-transform: uppercase; letter-spacing: 0.3px;">🔄 Wiederholungen</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: #d2a8ff; line-height: 1.2; margin-top: 1px;">
+                <span id="pacingSplitReviewsVal">102</span>
+              </div>
+              <div style="font-size: 9.5px; color: var(--text-dim);" id="pacingSplitReviewsSub">fällig</div>
+            </div>
+
+            <!-- Neue Karten -->
+            <div style="background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.22); border-radius: 5px; padding: 0.3rem 0.45rem; text-align: center;">
+              <div style="font-size: 9.5px; font-weight: 700; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.3px;">✨ Neue Karten</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; line-height: 1.2; margin-top: 1px;">
+                <span id="pacingSplitNewVal">101</span>
+              </div>
+              <div style="font-size: 9.5px; color: var(--text-dim);" id="pacingSplitNewSub">Tagesziel</div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-top: 0.25rem;">
+            <span id="pacingRemainingSub" style="color: var(--text-muted);">Noch 203 Karten offen</span>
+            <span id="pacingCompletedRatioSub" style="color: #3fb950; font-weight: 600;">0%</span>
+          </div>
           <span id="pacingTimeSpentSub" style="display: none;"></span>
         </div>
 

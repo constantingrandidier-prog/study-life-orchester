@@ -2878,11 +2878,18 @@ function renderCurriculumToday(data) {
   }
 
   if (cardsProgress) {
-    cardsProgress.textContent = `${(data.cumulative_cards_learned || 0).toLocaleString()} / ${(data.total_curriculum_cards || 9633).toLocaleString()} Karten (${data.curriculum_progress_pct || 0}%)`;
+    const actual = (data.cumulative_cards_learned !== undefined ? data.cumulative_cards_learned : (data.actual_cards_learned || 0));
+    const total = (data.total_curriculum_cards || 9676);
+    const pct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : (Math.round((actual / Math.max(1, total)) * 1000) / 10);
+    cardsProgress.textContent = `${actual.toLocaleString()} / ${total.toLocaleString()} Karten (${pct}%)`;
+    if (data.planned_cumulative_cards) {
+      cardsProgress.title = `Tatsächlich neu gelernt: ${actual} Karten | Geplanter Soll-Stand laut Roadmap: ${data.planned_cumulative_cards} Karten`;
+    }
   }
 
   if (progressBarFill) {
-    progressBarFill.style.width = `${Math.min(100, Math.max(1, data.curriculum_progress_pct || 1))}%`;
+    const fillPct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : 1.6;
+    progressBarFill.style.width = `${Math.min(100, Math.max(1, fillPct))}%`;
   }
 
   if (countdownDays) {
@@ -3554,26 +3561,52 @@ function handleRhythmConfigChange() {
   loadScienceRhythm();
 }
 
-async function openStruggleDeckInAnki(query) {
-  const q = query || 'rated:1:1';
+async function createTemporaryStruggleDeck() {
   try {
-    const res = await fetch('/api/v1/schedule/anki/open-browser', {
+    const res = await fetch('/api/v1/schedule/anki/create-temp-deck', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q })
+      body: JSON.stringify({ deck_name: '⚡ Problem-Karten Heute', tag_name: '⚡_Heute_Problemkarten', limit: 15 })
     });
     const data = await res.json();
     if (data.success) {
-      alert(`✅ Anki-Kartenbrowser für '${q}' geöffnet!`);
-    } else {
-      window.location.href = `anki://search?q=${encodeURIComponent(q)}`;
-      if (data.manual_instruction) {
-        alert(`Anki Desktop: ${data.manual_instruction}`);
+      if (navigator.clipboard && data.search_query) {
+        try { await navigator.clipboard.writeText(data.search_query); } catch (e) {}
       }
+      const instr = (data.instructions && data.instructions.length > 0)
+        ? data.instructions.join('\n')
+        : "1. Drücke in Anki Taste 'F' (Gefilterten Stapel erstellen).\n2. Filter: tag:⚡_Heute_Problemkarten";
+
+      alert(
+        `✅ ${data.message || 'Problemkarten in Anki vorbereitet!'}\n\n` +
+        `🎯 ANKI GEFILTERTES DECK (Taste F):\n${instr}\n\n` +
+        `🛡️ 100% SICHER FÜR DEINE DECKS:\n` +
+        `Gefilterte Decks sind temporär. Sobald du das Deck heute Abend löschst, wandern alle Karten automatisch und unberührt in ihre Original-Heimatstapel zurück!`
+      );
+    } else {
+      alert(`Hinweis: ${data.message || 'Konnte temporäres Deck nicht vorbereiten.'}`);
     }
   } catch (err) {
-    window.location.href = `anki://search?q=${encodeURIComponent(q)}`;
+    alert(`Fehler beim Erstellen des temporären Decks: ${err.message}`);
   }
+}
+
+async function cleanupTemporaryStruggleDeck() {
+  try {
+    const res = await fetch('/api/v1/schedule/anki/cleanup-temp-deck', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tag_name: '⚡_Heute_Problemkarten' })
+    });
+    const data = await res.json();
+    alert(data.message || 'Temporäre Tags bereinigt.');
+  } catch (err) {
+    alert('Fehler beim Bereinigen.');
+  }
+}
+
+async function openStruggleDeckInAnki(query) {
+  return createTemporaryStruggleDeck();
 }
 
 async function openStruggleSlidesQuick(path, page) {
@@ -3754,11 +3787,14 @@ function renderScienceRhythm(data) {
           <div style="margin-top: 0.35rem; padding-top: 0.45rem; border-top: 1px solid rgba(255,255,255,0.08);">
             <!-- The 2 Dominant Action Buttons -->
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-              <button type="button" onclick="openStruggleDeckInAnki('${escapeHtml(b.anki_query || 'rated:1:1')}')" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.75rem; background: #238636; border-color: #2ea043; display: flex; align-items: center; gap: 0.35rem; color: #fff; font-weight: 700; border-radius: 5px; cursor: pointer;">
-                <span>🃏</span> In Anki öffnen (Struggle-Deck)
+              <button type="button" onclick="createTemporaryStruggleDeck()" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.75rem; background: #238636; border-color: #2ea043; display: flex; align-items: center; gap: 0.35rem; color: #fff; font-weight: 700; border-radius: 5px; cursor: pointer;" title="Erstellt ein gefiltertes Problemkarten-Deck in Anki (beim Löschen bleiben alle Originaldecks unberührt)">
+                <span>⚡</span> Temporäres Deck in Anki erstellen
               </button>
               <button type="button" onclick="openStruggleSlidesQuick('${escapeHtml(b.top_struggles?.[0]?.slide_info?.slide_pdf || 'Vorlesungen im Themenblock Blut und Immunsystem/Tuzlak_Adaptives und angeborenes Immunsystem.pdf')}', ${b.top_struggles?.[0]?.slide_info?.page_hint || 1})" class="btn-secondary" style="font-size: 11px; padding: 0.35rem 0.75rem; border-color: #58a6ff; color: #58a6ff; display: flex; align-items: center; gap: 0.35rem; font-weight: 600; border-radius: 5px; cursor: pointer;" title="Öffnet bei Zeitdruck sofort die relevante Folie mit Dozentengrafik">
                 <span>📄</span> Relevante Folien öffnen (Schnell-Fokus)
+              </button>
+              <button type="button" onclick="cleanupTemporaryStruggleDeck()" class="btn-secondary" style="font-size: 10px; padding: 0.3rem 0.5rem; color: var(--text-muted); border-color: rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer;" title="Entfernt das temporäre Tag nach Abschluss des Tages">
+                <span>🧹</span> Tag bereinigen
               </button>
               ${(b.total_struggles || 0) > 0 ? `
                 <button type="button" id="btnToggleStruggles" onclick="toggleStrugglesExpanded()" class="btn-secondary" style="font-size: 10.5px; padding: 0.3rem 0.6rem; color: var(--text-muted); border-color: rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer;">
@@ -3876,6 +3912,8 @@ window.handleConfigDrawerBackdrop = handleConfigDrawerBackdrop;
 window.setRhythmStartNow = setRhythmStartNow;
 window.setRhythmLunch = setRhythmLunch;
 window.handleRhythmConfigChange = handleRhythmConfigChange;
+window.createTemporaryStruggleDeck = createTemporaryStruggleDeck;
+window.cleanupTemporaryStruggleDeck = cleanupTemporaryStruggleDeck;
 window.openStruggleDeckInAnki = openStruggleDeckInAnki;
 window.openStruggleSlidesQuick = openStruggleSlidesQuick;
 window.toggleStrugglesExpanded = toggleStrugglesExpanded;

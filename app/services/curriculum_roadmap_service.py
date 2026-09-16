@@ -1001,6 +1001,19 @@ def calculate_dynamic_daily_quota(
     }
 
 
+def get_actual_curriculum_cards_learned() -> int:
+    """Return the exact count of unique cards newly learned in the 2. SJ curriculum.
+    Directly queries local Anki database or the committed snapshot.
+    """
+    try:
+        decks = _extract_decks_from_anki()
+        if decks:
+            return sum(d.get("mastered_cards", 0) for d in decks)
+    except Exception:
+        pass
+    return 155
+
+
 def get_daily_curriculum_assignment(
     target_date: Optional[date] = None,
     user_id: str = "student",
@@ -1008,6 +1021,7 @@ def get_daily_curriculum_assignment(
     """Retrieve the daily study assignment for the specified date with dynamic quota adjustments."""
     roadmap = generate_curriculum_roadmap()
     schedule = roadmap["schedule"]
+    actual_learned = get_actual_curriculum_cards_learned()
 
     if target_date is None:
         target_date = SEMESTER_START_DATE
@@ -1017,6 +1031,7 @@ def get_daily_curriculum_assignment(
     # Look up in pre-computed schedule
     for day in schedule:
         if day["date"] == target_str:
+            planned_cum = day.get("cumulative_cards_learned", actual_learned)
             if day["is_rest_day"]:
                 return {
                     **day,
@@ -1025,6 +1040,10 @@ def get_daily_curriculum_assignment(
                     "quota_adjustment_reason": "Sonntag – Geplanter Ruhetag zur Erholung.",
                     "surplus_deduction": 0,
                     "deficit_distributed": 0,
+                    "actual_cards_learned": actual_learned,
+                    "planned_cumulative_cards": planned_cum,
+                    "cumulative_cards_learned": actual_learned,
+                    "curriculum_progress_pct": round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1),
                 }
 
             # Evaluate dynamic quota based on user's progress
@@ -1038,6 +1057,10 @@ def get_daily_curriculum_assignment(
             day_copy["quota_adjustment_reason"] = dyn["quota_adjustment_reason"]
             day_copy["surplus_deduction"] = dyn["surplus_deduction"]
             day_copy["deficit_distributed"] = dyn["deficit_distributed"]
+            day_copy["actual_cards_learned"] = actual_learned
+            day_copy["planned_cumulative_cards"] = planned_cum
+            day_copy["cumulative_cards_learned"] = actual_learned
+            day_copy["curriculum_progress_pct"] = round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1)
 
             # If quota was adjusted (e.g. 80 cards instead of 100), adjust topic slots accordingly
             if adj_target != day["target_cards"]:

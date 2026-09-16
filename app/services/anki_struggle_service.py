@@ -353,3 +353,130 @@ def trigger_anki_browse(query: str = "rated:1:1") -> Dict[str, Any]:
             "query": query,
             "manual_instruction": f"Öffne Anki -> 'Kartenverwaltung' -> Suche eingeben: {query}"
         }
+
+
+def _invoke_ankiconnect(action: str, **params) -> Dict[str, Any]:
+    """Helper to invoke AnkiConnect action."""
+    url = "http://127.0.0.1:8765"
+    payload = json.dumps({"action": action, "version": 6, "params": params}).encode("utf-8")
+    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=2.5) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def prepare_temporary_struggle_deck(
+    deck_name: str = "⚡ Problem-Karten Heute",
+    tag_name: str = "⚡_Heute_Problemkarten",
+    query_date: Optional[date] = None,
+    limit: int = 15,
+) -> Dict[str, Any]:
+    """Prepares a temporary study session in Anki Desktop for today's struggle cards.
+    
+    1. Identifies today's struggle cards (acute lapses + high friction).
+    2. Tags them with tag_name in Anki via AnkiConnect (clearing old tags first).
+    3. Opens Anki Browser directly focused on these cards.
+    4. Provides foolproof instructions for creating a native Filtered Deck in Anki:
+       Filtered decks (Taste F) are 100% safe: When deleted at the end of the day,
+       Anki automatically returns all cards back into their original home decks!
+    """
+    health = check_ankiconnect_health()
+    struggle_res = get_today_struggle_analysis(query_date=query_date, limit=limit)
+    cards = struggle_res.get("cards", [])
+
+    if not cards:
+        return {
+            "success": True,
+            "card_count": 0,
+            "tag": tag_name,
+            "search_query": f"tag:{tag_name}",
+            "deck_name": deck_name,
+            "message": "Heute wurden keine Problem-Karten festgestellt! Alle Wiederholungen waren fehlerfrei. 🎉",
+            "instructions": []
+        }
+
+    cids = [c["cid"] for c in cards]
+
+    if not health.get("available"):
+        return {
+            "success": False,
+            "card_count": len(cards),
+            "deck_name": deck_name,
+            "tag": tag_name,
+            "search_query": f"tag:{tag_name}",
+            "message": "Anki Desktop ist nicht geöffnet oder AnkiConnect ist inaktiv. Bitte öffne Anki Desktop.",
+            "instructions": [
+                "1. Öffne Anki Desktop.",
+                f"2. Manuelle Suche: cid:{','.join(str(c) for c in cids[:10])}",
+                "3. Drücke 'F' (Gefilterter Stapel), um die Karten gezielt zu wiederholen."
+            ]
+        }
+
+    try:
+        # Step A: Clean up previous cards with this tag to prevent mixing days
+        old_cards_res = _invoke_ankiconnect("findCards", query=f"tag:{tag_name}")
+        old_cids = old_cards_res.get("result", [])
+        if old_cids:
+            old_notes_res = _invoke_ankiconnect("cardsToNotes", cards=old_cids)
+            old_nids = old_notes_res.get("result", [])
+            if old_nids:
+                _invoke_ankiconnect("removeTags", notes=old_nids, tags=tag_name)
+
+        # Step B: Tag current struggle cards
+        notes_res = _invoke_ankiconnect("cardsToNotes", cards=cids)
+        nids = notes_res.get("result", [])
+        if nids:
+            _invoke_ankiconnect("addTags", notes=nids, tags=tag_name)
+
+        # Step C: Open card browser in Anki
+        _invoke_ankiconnect("guiBrowse", query=f"tag:{tag_name}")
+
+        return {
+            "success": True,
+            "card_count": len(cards),
+            "deck_name": deck_name,
+            "tag": tag_name,
+            "search_query": f"tag:{tag_name}",
+            "message": f"⚡ {len(cards)} Problemkarten in Anki getaggt (`tag:{tag_name}`) und Browser geöffnet!",
+            "instructions": [
+                f"1. Drücke in Anki Desktop einfach die Taste 'F' (Gefilterten Stapel erstellen).",
+                f"2. Gib als Stapelname '{deck_name}' und als Filter 'tag:{tag_name}' ein (bereits kopiert).",
+                "3. 🛡️ 100% Sicher: Sobald du den Stapel heute Abend löschst, wandern alle Karten automatisch & unberührt in ihre Original-Heimatdecks zurück!"
+            ]
+        }
+    except Exception as exc:
+        return {
+            "success": False,
+            "error": str(exc),
+            "card_count": len(cards),
+            "deck_name": deck_name,
+            "tag": tag_name,
+            "search_query": f"tag:{tag_name}",
+            "message": f"Fehler beim Erstellen des temporären Decks: {str(exc)}"
+        }
+
+
+def cleanup_struggle_deck_tags(tag_name: str = "⚡_Heute_Problemkarten") -> Dict[str, Any]:
+    """Removes the temporary struggle tag from all notes in Anki Desktop."""
+    health = check_ankiconnect_health()
+    if not health.get("available"):
+        return {"success": False, "message": "Anki Desktop nicht erreichbar."}
+
+    try:
+        cards_res = _invoke_ankiconnect("findCards", query=f"tag:{tag_name}")
+        cids = cards_res.get("result", [])
+        if not cids:
+            return {"success": True, "message": f"Keine Karten mit Tag '{tag_name}' gefunden.", "removed_count": 0}
+
+        notes_res = _invoke_ankiconnect("cardsToNotes", cards=cids)
+        nids = notes_res.get("result", [])
+        if nids:
+            _invoke_ankiconnect("removeTags", notes=nids, tags=tag_name)
+
+        return {
+            "success": True,
+            "message": f"Tag '{tag_name}' von {len(nids)} Notizen entfernt.",
+            "removed_count": len(nids)
+        }
+    except Exception as exc:
+        return {"success": False, "error": str(exc)}
+

@@ -1210,7 +1210,12 @@ def get_advisor_lecture_detail_endpoint(lecture_id: str):
 
 # --- Scientific Struggle & Relapse Analysis Endpoints ---
 
-from app.services.anki_struggle_service import get_today_struggle_analysis, trigger_anki_browse
+from app.services.anki_struggle_service import (
+    get_today_struggle_analysis,
+    trigger_anki_browse,
+    prepare_temporary_struggle_deck,
+    cleanup_struggle_deck_tags,
+)
 
 @router.get(
     "/anki/today-struggles",
@@ -1238,6 +1243,35 @@ def get_today_struggles_endpoint(
 def post_anki_open_browser_endpoint(payload: dict = Body(...)):
     query = payload.get("query", "rated:1:1")
     return trigger_anki_browse(query=query)
+
+
+@router.post(
+    "/anki/create-temp-deck",
+    summary="Create temporary filtered deck for today's problem cards in Anki",
+    description="Tags today's struggle cards with '⚡_Heute_Problemkarten', opens Anki Browser and returns instructions for 100% safe filtered deck.",
+)
+def post_anki_create_temp_deck_endpoint(payload: dict = Body(default={})):
+    deck_name = payload.get("deck_name", "⚡ Problem-Karten Heute")
+    tag_name = payload.get("tag_name", "⚡_Heute_Problemkarten")
+    limit = payload.get("limit", 15)
+    target_date = payload.get("target_date")
+    t_date = None
+    if target_date:
+        try:
+            t_date = datetime.strptime(target_date, "%Y-%m-%d").date()
+        except ValueError:
+            pass
+    return prepare_temporary_struggle_deck(deck_name=deck_name, tag_name=tag_name, query_date=t_date, limit=limit)
+
+
+@router.post(
+    "/anki/cleanup-temp-deck",
+    summary="Clean up temporary struggle tags in Anki Desktop",
+    description="Removes the temporary tag '⚡_Heute_Problemkarten' from cards in Anki Desktop.",
+)
+def post_anki_cleanup_temp_deck_endpoint(payload: dict = Body(default={})):
+    tag_name = payload.get("tag_name", "⚡_Heute_Problemkarten")
+    return cleanup_struggle_deck_tags(tag_name=tag_name)
 
 
 @router.get(

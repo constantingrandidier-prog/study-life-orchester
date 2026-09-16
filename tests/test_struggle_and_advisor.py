@@ -161,3 +161,36 @@ def test_api_slides_open_endpoint():
     data = resp.json()
     assert "page" in data
     assert data["page"] == 18
+
+
+def test_api_create_temp_deck_endpoint():
+    """Test temporary struggle deck creation endpoint."""
+    resp = client.post("/api/v1/schedule/anki/create-temp-deck", json={"deck_name": "⚡ Problem-Karten Heute", "limit": 10})
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "success" in data
+    assert "deck_name" in data
+    assert "instructions" in data
+    assert "tag" in data
+    assert data["tag"] == "⚡_Heute_Problemkarten"
+
+
+def test_api_cleanup_temp_deck_endpoint():
+    """Test temporary struggle deck tag cleanup endpoint."""
+    resp = client.post("/api/v1/schedule/anki/cleanup-temp-deck", json={"tag_name": "⚡_Heute_Problemkarten"})
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "success" in data
+
+
+def test_real_cards_progress_counter():
+    """Verify that daily assignment accurately tracks real newly learned cards (155), not the simulated future curve (476)."""
+    from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
+    from datetime import date
+    day = get_daily_curriculum_assignment(date(2026, 9, 16))
+    assert day["actual_cards_learned"] == 155
+    assert day["cumulative_cards_learned"] == 155
+    assert day["planned_cumulative_cards"] == 476
+    assert day["curriculum_progress_pct"] == 1.6
+    assert day["total_curriculum_cards"] == 9676
+

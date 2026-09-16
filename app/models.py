@@ -483,6 +483,8 @@ class DailyCurriculumAssignment(BaseModel):
     deficit_distributed: int = Field(0, description="Cards added to today due to spreading earlier deficit")
     topic_slots: List[CurriculumTopicSlot] = Field(default_factory=list, description="Subtopic breakdown for today")
     cumulative_cards_learned: int = Field(0, description="Total cumulative cards learned up to and including today")
+    actual_cards_learned: int = Field(0, description="Actual real cards newly learned in curriculum so far")
+    planned_cumulative_cards: int = Field(0, description="Theoretical planned cumulative cards according to schedule")
     total_curriculum_cards: int = Field(9633, description="Total cards in the 2. SJ curriculum")
     curriculum_progress_pct: float = Field(0.0, description="Percentage of entire semester curriculum completed")
     current_module: str = Field("", description="Active medical module name")

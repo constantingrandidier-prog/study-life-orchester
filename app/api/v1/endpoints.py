@@ -2,7 +2,7 @@
 
 from datetime import date, datetime
 from typing import List, Optional
-from fastapi import APIRouter, File, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, Body, File, HTTPException, Query, UploadFile, status
 from pydantic import BaseModel, Field
 import httpx
 from app.core.config import settings
@@ -1128,11 +1128,16 @@ from app.services.daily_rhythm_service import generate_daily_science_rhythm
 
 @router.get(
     "/daily-rhythm",
-    summary="Get 08:30 scientific daily study rhythm with mandatory practicals",
-    description="Calculates the science-backed study schedule starting at 08:30 AM (Active Recall -> Pause -> Deep Encoding -> Pause -> Concept Stream). Highlights mandatory UZH practicals in violet.",
+    summary="Get dynamic scientific study rhythm with customizable start time and lunch",
+    description="Calculates the science-backed study schedule. Supports custom start_time, lunch_duration, and include_lecture toggle. Highlights mandatory practicals and embeds today's struggle cards.",
 )
-def get_daily_rhythm_endpoint(target_date: Optional[str] = Query(None, description="Target date YYYY-MM-DD")):
-    """Returns the 08:30 scientific study schedule for the student."""
+def get_daily_rhythm_endpoint(
+    target_date: Optional[str] = Query(None, description="Target date YYYY-MM-DD"),
+    start_time: str = Query("08:30", description="Start time HH:MM"),
+    lunch_duration: int = Query(75, description="Lunch break duration in minutes (30, 45, 60, 75)"),
+    include_lecture: bool = Query(True, description="Whether to include lecture/podcast blocks"),
+):
+    """Returns the dynamic scientific study schedule for the student."""
     t_date = None
     if target_date:
         try:
@@ -1154,6 +1159,9 @@ def get_daily_rhythm_endpoint(target_date: Optional[str] = Query(None, descripti
         events=cal_events,
         cards_due_today=due_today,
         new_cards_target=100,
+        start_time_str=start_time or "08:30",
+        lunch_duration_mins=lunch_duration if lunch_duration is not None else 75,
+        include_lecture=include_lecture if include_lecture is not None else True,
     )
 
 
@@ -1198,4 +1206,94 @@ def get_advisor_lecture_detail_endpoint(lecture_id: str):
     if not found:
         raise HTTPException(status_code=404, detail=f"Lecture {lecture_id} not found")
     return found
+
+
+# --- Scientific Struggle & Relapse Analysis Endpoints ---
+
+from app.services.anki_struggle_service import get_today_struggle_analysis, trigger_anki_browse
+
+@router.get(
+    "/anki/today-struggles",
+    summary="Get scientific struggle analysis of today's Anki reviews",
+    description="Extracts today's lapses (Again), high latency hesitation cards, and calculates cognitive diagnoses with slide links.",
+)
+def get_today_struggles_endpoint(
+    target_date: Optional[str] = Query(None, description="Target date YYYY-MM-DD"),
+    limit: Optional[int] = Query(15, description="Max cards to return"),
+):
+    t_date = None
+    if target_date:
+        try:
+            t_date = datetime.strptime(target_date, "%Y-%m-%d").date()
+        except ValueError:
+            pass
+    return get_today_struggle_analysis(query_date=t_date, limit=limit or 15)
+
+
+@router.post(
+    "/anki/open-browser",
+    summary="Open Anki Desktop card browser with struggle query",
+    description="Invokes AnkiConnect guiBrowse to directly inspect the struggle cards inside Anki Desktop.",
+)
+def post_anki_open_browser_endpoint(payload: dict = Body(...)):
+    query = payload.get("query", "rated:1:1")
+    return trigger_anki_browse(query=query)
+
+
+@router.get(
+    "/slides/open",
+    summary="Opens or locates a lecture PDF slide",
+    description="Locates the UZH lecture slide PDF on disk and opens it in the default system viewer at the specified page.",
+)
+def open_slide_endpoint(
+    path: str = Query(..., description="Relative path or name of the slide PDF"),
+    page: Optional[int] = Query(1, description="Target page number"),
+):
+    import os
+    from pathlib import Path
+    
+    base_dirs = [
+        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app"),
+        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop"),
+        Path(__file__).resolve().parent.parent.parent.parent / "UNI sem app",
+        Path(__file__).resolve().parent.parent.parent,
+    ]
+    
+    clean_p = path.strip().replace("/", "\\")
+    found_file = None
+    for b in base_dirs:
+        cand = b / clean_p
+        if cand.exists():
+            found_file = cand
+            break
+        fname = Path(clean_p).name
+        cands = list(b.glob(f"**/{fname}"))
+        if cands:
+            found_file = cands[0]
+            break
+
+    if not found_file:
+        return {
+            "success": False,
+            "message": f"Folie '{path}' lokal noch nicht abgelegt.",
+            "path": path,
+            "page": page or 1,
+        }
+
+    try:
+        os.startfile(str(found_file))
+        return {
+            "success": True,
+            "message": f"Folie '{found_file.name}' auf Seite {page or 1} geöffnet!",
+            "file": str(found_file),
+            "page": page or 1,
+        }
+    except Exception as exc:
+        return {
+            "success": False,
+            "error": str(exc),
+            "file": str(found_file),
+            "page": page or 1,
+        }
+
 

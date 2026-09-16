@@ -3513,15 +3513,129 @@ window.closeForecastDrawers = closeForecastDrawers;
 // PHASE 6: 08:30 SCIENTIFIC STUDY RHYTHM & MANDATORY PRACTICALS
 // ============================================================================
 
+// Quick-Orchestrator State
+state.rhythmStartTime = localStorage.getItem('sl_rhythm_start') || '08:30';
+state.rhythmLunch = parseInt(localStorage.getItem('sl_rhythm_lunch') || '75', 10);
+state.rhythmIncludeLecture = localStorage.getItem('sl_rhythm_lecture') !== 'false';
+state.strugglesExpanded = false;
+
+function setRhythmStartNow() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const timeStr = `${hh}:${mm}`;
+  state.rhythmStartTime = timeStr;
+  localStorage.setItem('sl_rhythm_start', timeStr);
+  const input = document.getElementById('rhythmStartTimeInput');
+  if (input) input.value = timeStr;
+  loadScienceRhythm();
+}
+
+function setRhythmLunch(mins) {
+  state.rhythmLunch = mins;
+  localStorage.setItem('sl_rhythm_lunch', String(mins));
+  document.querySelectorAll('.lunch-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.dur, 10) === mins);
+  });
+  loadScienceRhythm();
+}
+
+function handleRhythmConfigChange() {
+  const input = document.getElementById('rhythmStartTimeInput');
+  if (input && input.value) {
+    state.rhythmStartTime = input.value;
+    localStorage.setItem('sl_rhythm_start', input.value);
+  }
+  const check = document.getElementById('rhythmIncludeLectureCheck');
+  if (check) {
+    state.rhythmIncludeLecture = check.checked;
+    localStorage.setItem('sl_rhythm_lecture', String(check.checked));
+  }
+  loadScienceRhythm();
+}
+
+async function openStruggleDeckInAnki(query) {
+  const q = query || 'rated:1:1';
+  try {
+    const res = await fetch('/api/v1/schedule/anki/open-browser', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: q })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert(`✅ Anki-Kartenbrowser für '${q}' geöffnet!`);
+    } else {
+      window.location.href = `anki://search?q=${encodeURIComponent(q)}`;
+      if (data.manual_instruction) {
+        alert(`Anki Desktop: ${data.manual_instruction}`);
+      }
+    }
+  } catch (err) {
+    window.location.href = `anki://search?q=${encodeURIComponent(q)}`;
+  }
+}
+
+async function openStruggleSlidesQuick(path, page) {
+  if (!path) {
+    alert('Für diese Karten ist keine separate Folie hinterlegt.');
+    return;
+  }
+  try {
+    const res = await fetch(`/api/v1/schedule/slides/open?path=${encodeURIComponent(path)}&page=${page || 1}`);
+    const data = await res.json();
+    if (data.success) {
+      alert(`📄 Folie geöffnet: ${data.message}`);
+    } else {
+      alert(`Hinweis: ${data.message || 'Konnte Folie nicht automatisch öffnen.'}`);
+    }
+  } catch (err) {
+    alert(`Fehler beim Öffnen der Folie: ${err.message}`);
+  }
+}
+
+function toggleStrugglesExpanded() {
+  state.strugglesExpanded = !state.strugglesExpanded;
+  const listEl = document.getElementById('lapseStruggleCardsList');
+  const btnEl = document.getElementById('btnToggleStruggles');
+  if (listEl) {
+    listEl.style.display = state.strugglesExpanded ? 'flex' : 'none';
+  }
+  if (btnEl) {
+    btnEl.innerHTML = state.strugglesExpanded ? '▲ Problemkarten verbergen' : '▼ Problemkarten & Diagnosen anzeigen';
+  }
+}
+
 async function loadScienceRhythm(targetDate) {
   const container = document.getElementById('scienceRhythmBlocksContainer');
   if (!container) return;
 
   const dateStr = targetDate || state.targetDate || '';
+  const startTime = state.rhythmStartTime || '08:30';
+  const lunchDur = state.rhythmLunch || 75;
+  const incLec = state.rhythmIncludeLecture !== false;
+
+  const timeInput = document.getElementById('rhythmStartTimeInput');
+  if (timeInput && timeInput.value !== startTime) timeInput.value = startTime;
+  
+  const lecCheck = document.getElementById('rhythmIncludeLectureCheck');
+  if (lecCheck && lecCheck.checked !== incLec) lecCheck.checked = incLec;
+
+  document.querySelectorAll('.lunch-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.dur, 10) === lunchDur);
+  });
+
   try {
-    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}`);
+    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}&start_time=${encodeURIComponent(startTime)}&lunch_duration=${lunchDur}&include_lecture=${incLec}`);
     if (!res.ok) return;
     const data = await res.json();
+    
+    // Update Feierabend badge
+    const feierabendEl = document.getElementById('rhythmFeierabendBadge');
+    if (feierabendEl && data.feierabend_time) {
+      feierabendEl.textContent = `${data.feierabend_time} Uhr`;
+    }
+
     renderScienceRhythm(data);
   } catch (err) {
     console.warn('Daily science rhythm fetch failed:', err);
@@ -3572,13 +3686,14 @@ function renderScienceRhythm(data) {
 
   const progressEl = document.getElementById('scienceRhythmProgressText');
   if (progressEl) {
-    progressEl.innerHTML = `<strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Lernzeit: <strong>${Math.round(data.total_study_minutes / 60)}h ${data.total_study_minutes % 60}m</strong>`;
+    progressEl.innerHTML = `<strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round(data.total_study_minutes / 60)}h ${data.total_study_minutes % 60}m</strong> (ohne Puffer)`;
   }
 
   let html = '';
   data.blocks.forEach(b => {
     const isBreak = b.is_break;
     const isMandatory = b.is_mandatory;
+    const isLapseBlock = (b.id === 'block_evening_lapse');
     const key = `sl_rhythm_${data.date}_${b.id}`;
     const isCompleted = localStorage.getItem(key) === 'true';
 
@@ -3600,39 +3715,116 @@ function renderScienceRhythm(data) {
     let compClass = isCompleted ? 'completed' : '';
 
     html += `
-      <div class="rhythm-row-card ${activeClass} ${compClass}" style="border-left: ${borderLeft}; background: ${bg};" title="${escapeHtml(b.description || '')}">
-        <!-- Left: Time & Duration -->
-        <div style="min-width: 90px; flex-shrink: 0;">
-          <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #f0f6fc;">
-            ${b.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${b.end_time}
+      <div class="rhythm-row-card ${activeClass} ${compClass}" style="border-left: ${borderLeft}; background: ${bg}; flex-direction: column; align-items: stretch; gap: 0.35rem;" title="${escapeHtml(b.description || '')}">
+        <!-- Top Row: Time, Title, Badges, Checkbox -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.65rem;">
+          <!-- Left: Time & Duration -->
+          <div style="min-width: 90px; flex-shrink: 0;">
+            <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #f0f6fc;">
+              ${b.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${b.end_time}
+            </div>
+            <div style="font-size: 10px; color: var(--text-muted);">${b.duration_minutes} Min.</div>
           </div>
-          <div style="font-size: 10px; color: var(--text-muted);">${b.duration_minutes} Min.</div>
+
+          <!-- Center: Icon & Title & Subtitle -->
+          <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1;">
+            <span style="font-size: 16px; flex-shrink: 0;">${b.icon}</span>
+            <div style="min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                <strong style="color: ${isMandatory ? '#d2a8ff' : '#f0f6fc'}; font-size: 12.5px; ${isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+                  ${escapeHtml(b.title)}
+                </strong>
+                ${b.badge ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
+                ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">🔴 JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                ${escapeHtml(b.subtitle || '')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Checkbox -->
+          <div onclick="toggleRhythmBlockDone('${data.date}', '${b.id}')" style="cursor: pointer; flex-shrink: 0; width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid ${isCompleted ? '#3fb950' : 'rgba(255,255,255,0.25)'}; background: ${isCompleted ? '#238636' : 'rgba(255,255,255,0.03)'}; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.15s ease;" title="${isCompleted ? 'Als offen markieren' : 'Als erledigt markieren'}">
+            ${isCompleted ? '✓' : ''}
+          </div>
         </div>
 
-        <!-- Center: Icon & Title & Crisp Subtitle -->
-        <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1;">
-          <span style="font-size: 16px; flex-shrink: 0;">${b.icon}</span>
-          <div style="min-width: 0;">
-            <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-              <strong style="color: ${isMandatory ? '#d2a8ff' : '#f0f6fc'}; font-size: 12.5px; ${isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
-                ${escapeHtml(b.title)}
-              </strong>
-              ${b.badge ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
-              ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">🔴 JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
+        <!-- Special Action Strip & Cards for Lapse Block -->
+        ${isLapseBlock ? `
+          <div style="margin-top: 0.35rem; padding-top: 0.45rem; border-top: 1px solid rgba(255,255,255,0.08);">
+            <!-- The 2 Dominant Action Buttons -->
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+              <button type="button" onclick="openStruggleDeckInAnki('${escapeHtml(b.anki_query || 'rated:1:1')}')" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.75rem; background: #238636; border-color: #2ea043; display: flex; align-items: center; gap: 0.35rem; color: #fff; font-weight: 700; border-radius: 5px; cursor: pointer;">
+                <span>🃏</span> In Anki öffnen (Struggle-Deck)
+              </button>
+              <button type="button" onclick="openStruggleSlidesQuick('${escapeHtml(b.top_struggles?.[0]?.slide_info?.slide_pdf || 'Vorlesungen im Themenblock Blut und Immunsystem/Tuzlak_Adaptives und angeborenes Immunsystem.pdf')}', ${b.top_struggles?.[0]?.slide_info?.page_hint || 1})" class="btn-secondary" style="font-size: 11px; padding: 0.35rem 0.75rem; border-color: #58a6ff; color: #58a6ff; display: flex; align-items: center; gap: 0.35rem; font-weight: 600; border-radius: 5px; cursor: pointer;" title="Öffnet bei Zeitdruck sofort die relevante Folie mit Dozentengrafik">
+                <span>📄</span> Relevante Folien öffnen (Schnell-Fokus)
+              </button>
+              ${(b.total_struggles || 0) > 0 ? `
+                <button type="button" id="btnToggleStruggles" onclick="toggleStrugglesExpanded()" class="btn-secondary" style="font-size: 10.5px; padding: 0.3rem 0.6rem; color: var(--text-muted); border-color: rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer;">
+                  ${state.strugglesExpanded ? '▲ Problemkarten verbergen' : `▼ ${b.total_struggles} Problemkarten & Diagnosen anzeigen`}
+                </button>
+              ` : ''}
             </div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 580px;">
-              ${escapeHtml(b.subtitle || '')}
-            </div>
-          </div>
-        </div>
 
-        <!-- Right: Checkbox -->
-        <div onclick="toggleRhythmBlockDone('${data.date}', '${b.id}')" style="cursor: pointer; flex-shrink: 0; width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid ${isCompleted ? '#3fb950' : 'rgba(255,255,255,0.25)'}; background: ${isCompleted ? '#238636' : 'rgba(255,255,255,0.03)'}; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.15s ease;" title="${isCompleted ? 'Als offen markieren' : 'Als erledigt markieren'}">
-          ${isCompleted ? '✓' : ''}
-        </div>
+            <!-- Expandable Struggle Cards List -->
+            ${b.top_struggles && b.top_struggles.length > 0 ? `
+              <div id="lapseStruggleCardsList" style="display: ${state.strugglesExpanded ? 'flex' : 'none'}; flex-direction: column; gap: 0.4rem; margin-top: 0.65rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem;">
+                <div style="font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; align-items: center;">
+                  <span>🧠 <strong>Wissenschaftliche Struggle-Analyse:</strong> Erkannte Kognitions-Engpässe &amp; synaptische Anker</span>
+                  <span style="font-size: 10px; color: #8b949e;">Score: Latenz + Lapses + Ease</span>
+                </div>
+                ${b.top_struggles.map((c) => `
+                  <div class="struggle-card-item">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap;">
+                      <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+                        <span style="font-size: 10px; font-weight: 700; color: ${c.ease_color}; background: ${c.ease_color}18; border: 1px solid ${c.ease_color}40; padding: 0.08rem 0.4rem; border-radius: 3px;">
+                          ${escapeHtml(c.ease_label)} (${c.time_sec}s)
+                        </span>
+                        <span style="font-size: 10px; font-weight: 600; color: #d2a8ff; background: rgba(210, 168, 255, 0.1); padding: 0.08rem 0.35rem; border-radius: 3px;">
+                          ${escapeHtml(c.diagnosis?.badge || 'Problemkarte')}
+                        </span>
+                        <span style="font-size: 10px; color: var(--text-dim); font-family: monospace;">Score: ${c.struggle_score}</span>
+                      </div>
+                      ${c.slide_info && c.slide_info.has_slide_link ? `
+                        <button type="button" onclick="openStruggleSlidesQuick('${escapeHtml(c.slide_info.slide_pdf)}', ${c.slide_info.page_hint})" class="btn-secondary" style="font-size: 9.5px; padding: 0.1rem 0.4rem; height: auto; border-color: rgba(56, 139, 253, 0.3); color: #79c0ff; cursor: pointer;">
+                          📄 ${escapeHtml(c.slide_info.estimated_slides)}
+                        </button>
+                      ` : ''}
+                    </div>
+                    <div style="font-size: 12px; font-weight: 600; color: var(--text-main); margin-top: 0.3rem;">
+                      ${escapeHtml(c.question)}
+                    </div>
+                    <div style="font-size: 11px; color: #8b949e; margin-top: 0.15rem; font-style: italic;">
+                      ↳ ${escapeHtml(c.answer)}
+                    </div>
+                    <div style="margin-top: 0.35rem; font-size: 11px; background: rgba(255, 255, 255, 0.03); border-left: 2px solid #58a6ff; padding: 0.25rem 0.5rem; border-radius: 0 4px 4px 0;">
+                      <span style="color: #79c0ff; font-weight: 600;">💡 Imprägnierungs-Tipp:</span>
+                      <span style="color: var(--text-muted);">${escapeHtml(c.diagnosis?.anchor_tip || '')}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        ` : ''}
       </div>
     `;
   });
+
+  container.innerHTML = html;
+
+  const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
+  if (indicatorEl) {
+    if (activeBlockTitle) {
+      indicatorEl.innerHTML = `<span style="color: #79c0ff;">🔴 JETZT AKTIV:</span> ${escapeHtml(activeBlockTitle)} (${activeMinsLeft}m)`;
+    } else if (isToday && nowMinutes >= 17 * 60 + 30) {
+      indicatorEl.innerHTML = `🎉 Feierabend & Sport am Abend!`;
+    } else {
+      indicatorEl.textContent = `Lernstart: ${data.start_time || '08:30'} Uhr`;
+    }
+  }
+}
 
   container.innerHTML = html;
 
@@ -3681,6 +3873,12 @@ window.loadScienceRhythm = loadScienceRhythm;
 window.toggleRhythmBlockDone = toggleRhythmBlockDone;
 window.toggleConfigDrawer = toggleConfigDrawer;
 window.handleConfigDrawerBackdrop = handleConfigDrawerBackdrop;
+window.setRhythmStartNow = setRhythmStartNow;
+window.setRhythmLunch = setRhythmLunch;
+window.handleRhythmConfigChange = handleRhythmConfigChange;
+window.openStruggleDeckInAnki = openStruggleDeckInAnki;
+window.openStruggleSlidesQuick = openStruggleSlidesQuick;
+window.toggleStrugglesExpanded = toggleStrugglesExpanded;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {
@@ -3981,26 +4179,81 @@ function renderAdvisorHero(lect) {
     annotated_chapters: lect.chapters || []
   };
 
-  const tsHeroHtml = `
-    <div class="advisor-ts-hero-box">
-      <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
-        <span style="font-size: 24px;">⏱️</span>
-        <div>
-          <div style="font-size: 13px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
-            <span>Relevanter Video-Abschnitt für deine <strong>${ts.target_cards}</strong> Anki-Karten:</span>
-            <span class="advisor-ts-timecode">${ts.start_timestamp} – ${ts.end_timestamp}</span>
-          </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4;">
-            ${escapeHtml(ts.guidance_text)}
+  let tsHeroHtml = '';
+  if (ts.is_full_skip) {
+    tsHeroHtml = `
+      <div class="advisor-ts-hero-box" style="border-color: rgba(248, 81, 73, 0.35); background: rgba(248, 81, 73, 0.05);">
+        <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
+          <span style="font-size: 26px;">⚡</span>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: #f85149; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+              <span>100% SKIP-EMPFEHLUNG: 0 Minuten Vorlesung nötig!</span>
+              <span class="advisor-ts-timecode" style="background: rgba(248, 81, 73, 0.15); color: #ff7b72; border-color: rgba(248, 81, 73, 0.3);">Skip (0x)</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4;">
+              ${escapeHtml(ts.guidance_text)}
+            </div>
+            ${ts.time_roi ? `
+              <div class="advisor-roi-box">
+                <span style="font-size: 14px;">⏱️</span>
+                <div>
+                  <strong style="color: #ff7b72;">Time-ROI Analyse:</strong>
+                  <span style="color: var(--text-dim); margin-left: 0.25rem;">${escapeHtml(ts.time_roi.verdict)}</span>
+                </div>
+              </div>
+            ` : ''}
           </div>
         </div>
+        <div class="advisor-ts-savings-badge" style="background: rgba(35, 134, 54, 0.2); border-color: #3fb950; color: #3fb950;" title="Volle Vorlesungszeit gespart!">
+          <span>⚡</span>
+          <span>+${ts.saved_minutes} Min gespart!</span>
+        </div>
       </div>
-      <div class="advisor-ts-savings-badge" title="Ersparnis gegenüber der 90-minütigen Gesamtvorlesung">
-        <span>⚡</span>
-        <span>${ts.saved_minutes > 0 ? `+${ts.saved_minutes} Min gespart!` : `${ts.video_minutes_effective} Min Fokus`}</span>
+    `;
+  } else if (ts.is_micro_deep_dive) {
+    tsHeroHtml = `
+      <div class="advisor-ts-hero-box" style="border-color: rgba(210, 153, 34, 0.45); background: rgba(210, 153, 34, 0.06);">
+        <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
+          <span style="font-size: 26px;">💡</span>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: #d29922; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+              <span>Optionaler Micro-Deep-Dive:</span>
+              <span class="advisor-ts-timecode" style="background: rgba(210, 153, 34, 0.15); color: #e3b341; border-color: rgba(210, 153, 34, 0.35);">${ts.start_timestamp} – ${ts.end_timestamp}</span>
+              <span style="font-size: 11px; font-weight: 600; color: var(--text-dim);">(${ts.video_minutes_effective} Min. / max. 20m)</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4;">
+              ${escapeHtml(ts.guidance_text)}
+            </div>
+          </div>
+        </div>
+        <div class="advisor-ts-savings-badge" title="Ersparnis gegenüber der Gesamtvorlesung">
+          <span>⚡</span>
+          <span>+${ts.saved_minutes} Min gespart!</span>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+  } else {
+    tsHeroHtml = `
+      <div class="advisor-ts-hero-box">
+        <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
+          <span style="font-size: 24px;">⏱️</span>
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+              <span>Relevanter Video-Abschnitt für deine <strong>${ts.target_cards}</strong> Anki-Karten:</span>
+              <span class="advisor-ts-timecode">${ts.start_timestamp} – ${ts.end_timestamp}</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4;">
+              ${escapeHtml(ts.guidance_text)}
+            </div>
+          </div>
+        </div>
+        <div class="advisor-ts-savings-badge" title="Ersparnis gegenüber der 90-minütigen Gesamtvorlesung">
+          <span>⚡</span>
+          <span>${ts.saved_minutes > 0 ? `+${ts.saved_minutes} Min gespart!` : `${ts.video_minutes_effective} Min Fokus`}</span>
+        </div>
+      </div>
+    `;
+  }
 
   // 3. Detailed Chapters with Timestamps & Cards Mapping
   let chaptersHtml = '';

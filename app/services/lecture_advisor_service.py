@@ -2054,12 +2054,34 @@ def get_all_advisor_lectures() -> List[Dict[str, Any]]:
 def calculate_timestamp_budget(
     chapters: List[Dict[str, Any]],
     target_cards: int = 100,
-    speed_factor: float = 1.2
+    speed_factor: float = 1.2,
+    recommendation: str = "1.2x"
 ) -> Dict[str, Any]:
     """Calculates precisely which video timestamp range is needed for target_cards.
     
-    Returns video minutes, effective stream time, saved minutes, and annotated chapters.
+    Adheres strictly to efficiency and Time-ROI principles:
+    - If recommendation is 'Skip', default is 0 minutes video (100% skip = +Full duration saved).
+    - If a micro understanding chapter exists, it is ONLY recommended if <= 20 minutes.
+    - Computes Time-ROI showing exact time lost if watching video vs. direct Anki encoding.
     """
+    total_lecture_cards = sum(c.get("cards_count", 0) for c in chapters) if chapters else 0
+    total_lecture_dur = sum(c.get("duration_min", 0) for c in chapters) if chapters else 0
+
+    # Time-ROI Calculation
+    anki_direct_mins = max(30, round(target_cards * 1.05))
+    anki_with_video_mins = max(25, round(target_cards * 0.95))
+    net_with_video = total_lecture_dur + anki_with_video_mins
+    net_time_lost = max(0, net_with_video - anki_direct_mins)
+
+    time_roi = {
+        "anki_direct_minutes": anki_direct_mins,
+        "video_duration_minutes": total_lecture_dur,
+        "net_time_direct": anki_direct_mins,
+        "net_time_with_video": net_with_video,
+        "net_minutes_lost": net_time_lost,
+        "verdict": f"Vorlesung schauen kostet netto {net_time_lost} Min. MEHR Zeit als direktes Anki-Lernen!" if net_time_lost > 0 else "Vorlesung und Anki sind zeitlich gleichwertig."
+    }
+
     if not chapters:
         return {
             "target_cards": target_cards,
@@ -2069,12 +2091,77 @@ def calculate_timestamp_budget(
             "video_minutes_raw": 0,
             "video_minutes_effective": 0,
             "saved_minutes": 0,
+            "is_full_skip": "skip" in recommendation.lower(),
+            "is_micro_deep_dive": False,
+            "time_roi": time_roi,
             "guidance_text": "Keine Kapitel für diese Vorlesung vorhanden.",
             "annotated_chapters": []
         }
 
-    total_lecture_cards = sum(c.get("cards_count", 0) for c in chapters)
-    total_lecture_dur = sum(c.get("duration_min", 0) for c in chapters)
+    is_skip_rec = "skip" in recommendation.lower()
+
+    # If the lecture is recommended to SKIP (100% Anki)
+    if is_skip_rec:
+        # Check if there is an exceptional micro-understanding chapter <= 20 minutes
+        micro_chap = None
+        for c in chapters:
+            c_dur = c.get("duration_min", 0)
+            c_title = c.get("title", "").lower()
+            if 0 < c_dur <= 20 and any(k in c_title for k in ["mechanismus", "kaskade", "zyklus", "pathophysiologie", "erregung"]):
+                micro_chap = c
+                break
+
+        if micro_chap:
+            eff_m = micro_chap.get("duration_min", 15)
+            saved_m = max(0, total_lecture_dur - eff_m)
+            annotated = []
+            for c in chapters:
+                ca = dict(c)
+                if c.get("start") == micro_chap.get("start"):
+                    ca["is_needed_for_target"] = True
+                    ca["coverage_label"] = f"💡 Micro-Deep-Dive ({eff_m}m)"
+                else:
+                    ca["is_needed_for_target"] = False
+                    ca["coverage_label"] = f"⚪ Überspringen (100% Anki, +{c.get('duration_min', 0)}m gespart)"
+                annotated.append(ca)
+
+            return {
+                "target_cards": target_cards,
+                "total_lecture_cards": total_lecture_cards,
+                "start_timestamp": micro_chap["start"],
+                "end_timestamp": micro_chap["end"],
+                "video_minutes_raw": eff_m,
+                "video_minutes_effective": eff_m,
+                "saved_minutes": saved_m,
+                "is_full_skip": False,
+                "is_micro_deep_dive": True,
+                "time_roi": time_roi,
+                "guidance_text": f"💡 Optionaler Micro-Deep-Dive (nur {eff_m} Min. von {micro_chap['start']}–{micro_chap['end']}): Nur dieser kurze Abschnitt bietet echten visuellen Mehrwert für Verständnis-Karten. Der Rest ({saved_m} Min.) bleibt zu 100% übersprungen!",
+                "annotated_chapters": annotated
+            }
+
+        # Strikte 100% Skip-Empfehlung: 0 Minuten Video!
+        annotated = []
+        for c in chapters:
+            ca = dict(c)
+            ca["is_needed_for_target"] = False
+            ca["coverage_label"] = f"⚪ Überspringen (100% Anki, +{c.get('duration_min', 0)}m gespart)"
+            annotated.append(ca)
+
+        return {
+            "target_cards": target_cards,
+            "total_lecture_cards": total_lecture_cards,
+            "start_timestamp": "00:00",
+            "end_timestamp": "00:00",
+            "video_minutes_raw": 0,
+            "video_minutes_effective": 0,
+            "saved_minutes": total_lecture_dur,
+            "is_full_skip": True,
+            "is_micro_deep_dive": False,
+            "time_roi": time_roi,
+            "guidance_text": f"⚡ 100% SKIP-EMPFEHLUNG: 0 Minuten Vorlesung nötig! Spare dir die vollen {total_lecture_dur} Minuten Vorlesungszeit und lerne die {target_cards} Karten direkt via Active Recall.",
+            "annotated_chapters": annotated
+        }
 
     # If user wants all or more cards than available in the lecture
     if target_cards >= total_lecture_cards:
@@ -2093,8 +2180,11 @@ def calculate_timestamp_budget(
             "end_timestamp": chapters[-1]["end"],
             "video_minutes_raw": total_lecture_dur,
             "video_minutes_effective": eff_dur,
-            "saved_minutes": 0,
-            "guidance_text": f"Schau die gesamte Vorlesung ({chapters[0]['start']} – {chapters[-1]['end']}) für alle {total_lecture_cards} Karten (Dauer: {eff_dur}m bei {speed_factor}x).",
+            "saved_minutes": max(0, total_lecture_dur - eff_dur),
+            "is_full_skip": False,
+            "is_micro_deep_dive": False,
+            "time_roi": time_roi,
+            "guidance_text": f"Schau die Vorlesung ({chapters[0]['start']} – {chapters[-1]['end']}) für alle {total_lecture_cards} Karten (Dauer: {eff_dur}m bei {speed_factor}x).",
             "annotated_chapters": annotated
         }
 
@@ -2149,6 +2239,9 @@ def calculate_timestamp_budget(
         "video_minutes_raw": raw_minutes,
         "video_minutes_effective": eff_minutes,
         "saved_minutes": saved_minutes,
+        "is_full_skip": False,
+        "is_micro_deep_dive": False,
+        "time_roi": time_roi,
         "guidance_text": f"Schau nur {chapters[0]['start']} bis {end_timestamp} ({eff_minutes} Min bei {speed_factor}x). Du sparst dir heute {saved_minutes} Minuten Vorlesungszeit!",
         "annotated_chapters": annotated
     }
@@ -2406,11 +2499,12 @@ def search_lecture_advisor(
             elif "skip" in rec_str.lower():
                 speed = 1.0
 
-            # Attach personalized timestamp budget
+            # Attach personalized timestamp budget with strict skip & ROI rules
             item_copy["timestamp_guidance"] = calculate_timestamp_budget(
                 chapters=l.get("chapters", []),
                 target_cards=target_cards_val,
-                speed_factor=speed
+                speed_factor=speed,
+                recommendation=rec_str
             )
             filtered.append(item_copy)
 
@@ -2419,7 +2513,7 @@ def search_lecture_advisor(
 
     # Top matches (up to 5)
     top_matches = filtered[:5] if filtered and q_raw else (filtered[:3] if filtered else [])
-    top_hit = filtered[0] if filtered else (all_lectures[0] if all_lectures else None)
+    top_hit = filtered[0] if filtered else None
 
     summary = {
         "total_lectures": len(all_lectures),
@@ -2440,5 +2534,5 @@ def search_lecture_advisor(
         "summary": summary,
         "top_match": top_hit,
         "top_matches": top_matches,
-        "results": filtered if has_filter else all_lectures,
+        "results": filtered,
     }

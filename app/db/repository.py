@@ -128,6 +128,9 @@ def get_saved_events(target_date: Optional[dt_date] = None) -> List[Dict[str, An
         return [dict(row) for row in cursor.fetchall()]
 
 
+get_events_for_date = get_saved_events
+
+
 def update_lecture_attendance(event_id: int, attended: Optional[bool]) -> bool:
     """Set whether the student attended this specific lecture (1, 0, or NULL)."""
     val = 1 if attended is True else (0 if attended is False else None)

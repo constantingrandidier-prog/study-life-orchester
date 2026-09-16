@@ -222,10 +222,19 @@ def evaluate_lecture_value(
         matched_slide_filename = pdf_eval["pdf_name"]
         slide_coverage_pct = pdf_eval["overlap_pct"]
 
-    # 1. Mandatory In-Person Course / Clinical Skills with attendance testat
+    # 1. Mandatory In-Person Course / Clinical Skills with attendance testat / Tutorat
     mandatory_in_person_keywords = [
-        "praktikum", "untersuchungskurs", "präparier", "praeparier", "visite", "kurs klinischer", "testat"
+        "praktikum", "untersuchungskurs", "präparier", "praeparier", "visite", "kurs klinischer", "klinischer kurs",
+        "testat", "tutorat", "tutorium", "pol ", "pol-", "problemorientiert", "absenz", "anwesenheitspflicht",
+        "präsenzpflicht", "praesenzpflicht", "obligatorisch", "skills lab", "blockkurs", "reanimation", "notfallkurs"
     ]
+
+    is_mandatory_format = (
+        any(k in combined for k in mandatory_in_person_keywords) or
+        "veranstaltungsformat: tutorat" in combined or
+        "veranstaltungsformat: praktikum" in combined or
+        "veranstaltungsformat: klinischer kurs" in combined
+    )
 
     # 2. High-complexity physiological "Killer-Concepts" -> 1.0x Focus Stream (diagram intensive)
     focus_concepts_keywords = [
@@ -248,14 +257,14 @@ def evaluate_lecture_value(
     # 4. Overview / Descriptive / Developmental / Endocrine -> 1.2x Standard-Stream
     # Descriptive lectures benefit from 1.2x speed for red thread and lecturer emphasis with clear comprehension
 
-    if any(k in combined for k in mandatory_in_person_keywords):
+    if is_mandatory_format and not (title_lower.startswith("einführung") and "veranstaltungsformat: vorlesung" in combined):
         recommendation = "attend"
         recommended_mode = "live"
         badge_label = "🏛️ OBLIGATORISCH (Präsenzpflicht)"
         badge_color = "#a371f7"  # Distinct bright violet for mandatory UZH practicals
         reason = (
-            "Offizielles Praktikum / Testatkurs an der UZH. Hier gilt Anwesenheitspflicht vor Ort! "
-            "Praktische Fertigkeiten (Untersuchung, Perkussion, Palpation, Präparation) lassen sich nicht digital ersetzen."
+            "Offizielles Praktikum / Tutorat an der UZH. Hier gilt Anwesenheitspflicht vor Ort! "
+            "Praktische Fertigkeiten und Testate lassen sich nicht digital ersetzen."
         )
 
     elif anki_fail_rate is not None and anki_fail_rate >= 40.0:

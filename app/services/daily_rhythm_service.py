@@ -12,13 +12,45 @@ MANDATORY_PRACTICAL_KEYWORDS = [
     "visite",
     "testat",
     "kurs klinischer",
+    "klinischer kurs",
     "blockkurs",
     "skills lab",
+    "tutorat",
+    "tutorium",
+    "pol ",
+    "pol-",
+    "problemorientiert",
+    "absenz",
+    "anwesenheitspflicht",
+    "präsenzpflicht",
+    "praesenzpflicht",
+    "obligatorisch",
+    "seziersaal",
+    "mikroskopierkurs",
+    "reanimation",
+    "notfallkurs",
 ]
 
 def is_mandatory_practical(title: str, description: str = "") -> bool:
     """Returns True if the event has mandatory in-person attendance requirements at UZH."""
-    combined = f"{title} {description}".lower()
+    t_lower = (title or "").lower().strip()
+    d_lower = (description or "").lower().strip()
+    combined = f"{t_lower} {d_lower}"
+
+    # Explicit format from UZH Moses ICS export
+    if "veranstaltungsformat: praktikum" in d_lower or \
+       "veranstaltungsformat: tutorat" in d_lower or \
+       "veranstaltungsformat: klinischer kurs" in d_lower:
+        return True
+
+    # Explicit attendance warning in description
+    if "absenz" in combined or "anwesenheitspflicht" in combined or "präsenzpflicht" in combined or "obligatorisch" in combined:
+        return True
+
+    # Introductory lecture to a course format is a lecture unless marked mandatory
+    if t_lower.startswith("einführung") and "veranstaltungsformat: vorlesung" in d_lower:
+        return False
+
     return any(k in combined for k in MANDATORY_PRACTICAL_KEYWORDS)
 
 
@@ -30,8 +62,8 @@ def tag_event_mandatory_status(event: CalendarEvent) -> CalendarEvent:
         event.badge_color = "#a371f7"  # Distinct bright violet for mandatory practicals
         event.recommendation = "attend"
         event.recommendation_reason = (
-            "Offizielles Praktikum / Testatkurs an der UZH mit Anwesenheitspflicht vor Ort! "
-            "Praktische Fertigkeiten lassen sich nicht digital durch Podcasts ersetzen."
+            "Offizielles Praktikum / Tutorat an der UZH mit Anwesenheitspflicht vor Ort! "
+            "Praktische Fertigkeiten und Testate lassen sich nicht digital durch Podcasts ersetzen."
         )
     return event
 
@@ -70,8 +102,30 @@ def generate_daily_science_rhythm(
     """
     t_date = target_date or date.today()
     date_iso = t_date.isoformat()
+
+    if events is None:
+        try:
+            from app.db.repository import get_saved_events
+            raw_evs = get_saved_events(t_date)
+            events = [CalendarEvent(**e) for e in raw_evs]
+        except Exception:
+            events = []
+
     tagged_events = [tag_event_mandatory_status(ev) for ev in (events or [])]
     mandatory_events = [ev for ev in tagged_events if getattr(ev, "is_mandatory", False)]
+
+    # Look up tomorrow's calendar for upcoming mandatory practicals/tutorats
+    next_date = t_date + timedelta(days=1)
+    tomorrow_mandatory = []
+    try:
+        from app.db.repository import get_saved_events
+        tom_raw = get_saved_events(next_date)
+        for e in tom_raw:
+            c_ev = CalendarEvent(**e)
+            if is_mandatory_practical(c_ev.title, c_ev.description or ""):
+                tomorrow_mandatory.append(tag_event_mandatory_status(c_ev))
+    except Exception:
+        pass
 
     # Load persistent removed and postponed actions if not explicitly passed
     removed_set = set(removed_block_ids or [])
@@ -267,32 +321,14 @@ def generate_daily_science_rhythm(
             "tomorrow_lecture_title": p.get("tomorrow_lecture_title") or clean_title,
         })
 
-    # 8. Mandatory Events or Regular Afternoon Lecture
-    if mandatory_events:
-        for m_ev in mandatory_events:
-            ev_start_str = m_ev.start_time.strftime("%H:%M")
-            ev_end_str = m_ev.end_time.strftime("%H:%M")
-            dur = int((m_ev.end_time - m_ev.start_time).total_seconds() / 60)
-            blocks.append({
-                "id": f"mandatory_event_{m_ev.id or 0}",
-                "start_time": ev_start_str,
-                "end_time": ev_end_str,
-                "duration_minutes": dur,
-                "title": f"🏛️ {m_ev.title}",
-                "subtitle": "UZH Vor-Ort Präsenzpflicht",
-                "focus_type": "mandatory_in_person",
-                "icon": "🔒",
-                "color": "#a371f7",
-                "badge": "🏛️ OBLIGATORISCH",
-                "description": m_ev.recommendation_reason or "Offizielles Praktikum / Testatkurs an der UZH. Präsenzpflicht vor Ort!",
-                "is_break": False,
-                "is_mandatory": True,
-            })
-            ev_end_m = _parse_time_to_minutes(ev_end_str)
-            if ev_end_m > cur_m:
-                cur_m = ev_end_m
-            total_study_mins += dur
-    elif include_lecture:
+    # 8. Afternoon Lecture Priming (24h-Pipeline for Tomorrow)
+    has_afternoon_mandatory_conflict = any(
+        m for m in mandatory_events
+        if _parse_time_to_minutes(m.start_time.strftime("%H:%M")) < (15 * 60 + 30)
+        and _parse_time_to_minutes(m.end_time.strftime("%H:%M")) > (14 * 60)
+    )
+
+    if include_lecture and not has_afternoon_mandatory_conflict:
         dur_afternoon = 90
         tom_title = tomorrow_data.get("primary_lecture_title") or "Vorlesung für MORGEN"
         tom_lec = tomorrow_data.get("primary_lecturer") or "Dozententeam"
@@ -302,9 +338,17 @@ def generate_daily_science_rhythm(
         tom_speed = tomorrow_data.get("primary_speed_factor", 1.2)
         tom_timecode = tomorrow_data.get("primary_timecode_guidance")
 
+        tom_m_warning = ""
+        if tomorrow_mandatory:
+            first_m = tomorrow_mandatory[0]
+            m_time = first_m.start_time.strftime("%H:%M")
+            tom_m_warning = f" • ⚠️ Morgen {m_time} Uhr: 🏛️ {first_m.title} (Präsenzpflicht!)"
+
         title_text = f"Nachmittag: Vorlesung für MORGEN sichten – {tom_title}"
-        subtitle_text = f"👨‍🏫 {tom_lec} • Bereitet {tom_cards} Anki-Karten für morgen vor"
+        subtitle_text = f"👨‍🏫 {tom_lec} • Bereitet {tom_cards} Anki-Karten für morgen vor{tom_m_warning}"
         desc_text = f"Auditive Vorentlastung für morgen: Vorlesung '{tom_title}'{' (' + tom_date + ')' if tom_date else ''} auf {tom_speed}x sichten{' (' + tom_timecode + ')' if tom_timecode else ''}. Bereitet die morgigen {tom_cards} neuen Karten vor ({tom_topics}). Das Gehirn baut im Schlaf das Schema auf!"
+        if tomorrow_mandatory:
+            desc_text += f" Wichtig: Morgen ab {tomorrow_mandatory[0].start_time.strftime('%H:%M')} Uhr findet das obligatorische '{tomorrow_mandatory[0].title}' vor Ort statt."
 
         add_block_if_active({
             "id": "block_afternoon_flex",
@@ -330,7 +374,64 @@ def generate_daily_science_rhythm(
             "slide_rel_path": tomorrow_data.get("slide_rel_path"),
         })
 
-    # 9. Evening Lapse Review with Struggle Cards Integration
+    # 9. Fixed Mandatory In-Person Sessions (Praktika, Tutorate, Testate, Klinische Kurse)
+    sorted_mandatory = sorted(mandatory_events, key=lambda ev: ev.start_time)
+    for m_ev in sorted_mandatory:
+        ev_start_str = m_ev.start_time.strftime("%H:%M")
+        ev_end_str = m_ev.end_time.strftime("%H:%M")
+        ev_start_m = _parse_time_to_minutes(ev_start_str)
+        ev_end_m = _parse_time_to_minutes(ev_end_str)
+        dur = max(15, ev_end_m - ev_start_m)
+
+        # If there is a noticeable gap between study work and this mandatory session, insert a buffer/commute block
+        if ev_start_m > cur_m and (ev_start_m - cur_m) >= 25:
+            gap_dur = ev_start_m - cur_m
+            gap_h = gap_dur // 60
+            gap_rem = gap_dur % 60
+            dur_label = f"{gap_h}h {gap_rem}m" if gap_h > 0 else f"{gap_rem}m"
+            loc_label = (m_ev.location or "Campus Irchel").split(",")[0].strip()
+
+            blocks.append({
+                "id": f"buffer_commute_{m_ev.id or 0}",
+                "start_time": _minutes_to_time(cur_m),
+                "end_time": _minutes_to_time(ev_start_m),
+                "duration_minutes": gap_dur,
+                "title": f"🚶 Puffer, Vorbereitung & Wegzeit ({loc_label})",
+                "subtitle": f"Kognitive Erholung & Transfer zum Kursort • {dur_label}",
+                "focus_type": "pause",
+                "icon": "🚶",
+                "color": "#3fb950",
+                "badge": f"Puffer ({dur_label})",
+                "description": f"Freie Zeit für Erholung, Snack, Durchatmen und rechtzeitigen Transfer zum Kursort ({m_ev.location or 'UZH'}).",
+                "is_break": True,
+                "is_mandatory": False,
+            })
+            total_pause_mins += gap_dur
+            cur_m = ev_start_m
+
+        loc_text = f" • {m_ev.location}" if m_ev.location else ""
+        desc_full = (m_ev.description or m_ev.recommendation_reason or "Offizielles Praktikum / Tutorat an der UZH mit Anwesenheitspflicht vor Ort!").strip()
+
+        blocks.append({
+            "id": f"mandatory_event_{m_ev.id or 0}",
+            "start_time": ev_start_str,
+            "end_time": ev_end_str,
+            "duration_minutes": dur,
+            "title": f"🏛️ {m_ev.title}",
+            "subtitle": f"UZH Vor-Ort Präsenzpflicht{loc_text}",
+            "focus_type": "mandatory_in_person",
+            "icon": "🏛️",
+            "color": "#a371f7",
+            "badge": "🏛️ OBLIGATORISCH (Präsenzpflicht)",
+            "description": desc_full,
+            "is_break": False,
+            "is_mandatory": True,
+            "location": m_ev.location,
+        })
+        total_study_mins += dur
+        cur_m = max(cur_m, ev_end_m)
+
+    # 10. Evening Lapse Review with Struggle Cards Integration
     from app.services.anki_struggle_service import get_today_struggle_analysis
     struggle_data = get_today_struggle_analysis(t_date)
 
@@ -344,8 +445,12 @@ def generate_daily_science_rhythm(
         if struggle_count > 0 else "Nur heute mit 'Nochmal' bewertete Karten"
     )
 
-    add_block_if_active({
+    s_lapse = _minutes_to_time(cur_m)
+    e_lapse = _minutes_to_time(cur_m + dur_lapse)
+    blocks.append({
         "id": "block_evening_lapse",
+        "start_time": s_lapse,
+        "end_time": e_lapse,
         "duration_minutes": dur_lapse,
         "title": "Tagesabschluss: Mini Lapse-Review",
         "subtitle": lapse_subtitle,
@@ -362,8 +467,10 @@ def generate_daily_science_rhythm(
         "anki_browse_url": struggle_data.get("anki_browse_url", "anki://search?q=rated:1:1"),
         "top_struggles": struggle_data.get("cards", [])[:5],
     })
+    total_study_mins += dur_lapse
+    cur_m += dur_lapse
 
-    # 10. Feierabend & Evening Free (starts exactly at the end of scheduled work)
+    # 11. Feierabend & Evening Free (starts exactly at the end of scheduled work)
     feierabend_time = _minutes_to_time(cur_m)
     dur_evening = max(60, (22 * 60) - cur_m)
     blocks.append({
@@ -382,6 +489,9 @@ def generate_daily_science_rhythm(
         "is_mandatory": False,
     })
 
+    # Sort all blocks chronologically by their start time
+    blocks.sort(key=lambda b: _parse_time_to_minutes(b.get("start_time", "08:30")))
+
     return {
         "date": t_date.isoformat(),
         "start_time": _minutes_to_time(_parse_time_to_minutes(start_time_str)),
@@ -394,4 +504,24 @@ def generate_daily_science_rhythm(
         "removed_blocks_count": len(removed_set),
         "postponed_blocks_count": len(active_postponed),
         "blocks": blocks,
+        "mandatory_events": [
+            {
+                "title": m.title,
+                "start_time": m.start_time.strftime("%H:%M"),
+                "end_time": m.end_time.strftime("%H:%M"),
+                "location": m.location,
+                "description": m.description,
+            }
+            for m in mandatory_events
+        ],
+        "tomorrow_mandatory_events": [
+            {
+                "title": m.title,
+                "start_time": m.start_time.strftime("%H:%M"),
+                "end_time": m.end_time.strftime("%H:%M"),
+                "location": m.location,
+                "description": m.description,
+            }
+            for m in tomorrow_mandatory
+        ],
     }

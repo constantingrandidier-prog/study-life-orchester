@@ -908,7 +908,10 @@ function renderTimeline() {
     const eDate = new Date(e);
     const durationMin = Math.max(15, Math.round((eDate - sDate) / 60000)) || 45;
 
-    const isMandatory = (ev.is_mandatory === true) || /praktikum|untersuchungskurs|präparier|praeparier|visite|testat|klinischer|blockkurs|skills lab/i.test(ev.title || '');
+    const isMandatory = (ev.is_mandatory === true) || 
+      /praktikum|untersuchungskurs|pr[aä]parier|visite|testat|klinisch|blockkurs|skills lab|tutorat|tutorium|pol|absenz|anwesenheitspflicht|pr[aä]senzpflicht|obligatorisch/i.test(ev.title || '') ||
+      /Veranstaltungsformat:\s*(Tutorat|Praktikum|Klinischer\s*Kurs|POL)/i.test(ev.description || '') ||
+      /Bei Absenzen/i.test(ev.description || '');
 
     allBlocks.push({
       id: id,
@@ -4450,6 +4453,31 @@ function renderScienceRhythm(data) {
     `;
   }
 
+  let tomorrowAlertHtml = '';
+  if (Array.isArray(data.tomorrow_mandatory_events) && data.tomorrow_mandatory_events.length > 0) {
+    const tmList = data.tomorrow_mandatory_events.map(ev => 
+      `<strong>${escapeHtml(ev.title)}</strong> (${ev.start_time} – ${ev.end_time} Uhr${ev.location ? ` @ ${escapeHtml(ev.location)}` : ''})`
+    ).join(', ');
+    tomorrowAlertHtml = `
+      <div style="background: linear-gradient(135deg, rgba(163, 113, 247, 0.15), rgba(138, 56, 245, 0.08)); border: 1.5px solid rgba(163, 113, 247, 0.4); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1;">
+          <span style="font-size: 22px; flex-shrink: 0;">🏛️</span>
+          <div>
+            <div style="font-weight: 700; font-size: 13px; color: #d2a8ff; letter-spacing: 0.2px;">
+              WICHTIGER HINWEIS: MORGEN PRÄSENZPFLICHT VOR ORT!
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-main); margin-top: 2px;">
+              ${tmList}
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="stepDate(1)" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.75rem; background: rgba(163, 113, 247, 0.25); border: 1px solid #a371f7; color: #d2a8ff; font-weight: 700; border-radius: 6px; cursor: pointer;" title="Zeigt den morgigen Tagesplan inklusive Präsenz-Slot">
+          Morgen ansehen &rarr;
+        </button>
+      </div>
+    `;
+  }
+
   let html = '';
   data.blocks.forEach(b => {
     if (!b || !b.start_time || !b.end_time) return;
@@ -4499,6 +4527,7 @@ function renderScienceRhythm(data) {
                 </strong>
                 ${isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(245, 159, 0, 0.2); color: #f59f00; border: 1px solid rgba(245, 159, 0, 0.45);">⏩ Von gestern verschoben</span>` : ''}
                 ${b.badge && !isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
+                ${isMandatory && b.location ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 600; background: rgba(163, 113, 247, 0.15); color: #d2a8ff; border: 1px solid rgba(163, 113, 247, 0.35); display: inline-flex; align-items: center; gap: 3px;">📍 ${escapeHtml(b.location)}</span>` : ''}
                 ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">🔴 JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
               </div>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
@@ -4519,6 +4548,14 @@ function renderScienceRhythm(data) {
             </div>
           </div>
         </div>
+
+        <!-- Detail Strip for Mandatory Attendance Events -->
+        ${isMandatory && b.description ? `
+          <div style="margin-top: 0.3rem; padding: 0.35rem 0.65rem; border-radius: 4px; background: rgba(163, 113, 247, 0.08); border-left: 2px solid #a371f7; font-size: 11px; color: #e2d9f3; line-height: 1.4;">
+            🏛️ <strong>Offizielle Kurs-Information:</strong> ${escapeHtml(b.description.split('\n')[0])}
+            ${b.location ? `<div style="margin-top: 0.15rem; color: #bca4ea; font-size: 10.5px;">📍 Kursort: ${escapeHtml(b.location)}</div>` : ''}
+          </div>
+        ` : ''}
 
         <!-- Subtopics / Decks for Morning New Cards Block -->
         ${b.id === 'block_new_cards' && b.topic_slots && b.topic_slots.length > 0 ? `
@@ -4630,7 +4667,7 @@ function renderScienceRhythm(data) {
     `;
   });
 
-  container.innerHTML = html;
+  container.innerHTML = tomorrowAlertHtml + html;
 
   const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
   if (indicatorEl) {

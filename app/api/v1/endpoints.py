@@ -1190,7 +1190,7 @@ def get_daily_rhythm_endpoint(
     t_date = t_date or date.today()
     
     from app.db import repository
-    events_raw = repository.get_events_for_date(t_date) if hasattr(repository, "get_events_for_date") else []
+    events_raw = repository.get_saved_events(t_date)
     cal_events = [CalendarEvent(**e) for e in events_raw] if events_raw else []
 
     from app.services.anki_desktop_sync import read_live_anki_desktop_state

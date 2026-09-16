@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="StudyLife Orchestrator - Professioneller akademischer Tages- und Lernplaner für Studierende.">
-  <link rel="stylesheet" href="/static/style.css?v=13.0">
+  <link rel="stylesheet" href="/static/style.css?v=14.0">
   <link rel="manifest" href="/static/manifest.json">
   <meta name="theme-color" content="#161b22">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -122,12 +122,6 @@
         </div>
       </div>
 
-      <div class="device-indicator-pill" title="Automatische Layout-Anpassung">
-        <span class="device-lbl-mobile">📱 iPhone-Optimiert</span>
-        <span class="device-lbl-tablet">📱 iPad-Dashboard</span>
-        <span class="device-lbl-desktop">💻 Desktop-Cockpit</span>
-      </div>
-
       <div class="weekday-badge" id="headerWeekdayDisplay">Montag, 14. September 2026</div>
 
       <button type="button" class="btn-header-sync" id="btnHeaderAnkiSync" onclick="handleSyncLocalAnki()" title="Klicke um Anki jetzt live zu synchronisieren">
@@ -176,206 +170,103 @@
       <!-- Top Meta & Title Bar -->
       <div class="mission-hero-header">
         <div class="mission-title-group">
-          <span class="mission-day-badge" id="curriculumDayBadge">Tag 1 von 97</span>
-          <h2 class="mission-main-title">🎯 Dein heutiger Lernauftrag (<span id="curriculumTargetQuota">100</span> neue Karten)</h2>
-          <span class="mission-module-tag" id="curriculumModuleTag">1. Blut &amp; Immunsystem</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="mission-day-badge" id="curriculumDayBadge">Tag 1 von 97</span>
+            <span class="mission-module-tag" id="curriculumModuleTag">1. Blut &amp; Immunsystem</span>
+          </div>
+          <h2 class="mission-main-title" style="margin-top: 0.35rem; font-size: 1.25rem;">
+            🎯 Heutiger Lernauftrag: <span id="curriculumTargetQuota">100</span> neue Karten
+          </h2>
         </div>
         <div class="mission-actions">
-          <button type="button" class="btn-secondary" id="btnRefreshCurriculum" onclick="loadCurriculumToday(true)" style="font-size: 11.5px; padding: 0.35rem 0.65rem;" title="Lernauftrag neu laden">
-            🔄 Aktualisieren
-          </button>
-          <button type="button" class="btn-primary" onclick="switchAppPage('page-roadmap')" style="font-size: 12px; padding: 0.35rem 0.8rem; background: linear-gradient(135deg, #1f6feb, #238636); border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
-            <span>🗺️</span> Roadmap
-          </button>
           <button type="button" class="btn-pacing-joker" id="btnToggleJokerDay" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Diesen Tag als Ruhetag markieren">
             🏖️ Joker
           </button>
           <button type="button" class="btn-pacing-config" id="btnOpenPacingSettings" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Pacing-Einstellungen anpassen">
             ⚙️ Optionen
           </button>
+          <!-- Hidden fallback elements for script compatibility -->
+          <button type="button" id="btnRefreshCurriculum" onclick="loadCurriculumToday(true)" style="display: none;"></button>
         </div>
       </div>
 
-      <!-- Dynamic Quota Adjustment Banner (Surplus / Deficit explained) -->
-      <div class="curriculum-adjustment-banner" id="curriculumAdjustmentBanner" style="display: none;"></div>
+      <!-- Hidden compatibility banners -->
+      <div id="curriculumAdjustmentBanner" style="display: none;"></div>
+      <div id="curriculumSummaryBox" style="display: none;"><span id="curriculumSummaryText"></span></div>
 
-      <!-- Motivational Briefing Box -->
-      <div class="mission-motivational-banner" id="curriculumSummaryBox">
-        <span>🔥</span>
-        <span id="curriculumSummaryText" style="flex: 1; font-weight: 500;">Tag 1/97: 100 neue Karten (48× Hämoglobin + 24× Hämoglobin Teil 2 + 28× CO2-Transport) im Modul 1. Blut &amp; Immunsystem.</span>
-      </div>
-      <!-- Unified 5-KPI Overview Grid with Direct Anki Integration -->
-      <div class="mission-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-        <!-- 1. Tages-Soll -->
-        <div class="mission-kpi-box">
-          <span class="mission-kpi-label">🎯 Tagesziel (Soll)</span>
-          <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="pacingDailyTarget">100</span>
-            <span class="mission-kpi-unit">Karten</span>
+      <!-- Minimalist & Focused 4-KPI Overview Row -->
+      <div class="mission-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; margin-top: 0.75rem; margin-bottom: 0.75rem;">
+        <!-- 1. Tagesziel -->
+        <div class="mission-kpi-box" style="padding: 0.75rem 1rem;">
+          <span class="mission-kpi-label">🎯 Tagesziel</span>
+          <div class="mission-kpi-value-row" style="margin-top: 2px;">
+            <span class="mission-kpi-val" id="pacingDailyTarget" style="font-size: 1.5rem;">100</span>
+            <span class="mission-kpi-unit">Karten neu</span>
           </div>
-          <div id="pacingTargetBreakdown" class="mission-kpi-sub">
-            <span id="pacingNewTargetVal">100</span> neu + <span id="pacingDueReviewsVal">0</span> fällig
-          </div>
-          <span class="mission-kpi-sub" id="pacingTargetSub">Bei 6 Lerntagen/Woche</span>
+          <span class="mission-kpi-sub" style="font-size: 10.5px;" id="pacingTargetSub">Mo–Sa aktiv</span>
+          <span id="pacingNewTargetVal" style="display: none;">100</span>
+          <span id="pacingDueReviewsVal" style="display: none;">102</span>
+          <span id="pacingTargetBreakdown" style="display: none;"></span>
         </div>
 
-        <!-- 2. In Anki erledigt (Ist) -->
-        <div class="mission-kpi-box" style="border: 1px solid rgba(63, 185, 80, 0.4); background: rgba(63, 185, 80, 0.05);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="mission-kpi-label" style="color: #3fb950; font-weight: 700;">✅ Neue Karten heute (Ist)</span>
-            <span style="font-size: 10px; background: rgba(63, 185, 80, 0.2); color: #3fb950; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 600;">🟢 Live Anki</span>
+        <!-- 2. Erledigt heute -->
+        <div class="mission-kpi-box" style="padding: 0.75rem 1rem; border: 1px solid rgba(63, 185, 80, 0.35); background: rgba(63, 185, 80, 0.04);">
+          <span class="mission-kpi-label" style="color: #3fb950; font-weight: 600;">✅ Heute erledigt</span>
+          <div class="mission-kpi-value-row" style="margin-top: 2px;">
+            <span class="mission-kpi-val" id="pacingCardsCompleted" style="color: #3fb950; font-size: 1.5rem;">0</span>
+            <span class="mission-kpi-unit">/ <span id="pacingCardsTargetMini">100</span></span>
           </div>
-          <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="pacingCardsCompleted" style="color: #3fb950;">0</span>
-            <span class="mission-kpi-unit">/ <span id="pacingCardsTargetMini">100</span> neu</span>
-          </div>
-          <div id="pacingRemainingSub" class="mission-kpi-sub" style="color: #3fb950; font-weight: 500;">Aus Anki-App automatisch erfasst</div>
-          <div id="pacingTimeSpentSub" class="mission-kpi-sub" style="color: var(--text-muted); font-size: 10.5px; margin-top: 0.2rem;">
-            ⏱️ 0 Min. Lernzeit heute
-          </div>
+          <span class="mission-kpi-sub" id="pacingRemainingSub" style="color: #3fb950; font-size: 10.5px;">Live aus Anki</span>
+          <span id="pacingTimeSpentSub" style="display: none;"></span>
         </div>
 
-        <!-- 3. Morgen zu repetieren (SRS Fälligkeit) -->
-        <div class="mission-kpi-box" style="border: 1px solid rgba(210, 168, 255, 0.4); background: rgba(210, 168, 255, 0.05);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="mission-kpi-label" style="color: #d2a8ff; font-weight: 700;">🔄 Repetition morgen</span>
-            <span style="font-size: 10px; background: rgba(210, 168, 255, 0.2); color: #d2a8ff; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 600;">Vorschau</span>
+        <!-- 3. Fällige Wiederholungen -->
+        <div class="mission-kpi-box" style="padding: 0.75rem 1rem; border: 1px solid rgba(210, 168, 255, 0.3); background: rgba(210, 168, 255, 0.04);">
+          <span class="mission-kpi-label" style="color: #d2a8ff; font-weight: 600;">🔄 Fällig in Anki</span>
+          <div class="mission-kpi-value-row" style="margin-top: 2px;">
+            <span class="mission-kpi-val" id="pacingDueReviewsDisplay" style="color: #d2a8ff; font-size: 1.5rem;">102</span>
+            <span class="mission-kpi-unit">Reviews</span>
           </div>
-          <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="kpiTomorrowCount" style="color: #d2a8ff;">0</span>
-            <span class="mission-kpi-unit">Karten</span>
-          </div>
-          <div id="kpiTomorrowTopicsSub" class="mission-kpi-sub" style="color: #d2a8ff; font-weight: 500;">Aus Anki-App berechnet</div>
-          <button type="button" onclick="toggleTomorrowAnkiDetails()" id="btnToggleTomorrowKpi" style="margin-top: 0.25rem; background: rgba(210,168,255,0.15); color: #d2a8ff; border: 1px solid rgba(210,168,255,0.3); border-radius: 4px; font-size: 10.5px; padding: 0.2rem 0.45rem; cursor: pointer; text-align: left; width: 100%;">
-            📋 Themen anzeigen ▼
-          </button>
-          <button type="button" onclick="toggleBacklogTriageModal()" id="btnOpenTriage" style="margin-top: 0.3rem; background: rgba(248, 81, 73, 0.15); color: #ff7b72; border: 1px solid rgba(248, 81, 73, 0.35); border-radius: 4px; font-size: 10.5px; padding: 0.2rem 0.45rem; cursor: pointer; text-align: left; width: 100%; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
-            <span>🚨 Notfall-Fokus (>500)</span>
-            <span style="font-size: 9px; background: rgba(248,81,73,0.3); padding: 0.05rem 0.3rem; border-radius: 3px;">Triage</span>
-          </button>
+          <span class="mission-kpi-sub" style="color: #d2a8ff; font-size: 10.5px;">Repetition</span>
+          <span id="kpiTomorrowCount" style="display: none;">0</span>
+          <span id="kpiTomorrowTopicsSub" style="display: none;"></span>
+          <button type="button" onclick="toggleTomorrowAnkiDetails()" id="btnToggleTomorrowKpi" style="display: none;"></button>
+          <button type="button" onclick="toggleBacklogTriageModal()" id="btnOpenTriage" style="display: none;"></button>
         </div>
 
-        <!-- 4. Zeit gespart heute & Streak -->
-        <div class="mission-kpi-box">
-          <span class="mission-kpi-label">⚡ Zeit gespart</span>
-          <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="statTimeSaved" style="color: var(--status-free);">2 Std.</span>
+        <!-- 4. Puffer vor Examen -->
+        <div class="mission-kpi-box" style="padding: 0.75rem 1rem;">
+          <span class="mission-kpi-label">📅 Puffer vor Examen</span>
+          <div class="mission-kpi-value-row" style="margin-top: 2px;">
+            <span class="mission-kpi-val" id="pacingBufferDays" style="font-size: 1.5rem;">23</span>
+            <span class="mission-kpi-unit">Tage</span>
           </div>
-          <span class="mission-kpi-sub" id="statTimeSavedSub">Durch 2.0x/1.5x Vorlesungs-Speed</span>
-          <div class="mission-kpi-sub" style="margin-top: 0.3rem;">
-            🔥 Streak: <strong id="statStreakDays" style="color: #ff9b54;">1 Tag aktiv</strong>
-          </div>
-        </div>
-
-        <!-- 5. Zielerreichung & Puffer -->
-        <div class="mission-kpi-box">
-          <span class="mission-kpi-label">🎯 Puffer & Readiness</span>
-          <div class="mission-kpi-value-row">
-            <span class="mission-kpi-val" id="pacingBufferDays">23</span>
-            <span class="mission-kpi-unit">Tage Puffer</span>
-          </div>
-          <span class="mission-kpi-sub" id="pacingBufferSub">Repetitions-Puffer vor Prüfung</span>
-          <div class="mission-kpi-sub" style="margin-top: 0.3rem;">
-            Readiness: <strong id="pacingReadinessVal" style="color: var(--status-study);">0.0%</strong>
-          </div>
+          <span class="mission-kpi-sub" style="font-size: 10.5px;" id="pacingBufferSub">Examen: 19.01.2027</span>
+          <span id="statTimeSaved" style="display: none;">2 Std.</span>
+          <span id="statTimeSavedSub" style="display: none;"></span>
+          <span id="statStreakDays" style="display: none;"></span>
+          <span id="pacingReadinessVal" style="display: none;"></span>
         </div>
       </div>
 
-      <!-- Aufklappbare Detail-Box für Morgen (Repetitionen) -->
-      <div id="ankiTomorrowDetailsBox" style="display: none; background: rgba(13, 17, 23, 0.95); padding: 0.75rem 1rem; border-radius: 8px; border: 1px dashed rgba(210, 168, 255, 0.4); font-size: 12px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <strong style="color: #d2a8ff; font-size: 13px;">📋 Welche Anki-Karten sind morgen zu repetieren?</strong>
-          <span style="font-size: 11px; color: var(--text-muted);" id="ankiTomorrowTotalTopics">0 Themen</span>
-        </div>
-        <div id="ankiTomorrowTopicsList" style="display: flex; flex-direction: column; gap: 0.35rem; max-height: 200px; overflow-y: auto;">
-          <span style="color: var(--text-muted);">Keine Wiederholungen für morgen fällig – du bist voll im Plan!</span>
-        </div>
-      </div>
-
-      <!-- 14-Tage Retentions-Radar & Workload-Vorschau -->
-      <div id="ankiWorkloadForecastBox" style="background: rgba(13, 17, 23, 0.95); padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(88, 166, 255, 0.25); font-size: 12px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <strong style="color: #58a6ff; font-size: 13px;">📈 14-Tage Retentions-Radar (Fälligkeits-Vorschau)</strong>
-            <span id="forecastSpikeBadge" style="display: none; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 10.5px; font-weight: 600; background: rgba(248,81,73,0.2); color: #ff7b72; border: 1px solid rgba(248,81,73,0.4);">⚠️ Spike erkannt</span>
-          </div>
-          <div style="display: flex; gap: 0.75rem; font-size: 11px; color: var(--text-muted);">
-            <span>14-Tage Summe: <strong id="forecastTotalVal" style="color: #e6edf3;">--</strong></span>
-            <span>Ø Tag: <strong id="forecastAvgVal" style="color: #e6edf3;">--</strong></span>
-            <span>Spitze: <strong id="forecastPeakVal" style="color: #e6edf3;">--</strong></span>
-          </div>
-        </div>
-
-        <!-- 14-Day Bar Chart Track -->
-        <div id="forecastBarsContainer" style="display: flex; gap: 5px; align-items: flex-end; height: 75px; padding-top: 15px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px;">
-          <!-- Dynamically populated 15 bars (Today + 14 Days) -->
-        </div>
-
-        <!-- Selected Day Tooltip/Detail Drawer -->
-        <div id="forecastSelectedDayDrawer" style="display: none; background: rgba(22, 27, 34, 0.8); border-radius: 6px; padding: 0.4rem 0.6rem; margin-top: 0.4rem; font-size: 11px;">
-          <!-- Shows deck breakdown for clicked bar -->
-        </div>
-
-        <!-- Smoothing Advice Footer -->
-        <div id="forecastAdviceFooter" style="margin-top: 0.45rem; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem;">
-          <span>💡</span> <span id="forecastAdviceText">Lade 14-Tage-Prognose aus Anki...</span>
-        </div>
-      </div>
-
-      <!-- Aufklappbare Notfall-Triage & Priorisierungs-Box bei >500 Reviews / Zeitmangel -->
-      <div id="ankiBacklogTriageBox" style="display: none; background: rgba(22, 27, 34, 0.98); padding: 1rem; border-radius: 8px; border: 1px solid rgba(248, 81, 73, 0.5); font-size: 12px; margin-top: 0.5rem; margin-bottom: 0.75rem; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
-          <div>
-            <span style="color: #ff7b72; font-weight: 700; font-size: 14px;">🚨 Notfall-Fokus: Intelligente Themen-Triage</span>
-            <div style="color: var(--text-muted); font-size: 11px; margin-top: 2px;">
-              Wenn du mehr als 500 Wiederholungen hast oder wenig Zeit: Themen priorisiert nach Vergessensrisiko & Fehlerquote
-            </div>
-          </div>
-          <button type="button" onclick="toggleBacklogTriageModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 0.2rem 0.5rem;">✕</button>
-        </div>
-
-        <!-- Budget Selector -->
-        <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
-          <span style="font-size: 11px; color: #e6edf3; font-weight: 600;">⏱️ Zeitbudget heute:</span>
-          <button type="button" class="btn-triage-cap active" onclick="setTriageBudget(null, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.15); color: #fff; cursor: pointer;">Alle fälligen</button>
-          <button type="button" class="btn-triage-cap" onclick="setTriageBudget(50, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 50</button>
-          <button type="button" class="btn-triage-cap" onclick="setTriageBudget(100, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 100</button>
-          <button type="button" class="btn-triage-cap" onclick="setTriageBudget(200, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 200</button>
-          <button type="button" class="btn-triage-cap" onclick="setTriageBudget(300, this)" style="padding: 0.2rem 0.45rem; border-radius: 4px; font-size: 10.5px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #8b949e; cursor: pointer;">Max. 300</button>
-        </div>
-
-        <!-- Combined Query 1-Click Copy Bar -->
-        <div id="triageCombinedQueryBar" style="display: none; background: rgba(56, 139, 253, 0.1); border: 1px solid rgba(56, 139, 253, 0.35); padding: 0.5rem 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; align-items: center; justify-content: space-between; gap: 0.5rem;">
-          <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; font-size: 11px; color: #58a6ff;" id="triageCombinedQueryText">
-            (deck:"...") is:due
-          </div>
-          <button type="button" id="btnCopyCombinedQuery" onclick="copyTriageQueryToClipboard()" style="flex-shrink: 0; background: #238636; border: none; color: #fff; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-            <span>📋</span> <span>Anki-Suchstring kopieren</span>
-          </button>
-        </div>
-
-        <div id="triageAdviceBanner" style="padding: 0.45rem 0.65rem; border-radius: 6px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.25); color: #ff7b72; font-size: 11.5px; margin-bottom: 0.75rem;">
-          Lade Live-Triage aus deiner Anki-App...
-        </div>
-
-        <div id="triageTopicsList" style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 320px; overflow-y: auto;">
-          <!-- Dynamically populated -->
-        </div>
-      </div>
-
-      <!-- Motivational Progress Bar & Status Advice -->
-      <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+      <!-- Clean Progress Bar & Status Advice -->
+      <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.4rem; margin-bottom: 0.85rem;">
         <div class="mission-progress-track">
           <div class="mission-progress-fill" id="pacingBarFill" style="width: 0%;"></div>
         </div>
-        <div class="mission-advice-bar">
+        <div class="mission-advice-bar" style="padding: 0.35rem 0.65rem; font-size: 11.5px;">
           <div style="display: flex; align-items: center; gap: 0.4rem;">
             <span>💡</span>
-            <span id="pacingAdviceText" style="font-weight: 500; color: var(--text-main);">Noch 100 Karten offen – starte deinen 1. Lerntag mit 1 Hämoglobin!</span>
+            <span id="pacingAdviceText" style="font-weight: 500; color: var(--text-main);">Noch 100 Karten offen – starte deinen Lerntag!</span>
           </div>
           <span class="pacing-status-indicator" id="pacingStatusBadge">🟢 Lerntag aktiv</span>
         </div>
       </div>
+
+      <!-- Hidden compatibility containers for charts/triage on this page -->
+      <div id="ankiTomorrowDetailsBox" style="display: none;"><div id="ankiTomorrowTopicsList"></div><span id="ankiTomorrowTotalTopics"></span></div>
+      <div id="ankiWorkloadForecastBox" style="display: none;"><div id="forecastBarsContainer"></div><span id="forecastSpikeBadge"></span><span id="forecastTotalVal"></span><span id="forecastAvgVal"></span><span id="forecastPeakVal"></span><div id="forecastSelectedDayDrawer"></div><span id="forecastAdviceText"></span></div>
+      <div id="ankiBacklogTriageBox" style="display: none;"><div id="triageTopicsList"></div><div id="triageCombinedQueryBar"><span id="triageCombinedQueryText"></span></div><button id="btnCopyCombinedQuery"></button><div id="triageAdviceBanner"></div></div>
 
       <!-- =====================================================================
            STRUCTURED MISSION TABLE (DESKTOP/IPAD: TABLE, MOBILE: CARD LIST)
@@ -497,8 +388,8 @@
         </div>
       </div>
 
-      <!-- Telemetry Strip (Vortag, 7-Tage-Schnitt, Streak, Zeit gespart) -->
-      <div class="pacing-stats-strip" id="pacingComparisonStrip">
+      <!-- Telemetry Strip (hidden on Today, available on Anki & Retention page) -->
+      <div class="pacing-stats-strip" id="pacingComparisonStrip" style="display: none;">
         <div class="pacing-stat-item">
           <span class="pacing-stat-label">📊 Vortagsvergleich</span>
           <span class="pacing-stat-val" id="statDiffCards">Lädt...</span>
@@ -569,8 +460,8 @@
     </div>
   </section>
 
-  <!-- Executive KPI Strip & Progress Tracker -->
-  <section class="metrics-strip">
+  <!-- Executive KPI Strip (hidden to maintain clean minimalist focus on Today page) -->
+  <section class="metrics-strip" style="display: none;">
     <div class="kpi-grid">
       <div class="kpi-item">
         <span class="kpi-label">Zu erledigen</span>
@@ -698,25 +589,15 @@
         </div>
 
         <!-- Quick Topic Filter Chips -->
-        <div style="font-size: 11px; color: var(--text-dim); margin-top: 0.4rem;">Schnellauswahl nach High-Yield Themen:</div>
+        <div style="font-size: 11.5px; color: var(--text-dim); margin-top: 0.5rem; margin-bottom: 0.25rem;">Häufige Themen:</div>
         <div class="advisor-chips-row" id="advisorQuickChips">
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Hämoglobin')">🩸 Hämoglobin &amp; O₂</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Hämoglobin')">🩸 Hämoglobin</button>
           <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Bohr-Effekt')">🧪 Säure-Base &amp; Bohr</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Gerinnung')">🩸 Hämostase &amp; Gerinnung</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('EKG')">📈 EKG &amp; Erregung</button>
           <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Komplement')">🛑 Komplementsystem (Skip)</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Herzentwicklung')">🫀 Herz-Embryologie</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('EKG')">📈 EKG &amp; Erregungsleitung</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Herzmechanik')">🫀 Wiggers &amp; PV-Loop</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Barorezeptor')">🔄 Barorezeptorreflex</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Gasaustausch')">🫁 Gasaustausch &amp; Shunts</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Atemregulation')">🛑 Atemregulation (Skip)</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Vitamine')">🛑 Vitamine &amp; B12 (Skip)</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Magensekretion')">🥗 Magen &amp; Säuresekretion</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Resorption')">🥗 Resorption &amp; SGLT1</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Glykolyse')">⚡ Glykolyse &amp; Glukoneogenese</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Fasten')">🎧 Fasten &amp; Hunger (Audio)</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Hypophyse')">🦋 Hypophyse &amp; Hormone</button>
-          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Calcium')">🦴 Calcium &amp; Parathormon</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Magensekretion')">🥗 Magen &amp; Säure</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Glykolyse')">⚡ Glykolyse</button>
+          <button type="button" class="advisor-chip" onclick="applyAdvisorChip('Hypophyse')">🦋 Hormone</button>
         </div>
 
         <!-- Filter Mode Toolbar -->
@@ -1435,7 +1316,7 @@
     <span id="toastText">Aktion erfolgreich</span>
   </div>
 
-  <script src="/static/app.js?v=13.0"></script>
+  <script src="/static/app.js?v=14.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

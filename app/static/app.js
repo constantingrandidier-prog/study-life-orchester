@@ -2049,6 +2049,10 @@ async function loadAnkiWeaknesses() {
     if (dueEl) {
       dueEl.textContent = dueCount;
     }
+    const dueDisp = document.getElementById('pacingDueReviewsDisplay');
+    if (dueDisp) {
+      dueDisp.textContent = dueCount;
+    }
 
     const headerSyncText = document.getElementById('headerSyncText');
     if (headerSyncText) {

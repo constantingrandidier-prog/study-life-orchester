@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="StudyLife Orchestrator - Professioneller akademischer Tages- und Lernplaner für Studierende.">
-  <link rel="stylesheet" href="/static/style.css?v=16.0">
+  <link rel="stylesheet" href="/static/style.css?v=18.0">
   <link rel="manifest" href="/static/manifest.json">
   <meta name="theme-color" content="#161b22">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1385,12 +1385,29 @@
     <span id="toastText">Aktion erfolgreich</span>
   </div>
 
-  <script src="/static/app.js?v=17.0"></script>
+  <script>
+    // Sanitize any corrupt or failed responses from previous service worker offline caching
+    try {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('sl_curr_cache_')) {
+          const val = localStorage.getItem(k);
+          if (!val || val.includes('"error"') || !val.includes('"target_cards"')) {
+            localStorage.removeItem(k);
+          }
+        }
+      }
+    } catch (e) {}
+  </script>
+  <script src="/static/app.js?v=18.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/static/sw.js')
-          .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+          .then(reg => {
+            console.log('PWA Service Worker registered:', reg.scope);
+            reg.update();
+          })
           .catch(err => console.warn('PWA registration failed:', err));
       });
     }

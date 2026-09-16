@@ -9,6 +9,18 @@ from app.core.config import settings
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
+from contextlib import asynccontextmanager
+from app.services.curriculum_roadmap_service import generate_curriculum_roadmap
+
+@asynccontextmanager
+async def lifespan(app_instance: FastAPI):
+    # Pre-warm curriculum roadmap in background so requests respond in <5ms
+    try:
+        generate_curriculum_roadmap()
+    except Exception as e:
+        print("Roadmap pre-warm note:", e)
+    yield
+
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
@@ -19,6 +31,7 @@ app = FastAPI(
     ),
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # Enable CORS for frontend clients

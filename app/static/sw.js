@@ -1,4 +1,4 @@
-const CACHE_NAME = 'study-life-orchester-v12';
+const CACHE_NAME = 'study-life-orchester-v18';
 const STATIC_ASSETS = [
   '/',
   '/static/style.css',
@@ -35,7 +35,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET') {
+        if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET' && !event.request.url.includes('/api/')) {
           const resClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
         }
@@ -46,7 +46,9 @@ self.addEventListener('fetch', (event) => {
         return caches.match(event.request).then((cachedResponse) => {
           if (cachedResponse) return cachedResponse;
           if (event.request.url.includes('/api/')) {
-            return new Response(JSON.stringify({ error: 'Offline mode: server unavailable' }), {
+            return new Response(JSON.stringify({ detail: 'Offline mode: server unavailable' }), {
+              status: 503,
+              statusText: 'Service Unavailable',
               headers: { 'Content-Type': 'application/json' }
             });
           }

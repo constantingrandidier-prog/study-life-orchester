@@ -495,6 +495,7 @@ async function loadSchedule() {
     const res = await fetch(`${API_BASE}/today${dateQuery}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    if (!data || data.error) return;
 
     state.fixedEvents = data.fixed_events || [];
     state.freeSlots = data.free_slots || [];
@@ -1784,7 +1785,7 @@ async function loadExamPacing() {
 }
 
 function renderExamPacing(data) {
-  if (!data) return;
+  if (!data || data.error) return;
 
   // 1. Countdown Pill
   const pill = document.getElementById('pacingCountdownPill');
@@ -2550,8 +2551,12 @@ async function loadCurriculumToday(forceRefresh = false) {
     const cachedStr = localStorage.getItem(cacheKey);
     if (cachedStr) {
       const cachedData = JSON.parse(cachedStr);
-      renderCurriculumToday(cachedData);
-      hadCachedRender = true;
+      if (cachedData && !cachedData.error && Array.isArray(cachedData.topic_slots) && cachedData.target_cards !== undefined) {
+        renderCurriculumToday(cachedData);
+        hadCachedRender = true;
+      } else {
+        localStorage.removeItem(cacheKey);
+      }
     } else if (dateStr === '2026-09-14') {
       renderCurriculumToday(DAY1_FALLBACK_ASSIGNMENT);
       hadCachedRender = true;
@@ -2560,9 +2565,9 @@ async function loadCurriculumToday(forceRefresh = false) {
     console.debug('Cache read note:', e);
   }
 
-  // 2. Fetch fresh data with 5s timeout & AbortController
+  // 2. Fetch fresh data with 25s timeout & AbortController (safe for cloud cold starts)
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  const timeoutId = setTimeout(() => controller.abort(), 25000);
 
   try {
     const res = await fetch(`${API_BASE}/curriculum/today?target_date=${dateStr}`, {
@@ -2579,11 +2584,13 @@ async function loadCurriculumToday(forceRefresh = false) {
     }
 
     const data = await res.json();
-    try {
-      localStorage.setItem(cacheKey, JSON.stringify(data));
-    } catch (e) {}
-    renderCurriculumToday(data);
-    if (forceRefresh) showToast('Lernauftrag erfolgreich aktualisiert');
+    if (data && !data.error && Array.isArray(data.topic_slots) && data.target_cards !== undefined) {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+      } catch (e) {}
+      renderCurriculumToday(data);
+      if (forceRefresh) showToast('Lernauftrag erfolgreich aktualisiert');
+    }
   } catch (err) {
     clearTimeout(timeoutId);
     console.warn('Curriculum network fetch notice:', err.name, err.message);
@@ -2599,6 +2606,7 @@ async function loadCurriculumToday(forceRefresh = false) {
 }
 
 function renderCurriculumToday(data) {
+  if (!data || data.error) return;
   const dayBadge = document.getElementById('curriculumDayBadge');
   const targetQuota = document.getElementById('curriculumTargetQuota');
   const moduleTag = document.getElementById('curriculumModuleTag');
@@ -3810,7 +3818,7 @@ function toggleRhythmBlockDone(dateStr, blockId) {
 
 function renderScienceRhythm(data) {
   const container = document.getElementById('scienceRhythmBlocksContainer');
-  if (!container || !data || !data.blocks) return;
+  if (!container || !data || data.error || !Array.isArray(data.blocks)) return;
 
   const now = new Date();
   const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -3822,17 +3830,19 @@ function renderScienceRhythm(data) {
   let doneCount = 0;
 
   data.blocks.forEach(b => {
+    if (!b || !b.id) return;
     const key = `sl_rhythm_${data.date}_${b.id}`;
     if (localStorage.getItem(key) === 'true') doneCount++;
   });
 
   const progressEl = document.getElementById('scienceRhythmProgressText');
   if (progressEl) {
-    progressEl.innerHTML = `<strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round(data.total_study_minutes / 60)}h ${data.total_study_minutes % 60}m</strong> (ohne Puffer)`;
+    progressEl.innerHTML = `<strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round((data.total_study_minutes || 0) / 60)}h ${(data.total_study_minutes || 0) % 60}m</strong> (ohne Puffer)`;
   }
 
   let html = '';
   data.blocks.forEach(b => {
+    if (!b || !b.start_time || !b.end_time) return;
     const isBreak = b.is_break;
     const isMandatory = b.is_mandatory;
     const isLapseBlock = (b.id === 'block_evening_lapse');
@@ -3842,8 +3852,8 @@ function renderScienceRhythm(data) {
     // Parse start and end time (HH:MM)
     const [sh, sm] = b.start_time.split(':').map(Number);
     const [eh, em] = b.end_time.split(':').map(Number);
-    const startM = sh * 60 + sm;
-    const endM = eh * 60 + em;
+    const startM = (sh || 0) * 60 + (sm || 0);
+    const endM = (eh || 0) * 60 + (em || 0);
 
     const isCurrent = isToday && (nowMinutes >= startM && nowMinutes < endM);
     if (isCurrent) {

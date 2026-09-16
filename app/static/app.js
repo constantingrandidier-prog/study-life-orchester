@@ -3526,6 +3526,29 @@ state.rhythmLunch = parseInt(localStorage.getItem('sl_rhythm_lunch') || '75', 10
 state.rhythmIncludeLecture = localStorage.getItem('sl_rhythm_lecture') !== 'false';
 state.strugglesExpanded = false;
 
+function calculateInstantFeierabend(startTimeStr, lunchMins, includeLecture) {
+  try {
+    const parts = (startTimeStr || '08:30').split(':').map(Number);
+    const startTotal = (parts[0] !== undefined ? parts[0] : 8) * 60 + (parts[1] !== undefined ? parts[1] : 30);
+    // 60m reps + 15m pause + 105m new + 15m pause + 60m transfer + lunch + (includeLecture ? 90m : 0) + 30m lapse
+    const studyAndPause = 60 + 15 + 105 + 15 + 60 + (lunchMins || 75) + (includeLecture !== false ? 90 : 0) + 30;
+    const endTotal = startTotal + studyAndPause;
+    const endH = Math.floor(endTotal / 60) % 24;
+    const endM = endTotal % 60;
+    return `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+  } catch (e) {
+    return '16:00';
+  }
+}
+
+function updateFeierabendBadgeInstantly() {
+  const feierabendEl = document.getElementById('rhythmFeierabendBadge');
+  if (feierabendEl) {
+    const instantTime = calculateInstantFeierabend(state.rhythmStartTime, state.rhythmLunch, state.rhythmIncludeLecture);
+    feierabendEl.textContent = `${instantTime} Uhr`;
+  }
+}
+
 function setRhythmStartNow() {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2, '0');
@@ -3535,6 +3558,7 @@ function setRhythmStartNow() {
   localStorage.setItem('sl_rhythm_start', timeStr);
   const input = document.getElementById('rhythmStartTimeInput');
   if (input) input.value = timeStr;
+  updateFeierabendBadgeInstantly();
   loadScienceRhythm();
 }
 
@@ -3544,6 +3568,7 @@ function setRhythmLunch(mins) {
   document.querySelectorAll('.lunch-pill-btn').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.dur, 10) === mins);
   });
+  updateFeierabendBadgeInstantly();
   loadScienceRhythm();
 }
 
@@ -3558,8 +3583,10 @@ function handleRhythmConfigChange() {
     state.rhythmIncludeLecture = check.checked;
     localStorage.setItem('sl_rhythm_lecture', String(check.checked));
   }
+  updateFeierabendBadgeInstantly();
   loadScienceRhythm();
 }
+
 
 async function createTemporaryStruggleDeck() {
   try {

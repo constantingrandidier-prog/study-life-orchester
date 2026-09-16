@@ -4025,20 +4025,6 @@ function renderScienceRhythm(data) {
   }
 }
 
-  container.innerHTML = html;
-
-  const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
-  if (indicatorEl) {
-    if (activeBlockTitle) {
-      indicatorEl.innerHTML = `<span style="color: #79c0ff;">🔴 JETZT AKTIV:</span> ${escapeHtml(activeBlockTitle)} (${activeMinsLeft}m)`;
-    } else if (isToday && nowMinutes >= 17 * 60 + 30) {
-      indicatorEl.innerHTML = `🎉 Feierabend & Sport am Abend!`;
-    } else {
-      indicatorEl.textContent = `Lernstart: 08:30 Uhr`;
-    }
-  }
-}
-
 // Global window bindings for inline HTML onclicks
 window.handleQuickAddCards = handleQuickAddCards;
 window.handleMarkAllTargetDone = handleMarkAllTargetDone;

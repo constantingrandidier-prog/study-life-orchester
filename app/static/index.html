@@ -12,6 +12,25 @@
   <meta name="apple-mobile-web-app-title" content="Orchester">
 </head>
 <body>
+  <!-- JS ERROR INTERCEPTOR: shows all JS errors on screen -->
+  <div id="__js_error_banner__" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;padding:12px 16px;font-size:13px;font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;border-bottom:2px solid #7f1d1d;"></div>
+  <script>
+    (function() {
+      var banner = document.getElementById('__js_error_banner__');
+      function showErr(msg) {
+        if (!banner) return;
+        banner.style.display = 'block';
+        banner.textContent += msg + '\n';
+      }
+      window.onerror = function(msg, src, line, col, err) {
+        showErr('[JS ERROR] ' + msg + ' @ line ' + line + ' col ' + col + (src ? ' in ' + src.split('/').pop() : ''));
+        return false;
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        showErr('[PROMISE REJECT] ' + (e.reason ? (e.reason.message || String(e.reason)) : 'unknown'));
+      });
+    })();
+  </script>
 
   <!-- Slide-Over Navigation & Config Drawer (Off-Canvas Hamburger Menu) -->
   <div id="sideMenuBackdrop" class="side-menu-backdrop" onclick="toggleSideMenu(false)">

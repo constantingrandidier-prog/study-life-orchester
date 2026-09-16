@@ -56,7 +56,11 @@ SYNONYMS_MAP = {
 
 SPEED_FACTORS = {
     "live": 1.0,
+    "live_1_0": 1.0,
+    "stream_1_0": 1.0,
+    "stream_1_2": 1.2,
     "stream_1_25": 1.25,
+    "stream_1_4": 1.4,
     "stream_1_5": 1.5,
     "stream_1_75": 1.75,
     "stream_2_0": 2.0,
@@ -223,7 +227,7 @@ def evaluate_lecture_value(
         "praktikum", "untersuchungskurs", "präparier", "praeparier", "visite", "kurs klinischer", "testat"
     ]
 
-    # 2. High-complexity physiological "Killer-Concepts" -> 1.5x Focus Stream (Never 2.0x, diagram intensive)
+    # 2. High-complexity physiological "Killer-Concepts" -> 1.0x Focus Stream (diagram intensive)
     focus_concepts_keywords = [
         "herzmechanik", "druck-volumen", "pv-loop", "wiggers", "frank-starling", "laplace",
         "erregungsleitung", "aktionspotenzial", "ekg", "rhythmusstörung", "arrhythmi", "antiarrhythmika",
@@ -241,8 +245,8 @@ def evaluate_lecture_value(
         "anatomie rektum", "anatomie trachea", "nomenklatur", "definition", "repetition", "stoffchemie"
     ]
 
-    # 4. Overview / Descriptive / Developmental / Endocrine -> 2.0x High-Speed Stream
-    # All remaining lectures benefit from 2.0x speed for red thread and lecturer emphasis without wasting time
+    # 4. Overview / Descriptive / Developmental / Endocrine -> 1.2x Standard-Stream
+    # Descriptive lectures benefit from 1.2x speed for red thread and lecturer emphasis with clear comprehension
 
     if any(k in combined for k in mandatory_in_person_keywords):
         recommendation = "attend"
@@ -256,24 +260,24 @@ def evaluate_lecture_value(
 
     elif anki_fail_rate is not None and anki_fail_rate >= 40.0:
         recommendation = "stream"
-        recommended_mode = "stream_1_5"
-        badge_label = f"🟠 Hohe Fehlerquote {anki_fail_rate:.0f}% (1.5x Focus Stream)"
+        recommended_mode = "stream_1_0"
+        badge_label = f"🟠 Hohe Fehlerquote {anki_fail_rate:.0f}% (1.0x Voller Fokus)"
         badge_color = "#db6d28"
         reason = (
             f"Deine Anki-Statistik zeigt bei diesem Thema eine Fehlerquote von {anki_fail_rate:.1f}%. "
-            f"Reines Kartendrücken reicht hier nicht – schau dir die Vorlesung auf 1.5x an, um die konzeptionelle "
+            f"Reines Kartendrücken reicht hier nicht – schau dir die Vorlesung auf 1.0x (voller Fokus) an, um die konzeptionelle "
             f"Basis zu festigen und Transferfragen in der Prüfung sicher zu lösen."
         )
 
     elif any(k in combined for k in focus_concepts_keywords):
         recommendation = "stream"
-        recommended_mode = "stream_1_5"
-        badge_label = "🟠 1.5x Focus Stream (Prüfungs-Kern)"
+        recommended_mode = "stream_1_0"
+        badge_label = "🟠 1.0x Voller Fokus (Prüfungs-Kern)"
         badge_color = "#db6d28"
         reason = (
             "⚠️ Klinischer & physiologischer Prüfungsschwerpunkt! Beinhaltet dynamische Regelkreise, Diagramme oder Kaskaden "
-            "(z.B. Druck-Volumen-Kurven, EKG, Säure-Basen oder Gerinnung). Nicht auf 2.0x rasen – auf 1.5x streamen und "
-            "Diagramme aktiv nachvollziehen. Spart 30 Minuten und schützt vor gravierenden Fehlern bei Transferfragen."
+            "(z.B. Druck-Volumen-Kurven, EKG, Säure-Basen oder Gerinnung). Nicht vorspulen – auf 1.0x (oder max. 1.2x) streamen und "
+            "Diagramme aktiv nachvollziehen. Schützt vor gravierenden Fehlern bei Transferfragen."
         )
 
     elif any(k in combined for k in pure_factual_keywords):
@@ -302,19 +306,19 @@ def evaluate_lecture_value(
         )
 
     else:
-        # Default for descriptive / overview lectures: High-Speed 2.0x Stream
+        # Default for descriptive / overview lectures: Standard-Stream 1.2x
         recommendation = "stream"
-        recommended_mode = "stream_2_0"
-        badge_label = "🟡 2.0x High-Speed Stream (spart 45 min)"
+        recommended_mode = "stream_1_2"
+        badge_label = "🟡 1.2x Standard-Stream (spart 25 min)"
         badge_color = "#d29922"
         reason = (
-            "Wichtig für den roten Faden, Organ-Zusammenhänge und Dozenten-Schwerpunkte, aber inhaltlich unkompliziert. "
-            "Auf doppelter Geschwindigkeit (2.0x) im Stream anhören – spart genau 45 Minuten bei vollem Stoffüberblick!"
+            "Wichtig für den roten Faden, Organ-Zusammenhänge und Dozenten-Schwerpunkte. "
+            "Im Standard-Stream (1.2x) anhören – spart ca. 25 Minuten bei optimaler kognitiver Verarbeitung!"
         )
 
     # Calculate options breakdown
     modes_breakdown = []
-    for m in ["live", "stream_1_25", "stream_1_5", "stream_2_0", "slides_only", "skipped"]:
+    for m in ["live", "stream_1_0", "stream_1_2", "stream_1_4", "slides_only", "skipped"]:
         calc = calculate_mode_time_savings(duration_minutes, m)
         modes_breakdown.append(calc)
 
@@ -355,7 +359,7 @@ def set_event_consumption_mode(event_id: int, mode: str) -> Dict[str, Any]:
         calc = calculate_mode_time_savings(duration, mode)
         speed = calc["speed_factor"]
         saved = calc["time_saved_minutes"]
-        attended = 1 if mode in ["live", "stream_1_25", "stream_1_5", "stream_1_75", "stream_2_0"] else 0
+        attended = 1 if mode in ["live", "live_1_0", "stream_1_0", "stream_1_2", "stream_1_25", "stream_1_4", "stream_1_5", "stream_1_75", "stream_2_0"] else 0
 
         cursor.execute("""
             UPDATE saved_events SET

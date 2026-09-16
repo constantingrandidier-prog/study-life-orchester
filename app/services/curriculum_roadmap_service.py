@@ -80,16 +80,16 @@ PURE_FACT_KEYWORDS = [
 
 
 def classify_topic_didactics(deck_name: str, clean_title: str, module_name: str) -> Dict[str, Any]:
-    """Classify a curriculum topic into: 1.5x Focus Stream, 2.0x High-Speed Stream, or Skip for Anki."""
+    """Classify a curriculum topic into: 1.0x Voller Fokus, 1.2x Standard-Stream, or Skip for Anki."""
     combined = f"{deck_name} {clean_title} {module_name}".lower()
 
     if any(k in combined for k in FOCUS_KEYWORDS):
         return {
             "is_cycle_topic": True,
-            "recommended_mode": "stream_1_5",
-            "speed_factor": 1.5,
-            "badge_label": "🟠 1.5x Focus Stream (Prüfungs-Kern)",
-            "didactic_reason": "⚠️ Kausale Regelkreise & Funktionskurven (USMLE/UZH Prüfungsfokus). Auf 1.5x streamen und aktiv mitdenken!",
+            "recommended_mode": "stream_1_0",
+            "speed_factor": 1.0,
+            "badge_label": "🟠 1.0x Voller Fokus (Prüfungs-Kern)",
+            "didactic_reason": "⚠️ Kausale Regelkreise & Funktionskurven (USMLE/UZH Prüfungsfokus). Auf 1.0x streamen und aktiv mitdenken!",
         }
     elif any(k in combined for k in PURE_FACT_KEYWORDS):
         return {
@@ -102,10 +102,10 @@ def classify_topic_didactics(deck_name: str, clean_title: str, module_name: str)
     else:
         return {
             "is_cycle_topic": False,
-            "recommended_mode": "stream_2_0",
-            "speed_factor": 2.0,
-            "badge_label": "🟡 2.0x High-Speed Stream",
-            "didactic_reason": "Deskriptiver Überblick & Dozentenschwerpunkte. Auf 2.0x doppelter Geschwindigkeit im Stream mitnehmen!",
+            "recommended_mode": "stream_1_2",
+            "speed_factor": 1.2,
+            "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
+            "didactic_reason": "Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!",
         }
 
 GERMAN_WEEKDAYS = {

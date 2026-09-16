@@ -1089,7 +1089,7 @@ function renderTimeline() {
       const rec = block.recommendation || 'stream';
       let ampelBadgeClass = 'ampel-stream';
       let ampelIcon = '🟡';
-      let ampelLabel = 'Streamen (1.5x / 2.0x)';
+      let ampelLabel = 'Streamen (1.0x / 1.2x / 1.4x)';
 
       if (rec === 'attend') {
         ampelBadgeClass = 'ampel-attend';
@@ -1105,10 +1105,9 @@ function renderTimeline() {
       const timeSaved = block.time_saved_minutes || 0;
 
       const modes = [
-        { key: 'live_1_0', label: 'Live 1.0x' },
-        { key: 'stream_1_25', label: '1.25x' },
-        { key: 'stream_1_5', label: '1.5x' },
-        { key: 'stream_2_0', label: '2.0x' },
+        { key: 'live_1_0', label: '1.0x' },
+        { key: 'stream_1_2', label: '1.2x' },
+        { key: 'stream_1_4', label: '1.4x' },
         { key: 'slides_only', label: 'Folien' },
         { key: 'skipped', label: 'Skip' },
       ];
@@ -2505,10 +2504,10 @@ const DAY1_FALLBACK_ASSIGNMENT = {
       matched_slide_filename: '01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf',
       slide_coverage_pct: 88.0,
       is_cycle_topic: false,
-      recommended_mode: 'stream_2_0',
-      badge_label: '🟡 2.0x High-Speed Stream (spart 45 min)',
-      didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 2.0x doppelter Geschwindigkeit im Stream mitnehmen!',
-      speed_factor: 2.0
+      recommended_mode: 'stream_1_2',
+      badge_label: '🟡 1.2x Standard-Stream (+25m gespart)',
+      didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!',
+      speed_factor: 1.2
     },
     {
       deck_name: '2. SJ :: 3. Semester :: Blut / Immunsystem :: 2 Manatschal :: Hämoglobin Teil 2',
@@ -2523,10 +2522,10 @@ const DAY1_FALLBACK_ASSIGNMENT = {
       matched_slide_filename: '01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf',
       slide_coverage_pct: 88.0,
       is_cycle_topic: false,
-      recommended_mode: 'stream_2_0',
-      badge_label: '🟡 2.0x High-Speed Stream (spart 45 min)',
-      didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 2.0x doppelter Geschwindigkeit im Stream mitnehmen!',
-      speed_factor: 2.0
+      recommended_mode: 'stream_1_2',
+      badge_label: '🟡 1.2x Standard-Stream (+25m gespart)',
+      didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!',
+      speed_factor: 1.2
     },
     {
       deck_name: '2. SJ :: 3. Semester :: Blut / Immunsystem :: 2 Manatschal :: 2 CO2-Transport',
@@ -2541,10 +2540,10 @@ const DAY1_FALLBACK_ASSIGNMENT = {
       matched_slide_filename: '02_CO2-Transport_Saure-Base_HS24_Manatschal.pdf',
       slide_coverage_pct: 84.0,
       is_cycle_topic: true,
-      recommended_mode: 'stream_1_5',
-      badge_label: '🟠 1.5x Focus Stream (Prüfungs-Kern)',
-      didactic_reason: '⚠️ Physiologischer Prüfungsschwerpunkt (Gasaustausch & Säure-Basen-Kopplung)! Auf 1.5x aktiv durcharbeiten.',
-      speed_factor: 1.5
+      recommended_mode: 'stream_1_0',
+      badge_label: '🟠 1.0x Voller Fokus (Prüfungs-Kern)',
+      didactic_reason: '⚠️ Physiologischer Prüfungsschwerpunkt (Gasaustausch & Säure-Basen-Kopplung)! Auf 1.0x aktiv durcharbeiten.',
+      speed_factor: 1.0
     }
   ],
   cumulative_cards_learned: 100,
@@ -2701,15 +2700,19 @@ function renderCurriculumToday(data) {
         
         let timeSavedMin = 0;
         let didacticBadge = '';
-        if (slot.recommended_mode === 'stream_1_5') {
+        if (slot.recommended_mode === 'stream_1_0') {
+          timeSavedMin = 0;
+          didacticBadge = `<span class="curriculum-focus-badge" title="Prüfungsrelevanter Regelkreis/Diagramme">🟠 1.0x Voller Fokus (Kernprüfungskonzept)</span>`;
+        } else if (slot.recommended_mode === 'stream_1_4') {
           timeSavedMin = 30;
-          didacticBadge = `<span class="curriculum-focus-badge" title="Prüfungsrelevanter Regelkreis/Diagramme">🟠 1.5x Focus Stream (+30m gespart)</span>`;
+          didacticBadge = `<span class="curriculum-speed-badge" title="High-Speed Stream">🟡 1.4x High-Speed (+30m gespart)</span>`;
         } else if (slot.recommended_mode === 'skipped') {
           timeSavedMin = 90;
           didacticBadge = `<span class="curriculum-skip-badge" title="Reines Faktenwissen / Nomenklatur">🔴 Vorlesung skippen (+90m gespart)</span>`;
         } else {
-          timeSavedMin = 45;
-          didacticBadge = `<span class="curriculum-speed-badge" title="Deskriptiver Überblick & Dozentenschwerpunkte">🟡 2.0x High-Speed (+45m gespart)</span>`;
+          // Standard-Stream 1.2x (spart 25m)
+          timeSavedMin = 25;
+          didacticBadge = `<span class="curriculum-speed-badge" title="Standard-Stream & Dozentenschwerpunkte">🟡 1.2x Standard-Stream (+25m gespart)</span>`;
         }
         totalTimeSavedMinutes += timeSavedMin;
 

@@ -34,7 +34,7 @@ def test_evaluate_lecture_ampel():
     assert anat["badge_color"] == "#a371f7"
     assert "Praktikum" in anat["reason"]
 
-    # 1b. High Anki Failure Rate Lecture -> Stream 1.5x Focus
+    # 1b. High Anki Failure Rate Lecture -> Stream 1.0x Voller Fokus
     weak = evaluate_lecture_value(
         title="Vorlesung Klinische Anatomie",
         module_name="Anatomie",
@@ -42,8 +42,8 @@ def test_evaluate_lecture_ampel():
         anki_fail_rate=52.0,
     )
     assert weak["recommendation"] == "stream"
-    assert weak["recommended_mode"] == "stream_1_5"
-    assert "1.5x Focus Stream" in weak["badge_label"]
+    assert weak["recommended_mode"] == "stream_1_0"
+    assert "1.0x Voller Fokus" in weak["badge_label"]
     assert "Fehlerquote" in weak["reason"]
 
     # 2. Myelopoiese (Factual cell lineages) -> Skip / Anki
@@ -56,25 +56,25 @@ def test_evaluate_lecture_ampel():
     assert "Skippen" in myelo["badge_label"]
     assert myelo["badge_color"] == "#f85149"
 
-    # 3. Overview Introduction -> 2.0x Stream
+    # 3. Overview Introduction -> 1.2x Standard-Stream
     intro = evaluate_lecture_value(
         title="Einführung TB Blut/Immunsystem",
         module_name="Blut/Immunsystem",
         duration_minutes=45,
     )
     assert intro["recommendation"] == "stream"
-    assert intro["recommended_mode"] == "stream_2_0"
-    assert "2.0x High-Speed Stream" in intro["badge_label"]
+    assert intro["recommended_mode"] == "stream_1_2"
+    assert "1.2x Standard-Stream" in intro["badge_label"]
 
-    # 4. Complex Physiology Killer Concept -> 1.5x Focus Stream
+    # 4. Complex Physiology Killer Concept -> 1.0x Focus Stream
     wiggers = evaluate_lecture_value(
         title="Herzmechanik und Wiggers-Diagramm",
         module_name="Herz/Kreislauf",
         duration_minutes=90,
     )
     assert wiggers["recommendation"] == "stream"
-    assert wiggers["recommended_mode"] == "stream_1_5"
-    assert "1.5x Focus Stream" in wiggers["badge_label"]
+    assert wiggers["recommended_mode"] == "stream_1_0"
+    assert "1.0x Voller Fokus" in wiggers["badge_label"]
 
 
 def test_calculate_mode_time_savings():

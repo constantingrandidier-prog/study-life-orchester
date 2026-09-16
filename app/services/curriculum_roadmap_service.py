@@ -594,10 +594,18 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
 
     # Direct keyword mapping
     mappings = {
-        "blutgerinnung": "Tuzlak_Vorlesung_11_Blutgerinnung_HS24.pdf",
-        "hämostase": "Tuzlak_Vorlesung_11_Blutgerinnung_HS24.pdf",
-        "hämoglobin": "01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf",
-        "erythrozyten": "01_Haemoglobin_Myoglobin_HS24_Dutzler.pdf",
+        "blutgerinnung": "6-7_CM_Blutgerinnung.pdf",
+        "hämostase": "6-7_CM_Blutgerinnung.pdf",
+        "gerinnung": "6-7_CM_Blutgerinnung.pdf",
+        "co2": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "co2-transport": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "säure-base": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "bohr": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "haldane": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "hämoglobin": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "myoglobin": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "erythrozyten": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "komplement": "8_CM_Komplementsystem.pdf",
         "herzmechanik": "Kurt_Vorlesung_Herzmechanik_HS24.pdf",
         "erregungsleitung": "Kurt_Vorlesung_Erregungsleitung_HS24.pdf",
         "ekg": "Kurt_Vorlesung_EKG_HS24.pdf",
@@ -781,10 +789,44 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
                 saved_min = tb.get("saved_minutes")
                 timecode_guidance = f"{tb.get('start_timestamp')} – {tb.get('end_timestamp')} ({eff_min}m Stream, spart {saved_min}m)"
 
+            lec_date = top.get("date")
+            lec_date_formatted = None
+            if lec_date:
+                try:
+                    p = str(lec_date).split("-")
+                    if len(p) == 3:
+                        lec_date_formatted = f"{p[2]}.{p[1]}.{p[0]}"
+                    else:
+                        lec_date_formatted = str(lec_date)
+                except Exception:
+                    lec_date_formatted = str(lec_date)
+
+            lec_id = top.get("id")
+            lec_title = top.get("title")
+            podcast_folder_name = lec_id if lec_id else None
+            slide_file = c_deck.get("matched_slide_filename")
+            
+            # Determine slide subfolder
+            slide_subfolder = "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal" if (slide_file and "CM_" in str(slide_file)) else "Vorlesungen im Themenblock Blut und Immunsystem"
+            slide_rel = f"{slide_subfolder}/{slide_file}" if slide_file else None
+
             day_slots.append({
                 "deck_name": c_deck["deck_name"],
                 "short_title": leaf_title,
                 "clean_title": clean_info["clean_title"],
+                "display_title_with_date": f"{clean_info['clean_title']} ({lec_date_formatted})" if lec_date_formatted else clean_info["clean_title"],
+                "lecture_date": lec_date,
+                "lecture_date_formatted": lec_date_formatted,
+                "lecture_id": lec_id,
+                "lecture_title": lec_title,
+                "podcast_folder_name": podcast_folder_name,
+                "slide_folder_relative": slide_subfolder,
+                "slide_relative_path": slide_rel,
+                "local_podcast_folder_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\Podcasts\\{podcast_folder_name}" if podcast_folder_name else None,
+                "local_slide_folder_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\{slide_subfolder.replace('/', chr(92))}",
+                "local_slide_file_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\{slide_subfolder.replace('/', chr(92))}\\{slide_file}" if slide_file else None,
+                "vam_url": "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
+                "olat_url": "https://lms.uzh.ch/url/RepositoryEntry/666697737",
                 "lecturer": clean_info["lecturer"],
                 "breadcrumb": clean_info["breadcrumb"],
                 "module_name": c_deck["module_name"],

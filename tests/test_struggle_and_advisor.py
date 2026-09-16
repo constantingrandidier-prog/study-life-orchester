@@ -194,3 +194,47 @@ def test_real_cards_progress_counter():
     assert day["curriculum_progress_pct"] == 1.6
     assert day["total_curriculum_cards"] == 9676
 
+
+def test_lecture_date_and_slide_paths_in_curriculum_assignment():
+    """Verify that Day 2 slots include recording dates in title, local folder paths, and slide mappings."""
+    from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
+    from datetime import date
+    day = get_daily_curriculum_assignment(date(2026, 9, 16))
+    slots = day["topic_slots"]
+    assert len(slots) >= 2
+
+    # Slot 1: CO2-Transport
+    s1 = slots[0]
+    assert "CO2-Transport" in s1["clean_title"]
+    assert "19.09.2025" in s1["display_title_with_date"]
+    assert s1["lecture_date_formatted"] == "19.09.2025"
+    assert s1["matched_slide_filename"] == "5_CM_Saure-Base_CO2-Transport.pdf"
+    assert "Cristina Manatschal" in s1["slide_relative_path"]
+    assert s1["vam_url"] is not None
+
+    # Slot 2: Blutgerinnung
+    s2 = slots[1]
+    assert "Blutgerinnung" in s2["clean_title"]
+    assert "22.09.2025" in s2["display_title_with_date"]
+    assert s2["lecture_date_formatted"] == "22.09.2025"
+    assert s2["matched_slide_filename"] == "6-7_CM_Blutgerinnung.pdf"
+    assert "Cristina Manatschal" in s2["slide_relative_path"]
+
+
+def test_api_slides_view_endpoint():
+    """Verify that /slides/view streams the slide PDF inline with application/pdf."""
+    resp = client.get("/api/v1/schedule/slides/view?path=5_CM_Saure-Base_CO2-Transport.pdf")
+    assert resp.status_code == 200
+    assert "application/pdf" in resp.headers.get("content-type", "")
+    assert len(resp.content) > 10000
+
+
+def test_api_folder_open_endpoint():
+    """Verify that /folder/open resolves the local UZH directory."""
+    resp = client.get("/api/v1/schedule/folder/open?path=Podcasts")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["success"] is True
+    assert "Podcasts" in data["path"]
+
+

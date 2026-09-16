@@ -372,10 +372,15 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "txa2",
             "ass",
             "clopidogrel",
-            "primäre hämostase"
+            "primäre hämostase",
+            "blutgerinnung",
+            "gerinnung",
+            "blutstillung"
         ],
         "associated_decks": [
             "3 Hämostase",
+            "3 Blutgerinnung",
+            "Blutgerinnung",
             "Thrombozytenaktivierung",
             "2. SJ :: 1. Blut & Immunsystem :: Primäre Hämostase"
         ],

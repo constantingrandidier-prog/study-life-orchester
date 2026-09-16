@@ -466,6 +466,19 @@ class CurriculumTopicSlot(BaseModel):
     already_mastered_cards: Optional[int] = Field(0, description="Cards already completed in Anki")
     remaining_new_cards: Optional[int] = Field(0, description="Remaining new cards in this deck")
     concept_goal: Optional[str] = Field(None, description="Clear daily learning objective")
+    display_title_with_date: Optional[str] = Field(None, description="Clean topic title with formatted lecture recording date")
+    lecture_date: Optional[str] = Field(None, description="ISO date of the lecture recording")
+    lecture_date_formatted: Optional[str] = Field(None, description="Formatted recording date (e.g. 19.09.2025)")
+    lecture_id: Optional[str] = Field(None, description="Identifier of the recorded lecture")
+    lecture_title: Optional[str] = Field(None, description="Official title of the lecture recording")
+    podcast_folder_name: Optional[str] = Field(None, description="Folder name of the podcast")
+    slide_folder_relative: Optional[str] = Field(None, description="Relative directory containing the slides")
+    slide_relative_path: Optional[str] = Field(None, description="Relative file path of the slide PDF")
+    local_podcast_folder_path: Optional[str] = Field(None, description="Absolute Windows path to podcast folder")
+    local_slide_folder_path: Optional[str] = Field(None, description="Absolute Windows path to slide folder")
+    local_slide_file_path: Optional[str] = Field(None, description="Absolute Windows path to slide PDF file")
+    vam_url: Optional[str] = Field("https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983", description="Direct URL to UZH VAM archive")
+    olat_url: Optional[str] = Field("https://lms.uzh.ch/url/RepositoryEntry/666697737", description="Direct URL to OpenOLAT course materials")
 
 
 class DailyCurriculumAssignment(BaseModel):

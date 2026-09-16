@@ -1,6 +1,7 @@
 """API endpoints for calendar analysis and free slot calculation."""
 
 from datetime import date, datetime
+from pathlib import Path
 from typing import List, Optional
 from fastapi import APIRouter, Body, File, HTTPException, Query, UploadFile, status
 from pydantic import BaseModel, Field
@@ -1274,6 +1275,39 @@ def post_anki_cleanup_temp_deck_endpoint(payload: dict = Body(default={})):
     return cleanup_struggle_deck_tags(tag_name=tag_name)
 
 
+def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
+    """Helper to locate a local UZH course file or folder across known directories."""
+    from pathlib import Path
+    
+    base_dirs = [
+        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app"),
+        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\alles\Studium"),
+        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop"),
+        Path(__file__).resolve().parent.parent.parent.parent / "UNI sem app",
+        Path(__file__).resolve().parent.parent.parent,
+    ]
+    if not path:
+        return base_dirs[0] if base_dirs[0].exists() else None
+
+    clean_p = path.strip().replace("/", "\\")
+    cand = Path(clean_p)
+    if cand.is_absolute() and cand.exists():
+        return cand
+
+    for b in base_dirs:
+        cand = b / clean_p
+        if cand.exists():
+            return cand
+        fname = Path(clean_p).name
+        try:
+            cands = list(b.glob(f"**/{fname}"))
+            if cands:
+                return cands[0]
+        except Exception:
+            pass
+    return None
+
+
 @router.get(
     "/slides/open",
     summary="Opens or locates a lecture PDF slide",
@@ -1284,29 +1318,9 @@ def open_slide_endpoint(
     page: Optional[int] = Query(1, description="Target page number"),
 ):
     import os
-    from pathlib import Path
-    
-    base_dirs = [
-        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app"),
-        Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop"),
-        Path(__file__).resolve().parent.parent.parent.parent / "UNI sem app",
-        Path(__file__).resolve().parent.parent.parent,
-    ]
-    
-    clean_p = path.strip().replace("/", "\\")
-    found_file = None
-    for b in base_dirs:
-        cand = b / clean_p
-        if cand.exists():
-            found_file = cand
-            break
-        fname = Path(clean_p).name
-        cands = list(b.glob(f"**/{fname}"))
-        if cands:
-            found_file = cands[0]
-            break
+    found_file = _resolve_uzh_file_or_folder(path)
 
-    if not found_file:
+    if not found_file or not found_file.exists():
         return {
             "success": False,
             "message": f"Folie '{path}' lokal noch nicht abgelegt.",
@@ -1329,5 +1343,74 @@ def open_slide_endpoint(
             "file": str(found_file),
             "page": page or 1,
         }
+
+
+@router.get(
+    "/slides/view",
+    summary="Streams/views a lecture PDF slide in browser",
+    description="Serves the lecture slide PDF directly to the browser for in-tab preview.",
+)
+def view_slide_endpoint(
+    path: str = Query(..., description="Relative path or name of the slide PDF"),
+):
+    from fastapi.responses import FileResponse
+    found = _resolve_uzh_file_or_folder(path)
+    if not found or not found.exists() or not found.is_file():
+        raise HTTPException(status_code=404, detail=f"Folie '{path}' nicht gefunden.")
+    return FileResponse(
+        str(found),
+        media_type="application/pdf",
+        filename=found.name,
+        headers={"Content-Disposition": f"inline; filename=\"{found.name}\""}
+    )
+
+
+@router.get(
+    "/folder/open",
+    summary="Opens a local UZH folder or file in Windows Explorer",
+    description="Opens the folder or selects the file directly in Windows Explorer.",
+)
+def open_folder_endpoint(
+    path: Optional[str] = Query(None, description="Path to folder or file"),
+):
+    import os
+    import subprocess
+    from pathlib import Path
+
+    found = _resolve_uzh_file_or_folder(path)
+    if not found or not found.exists():
+        base = Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app")
+        if base.exists():
+            found = base
+        else:
+            return {
+                "success": False,
+                "message": f"Pfad '{path}' konnte lokal nicht gefunden werden.",
+                "path": path,
+            }
+
+    try:
+        if found.is_file():
+            subprocess.Popen(["explorer.exe", f"/select,{str(found)}"])
+            return {
+                "success": True,
+                "message": f"Datei '{found.name}' im Windows Explorer markiert!",
+                "path": str(found),
+                "folder": str(found.parent),
+            }
+        else:
+            os.startfile(str(found))
+            return {
+                "success": True,
+                "message": f"Ordner '{found.name}' im Windows Explorer geöffnet!",
+                "path": str(found),
+            }
+    except Exception as exc:
+        return {
+            "success": False,
+            "error": str(exc),
+            "path": str(found),
+        }
+
 
 

@@ -2754,11 +2754,44 @@ function renderCurriculumToday(data) {
              </div>`
           : '';
 
-        const slideBadge = slot.matched_slide_filename
-          ? `<a class="curriculum-slide-link" title="Lokale Vorlesungsfolie: ${escapeHtml(slot.matched_slide_filename)}" href="#" onclick="showToast('Folie: ${escapeHtml(slot.matched_slide_filename)}'); return false;">
-              📄 ${escapeHtml(slot.matched_slide_filename.length > 25 ? slot.matched_slide_filename.substring(0, 22) + '...' : slot.matched_slide_filename)}
-            </a>`
-          : '<span style="color: var(--text-dim); font-size: 11px;">–</span>';
+        // Lecture Links (VAM-Archiv & Podcast-Folder)
+        const lectureLinksHtml = `
+          <div class="slot-lecture-links" style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
+            <a href="${slot.vam_url || 'https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983'}" target="_blank" class="btn-vam-chip" title="Vorlesungsaufzeichnung direkt im UZH VAM-Archiv öffnen">
+              🎬 VAM-Archiv
+            </a>
+            ${slot.local_podcast_folder_path ? `
+              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Podcast-Ordner (${escapeHtml(slot.podcast_folder_name || '')})')" title="Lokalen Podcast-Ordner auf dem PC öffnen (${escapeHtml(slot.local_podcast_folder_path)})">
+                📁 Ordner
+              </button>
+            ` : ''}
+          </div>
+        `;
+
+        // Slide Badge & Action Links (In-Browser View, Windows Explorer Folder, OpenOLAT)
+        let slideBadge;
+        if (slot.matched_slide_filename) {
+          const slideRel = slot.slide_relative_path || slot.matched_slide_filename;
+          const slideLocal = slot.local_slide_file_path || '';
+          const folderLocal = slot.local_slide_folder_path || '';
+          slideBadge = `
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <a class="curriculum-slide-link" title="Folie im Browser / PDF-Viewer öffnen: ${escapeHtml(slot.matched_slide_filename)}" href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" onclick="handleOpenSlidePdf('${escapeHtml(slideRel).replace(/'/g, "\\'")}', '${escapeHtml(slideLocal).replace(/\\/g, '\\\\')}');">
+                📄 ${escapeHtml(slot.matched_slide_filename.length > 20 ? slot.matched_slide_filename.substring(0, 18) + '...' : slot.matched_slide_filename)}
+              </a>
+              <div style="display: flex; gap: 4px; align-items: center;">
+                <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(folderLocal || slideLocal).replace(/\\/g, '\\\\')}', 'Folien-Ordner')" title="Folien-Ordner im Windows Explorer öffnen" style="font-size: 10px; padding: 2px 5px;">
+                  📂 Ordner
+                </button>
+                <a href="${slot.olat_url || 'https://lms.uzh.ch/url/RepositoryEntry/666697737'}" target="_blank" class="btn-olat-chip" title="Skripte &amp; Unterlagen auf OpenOLAT öffnen" style="font-size: 10px; padding: 2px 5px;">
+                  🌐 OLAT
+                </a>
+              </div>
+            </div>
+          `;
+        } else {
+          slideBadge = '<span style="color: var(--text-dim); font-size: 11px;">–</span>';
+        }
 
         const lecturerBadge = slot.lecturer
           ? `<span class="curriculum-lecturer-badge">👨‍🏫 ${escapeHtml(slot.lecturer)}</span>`
@@ -2784,7 +2817,12 @@ function renderCurriculumToday(data) {
           : '';
 
         const breadcrumb = slot.breadcrumb || slot.module_name || '';
-        const displayTitle = slot.clean_title || slot.short_title || 'Thema';
+        const rawTitle = slot.clean_title || slot.short_title || 'Thema';
+        const displayTitle = slot.display_title_with_date || (slot.lecture_date_formatted ? `${rawTitle} (${slot.lecture_date_formatted})` : rawTitle);
+        const dateBadge = slot.lecture_date_formatted
+          ? `<span class="lecture-date-badge" title="Aufzeichnungsdatum der Vorlesung">📅 Gedreht: ${escapeHtml(slot.lecture_date_formatted)}</span>`
+          : '';
+
         const reasonHtml = slot.didactic_reason
           ? `<div class="curriculum-slot-reason" style="margin-top: 3px;">💡 ${escapeHtml(slot.didactic_reason)}</div>`
           : '';
@@ -2796,8 +2834,9 @@ function renderCurriculumToday(data) {
         return `
           <tr class="mission-slot-row ${isDone ? 'row-completed' : ''}" id="mission-row-${idx}">
             <td class="td-topic">
-              <div class="mission-topic-title" style="display: flex; align-items: center; flex-wrap: wrap;">
-                <span>${escapeHtml(displayTitle)}</span>
+              <div class="mission-topic-title" style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
+                <span style="font-weight: 600; font-size: 13.5px; color: var(--text-main);">${escapeHtml(displayTitle)}</span>
+                ${dateBadge}
                 ${ankiStatusBadge}
               </div>
               <div class="mission-topic-meta">
@@ -2811,6 +2850,7 @@ function renderCurriculumToday(data) {
             <td class="td-strategy">
               ${didacticBadge}
               ${timecodePill}
+              ${lectureLinksHtml}
             </td>
             <td class="td-slide">
               ${slideBadge}
@@ -2894,6 +2934,43 @@ function renderCurriculumToday(data) {
 
   if (countdownDays) {
     countdownDays.textContent = `${data.days_until_exam} Tage bis ${data.exam_date}`;
+  }
+}
+
+async function handleOpenLocalFolder(folderPath, label = 'Ordner') {
+  if (!folderPath) {
+    showToast('Kein lokaler Pfad hinterlegt');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(folderPath);
+  } catch (e) {
+    console.debug('Clipboard write error', e);
+  }
+
+  try {
+    const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderPath)}`);
+    const data = await res.json();
+    if (data.success) {
+      showToast(`📂 ${label} im Explorer geöffnet & Pfad kopiert!`);
+    } else {
+      showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Öffnen)`);
+    }
+  } catch (err) {
+    showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Öffnen)`);
+  }
+}
+
+async function handleOpenSlidePdf(relPath, localFilePath) {
+  if (localFilePath) {
+    try {
+      await navigator.clipboard.writeText(localFilePath);
+    } catch (e) {}
+  }
+  try {
+    await fetch(`/api/v1/schedule/slides/open?path=${encodeURIComponent(relPath)}&page=1`);
+  } catch (err) {
+    console.debug('Slide local open error', err);
   }
 }
 

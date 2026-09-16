@@ -1552,6 +1552,60 @@ body {
   color: #fff;
 }
 
+.btn-vam-chip, .btn-folder-chip, .btn-olat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.3;
+}
+.btn-vam-chip {
+  background: rgba(163, 113, 247, 0.12);
+  color: #d2a8ff;
+  border: 1px solid rgba(163, 113, 247, 0.3);
+}
+.btn-vam-chip:hover {
+  background: rgba(163, 113, 247, 0.22);
+  border-color: #d2a8ff;
+  color: #fff;
+}
+.btn-folder-chip {
+  background: rgba(56, 139, 253, 0.12);
+  color: #79c0ff;
+  border: 1px solid rgba(56, 139, 253, 0.3);
+}
+.btn-folder-chip:hover {
+  background: rgba(56, 139, 253, 0.22);
+  border-color: #79c0ff;
+  color: #fff;
+}
+.btn-olat-chip {
+  background: rgba(46, 160, 67, 0.12);
+  color: #7ee787;
+  border: 1px solid rgba(46, 160, 67, 0.3);
+}
+.btn-olat-chip:hover {
+  background: rgba(46, 160, 67, 0.22);
+  border-color: #7ee787;
+  color: #fff;
+}
+.lecture-date-badge {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #58a6ff;
+  background: rgba(56, 139, 253, 0.12);
+  border: 1px solid rgba(56, 139, 253, 0.3);
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
 /* Responsive Overrides for iPad and Mobile */
 @media (max-width: 900px) {
   .exam-pacing-section {

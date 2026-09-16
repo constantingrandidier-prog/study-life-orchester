@@ -3101,10 +3101,10 @@ function renderRoadmapDaysList(days) {
   daysList.innerHTML = days.map(d => {
     if (d.is_rest_day) {
       return `
-        <div class="roadmap-day-row rest-day">
+        <div class="roadmap-day-row rest-day" data-date="${d.date}" data-day-num="${d.day_number || ''}" data-is-rest="true">
           <div class="roadmap-day-date">
             <span>🏖️</span>
-            <span>${d.date} (${d.day_of_week})</span>
+            <span>${d.date} (${d.day_of_week || 'So'})</span>
           </div>
           <div style="flex: 1; color: var(--text-dim); font-size: 11.5px;">
             Sonntag – Geplanter Ruhetag & Erholung
@@ -3121,27 +3121,363 @@ function renderRoadmapDaysList(days) {
       return `<strong>${s.cards_to_learn}×</strong> ${escapeHtml(s.clean_title || s.short_title)}${lec}`;
     }).join(' + ');
 
+    const isSwappedBadge = d.is_swapped
+      ? `<span style="font-size: 9.5px; color: #e3b341; background: rgba(227,179,65,0.15); border: 1px solid rgba(227,179,65,0.3); border-radius: 3px; padding: 1px 5px; margin-left: 0.35rem; display: inline-flex; align-items: center; gap: 2px;" title="Dieses Lernpaket wurde manuell von Tag ${d.swapped_with_day || d.original_day_number} hierher getauscht">🔄 Paket Tag ${d.swapped_with_day || d.original_day_number}</span>`
+      : '';
+
     return `
-      <div class="roadmap-day-row">
-        <div class="roadmap-day-date">
-          <span style="color: #58a6ff;">Tag ${d.day_number}</span>
-          <span style="font-weight: 400; color: var(--text-dim); font-size: 11px;">${d.date}</span>
+      <div class="roadmap-day-row draggable-active ${d.is_swapped ? 'swapped-row' : ''}"
+           id="roadmapRow-${d.date}"
+           data-date="${d.date}"
+           data-day-num="${d.day_number}"
+           data-cards="${d.target_cards}"
+           draggable="true"
+           title="Lange gedrückt halten oder ziehen zum Tauschen mit einem anderen Tag">
+        
+        <!-- Drag Handle & Schnell-Tausch Tasten -->
+        <div style="display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0;">
+          <span class="roadmap-drag-handle" title="Gedrückt halten & ziehen zum Tauschen">⠿</span>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <button type="button" class="roadmap-quick-btn" onclick="handleQuickSwapDay('${d.date}', -1, event)" title="Mit vorherigem Lerntag tauschen">▲</button>
+            <button type="button" class="roadmap-quick-btn" onclick="handleQuickSwapDay('${d.date}', 1, event)" title="Mit nächstem Lerntag tauschen">▼</button>
+          </div>
         </div>
-        <div style="flex: 1; font-size: 12px; color: var(--text-main);">
+
+        <div class="roadmap-day-date">
+          <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem;">
+            <span style="color: #58a6ff; font-weight: 600;">Tag ${d.day_number}</span>
+            ${isSwappedBadge}
+          </div>
+          <span style="font-weight: 400; color: var(--text-dim); font-size: 11px;">${d.date} (${d.day_of_week || ''})</span>
+        </div>
+
+        <div style="flex: 1; font-size: 12px; color: var(--text-main); min-width: 180px;">
           <span style="color: var(--text-muted); font-size: 10.5px; display: block;">${escapeHtml(d.current_module)}</span>
           ${slotsText}
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <span class="curriculum-card-pill" style="font-size: 11px; padding: 0.2rem 0.5rem;">
+
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+          <span class="curriculum-card-pill" style="font-size: 11px; padding: 0.2rem 0.5rem; font-weight: 600;">
             ${d.target_cards} Karten
           </span>
-          <span style="font-size: 10.5px; color: var(--text-muted); min-width: 55px; text-align: right;">
+          <span style="font-size: 10.5px; color: var(--text-muted); min-width: 50px; text-align: right;">
             ${d.curriculum_progress_pct}%
           </span>
         </div>
       </div>
     `;
   }).join('');
+
+  initRoadmapDragAndDrop();
+}
+
+let _desktopDragSource = null;
+let _touchDragSource = null;
+let _touchTimer = null;
+let _touchStartX = 0;
+let _touchStartY = 0;
+let _isTouchDragging = false;
+let _lastHighlightedRow = null;
+
+function initRoadmapDragAndDrop() {
+  const container = document.getElementById('roadmapDaysList');
+  if (!container || container._dndInitialized) return;
+  container._dndInitialized = true;
+
+  // Desktop Drag & Drop
+  container.addEventListener('dragstart', (e) => {
+    const row = e.target.closest('.roadmap-day-row:not(.rest-day)');
+    if (!row) return;
+    _desktopDragSource = row;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', row.dataset.date || '');
+    setTimeout(() => row.classList.add('is-dragging'), 0);
+  });
+
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const targetRow = e.target.closest('.roadmap-day-row:not(.rest-day)');
+    if (targetRow && targetRow !== _desktopDragSource) {
+      if (_lastHighlightedRow && _lastHighlightedRow !== targetRow) {
+        _lastHighlightedRow.classList.remove('drag-over-highlight');
+      }
+      targetRow.classList.add('drag-over-highlight');
+      _lastHighlightedRow = targetRow;
+    }
+  });
+
+  container.addEventListener('dragleave', (e) => {
+    const targetRow = e.target.closest('.roadmap-day-row');
+    if (targetRow && !targetRow.contains(e.relatedTarget)) {
+      targetRow.classList.remove('drag-over-highlight');
+    }
+  });
+
+  container.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (_lastHighlightedRow) {
+      _lastHighlightedRow.classList.remove('drag-over-highlight');
+      _lastHighlightedRow = null;
+    }
+    const targetRow = e.target.closest('.roadmap-day-row:not(.rest-day)');
+    if (_desktopDragSource && targetRow && _desktopDragSource !== targetRow) {
+      const srcDate = _desktopDragSource.dataset.date;
+      const tgtDate = targetRow.dataset.date;
+      const srcDayNum = parseInt(_desktopDragSource.dataset.dayNum, 10);
+      const tgtDayNum = parseInt(targetRow.dataset.dayNum, 10);
+      swapCurriculumDays(srcDate, tgtDate, srcDayNum, tgtDayNum);
+    }
+  });
+
+  container.addEventListener('dragend', () => {
+    if (_desktopDragSource) {
+      _desktopDragSource.classList.remove('is-dragging');
+      _desktopDragSource = null;
+    }
+    if (_lastHighlightedRow) {
+      _lastHighlightedRow.classList.remove('drag-over-highlight');
+      _lastHighlightedRow = null;
+    }
+  });
+
+  // Mobile / Touch Drag & Drop (Long Press to drag)
+  container.addEventListener('touchstart', (e) => {
+    const row = e.target.closest('.roadmap-day-row:not(.rest-day)');
+    if (!row) return;
+    if (e.target.closest('button')) return;
+
+    _touchStartX = e.touches[0].clientX;
+    _touchStartY = e.touches[0].clientY;
+    _touchDragSource = row;
+    _isTouchDragging = false;
+
+    clearTimeout(_touchTimer);
+    _touchTimer = setTimeout(() => {
+      _isTouchDragging = true;
+      row.classList.add('is-dragging-touch');
+      if (navigator.vibrate) {
+        try { navigator.vibrate(35); } catch (_) {}
+      }
+      showToast(`🎯 Tag ${row.dataset.dayNum} zum Verschieben aktiv – ziehe auf einen Zieltag`, 'info');
+    }, 320);
+  }, { passive: true });
+
+  container.addEventListener('touchmove', (e) => {
+    if (!_touchDragSource) return;
+
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    const dist = Math.hypot(currentX - _touchStartX, currentY - _touchStartY);
+
+    if (!_isTouchDragging) {
+      if (dist > 12) {
+        clearTimeout(_touchTimer);
+        _touchDragSource = null;
+      }
+      return;
+    }
+
+    e.preventDefault();
+
+    const elemBelow = document.elementFromPoint(currentX, currentY);
+    if (!elemBelow) return;
+    const targetRow = elemBelow.closest('.roadmap-day-row:not(.rest-day)');
+
+    if (targetRow && targetRow !== _touchDragSource) {
+      if (_lastHighlightedRow && _lastHighlightedRow !== targetRow) {
+        _lastHighlightedRow.classList.remove('drag-over-highlight');
+      }
+      targetRow.classList.add('drag-over-highlight');
+      _lastHighlightedRow = targetRow;
+    } else if (!targetRow && _lastHighlightedRow) {
+      _lastHighlightedRow.classList.remove('drag-over-highlight');
+      _lastHighlightedRow = null;
+    }
+  }, { passive: false });
+
+  container.addEventListener('touchend', (e) => {
+    clearTimeout(_touchTimer);
+    if (!_isTouchDragging) {
+      _touchDragSource = null;
+      return;
+    }
+
+    if (_touchDragSource) {
+      _touchDragSource.classList.remove('is-dragging-touch');
+    }
+
+    let targetRow = _lastHighlightedRow;
+    if (!targetRow && e.changedTouches && e.changedTouches.length > 0) {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const elem = document.elementFromPoint(endX, endY);
+      if (elem) targetRow = elem.closest('.roadmap-day-row:not(.rest-day)');
+    }
+
+    if (_lastHighlightedRow) {
+      _lastHighlightedRow.classList.remove('drag-over-highlight');
+      _lastHighlightedRow = null;
+    }
+
+    if (_touchDragSource && targetRow && _touchDragSource !== targetRow) {
+      const srcDate = _touchDragSource.dataset.date;
+      const tgtDate = targetRow.dataset.date;
+      const srcDayNum = parseInt(_touchDragSource.dataset.dayNum, 10);
+      const tgtDayNum = parseInt(targetRow.dataset.dayNum, 10);
+      swapCurriculumDays(srcDate, tgtDate, srcDayNum, tgtDayNum);
+    }
+
+    _isTouchDragging = false;
+    _touchDragSource = null;
+  });
+
+  container.addEventListener('touchcancel', () => {
+    clearTimeout(_touchTimer);
+    if (_touchDragSource) {
+      _touchDragSource.classList.remove('is-dragging-touch');
+      _touchDragSource = null;
+    }
+    if (_lastHighlightedRow) {
+      _lastHighlightedRow.classList.remove('drag-over-highlight');
+      _lastHighlightedRow = null;
+    }
+    _isTouchDragging = false;
+  });
+}
+
+function handleQuickSwapDay(date, direction, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  if (!_cachedRoadmapData || !_cachedRoadmapData.schedule) return;
+
+  const schedule = _cachedRoadmapData.schedule;
+  const currIdx = schedule.findIndex(d => d.date === date);
+  if (currIdx === -1) return;
+
+  let targetIdx = currIdx + direction;
+  while (targetIdx >= 0 && targetIdx < schedule.length && schedule[targetIdx].is_rest_day) {
+    targetIdx += direction;
+  }
+
+  if (targetIdx < 0 || targetIdx >= schedule.length) {
+    showToast('Kein weiterer Lerntag in dieser Richtung vorhanden.', 'info');
+    return;
+  }
+
+  const currentDay = schedule[currIdx];
+  const targetDay = schedule[targetIdx];
+  swapCurriculumDays(currentDay.date, targetDay.date, currentDay.day_number, targetDay.day_number);
+}
+
+async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
+  if (!date1 || !date2 || date1 === date2) return;
+  if (!_cachedRoadmapData || !_cachedRoadmapData.schedule) return;
+
+  const d1 = _cachedRoadmapData.schedule.find(d => d.date === date1);
+  const d2 = _cachedRoadmapData.schedule.find(d => d.date === date2);
+  if (!d1 || !d2) return;
+
+  const cards1 = d1.target_cards;
+  const cards2 = d2.target_cards;
+  const num1 = dayNum1 || d1.day_number;
+  const num2 = dayNum2 || d2.day_number;
+
+  // Optimistic swap in memory
+  const swapKeys = ['target_cards', 'adjusted_target_cards', 'topic_slots', 'current_module', 'summary', 'synergy_headline', 'recommended_study_sequence'];
+  const temp = {};
+  swapKeys.forEach(k => temp[k] = d1[k]);
+  swapKeys.forEach(k => d1[k] = d2[k]);
+  swapKeys.forEach(k => d2[k] = temp[k]);
+
+  d1.is_swapped = true;
+  d2.is_swapped = true;
+  d1.swapped_with_day = num2;
+  d2.swapped_with_day = num1;
+
+  // Recalculate running cumulative progress
+  let cum = 0;
+  const totalCards = _cachedRoadmapData.total_cards || 9633;
+  _cachedRoadmapData.schedule.forEach(d => {
+    if (!d.is_rest_day) {
+      cum += (d.target_cards || 0);
+      d.cumulative_cards_learned = cum;
+      d.curriculum_progress_pct = Math.round((cum / Math.max(1, totalCards)) * 1000) / 10;
+    }
+  });
+
+  renderRoadmapDaysList(_cachedRoadmapData.schedule);
+
+  // Invalidate daily caches
+  try {
+    localStorage.removeItem(`sl_curr_cache_${date1}`);
+    localStorage.removeItem(`sl_curr_cache_${date2}`);
+  } catch (_) {}
+
+  // If viewing affected date, reload daily rhythm immediately
+  const currentDate = state.targetDate || '2026-09-14';
+  if (currentDate === date1 || currentDate === date2) {
+    if (typeof loadScienceRhythm === 'function') {
+      loadScienceRhythm(currentDate);
+    }
+  }
+
+  showToast(`🔄 Tag ${num1} (${cards2} Karten) mit Tag ${num2} (${cards1} Karten) getauscht!`, 'success');
+
+  // Persist to backend database
+  try {
+    const res = await fetch(`${API_BASE}/curriculum/swap-days`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date1: date1,
+        date2: date2,
+        day_num1: num1,
+        day_num2: num2
+      })
+    });
+    if (!res.ok) {
+      console.warn('Backend returned non-ok for swap-days');
+    }
+  } catch (err) {
+    console.error('Failed to persist day swap to server:', err);
+    showToast('⚠️ Hinweis: Tausch konnte nicht online gespeichert werden.', 'warning');
+  }
+}
+
+async function resetCurriculumSwaps() {
+  try {
+    const res = await fetch(`${API_BASE}/curriculum/reset-swaps`, {
+      method: 'POST'
+    });
+    if (res.ok) {
+      try {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('sl_curr_cache_')) {
+            localStorage.removeItem(k);
+          }
+        }
+      } catch (_) {}
+
+      _cachedRoadmapData = null;
+      await openCurriculumRoadmapModal();
+
+      const currentDate = state.targetDate || '2026-09-14';
+      if (typeof loadScienceRhythm === 'function') {
+        loadScienceRhythm(currentDate);
+      }
+
+      showToast('✅ Alle Tage auf die originale didaktische Reihenfolge zurückgesetzt!', 'success');
+    } else {
+      showToast('⚠️ Fehler beim Zurücksetzen der Reihenfolge.', 'warning');
+    }
+  } catch (err) {
+    console.error('Error resetting swaps:', err);
+    showToast('⚠️ Netzwerkfehler beim Zurücksetzen.', 'warning');
+  }
 }
 
 function handleFilterRoadmap(query) {
@@ -5226,6 +5562,10 @@ window.renderPageRoadmap = renderPageRoadmap;
 window.renderPageAnalytics = renderPageAnalytics;
 window.handleSyncCalendarUrlPage = handleSyncCalendarUrlPage;
 window.handleAddManualActivityFromPage = handleAddManualActivityFromPage;
+window.swapCurriculumDays = swapCurriculumDays;
+window.resetCurriculumSwaps = resetCurriculumSwaps;
+window.handleQuickSwapDay = handleQuickSwapDay;
+window.initRoadmapDragAndDrop = initRoadmapDragAndDrop;
 
 
 

@@ -1027,6 +1027,36 @@ def get_curriculum_roadmap_endpoint() -> CurriculumRoadmapResponse:
     return CurriculumRoadmapResponse(**res)
 
 
+class CurriculumSwapDaysRequest(BaseModel):
+    date1: str
+    date2: str
+    day_num1: Optional[int] = None
+    day_num2: Optional[int] = None
+
+@router.post(
+    "/curriculum/swap-days",
+    summary="Swap learning packages between two roadmap days",
+)
+def swap_curriculum_days_endpoint(req: CurriculumSwapDaysRequest):
+    from app.db import repository
+    res = repository.swap_curriculum_days(
+        date1=req.date1,
+        date2=req.date2,
+        day_num1=req.day_num1,
+        day_num2=req.day_num2,
+    )
+    return res
+
+
+@router.post(
+    "/curriculum/reset-swaps",
+    summary="Reset all curriculum day swaps back to original chronological order",
+)
+def reset_curriculum_swaps_endpoint():
+    from app.db import repository
+    return repository.reset_curriculum_schedule_overrides()
+
+
 # ============================================================================
 # PHASE 4: ANKI DESKTOP DIRECT SYNC (No AnkiWeb, Automatic Progress)
 # ============================================================================

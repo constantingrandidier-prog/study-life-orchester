@@ -639,3 +639,102 @@ def restore_rhythm_action(
             """, (user_id, source_date))
 
     return {"status": "restored", "source_date": source_date, "block_id": block_id}
+
+
+# ============================================================================
+# CURRICULUM DAY SWAPS & SCHEDULE OVERRIDES
+# ============================================================================
+
+def get_curriculum_schedule_overrides(user_id: str = "student") -> Dict[str, int]:
+    """Returns mapping of target_date -> assigned_day_number (e.g. {'2026-09-17': 5, '2026-09-18': 4})."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS curriculum_schedule_overrides (
+                user_id TEXT NOT NULL DEFAULT 'student',
+                target_date TEXT NOT NULL,
+                assigned_day_number INTEGER NOT NULL,
+                PRIMARY KEY (user_id, target_date)
+            );
+        """)
+        cursor.execute("""
+            SELECT target_date, assigned_day_number
+            FROM curriculum_schedule_overrides
+            WHERE user_id = ?;
+        """, (user_id,))
+        return {row["target_date"]: row["assigned_day_number"] for row in cursor.fetchall()}
+
+
+def save_curriculum_schedule_override(
+    target_date: str,
+    assigned_day_number: int,
+    user_id: str = "student",
+) -> None:
+    """Saves or updates an assigned day number for a target date."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO curriculum_schedule_overrides (user_id, target_date, assigned_day_number)
+            VALUES (?, ?, ?)
+            ON CONFLICT(user_id, target_date) DO UPDATE SET
+                assigned_day_number = excluded.assigned_day_number;
+        """, (user_id, target_date, assigned_day_number))
+
+
+def swap_curriculum_days(
+    date1: str,
+    date2: str,
+    day_num1: Optional[int] = None,
+    day_num2: Optional[int] = None,
+    user_id: str = "student",
+) -> Dict[str, Any]:
+    """
+    Swaps learning packages between two dates.
+    If day_num1 and day_num2 are provided, date1 gets day_num2 and date2 gets day_num1.
+    Otherwise looks up current assignments and swaps them.
+    """
+    current_overrides = get_curriculum_schedule_overrides(user_id=user_id)
+    actual_num1 = day_num1 if day_num1 is not None else current_overrides.get(date1)
+    actual_num2 = day_num2 if day_num2 is not None else current_overrides.get(date2)
+
+    if actual_num1 is None or actual_num2 is None:
+        # Fallback: calculate canonical active day numbers from SEMESTER_START_DATE (2026-09-14)
+        from datetime import datetime as dt
+        d1 = dt.strptime(date1, "%Y-%m-%d").date()
+        d2 = dt.strptime(date2, "%Y-%m-%d").date()
+        start = dt.strptime("2026-09-14", "%Y-%m-%d").date()
+
+        def get_canonical_day_num(target):
+            cur = start
+            active_cnt = 0
+            while cur <= target:
+                if cur.weekday() != 6:
+                    active_cnt += 1
+                cur += timedelta(days=1)
+            return active_cnt
+
+        from datetime import timedelta
+        if actual_num1 is None:
+            actual_num1 = get_canonical_day_num(d1)
+        if actual_num2 is None:
+            actual_num2 = get_canonical_day_num(d2)
+
+    # Swap assignments: date1 gets actual_num2, date2 gets actual_num1
+    save_curriculum_schedule_override(date1, actual_num2, user_id=user_id)
+    save_curriculum_schedule_override(date2, actual_num1, user_id=user_id)
+
+    return {
+        "status": "ok",
+        "swapped": [
+            {"date": date1, "assigned_day_number": actual_num2, "previous_day_number": actual_num1},
+            {"date": date2, "assigned_day_number": actual_num1, "previous_day_number": actual_num2},
+        ],
+    }
+
+
+def reset_curriculum_schedule_overrides(user_id: str = "student") -> Dict[str, Any]:
+    """Clears all custom curriculum day swaps back to chronological sequence."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM curriculum_schedule_overrides WHERE user_id = ?;", (user_id,))
+    return {"status": "reset", "user_id": user_id}

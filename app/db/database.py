@@ -251,6 +251,16 @@ def init_db() -> None:
             );
         """)
 
+        # 11. Curriculum Schedule Overrides (Day Swaps & Custom Ordering)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS curriculum_schedule_overrides (
+                user_id TEXT NOT NULL DEFAULT 'student',
+                target_date TEXT NOT NULL,
+                assigned_day_number INTEGER NOT NULL,
+                PRIMARY KEY (user_id, target_date)
+            );
+        """)
+
         # Insert default student profile if not present
         cursor.execute("SELECT id FROM user_profile WHERE username = 'student'")
         if not cursor.fetchone():

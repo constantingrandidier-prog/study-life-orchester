@@ -635,7 +635,7 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
 
 ROADMAP_CACHE_FILE = Path(__file__).resolve().parent.parent / "data" / "cached_curriculum_roadmap.json"
 
-def generate_curriculum_roadmap() -> Dict[str, Any]:
+def _get_canonical_roadmap() -> Dict[str, Any]:
     """Generate the full deterministic semester roadmap for 2. Studienjahr with concept chunking and lecture synergy."""
     global _CACHED_ROADMAP
     if _CACHED_ROADMAP is not None:
@@ -977,6 +977,62 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
     return _CACHED_ROADMAP
 
 
+def generate_curriculum_roadmap() -> Dict[str, Any]:
+    """Generate the semester roadmap for 2. Studienjahr, dynamically applying user day swaps & schedule overrides."""
+    base_data = _get_canonical_roadmap()
+    roadmap = {k: v for k, v in base_data.items() if k != "schedule"}
+    schedule_days = [dict(d) for d in base_data["schedule"]]
+
+    try:
+        from app.db.repository import get_curriculum_schedule_overrides
+        overrides = get_curriculum_schedule_overrides()
+        if overrides:
+            packages_by_canonical_day = {}
+            for d in schedule_days:
+                if not d.get("is_rest_day") and d.get("day_number"):
+                    packages_by_canonical_day[d["day_number"]] = {
+                        "target_cards": d["target_cards"],
+                        "adjusted_target_cards": d.get("adjusted_target_cards", d["target_cards"]),
+                        "topic_slots": d["topic_slots"],
+                        "current_module": d["current_module"],
+                        "summary": d["summary"],
+                        "synergy_headline": d.get("synergy_headline"),
+                        "recommended_study_sequence": d.get("recommended_study_sequence"),
+                    }
+
+            for d in schedule_days:
+                d_str = d.get("date")
+                if not d.get("is_rest_day") and d_str in overrides:
+                    assigned_num = overrides[d_str]
+                    if assigned_num in packages_by_canonical_day:
+                        pkg = packages_by_canonical_day[assigned_num]
+                        d["target_cards"] = pkg["target_cards"]
+                        d["adjusted_target_cards"] = pkg["adjusted_target_cards"]
+                        d["topic_slots"] = pkg["topic_slots"]
+                        d["current_module"] = pkg["current_module"]
+                        d["summary"] = pkg["summary"]
+                        d["synergy_headline"] = pkg["synergy_headline"]
+                        d["recommended_study_sequence"] = pkg["recommended_study_sequence"]
+                        if assigned_num != d.get("day_number"):
+                            d["is_swapped"] = True
+                            d["swapped_with_day"] = assigned_num
+                        d["original_day_number"] = assigned_num
+
+            # Recalculate cumulative cards & progress percentages cleanly
+            total_curriculum_cards = base_data.get("total_cards", 9633)
+            running_cum = 0
+            for d in schedule_days:
+                if not d.get("is_rest_day"):
+                    running_cum += d.get("target_cards", 0)
+                    d["cumulative_cards_learned"] = running_cum
+                    d["curriculum_progress_pct"] = round((running_cum / max(1, total_curriculum_cards)) * 100, 1)
+    except Exception as e:
+        print("Curriculum override apply error:", e)
+
+    roadmap["schedule"] = schedule_days
+    return roadmap
+
+
 def calculate_dynamic_daily_quota(
     target_date: date,
     user_id: str = "student",
@@ -1112,19 +1168,28 @@ def get_daily_curriculum_assignment(
                     "curriculum_progress_pct": round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1),
                 }
 
-            # Evaluate dynamic quota based on scheduled quota and user progress
-            scheduled_quota = day["target_cards"]
-            dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=scheduled_quota)
-            adj_target = dyn["adjusted_target_cards"]
-
-            # Master exam pacing target alignment:
-            # If multi-topic greedy packing caused scheduled_quota to exceed master daily target (e.g. 117 instead of 101):
+            # Master exam pacing target
             master_dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=DAILY_CARD_QUOTA)
             master_pacing = master_dyn["adjusted_target_cards"]
 
-            if len(day["topic_slots"]) > 1 and adj_target > master_pacing:
-                adj_target = master_pacing
-                dyn = master_dyn
+            # Evaluate dynamic quota based on scheduled quota and user progress
+            scheduled_quota = day["target_cards"]
+            if day.get("is_swapped"):
+                adj_target = scheduled_quota
+                dyn = {
+                    "base_quota": scheduled_quota,
+                    "adjusted_target_cards": scheduled_quota,
+                    "quota_adjustment_reason": f"Manuell getauschtes Lernpaket von Tag {day.get('swapped_with_day', day.get('original_day_number'))}.",
+                    "surplus_deduction": 0,
+                    "deficit_distributed": 0,
+                }
+            else:
+                dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=scheduled_quota)
+                adj_target = dyn["adjusted_target_cards"]
+
+                if len(day["topic_slots"]) > 1 and adj_target > master_pacing:
+                    adj_target = master_pacing
+                    dyn = master_dyn
 
             day_copy = dict(day)
             day_copy["base_quota"] = dyn["base_quota"]

@@ -509,6 +509,9 @@ class DailyCurriculumAssignment(BaseModel):
     days_until_exam: int = Field(0, description="Days remaining until the exam")
     revision_buffer_days: int = Field(15, description="Free buffer days before exam after completing all 9,633 cards")
     tomorrow_preview: Optional[Dict[str, Any]] = Field(None, description="Preview of tomorrow's lecture and card assignments")
+    is_swapped: Optional[bool] = Field(False, description="True if learning package was swapped by user")
+    swapped_with_day: Optional[int] = Field(None, description="Original canonical day number of the swapped package")
+    original_day_number: Optional[int] = Field(None, description="Canonical day number before swap")
 
 
 class CurriculumModuleMilestone(BaseModel):

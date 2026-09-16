@@ -2222,6 +2222,72 @@ body {
   border-radius: var(--radius-xs);
   font-size: 12px;
   gap: 1rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.roadmap-day-row.draggable-active {
+  cursor: grab;
+}
+
+.roadmap-day-row.is-dragging {
+  opacity: 0.45;
+  border: 1.5px dashed #58a6ff;
+  background: rgba(56, 139, 253, 0.08);
+}
+
+.roadmap-day-row.is-dragging-touch {
+  opacity: 0.95;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 16px rgba(88, 166, 255, 0.45);
+  border: 1.5px solid #58a6ff !important;
+  background: #1c2128 !important;
+  transform: scale(1.02);
+  z-index: 1000;
+  cursor: grabbing;
+}
+
+.roadmap-day-row.drag-over-highlight {
+  border-color: #58a6ff !important;
+  background: rgba(56, 139, 253, 0.15) !important;
+  transform: translateY(2px);
+}
+
+.roadmap-drag-handle {
+  cursor: grab;
+  color: var(--text-dim);
+  font-size: 16px;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.roadmap-drag-handle:hover, .roadmap-drag-handle:active {
+  color: #58a6ff;
+  background: rgba(56, 139, 253, 0.12);
+}
+
+.roadmap-quick-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.roadmap-quick-btn:hover {
+  color: #58a6ff;
+  border-color: rgba(56, 139, 253, 0.3);
+  background: rgba(56, 139, 253, 0.1);
 }
 
 .roadmap-day-row.rest-day {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="StudyLife Orchestrator - Professioneller akademischer Tages- und Lernplaner für Studierende.">
-  <link rel="stylesheet" href="/static/style.css?v=11.0">
+  <link rel="stylesheet" href="/static/style.css?v=13.0">
   <link rel="manifest" href="/static/manifest.json">
   <meta name="theme-color" content="#161b22">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,13 +13,101 @@
 </head>
 <body>
 
+  <!-- Slide-Over Navigation & Config Drawer (Off-Canvas Hamburger Menu) -->
+  <div id="sideMenuBackdrop" class="side-menu-backdrop" onclick="toggleSideMenu(false)">
+    <aside id="sideMenuDrawer" class="side-menu-drawer" onclick="event.stopPropagation()">
+      <div class="side-menu-header">
+        <div class="side-menu-brand">
+          <div class="brand-badge">SL</div>
+          <div>
+            <div class="side-menu-title">StudyLife Orchestrator</div>
+            <div class="side-menu-sub">Humanmedizin UZH • HS 2025</div>
+          </div>
+        </div>
+        <button type="button" class="btn-side-menu-close" onclick="toggleSideMenu(false)" title="Menü schliessen">✕</button>
+      </div>
+
+      <div class="side-menu-body">
+        <div class="side-menu-section-label">HAUPTSEITEN</div>
+        <nav class="side-menu-nav">
+          <button type="button" class="side-menu-item active" data-page="page-today" onclick="navigateToPage('page-today')">
+            <span class="side-item-icon">🎯</span>
+            <div class="side-item-text">
+              <span class="side-item-title">Tages-Plan</span>
+              <span class="side-item-desc">Tagesziel, Stundenplan &amp; Didaktik</span>
+            </div>
+            <span class="side-item-badge" id="sideBadgeQuota">100</span>
+          </button>
+
+          <button type="button" class="side-menu-item" data-page="page-advisor" onclick="navigateToPage('page-advisor')">
+            <span class="side-item-icon">🔍</span>
+            <div class="side-item-text">
+              <span class="side-item-title">Vorlesungs-Berater</span>
+              <span class="side-item-desc">Finde Vorlesungen &amp; Video-Tipps</span>
+            </div>
+            <span class="side-item-badge badge-accent">NEU</span>
+          </button>
+
+          <button type="button" class="side-menu-item" data-page="page-roadmap" onclick="navigateToPage('page-roadmap')">
+            <span class="side-item-icon">🗺️</span>
+            <div class="side-item-text">
+              <span class="side-item-title">Semester-Roadmap</span>
+              <span class="side-item-desc">6 Module • 97 Tage bis Examen</span>
+            </div>
+          </button>
+
+          <button type="button" class="side-menu-item" data-page="page-analytics" onclick="navigateToPage('page-analytics')">
+            <span class="side-item-icon">📊</span>
+            <div class="side-item-text">
+              <span class="side-item-title">Anki &amp; Retention</span>
+              <span class="side-item-desc">14-Tage-Radar &amp; Notfall-Triage</span>
+            </div>
+            <span class="side-item-badge" id="sideBadgeDue">102 fällig</span>
+          </button>
+
+          <button type="button" class="side-menu-item" data-page="page-setup" onclick="navigateToPage('page-setup')">
+            <span class="side-item-icon">⚙️</span>
+            <div class="side-item-text">
+              <span class="side-item-title">Stundenplan &amp; Setup</span>
+              <span class="side-item-desc">iCal-URL, VAM-Status &amp; Einstellungen</span>
+            </div>
+          </button>
+        </nav>
+
+        <div class="side-menu-section-label" style="margin-top: 1.5rem;">SCHNELLAKTIONEN</div>
+        <div class="side-menu-actions">
+          <button type="button" class="side-action-btn" onclick="handleSyncLocalAnki(); toggleSideMenu(false);">
+            <span>⚡</span> Anki jetzt synchronisieren
+          </button>
+          <button type="button" class="side-action-btn" onclick="loadCurriculumToday(true); toggleSideMenu(false);">
+            <span>🔄</span> Tagesplan neu laden
+          </button>
+        </div>
+      </div>
+
+      <div class="side-menu-footer">
+        <div style="color: #3fb950; font-weight: 600;">🟢 Anki Daemon aktiv</div>
+        <div style="font-size: 10.5px; color: var(--text-dim); margin-top: 3px;">StudyLife Orchestrator v13.0</div>
+      </div>
+    </aside>
+  </div>
+
   <!-- Minimalist Executive Header -->
   <header class="app-header">
-    <div class="brand-wrapper">
-      <div class="brand-badge">SL</div>
-      <div>
-        <h1 class="brand-title">StudyLife Orchestrator</h1>
-        <div class="brand-subtitle">Akademischer Tages- und Lernplaner</div>
+    <div class="header-left">
+      <button type="button" class="btn-hamburger" id="btnOpenSideMenu" onclick="toggleSideMenu(true)" title="Menü öffnen (☰)">
+        <span class="hamburger-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+      <div class="brand-wrapper" onclick="navigateToPage('page-today')" style="cursor: pointer;" title="Zum Tagesplan">
+        <div class="brand-badge">SL</div>
+        <div>
+          <h1 class="brand-title">StudyLife Orchestrator</h1>
+          <div class="brand-subtitle">Akademischer Tages- und Lernplaner</div>
+        </div>
       </div>
     </div>
 
@@ -42,32 +130,35 @@
 
       <div class="weekday-badge" id="headerWeekdayDisplay">Montag, 14. September 2026</div>
 
-      <button class="btn-secondary" id="btnRefresh" title="Zeitplan neu synchronisieren">Aktualisieren</button>
-      <button type="button" class="btn-primary" id="btnOpenConfigDrawer" onclick="toggleConfigDrawer(true)" title="Stundenplan-Import, Kalender-URL &amp; VAM Einstellungen" style="font-size: 11.5px; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">
-        <span>⚙️</span> <span>Stundenplan &amp; Setup</span>
+      <button type="button" class="btn-header-sync" id="btnHeaderAnkiSync" onclick="handleSyncLocalAnki()" title="Klicke um Anki jetzt live zu synchronisieren">
+        <span class="sync-dot pulse"></span>
+        <span id="headerSyncText">⚡ Anki Live: 102 fällig</span>
       </button>
     </div>
   </header>
 
-  <!-- Top Navigation Bar & Multi-Page View Switcher -->
+  <!-- Top Navigation Bar & Multi-Page View Switcher (Segmented Control) -->
   <nav class="app-top-nav" role="navigation" aria-label="Hauptnavigation">
-    <button type="button" class="nav-tab-btn active" id="navBtnToday" data-page="page-today" onclick="switchAppPage('page-today')">
-      <span>🎯</span> <span>Tages-Plan</span>
-      <span class="nav-tab-badge" id="navBadgeQuota">100</span>
-    </button>
-    <button type="button" class="nav-tab-btn" id="navBtnAdvisor" data-page="page-advisor" onclick="switchAppPage('page-advisor')">
-      <span>🔍</span> <span>Vorlesungs-Berater</span>
-      <span class="nav-tab-badge" style="background: rgba(88, 166, 255, 0.25); color: #58a6ff;">NEU</span>
-    </button>
-    <button type="button" class="nav-tab-btn" id="navBtnRoadmap" data-page="page-roadmap" onclick="switchAppPage('page-roadmap')">
-      <span>🗺️</span> <span>Semester-Roadmap</span>
-    </button>
-    <button type="button" class="nav-tab-btn" id="navBtnAnalytics" data-page="page-analytics" onclick="switchAppPage('page-analytics')">
-      <span>📊</span> <span>Anki &amp; Retention</span>
-    </button>
-    <button type="button" class="nav-tab-btn" id="navBtnSetup" data-page="page-setup" onclick="switchAppPage('page-setup')">
-      <span>⚙️</span> <span>Stundenplan &amp; Setup</span>
-    </button>
+    <div class="nav-segmented-control">
+      <button type="button" class="nav-tab-btn active" id="navBtnToday" data-page="page-today" onclick="switchAppPage('page-today')">
+        <span>🎯</span> <span>Tages-Plan</span>
+        <span class="nav-tab-badge" id="navBadgeQuota">100</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navBtnAdvisor" data-page="page-advisor" onclick="switchAppPage('page-advisor')">
+        <span>🔍</span> <span>Vorlesungs-Berater</span>
+        <span class="nav-tab-badge badge-accent">NEU</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navBtnRoadmap" data-page="page-roadmap" onclick="switchAppPage('page-roadmap')">
+        <span>🗺️</span> <span>Semester-Roadmap</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navBtnAnalytics" data-page="page-analytics" onclick="switchAppPage('page-analytics')">
+        <span>📊</span> <span>Anki &amp; Retention</span>
+        <span class="nav-tab-badge" id="navBadgeDue" style="display: none;">102</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navBtnSetup" data-page="page-setup" onclick="switchAppPage('page-setup')">
+        <span>⚙️</span> <span>Setup</span>
+      </button>
+    </div>
   </nav>
 
   <!-- =========================================================================
@@ -93,7 +184,7 @@
           <button type="button" class="btn-secondary" id="btnRefreshCurriculum" onclick="loadCurriculumToday(true)" style="font-size: 11.5px; padding: 0.35rem 0.65rem;" title="Lernauftrag neu laden">
             🔄 Aktualisieren
           </button>
-          <button type="button" class="btn-primary" onclick="openCurriculumRoadmapModal()" style="font-size: 12px; padding: 0.35rem 0.8rem; background: linear-gradient(135deg, #1f6feb, #238636); border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+          <button type="button" class="btn-primary" onclick="switchAppPage('page-roadmap')" style="font-size: 12px; padding: 0.35rem 0.8rem; background: linear-gradient(135deg, #1f6feb, #238636); border: none; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
             <span>🗺️</span> Roadmap
           </button>
           <button type="button" class="btn-pacing-joker" id="btnToggleJokerDay" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Diesen Tag als Ruhetag markieren">
@@ -1344,7 +1435,7 @@
     <span id="toastText">Aktion erfolgreich</span>
   </div>
 
-  <script src="/static/app.js?v=11.0"></script>
+  <script src="/static/app.js?v=13.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

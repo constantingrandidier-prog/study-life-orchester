@@ -2050,6 +2050,20 @@ async function loadAnkiWeaknesses() {
       dueEl.textContent = dueCount;
     }
 
+    const headerSyncText = document.getElementById('headerSyncText');
+    if (headerSyncText) {
+      headerSyncText.textContent = `⚡ Anki Live: ${dueCount} fällig`;
+    }
+    const sideBadgeDue = document.getElementById('sideBadgeDue');
+    if (sideBadgeDue) {
+      sideBadgeDue.textContent = `${dueCount} fällig`;
+    }
+    const navBadgeDue = document.getElementById('navBadgeDue');
+    if (navBadgeDue) {
+      navBadgeDue.textContent = dueCount;
+      navBadgeDue.style.display = dueCount > 0 ? 'inline-flex' : 'none';
+    }
+
     const baseNew = currentPacingData ? (currentPacingData.is_rest_day ? 0 : currentPacingData.daily_target_cards) : 100;
     const newTargetEl = document.getElementById('pacingNewTargetVal');
     if (newTargetEl) newTargetEl.textContent = baseNew;
@@ -3669,7 +3683,7 @@ state.selectedAdvisorLecture = null;
 
 async function loadAdvisorData(query = '') {
   try {
-    let url = `${CONFIG.API_BASE}/advisor/search?q=${encodeURIComponent(query)}`;
+    let url = `${API_BASE}/advisor/search?q=${encodeURIComponent(query)}`;
     if (state.advisorFilterMode && state.advisorFilterMode !== 'all') {
       url += `&mode=${encodeURIComponent(state.advisorFilterMode)}`;
     }
@@ -4127,8 +4141,108 @@ async function handleAddManualActivityFromPage() {
   if (title) title.value = '';
 }
 
+// ============================================================================
+// MULTI-PAGE VIEW ROUTER & HAMBURGER SIDE-MENU CONTROLLER
+// ============================================================================
+
+function switchAppPage(pageId) {
+  if (!pageId) return;
+
+  // 1. Hide all pages and reveal the active one
+  const pages = document.querySelectorAll('.app-page');
+  pages.forEach(p => {
+    p.classList.remove('active');
+  });
+
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add('active');
+  }
+
+  // 2. Update active states on top segmented control
+  const navBtns = document.querySelectorAll('.nav-tab-btn');
+  navBtns.forEach(btn => {
+    if (btn.getAttribute('data-page') === pageId) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // 3. Update active states in slide-over side menu
+  const sideItems = document.querySelectorAll('.side-menu-item');
+  sideItems.forEach(item => {
+    if (item.getAttribute('data-page') === pageId) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  // 4. Save state locally
+  try {
+    localStorage.setItem('study_current_page', pageId);
+  } catch (e) {}
+
+  // 5. Trigger page-specific data loaders
+  if (pageId === 'page-advisor') {
+    if (!state.advisorData) {
+      loadAdvisorData('');
+    }
+  } else if (pageId === 'page-roadmap') {
+    renderPageRoadmap();
+  } else if (pageId === 'page-analytics') {
+    renderPageAnalytics();
+  } else if (pageId === 'page-setup') {
+    const origInput = document.getElementById('calendarUrlInput');
+    const pageInput = document.getElementById('pageCalendarUrlInput');
+    if (origInput && pageInput && origInput.value) {
+      pageInput.value = origInput.value;
+    }
+  }
+
+  // 6. Smooth scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSideMenu(isOpen) {
+  const backdrop = document.getElementById('sideMenuBackdrop');
+  if (!backdrop) return;
+  if (isOpen) {
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  } else {
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function navigateToPage(pageId) {
+  switchAppPage(pageId);
+  toggleSideMenu(false);
+}
+
+// Global escape key listener to close menu drawer
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    toggleSideMenu(false);
+  }
+});
+
+// Restore previous page on startup if user refreshed while on a specific tab
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const savedPage = localStorage.getItem('study_current_page');
+    if (savedPage && savedPage !== 'page-today' && document.getElementById(savedPage)) {
+      switchAppPage(savedPage);
+    }
+  } catch (e) {}
+});
+
 // Window exports
 window.switchAppPage = switchAppPage;
+window.toggleSideMenu = toggleSideMenu;
+window.navigateToPage = navigateToPage;
 window.loadAdvisorData = loadAdvisorData;
 window.handleAdvisorSearch = handleAdvisorSearch;
 window.clearAdvisorSearch = clearAdvisorSearch;
@@ -4141,6 +4255,7 @@ window.renderPageRoadmap = renderPageRoadmap;
 window.renderPageAnalytics = renderPageAnalytics;
 window.handleSyncCalendarUrlPage = handleSyncCalendarUrlPage;
 window.handleAddManualActivityFromPage = handleAddManualActivityFromPage;
+
 
 
 

@@ -1399,17 +1399,26 @@
       }
     } catch (e) {}
   </script>
-  <script src="/static/app.js?v=18.0"></script>
+  <script src="/static/app.js?v=19.0"></script>
   <script>
+    // NUCLEAR SW RESET: Unregister ALL service workers unconditionally.
+    // The SW caused cache poisoning bugs. We disable it permanently.
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/static/sw.js')
-          .then(reg => {
-            console.log('PWA Service Worker registered:', reg.scope);
-            reg.update();
-          })
-          .catch(err => console.warn('PWA registration failed:', err));
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => {
+          reg.unregister();
+          console.log('SW unregistered:', reg.scope);
+        });
       });
+      // Also clear all SW caches
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => {
+            caches.delete(name);
+            console.log('Cache deleted:', name);
+          });
+        });
+      }
     }
   </script>
 </body>

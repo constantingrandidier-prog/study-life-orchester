@@ -3683,11 +3683,12 @@ window.addEventListener('hashchange', () => {
 state.advisorData = null;
 state.advisorFilterMode = 'all';
 state.advisorFilterModule = 'all';
+state.advisorTargetCards = 100;
 state.selectedAdvisorLecture = null;
 
 async function loadAdvisorData(query = '') {
   try {
-    let url = `${API_BASE}/advisor/search?q=${encodeURIComponent(query)}`;
+    let url = `${API_BASE}/advisor/search?q=${encodeURIComponent(query)}&cards=${state.advisorTargetCards}`;
     if (state.advisorFilterMode && state.advisorFilterMode !== 'all') {
       url += `&mode=${encodeURIComponent(state.advisorFilterMode)}`;
     }
@@ -3705,8 +3706,12 @@ async function loadAdvisorData(query = '') {
       countBadge.textContent = `${data.summary.total_matching} von ${data.summary.total_lectures} Vorlesungen`;
     }
 
+    // Set or refresh selected lecture
     if (query || !state.selectedAdvisorLecture) {
       state.selectedAdvisorLecture = data.top_match;
+    } else if (state.selectedAdvisorLecture && data.results) {
+      const refreshed = data.results.find(l => l.id === state.selectedAdvisorLecture.id);
+      if (refreshed) state.selectedAdvisorLecture = refreshed;
     }
 
     renderAdvisorHero(state.selectedAdvisorLecture);
@@ -3726,7 +3731,7 @@ function handleAdvisorSearch(query) {
   }
   advisorSearchTimer = setTimeout(() => {
     loadAdvisorData(query);
-  }, 150);
+  }, 120);
 }
 
 function clearAdvisorSearch() {
@@ -3735,6 +3740,33 @@ function clearAdvisorSearch() {
     input.value = '';
     handleAdvisorSearch('');
   }
+}
+
+function handleAdvisorTargetCardsChange(val) {
+  const num = parseInt(val, 10);
+  if (!isNaN(num) && num > 0) {
+    state.advisorTargetCards = num;
+    const searchInput = document.getElementById('advisorSearchInput');
+    loadAdvisorData(searchInput ? searchInput.value : '');
+  }
+}
+
+function setAdvisorTargetCards(cards, btnEl) {
+  state.advisorTargetCards = cards;
+  const input = document.getElementById('advisorTargetCardsInput');
+  if (input) input.value = cards;
+  document.querySelectorAll('.advisor-preset-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.borderColor = '';
+    b.style.color = '';
+  });
+  if (btnEl) {
+    btnEl.classList.add('active');
+    btnEl.style.borderColor = 'var(--accent-blue)';
+    btnEl.style.color = 'var(--accent-blue)';
+  }
+  const searchInput = document.getElementById('advisorSearchInput');
+  loadAdvisorData(searchInput ? searchInput.value : '');
 }
 
 function applyAdvisorChip(topic) {
@@ -3786,7 +3818,7 @@ function renderAdvisorHero(lect) {
       <div class="advisor-decision-card" style="text-align: center; padding: 2rem;">
         <span style="font-size: 32px;">🔍</span>
         <h3 style="color: var(--text-muted); margin-top: 0.5rem;">Keine Vorlesung gefunden</h3>
-        <p style="font-size: 12px; color: var(--text-dim);">Versuche einen anderen Suchbegriff wie z. B. Hämoglobin, Magen, EKG, Vitamine oder Calcium.</p>
+        <p style="font-size: 12px; color: var(--text-dim);">Versuche einen anderen Begriff (z. B. Hämoglobin, Manatschal, Magen, EKG, Vitamine, Sauerstoff).</p>
       </div>
     `;
     return;
@@ -3818,6 +3850,115 @@ function renderAdvisorHero(lect) {
     bannerText = '#79c0ff';
   }
 
+  // 1. Multi-Lecture Selector (When multiple lectures match query)
+  let multiMatchHtml = '';
+  if (state.advisorData && state.advisorData.top_matches && state.advisorData.top_matches.length > 1) {
+    multiMatchHtml = `
+      <div class="advisor-top-matches-bar">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 11.5px; font-weight: 700; color: #58a6ff; display: flex; align-items: center; gap: 0.35rem;">
+            <span>📚</span> Passende Vorlesungen (${state.advisorData.top_matches.length} Treffer):
+          </span>
+          <span style="font-size: 11px; color: var(--text-dim);">Klicke zum Umschalten</span>
+        </div>
+        <div class="advisor-top-matches-pills">
+          ${state.advisorData.top_matches.map((m, idx) => {
+            const isActive = lect && lect.id === m.id;
+            const recShort = m.recommendation.toLowerCase().includes('skip') ? '🛑 Skip' : m.recommendation;
+            return `
+              <button type="button" class="advisor-match-pill ${isActive ? 'active' : ''}" onclick="selectAdvisorLecture('${m.id}')" title="${escapeHtml(m.title)}">
+                <span>${idx + 1}.</span>
+                <span style="max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(m.title)}</span>
+                <span style="font-size: 10px; opacity: 0.85; background: rgba(0,0,0,0.25); padding: 0.1rem 0.3rem; border-radius: 3px;">${recShort}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // 2. Dynamic Timestamp Guidance Hero Box
+  const ts = lect.timestamp_guidance || {
+    target_cards: state.advisorTargetCards,
+    total_lecture_cards: lect.total_anki_cards || 200,
+    start_timestamp: '00:00',
+    end_timestamp: '85:00',
+    video_minutes_raw: 85,
+    video_minutes_effective: 70,
+    saved_minutes: 0,
+    guidance_text: 'Schau die empfohlene Vorlesung nach Bedarf.',
+    annotated_chapters: lect.chapters || []
+  };
+
+  const tsHeroHtml = `
+    <div class="advisor-ts-hero-box">
+      <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
+        <span style="font-size: 24px;">⏱️</span>
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+            <span>Relevanter Video-Abschnitt für deine <strong>${ts.target_cards}</strong> Anki-Karten:</span>
+            <span class="advisor-ts-timecode">${ts.start_timestamp} – ${ts.end_timestamp}</span>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4;">
+            ${escapeHtml(ts.guidance_text)}
+          </div>
+        </div>
+      </div>
+      <div class="advisor-ts-savings-badge" title="Ersparnis gegenüber der 90-minütigen Gesamtvorlesung">
+        <span>⚡</span>
+        <span>${ts.saved_minutes > 0 ? `+${ts.saved_minutes} Min gespart!` : `${ts.video_minutes_effective} Min Fokus`}</span>
+      </div>
+    </div>
+  `;
+
+  // 3. Detailed Chapters with Timestamps & Cards Mapping
+  let chaptersHtml = '';
+  const chaptersList = ts.annotated_chapters && ts.annotated_chapters.length > 0 ? ts.annotated_chapters : (lect.chapters || []);
+  if (chaptersList && chaptersList.length > 0) {
+    chaptersHtml = `
+      <div class="advisor-chapters-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem; flex-wrap: wrap; gap: 0.35rem;">
+          <strong style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 0.35rem;">
+            <span>📋</span> Kapitel- &amp; Timestamp-Aufschlüsselung (${lect.total_anki_cards || 200} Anki-Karten):
+          </strong>
+          <span style="font-size: 11px; color: var(--text-dim);">Exakte Timecodes aus Podcast-Aufzeichnung</span>
+        </div>
+        ${chaptersList.map((chap, idx) => {
+          const isNeeded = chap.is_needed_for_target !== false;
+          const statusClass = isNeeded ? 'needed' : 'skipped';
+          return `
+            <div class="advisor-chapter-card ${statusClass}">
+              <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 220px;">
+                <span class="advisor-chapter-time" title="Klicke zum Kopieren" onclick="copyAnkiFactText('${encodeURIComponent(chap.start + ' - ' + chap.end)}', this)">
+                  ⏱️ ${chap.start} – ${chap.end}
+                </span>
+                <div style="flex: 1;">
+                  <div style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">
+                    ${escapeHtml(chap.title)}
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-dim); margin-top: 0.15rem;">
+                    📄 ${escapeHtml(chap.slide_range || '')} • 🃏 <strong>${chap.cards_count} Karten</strong> (Bereich: ${chap.cards_range || ''})
+                  </div>
+                  <div style="display: flex; gap: 0.25rem; flex-wrap: wrap; margin-top: 0.35rem;">
+                    ${(chap.topics || []).map(t => `<span class="advisor-topic-tag">${escapeHtml(t)}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+                <span style="font-size: 11px; font-weight: 600; color: ${isNeeded ? '#56d364' : 'var(--text-dim)'}; background: ${isNeeded ? 'rgba(63, 185, 80, 0.12)' : 'rgba(255,255,255,0.05)'}; padding: 0.2rem 0.5rem; border-radius: 4px;">
+                  ${escapeHtml(chap.coverage_label || (isNeeded ? '🟢 Ansehen' : '⚪ Überspringen'))}
+                </span>
+                <span style="font-size: 10.5px; color: var(--text-dim);">Dauer: ${chap.duration_min} Min</span>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // 4. Pure-Anki Facts
   let factsHtml = '';
   if (lect.anki_facts && lect.anki_facts.length > 0) {
     factsHtml = `
@@ -3866,6 +4007,7 @@ function renderAdvisorHero(lect) {
   }
 
   container.innerHTML = `
+    ${multiMatchHtml}
     <div class="advisor-decision-card" style="border-left: 4px solid ${borderColor};">
       
       <div class="advisor-decision-header">
@@ -3897,6 +4039,8 @@ function renderAdvisorHero(lect) {
           </span>
         </div>
       </div>
+
+      ${tsHeroHtml}
 
       <div class="advisor-metrics-grid">
         <div class="advisor-metric-box">
@@ -3935,6 +4079,7 @@ function renderAdvisorHero(lect) {
         ${escapeHtml(lect.tradeoff_reason)}
       </div>
 
+      ${chaptersHtml}
       ${factsHtml}
       ${mediaHtml}
 
@@ -3966,14 +4111,18 @@ function renderAdvisorCatalog(lectures) {
     else if (is1_0x) badgeColor = '#3fb950';
     else if (isAudio) badgeColor = '#58a6ff';
 
+    const ts = l.timestamp_guidance;
+    const tsSnippet = ts ? `<span style="font-size: 11px; color: #56d364; font-family: monospace; margin-left: 0.4rem;">⏱️ ${ts.start_timestamp}–${ts.end_timestamp}</span>` : '';
+
     return `
       <div class="advisor-lecture-row" onclick="selectAdvisorLecture('${l.id}')" style="${isSelected ? 'background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.35);' : ''}">
         <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0;">
           <span style="font-size: 11px; color: var(--text-dim); font-family: monospace; min-width: 72px;">${l.date}</span>
           <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
             <strong style="color: var(--text-main); font-size: 13px;">${escapeHtml(l.title)}</strong>
+            ${tsSnippet}
             <div style="font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis;">
-              ${escapeHtml(l.module)} • ${escapeHtml(l.lecturer || '')}
+              ${escapeHtml(l.module)} • ${escapeHtml(l.lecturer || '')} • 🃏 ${l.total_anki_cards || 200} Karten
             </div>
           </div>
         </div>

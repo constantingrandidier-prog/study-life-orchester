@@ -59,15 +59,33 @@ def generate_daily_science_rhythm(
     lunch_duration_mins: int = 75,
     include_lecture: bool = True,
     curriculum_assignment: Optional[Dict[str, Any]] = None,
+    removed_block_ids: Optional[List[str]] = None,
+    postponed_blocks: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """
     Generates the scientific ultradian study schedule with precise time arithmetic.
     Fully customizable: start time, lunch break duration, lecture inclusion/skip.
     Integrates today's struggle cards, morning Anki focus, and afternoon lecture priming for tomorrow.
+    Supports dynamic block deletion and intelligent scheduling of postponed tasks from previous days.
     """
     t_date = target_date or date.today()
+    date_iso = t_date.isoformat()
     tagged_events = [tag_event_mandatory_status(ev) for ev in (events or [])]
     mandatory_events = [ev for ev in tagged_events if getattr(ev, "is_mandatory", False)]
+
+    # Load persistent removed and postponed actions if not explicitly passed
+    removed_set = set(removed_block_ids or [])
+    active_postponed = list(postponed_blocks if postponed_blocks is not None else [])
+
+    try:
+        from app.db.repository import get_rhythm_actions_for_date
+        db_actions = get_rhythm_actions_for_date(date_iso)
+        if not removed_block_ids:
+            removed_set.update(db_actions.get("removed_block_ids", []))
+        if postponed_blocks is None:
+            active_postponed.extend(db_actions.get("postponed_blocks", []))
+    except Exception:
+        pass
 
     if curriculum_assignment is None:
         try:
@@ -95,14 +113,28 @@ def generate_daily_science_rhythm(
     total_study_mins = 0
     total_pause_mins = 0
 
+    def add_block_if_active(b_dict: Dict[str, Any]) -> bool:
+        nonlocal cur_m, total_study_mins, total_pause_mins
+        bid = b_dict.get("id")
+        if bid and bid in removed_set:
+            return False
+        dur = b_dict.get("duration_minutes", 30)
+        s_time = _minutes_to_time(cur_m)
+        e_time = _minutes_to_time(cur_m + dur)
+        b_dict["start_time"] = s_time
+        b_dict["end_time"] = e_time
+        cur_m += dur
+        if b_dict.get("is_break"):
+            total_pause_mins += dur
+        else:
+            total_study_mins += dur
+        blocks.append(b_dict)
+        return True
+
     # 1. Block 1: Morning Reps
     dur_reps = 60
-    s_time = _minutes_to_time(cur_m)
-    e_time = _minutes_to_time(cur_m + dur_reps)
-    blocks.append({
+    add_block_if_active({
         "id": "block_morning_reps",
-        "start_time": s_time,
-        "end_time": e_time,
         "duration_minutes": dur_reps,
         "title": "Block 1: Morgen-Repetitionen (~100 Karten)",
         "subtitle": "Active Recall & Elvanse-Anflutung",
@@ -114,17 +146,11 @@ def generate_daily_science_rhythm(
         "is_break": False,
         "is_mandatory": False,
     })
-    cur_m += dur_reps
-    total_study_mins += dur_reps
 
     # 2. Pause 1
     dur_p1 = 15
-    s_time = _minutes_to_time(cur_m)
-    e_time = _minutes_to_time(cur_m + dur_p1)
-    blocks.append({
+    add_block_if_active({
         "id": "pause_1",
-        "start_time": s_time,
-        "end_time": e_time,
         "duration_minutes": dur_p1,
         "title": "Pause 1: Diffuse Mode (Kein Bildschirm!)",
         "subtitle": "Synaptische Konsolidierung & Hydratation",
@@ -136,17 +162,11 @@ def generate_daily_science_rhythm(
         "is_break": True,
         "is_mandatory": False,
     })
-    cur_m += dur_p1
-    total_pause_mins += dur_p1
 
     # 3. Block 2: Deep Encoding New Cards (Curriculum Today)
     dur_new = 105
-    s_time = _minutes_to_time(cur_m)
-    e_time = _minutes_to_time(cur_m + dur_new)
-    blocks.append({
+    add_block_if_active({
         "id": "block_new_cards",
-        "start_time": s_time,
-        "end_time": e_time,
         "duration_minutes": dur_new,
         "title": f"Block 2: {new_cards_target} Neue Karten HEUTE (Deep Encoding)",
         "subtitle": f"{slot_summary} • Vormittags-Fokus",
@@ -161,17 +181,11 @@ def generate_daily_science_rhythm(
         "topic_slots": today_slots,
         "today_summary": slot_summary,
     })
-    cur_m += dur_new
-    total_study_mins += dur_new
 
     # 4. Pause 2
     dur_p2 = 15
-    s_time = _minutes_to_time(cur_m)
-    e_time = _minutes_to_time(cur_m + dur_p2)
-    blocks.append({
+    add_block_if_active({
         "id": "pause_2",
-        "start_time": s_time,
-        "end_time": e_time,
         "duration_minutes": dur_p2,
         "title": "Pause 2: Gehirn-Reset",
         "subtitle": "Erfrischung & Bewegung",
@@ -183,18 +197,12 @@ def generate_daily_science_rhythm(
         "is_break": True,
         "is_mandatory": False,
     })
-    cur_m += dur_p2
-    total_pause_mins += dur_p2
 
     # 5. Optional Block 3: Lecture / Concept Stream
     if include_lecture:
         dur_lec = 60
-        s_time = _minutes_to_time(cur_m)
-        e_time = _minutes_to_time(cur_m + dur_lec)
-        blocks.append({
+        add_block_if_active({
             "id": "block_podcasts",
-            "start_time": s_time,
-            "end_time": e_time,
             "duration_minutes": dur_lec,
             "title": "Block 3: Transfer & Vormittags-Abschluss",
             "subtitle": "Skript-Abgleich / Offene Karten klären",
@@ -206,18 +214,12 @@ def generate_daily_science_rhythm(
             "is_break": False,
             "is_mandatory": False,
         })
-        cur_m += dur_lec
-        total_study_mins += dur_lec
 
     # 6. Lunch Break
     dur_lunch = max(20, min(120, lunch_duration_mins))
     lunch_badge = "Mensa (75m)" if dur_lunch >= 70 else (f"Express ({dur_lunch}m)" if dur_lunch <= 35 else f"Pause ({dur_lunch}m)")
-    s_time = _minutes_to_time(cur_m)
-    e_time = _minutes_to_time(cur_m + dur_lunch)
-    blocks.append({
+    add_block_if_active({
         "id": "pause_lunch",
-        "start_time": s_time,
-        "end_time": e_time,
         "duration_minutes": dur_lunch,
         "title": f"Mittagspause & Erholung ({dur_lunch} Min.)",
         "subtitle": "Proteinreiche Mahlzeit & Kognitiver Abstand",
@@ -229,10 +231,43 @@ def generate_daily_science_rhythm(
         "is_break": True,
         "is_mandatory": False,
     })
-    cur_m += dur_lunch
-    total_pause_mins += dur_lunch
 
-    # 7. Afternoon Slot
+    # 7. Postponed Tasks Injection (Scientific Slot: 14:00 Post-Lunch Auditory Prime Window)
+    for p in active_postponed:
+        p_id = p.get("id") or "postponed_task"
+        p_title = p.get("title") or "Verschobener Schritt"
+        p_dur = min(90, max(30, int(p.get("duration_minutes", 75) or 75)))
+        p_from = p.get("_postponed_from") or p.get("postponed_from") or "gestern"
+
+        clean_title = p_title.replace("Nachmittag: ", "").replace("[Nachhol-Block] ", "").strip()
+
+        add_block_if_active({
+            "id": f"postponed_{p_id}",
+            "original_id": p_id,
+            "duration_minutes": p_dur,
+            "title": f"⏩ [Nachhol-Block] {clean_title}",
+            "subtitle": f"Von {p_from} verschoben • Neuro-optimal: Nachmittags-Fokus (14:00)",
+            "focus_type": "postponed_catchup",
+            "icon": "⏩",
+            "color": "#f59f00",
+            "badge": "⏩ Von gestern verschoben (Optimal eingetaktet)",
+            "description": (
+                f"Wissenschaftlich optimal nach der Mittagspause eingetaktet: Dein Arbeitsgedächtnis "
+                f"ist jetzt ideal aufnahmefähig für die auditive Vorentlastung dieser verschobenen Vorlesung. "
+                f"{p.get('description') or ''}"
+            ),
+            "is_break": False,
+            "is_mandatory": False,
+            "is_postponed": True,
+            "postponed_from": p_from,
+            "vam_url": p.get("vam_url"),
+            "podcast_folder_name": p.get("podcast_folder_name"),
+            "slide_filename": p.get("slide_filename"),
+            "slide_rel_path": p.get("slide_rel_path"),
+            "tomorrow_lecture_title": p.get("tomorrow_lecture_title") or clean_title,
+        })
+
+    # 8. Mandatory Events or Regular Afternoon Lecture
     if mandatory_events:
         for m_ev in mandatory_events:
             ev_start_str = m_ev.start_time.strftime("%H:%M")
@@ -253,16 +288,12 @@ def generate_daily_science_rhythm(
                 "is_break": False,
                 "is_mandatory": True,
             })
-            # If mandatory event ends later than cur_m, update cur_m
             ev_end_m = _parse_time_to_minutes(ev_end_str)
             if ev_end_m > cur_m:
                 cur_m = ev_end_m
             total_study_mins += dur
     elif include_lecture:
         dur_afternoon = 90
-        s_time = _minutes_to_time(cur_m)
-        e_time = _minutes_to_time(cur_m + dur_afternoon)
-
         tom_title = tomorrow_data.get("primary_lecture_title") or "Vorlesung für MORGEN"
         tom_lec = tomorrow_data.get("primary_lecturer") or "Dozententeam"
         tom_date = tomorrow_data.get("primary_lecture_date")
@@ -275,10 +306,8 @@ def generate_daily_science_rhythm(
         subtitle_text = f"👨‍🏫 {tom_lec} • Bereitet {tom_cards} Anki-Karten für morgen vor"
         desc_text = f"Auditive Vorentlastung für morgen: Vorlesung '{tom_title}'{' (' + tom_date + ')' if tom_date else ''} auf {tom_speed}x sichten{' (' + tom_timecode + ')' if tom_timecode else ''}. Bereitet die morgigen {tom_cards} neuen Karten vor ({tom_topics}). Das Gehirn baut im Schlaf das Schema auf!"
 
-        blocks.append({
+        add_block_if_active({
             "id": "block_afternoon_flex",
-            "start_time": s_time,
-            "end_time": e_time,
             "duration_minutes": dur_afternoon,
             "title": title_text,
             "subtitle": subtitle_text,
@@ -300,29 +329,23 @@ def generate_daily_science_rhythm(
             "slide_filename": tomorrow_data.get("slide_filename"),
             "slide_rel_path": tomorrow_data.get("slide_rel_path"),
         })
-        cur_m += dur_afternoon
-        total_study_mins += dur_afternoon
 
-    # 8. Evening Lapse Review with Struggle Cards Integration
+    # 9. Evening Lapse Review with Struggle Cards Integration
     from app.services.anki_struggle_service import get_today_struggle_analysis
     struggle_data = get_today_struggle_analysis(t_date)
 
     dur_lapse = 30
-    s_time = _minutes_to_time(cur_m)
-    e_time = _minutes_to_time(cur_m + dur_lapse)
     struggle_count = struggle_data.get("total_struggles", 0)
     lapses_count = struggle_data.get("lapses_count", 0)
     hard_count = struggle_data.get("hard_count", 0)
-    
+
     lapse_subtitle = (
         f"{struggle_count} Problemkarten heute ({lapses_count}x Nochmal, {hard_count}x Schwer)"
         if struggle_count > 0 else "Nur heute mit 'Nochmal' bewertete Karten"
     )
 
-    blocks.append({
+    add_block_if_active({
         "id": "block_evening_lapse",
-        "start_time": s_time,
-        "end_time": e_time,
         "duration_minutes": dur_lapse,
         "title": "Tagesabschluss: Mini Lapse-Review",
         "subtitle": lapse_subtitle,
@@ -339,10 +362,8 @@ def generate_daily_science_rhythm(
         "anki_browse_url": struggle_data.get("anki_browse_url", "anki://search?q=rated:1:1"),
         "top_struggles": struggle_data.get("cards", [])[:5],
     })
-    cur_m += dur_lapse
-    total_study_mins += dur_lapse
 
-    # 9. Feierabend & Evening Free (starts exactly at the end of lapse review)
+    # 10. Feierabend & Evening Free (starts exactly at the end of scheduled work)
     feierabend_time = _minutes_to_time(cur_m)
     dur_evening = max(60, (22 * 60) - cur_m)
     blocks.append({
@@ -370,5 +391,7 @@ def generate_daily_science_rhythm(
         "total_study_minutes": total_study_mins,
         "total_pause_minutes": total_pause_mins,
         "mandatory_events_count": len(mandatory_events),
+        "removed_blocks_count": len(removed_set),
+        "postponed_blocks_count": len(active_postponed),
         "blocks": blocks,
     }

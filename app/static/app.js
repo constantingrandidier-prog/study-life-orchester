@@ -2254,7 +2254,9 @@ function closeAnkiDeckTreeModal() {
 window.closeAnkiDeckTreeModal = closeAnkiDeckTreeModal;
 
 function handleModalBackdropClick(event) {
-  closeAnkiDeckTreeModal();
+  if (event.target.id === 'ankiDeckTreeModal') closeAnkiDeckTreeModal();
+  if (event.target.id === 'curriculumRoadmapModal' && window.closeCurriculumRoadmapModal) window.closeCurriculumRoadmapModal();
+  if (event.target.id === 'rhythmBlockActionModal' && window.closeRhythmBlockActionModal) window.closeRhythmBlockActionModal();
 }
 window.handleModalBackdropClick = handleModalBackdropClick;
 
@@ -3842,11 +3844,53 @@ async function loadScienceRhythm(targetDate) {
     btn.classList.toggle('active', parseInt(btn.dataset.dur, 10) === lunchDur);
   });
 
+  const removedKey = `sl_rhythm_removed_${dateStr}`;
+  const localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
+  const remQuery = localRemoved.length ? `&removed_blocks=${encodeURIComponent(localRemoved.join(','))}` : '';
+
   try {
-    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}&start_time=${encodeURIComponent(startTime)}&lunch_duration=${lunchDur}&include_lecture=${incLec}`);
+    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}&start_time=${encodeURIComponent(startTime)}&lunch_duration=${lunchDur}&include_lecture=${incLec}${remQuery}`);
     if (!res.ok) return;
     const data = await res.json();
     
+    // Check if client has local postponed blocks for this date not yet returned by server
+    const postKey = `sl_rhythm_postponed_${dateStr}`;
+    const localPostponed = JSON.parse(localStorage.getItem(postKey) || '[]');
+    if (localPostponed.length > 0 && Array.isArray(data.blocks)) {
+      localPostponed.forEach(lp => {
+        const pId = `postponed_${lp.id}`;
+        if (!data.blocks.some(b => b.id === pId || b.id === lp.id)) {
+          const lunchIdx = data.blocks.findIndex(b => b.id === 'pause_lunch');
+          const insertIdx = lunchIdx >= 0 ? lunchIdx + 1 : Math.max(0, data.blocks.length - 2);
+          const cleanTitle = (lp.title || 'Verschobener Schritt').replace('Nachmittag: ', '').replace('[Nachhol-Block] ', '').trim();
+          data.blocks.splice(insertIdx, 0, {
+            id: pId,
+            original_id: lp.id,
+            duration_minutes: lp.duration_minutes || 75,
+            start_time: '14:00',
+            end_time: '15:15',
+            title: `⏩ [Nachhol-Block] ${cleanTitle}`,
+            subtitle: `Von ${lp._postponed_from || 'gestern'} verschoben • Neuro-optimal: Nachmittags-Fokus (14:00)`,
+            focus_type: 'postponed_catchup',
+            icon: '⏩',
+            color: '#f59f00',
+            badge: '⏩ Von gestern verschoben (Optimal eingetaktet)',
+            description: `Wissenschaftlich optimal nach der Mittagspause eingetaktet: ${lp.description || ''}`,
+            is_break: false,
+            is_mandatory: false,
+            is_postponed: true,
+            postponed_from: lp._postponed_from,
+            vam_url: lp.vam_url,
+            podcast_folder_name: lp.podcast_folder_name,
+            slide_filename: lp.slide_filename,
+            slide_rel_path: lp.slide_rel_path,
+            tomorrow_lecture_title: lp.tomorrow_lecture_title || cleanTitle,
+          });
+          data.postponed_blocks_count = (data.postponed_blocks_count || 0) + 1;
+        }
+      });
+    }
+
     // Update Feierabend badge
     const feierabendEl = document.getElementById('rhythmFeierabendBadge');
     if (feierabendEl && data.feierabend_time) {
@@ -3883,9 +3927,159 @@ function toggleRhythmBlockDone(dateStr, blockId) {
   loadScienceRhythm(dateStr);
 }
 
+function promptRhythmBlockAction(dateStr, blockId) {
+  if (!state.currentScienceRhythmData || !Array.isArray(state.currentScienceRhythmData.blocks)) return;
+  const block = state.currentScienceRhythmData.blocks.find(b => b.id === blockId);
+  if (!block) return;
+
+  state.activeRhythmActionTarget = {
+    date: dateStr,
+    block: block,
+  };
+
+  const modal = document.getElementById('rhythmBlockActionModal');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('rhythmActionModalBlockTitle');
+  const iconEl = document.getElementById('rhythmActionModalIcon');
+  const infoEl = document.getElementById('rhythmActionModalBlockInfo');
+  const subEl = document.getElementById('rhythmActionModalSubtitle');
+
+  if (titleEl) titleEl.textContent = block.title || 'Schritt';
+  if (iconEl) iconEl.textContent = block.icon || '⏱️';
+  if (infoEl) infoEl.textContent = `Geplante Zeit: ${block.start_time || ''} – ${block.end_time || ''} (${block.duration_minutes || 0} Minuten)`;
+  if (subEl) subEl.textContent = `Plan für ${formatGermanDate(dateStr)} • Schritt im Zeitorchester anpassen`;
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRhythmBlockActionModal() {
+  const modal = document.getElementById('rhythmBlockActionModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+  state.activeRhythmActionTarget = null;
+}
+
+async function executePostponeRhythmBlock() {
+  const target = state.activeRhythmActionTarget;
+  if (!target || !target.date || !target.block) {
+    closeRhythmBlockActionModal();
+    return;
+  }
+
+  // Compute tomorrow date string (YYYY-MM-DD)
+  const d = new Date(target.date + 'T12:00:00');
+  d.setDate(d.getDate() + 1);
+  const tomorrowIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  const blockId = target.block.id;
+  const sourceDate = target.date;
+
+  // 1. Update localStorage
+  const removedKey = `sl_rhythm_removed_${sourceDate}`;
+  const removed = JSON.parse(localStorage.getItem(removedKey) || '[]');
+  if (!removed.includes(blockId)) removed.push(blockId);
+  localStorage.setItem(removedKey, JSON.stringify(removed));
+
+  const postKey = `sl_rhythm_postponed_${tomorrowIso}`;
+  const postponed = JSON.parse(localStorage.getItem(postKey) || '[]');
+  postponed.push({
+    ...target.block,
+    _postponed_from: sourceDate,
+    _postponed_to: tomorrowIso,
+  });
+  localStorage.setItem(postKey, JSON.stringify(postponed));
+
+  closeRhythmBlockActionModal();
+
+  // 2. Call backend API
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: sourceDate,
+        action: 'postpone',
+        block_id: blockId,
+        target_date: tomorrowIso,
+        block_payload: target.block,
+      }),
+    });
+  } catch (err) {
+    console.warn('Backend rhythm postpone action failed:', err);
+  }
+
+  // 3. Reload science rhythm for source date
+  await loadScienceRhythm(sourceDate);
+
+  showToast('⏩ Schritt auf morgen verschoben! Er wurde für morgen optimal nach der Mittagspause eingetaktet.');
+}
+
+async function executeDeleteRhythmBlock() {
+  const target = state.activeRhythmActionTarget;
+  if (!target || !target.date || !target.block) {
+    closeRhythmBlockActionModal();
+    return;
+  }
+
+  const blockId = target.block.id;
+  const sourceDate = target.date;
+
+  // 1. Update localStorage
+  const removedKey = `sl_rhythm_removed_${sourceDate}`;
+  const removed = JSON.parse(localStorage.getItem(removedKey) || '[]');
+  if (!removed.includes(blockId)) removed.push(blockId);
+  localStorage.setItem(removedKey, JSON.stringify(removed));
+
+  closeRhythmBlockActionModal();
+
+  // 2. Call backend API
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: sourceDate,
+        action: 'delete',
+        block_id: blockId,
+      }),
+    });
+  } catch (err) {
+    console.warn('Backend rhythm delete action failed:', err);
+  }
+
+  // 3. Reload science rhythm for source date
+  await loadScienceRhythm(sourceDate);
+
+  showToast('🗑️ Schritt aus dem heutigen Plan gelöscht. Feierabend rückt nach vorne!');
+}
+
+async function restoreRhythmBlocks(dateStr) {
+  const removedKey = `sl_rhythm_removed_${dateStr}`;
+  localStorage.removeItem(removedKey);
+
+  try {
+    await fetch('/api/v1/schedule/rhythm-action/restore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+      }),
+    });
+  } catch (err) {
+    console.warn('Backend rhythm restore failed:', err);
+  }
+
+  await loadScienceRhythm(dateStr);
+  showToast('🔄 Tagesplan erfolgreich auf Ursprungszustand zurückgesetzt.');
+}
+
 function renderScienceRhythm(data) {
   const container = document.getElementById('scienceRhythmBlocksContainer');
   if (!container || !data || data.error || !Array.isArray(data.blocks)) return;
+
+  state.currentScienceRhythmData = data;
 
   const now = new Date();
   const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -3902,9 +4096,22 @@ function renderScienceRhythm(data) {
     if (localStorage.getItem(key) === 'true') doneCount++;
   });
 
+  const removedKey = `sl_rhythm_removed_${data.date}`;
+  const localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
+  const hasAdjustments = (data.removed_blocks_count > 0 || localRemoved.length > 0 || data.postponed_blocks_count > 0);
+
   const progressEl = document.getElementById('scienceRhythmProgressText');
   if (progressEl) {
-    progressEl.innerHTML = `<strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round((data.total_study_minutes || 0) / 60)}h ${(data.total_study_minutes || 0) % 60}m</strong> (ohne Puffer)`;
+    progressEl.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 0.5rem;">
+        <span><strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round((data.total_study_minutes || 0) / 60)}h ${(data.total_study_minutes || 0) % 60}m</strong> (ohne Puffer)</span>
+        ${hasAdjustments ? `
+          <button type="button" onclick="restoreRhythmBlocks('${data.date}')" class="btn-secondary" style="font-size: 10.5px; padding: 0.15rem 0.55rem; height: auto; border-color: rgba(56, 139, 253, 0.4); color: #79c0ff; cursor: pointer;" title="Stellt alle gelöschten oder verschobenen Schritte dieses Tages wieder her">
+            🔄 Plan wiederherstellen
+          </button>
+        ` : ''}
+      </div>
+    `;
   }
 
   let html = '';
@@ -3913,6 +4120,7 @@ function renderScienceRhythm(data) {
     const isBreak = b.is_break;
     const isMandatory = b.is_mandatory;
     const isLapseBlock = (b.id === 'block_evening_lapse');
+    const isPostponed = Boolean(b.is_postponed);
     const key = `sl_rhythm_${data.date}_${b.id}`;
     const isCompleted = localStorage.getItem(key) === 'true';
 
@@ -3928,14 +4136,14 @@ function renderScienceRhythm(data) {
       activeMinsLeft = endM - nowMinutes;
     }
 
-    let borderLeft = isMandatory ? '4px solid #a371f7' : (isBreak ? '3px solid #3fb950' : `3px solid ${b.color}`);
-    let bg = isMandatory ? 'rgba(163, 113, 247, 0.08)' : (isBreak ? 'rgba(63, 185, 80, 0.03)' : 'rgba(255, 255, 255, 0.02)');
+    let borderLeft = isPostponed ? '3.5px solid #f59f00' : (isMandatory ? '4px solid #a371f7' : (isBreak ? '3px solid #3fb950' : `3px solid ${b.color}`));
+    let bg = isPostponed ? 'rgba(245, 159, 0, 0.08)' : (isMandatory ? 'rgba(163, 113, 247, 0.08)' : (isBreak ? 'rgba(63, 185, 80, 0.03)' : 'rgba(255, 255, 255, 0.02)'));
     let activeClass = isCurrent ? 'active-now' : '';
     let compClass = isCompleted ? 'completed' : '';
 
     html += `
       <div class="rhythm-row-card ${activeClass} ${compClass}" style="border-left: ${borderLeft}; background: ${bg}; flex-direction: column; align-items: stretch; gap: 0.35rem;" title="${escapeHtml(b.description || '')}">
-        <!-- Top Row: Time, Title, Badges, Checkbox -->
+        <!-- Top Row: Time, Title, Badges, Delete & Checkbox -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.65rem;">
           <!-- Left: Time & Duration -->
           <div style="min-width: 90px; flex-shrink: 0;">
@@ -3950,10 +4158,11 @@ function renderScienceRhythm(data) {
             <span style="font-size: 16px; flex-shrink: 0;">${b.icon}</span>
             <div style="min-width: 0;">
               <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-                <strong style="color: ${isMandatory ? '#d2a8ff' : '#f0f6fc'}; font-size: 12.5px; ${isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+                <strong style="color: ${isPostponed ? '#f59f00' : (isMandatory ? '#d2a8ff' : '#f0f6fc')}; font-size: 12.5px; ${isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
                   ${escapeHtml(b.title)}
                 </strong>
-                ${b.badge ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
+                ${isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(245, 159, 0, 0.2); color: #f59f00; border: 1px solid rgba(245, 159, 0, 0.45);">⏩ Von gestern verschoben</span>` : ''}
+                ${b.badge && !isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
                 ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">🔴 JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
               </div>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
@@ -3962,9 +4171,16 @@ function renderScienceRhythm(data) {
             </div>
           </div>
 
-          <!-- Right: Checkbox -->
-          <div onclick="toggleRhythmBlockDone('${data.date}', '${b.id}')" style="cursor: pointer; flex-shrink: 0; width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid ${isCompleted ? '#3fb950' : 'rgba(255,255,255,0.25)'}; background: ${isCompleted ? '#238636' : 'rgba(255,255,255,0.03)'}; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.15s ease;" title="${isCompleted ? 'Als offen markieren' : 'Als erledigt markieren'}">
-            ${isCompleted ? '✓' : ''}
+          <!-- Right: Delete / Postpone Button & Checkbox -->
+          <div style="display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;">
+            ${b.id !== 'evening_free' ? `
+              <button type="button" onclick="promptRhythmBlockAction('${data.date}', '${b.id}')" title="Schritt entfernen oder auf morgen verschieben" style="background: transparent; border: 1px solid transparent; color: var(--text-dim); font-size: 13px; cursor: pointer; padding: 0.2rem 0.35rem; border-radius: 4px; transition: all 0.15s ease;" onmouseenter="this.style.color='#ff7b72'; this.style.borderColor='rgba(248,81,73,0.3)'; this.style.background='rgba(248,81,73,0.1)';" onmouseleave="this.style.color='var(--text-dim)'; this.style.borderColor='transparent'; this.style.background='transparent';">
+                🗑️
+              </button>
+            ` : ''}
+            <div onclick="toggleRhythmBlockDone('${data.date}', '${b.id}')" style="cursor: pointer; flex-shrink: 0; width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid ${isCompleted ? '#3fb950' : 'rgba(255,255,255,0.25)'}; background: ${isCompleted ? '#238636' : 'rgba(255,255,255,0.03)'}; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.15s ease;" title="${isCompleted ? 'Als offen markieren' : 'Als erledigt markieren'}">
+              ${isCompleted ? '✓' : ''}
+            </div>
           </div>
         </div>
 
@@ -3985,11 +4201,11 @@ function renderScienceRhythm(data) {
           </div>
         ` : ''}
 
-        <!-- Action Strip for Afternoon Flex Block (Lecture for Tomorrow) -->
-        ${b.id === 'block_afternoon_flex' ? `
+        <!-- Action Strip for Afternoon Flex Block (Lecture for Tomorrow or Postponed Lecture) -->
+        ${(b.id === 'block_afternoon_flex' || isPostponed || b.focus_type === 'postponed_catchup') && (b.vam_url || b.podcast_folder_name || b.slide_filename || b.slide_rel_path) ? `
           <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-            <span style="font-size: 11px; font-weight: 700; color: #79c0ff; display: inline-flex; align-items: center; gap: 4px;">
-              🌅 Vorlesung für MORGEN:
+            <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : '#79c0ff'}; display: inline-flex; align-items: center; gap: 4px;">
+              ${isPostponed ? '⏩ Nachhol-Vorlesung:' : '🌅 Vorlesung für MORGEN:'}
             </span>
             ${b.vam_url ? `
               <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-primary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">
@@ -4002,12 +4218,12 @@ function renderScienceRhythm(data) {
               </button>
             ` : ''}
             ${(b.slide_rel_path || b.slide_filename) ? `
-              <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent(b.slide_rel_path || b.slide_filename)}" target="_blank" rel="noopener" onclick="openSlideModalQuick('${escapeHtml(b.slide_rel_path || b.slide_filename)}', '${escapeHtml(b.tomorrow_lecture_title || '')}');" class="btn-secondary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Folien für morgen ansehen (öffnet Folie direkt im Browser & PDF-Viewer)">
+              <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent(b.slide_rel_path || b.slide_filename)}" target="_blank" rel="noopener" onclick="openSlideModalQuick('${escapeHtml(b.slide_rel_path || b.slide_filename)}', '${escapeHtml(b.tomorrow_lecture_title || '')}');" class="btn-secondary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Folien ansehen (öffnet Folie direkt im Browser & PDF-Viewer)">
                 📄 Folien
               </a>
             ` : ''}
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
-              🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor
+              ${isPostponed ? '🧠 Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}
             </span>
           </div>
         ` : ''}
@@ -4133,6 +4349,11 @@ window.cleanupTemporaryStruggleDeck = cleanupTemporaryStruggleDeck;
 window.openStruggleDeckInAnki = openStruggleDeckInAnki;
 window.openStruggleSlidesQuick = openStruggleSlidesQuick;
 window.toggleStrugglesExpanded = toggleStrugglesExpanded;
+window.promptRhythmBlockAction = promptRhythmBlockAction;
+window.closeRhythmBlockActionModal = closeRhythmBlockActionModal;
+window.executePostponeRhythmBlock = executePostponeRhythmBlock;
+window.executeDeleteRhythmBlock = executeDeleteRhythmBlock;
+window.restoreRhythmBlocks = restoreRhythmBlocks;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {

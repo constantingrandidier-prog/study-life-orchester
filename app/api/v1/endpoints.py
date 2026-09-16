@@ -1127,6 +1127,17 @@ def post_anki_workload_sync_endpoint(payload: dict):
 
 from app.services.daily_rhythm_service import generate_daily_science_rhythm
 
+class RhythmActionRequest(BaseModel):
+    source_date: str
+    action: str  # 'delete' or 'postpone'
+    block_id: str
+    target_date: Optional[str] = None
+    block_payload: Optional[dict] = None
+
+class RhythmRestoreRequest(BaseModel):
+    source_date: str
+    block_id: Optional[str] = None
+
 @router.get(
     "/daily-rhythm",
     summary="Get dynamic scientific study rhythm with customizable start time and lunch",
@@ -1137,6 +1148,7 @@ def get_daily_rhythm_endpoint(
     start_time: str = Query("08:30", description="Start time HH:MM"),
     lunch_duration: int = Query(75, description="Lunch break duration in minutes (30, 45, 60, 75)"),
     include_lecture: bool = Query(True, description="Whether to include lecture/podcast blocks"),
+    removed_blocks: Optional[str] = Query(None, description="Comma-separated block IDs to omit"),
 ):
     """Returns the dynamic scientific study schedule for the student."""
     t_date = None
@@ -1159,6 +1171,8 @@ def get_daily_rhythm_endpoint(
     curr_assign = get_daily_curriculum_assignment(t_date)
     new_target = curr_assign.get("adjusted_target_cards", 101)
 
+    rem_list = [b.strip() for b in removed_blocks.split(",") if b.strip()] if removed_blocks else None
+
     return generate_daily_science_rhythm(
         target_date=t_date,
         events=cal_events,
@@ -1168,7 +1182,49 @@ def get_daily_rhythm_endpoint(
         lunch_duration_mins=lunch_duration if lunch_duration is not None else 75,
         include_lecture=include_lecture if include_lecture is not None else True,
         curriculum_assignment=curr_assign,
+        removed_block_ids=rem_list,
     )
+
+
+@router.post(
+    "/rhythm-action",
+    summary="Save rhythm block action (delete or postpone to tomorrow)",
+)
+def post_rhythm_action_endpoint(req: RhythmActionRequest):
+    from app.db import repository
+    res = repository.save_rhythm_action(
+        source_date=req.source_date,
+        block_id=req.block_id,
+        action=req.action,
+        target_date=req.target_date,
+        block_payload=req.block_payload,
+    )
+    return res
+
+
+@router.post(
+    "/rhythm-action/restore",
+    summary="Restore removed or postponed rhythm blocks for a date",
+)
+def restore_rhythm_action_endpoint(req: RhythmRestoreRequest):
+    from app.db import repository
+    res = repository.restore_rhythm_action(
+        source_date=req.source_date,
+        block_id=req.block_id,
+    )
+    return res
+
+
+@router.get(
+    "/rhythm-actions",
+    summary="Get active rhythm adjustments (removed and postponed blocks) for a date",
+)
+def get_rhythm_actions_endpoint(
+    target_date: Optional[str] = Query(None, description="Date YYYY-MM-DD"),
+):
+    from app.db import repository
+    t_str = target_date or date.today().isoformat()
+    return repository.get_rhythm_actions_for_date(t_str)
 
 
 from app.services.lecture_advisor_service import (

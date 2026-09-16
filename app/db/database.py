@@ -237,6 +237,20 @@ def init_db() -> None:
             );
         """)
 
+        # 10. Rhythm Block Actions (Delete, Postpone to tomorrow)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS rhythm_block_actions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id TEXT NOT NULL DEFAULT 'student',
+                source_date TEXT NOT NULL,
+                target_date TEXT,
+                block_id TEXT NOT NULL,
+                action TEXT NOT NULL, -- 'delete' or 'postpone'
+                block_payload TEXT,    -- JSON dump of the block properties
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
         # Insert default student profile if not present
         cursor.execute("SELECT id FROM user_profile WHERE username = 'student'")
         if not cursor.fetchone():

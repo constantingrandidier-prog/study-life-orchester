@@ -1,5 +1,6 @@
 """Database Repository providing clean CRUD operations for StudyLife Orchestrator."""
 
+import json
 from datetime import date as dt_date, datetime
 from typing import Any, Dict, List, Optional
 from app.db.database import get_db_connection
@@ -539,3 +540,102 @@ def _extract_module_name(text: str) -> str:
         if delimiter in clean:
             clean = clean.split(delimiter)[0].strip()
     return clean or "Allgemeines Modul"
+
+
+# ============================================================================
+# RHYTHM BLOCK ACTIONS (Delete, Postpone to Tomorrow)
+# ============================================================================
+
+def save_rhythm_action(
+    source_date: str,
+    block_id: str,
+    action: str,
+    target_date: Optional[str] = None,
+    block_payload: Optional[Dict[str, Any]] = None,
+    user_id: str = "student",
+) -> Dict[str, Any]:
+    """Saves a block action (delete or postpone). Overwrites existing action for same block and source date."""
+    payload_json = json.dumps(block_payload, ensure_ascii=False) if block_payload else None
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        # Remove any existing record for this block & source date to avoid duplicates
+        cursor.execute("""
+            DELETE FROM rhythm_block_actions
+            WHERE user_id = ? AND source_date = ? AND block_id = ?;
+        """, (user_id, source_date, block_id))
+
+        cursor.execute("""
+            INSERT INTO rhythm_block_actions (
+                user_id, source_date, target_date, block_id, action, block_payload, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);
+        """, (user_id, source_date, target_date, block_id, action, payload_json))
+
+    return {
+        "status": "ok",
+        "source_date": source_date,
+        "block_id": block_id,
+        "action": action,
+        "target_date": target_date,
+    }
+
+
+def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> Dict[str, Any]:
+    """
+    Returns rhythm adjustments for a given date:
+    - removed_block_ids: blocks deleted or postponed out of this date
+    - postponed_blocks: blocks postponed from a previous date INTO this target_date
+    """
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        # 1. Blocks removed/postponed FROM this date
+        cursor.execute("""
+            SELECT block_id, action FROM rhythm_block_actions
+            WHERE user_id = ? AND source_date = ?;
+        """, (user_id, target_date))
+        removed_ids = [row["block_id"] for row in cursor.fetchall()]
+
+        # 2. Blocks postponed INTO this target_date
+        cursor.execute("""
+            SELECT id, source_date, target_date, block_id, action, block_payload
+            FROM rhythm_block_actions
+            WHERE user_id = ? AND target_date = ? AND action = 'postpone';
+        """, (user_id, target_date))
+        postponed = []
+        for row in cursor.fetchall():
+            payload = {}
+            if row["block_payload"]:
+                try:
+                    payload = json.loads(row["block_payload"])
+                except Exception:
+                    payload = {}
+            payload["_action_id"] = row["id"]
+            payload["_postponed_from"] = row["source_date"]
+            payload["_postponed_to"] = row["target_date"]
+            postponed.append(payload)
+
+    return {
+        "removed_block_ids": removed_ids,
+        "postponed_blocks": postponed,
+    }
+
+
+def restore_rhythm_action(
+    source_date: str,
+    block_id: Optional[str] = None,
+    user_id: str = "student",
+) -> Dict[str, Any]:
+    """Restores removed or postponed blocks back to original state for a date."""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        if block_id:
+            cursor.execute("""
+                DELETE FROM rhythm_block_actions
+                WHERE user_id = ? AND source_date = ? AND block_id = ?;
+            """, (user_id, source_date, block_id))
+        else:
+            cursor.execute("""
+                DELETE FROM rhythm_block_actions
+                WHERE user_id = ? AND source_date = ?;
+            """, (user_id, source_date))
+
+    return {"status": "restored", "source_date": source_date, "block_id": block_id}

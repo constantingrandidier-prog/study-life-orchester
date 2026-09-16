@@ -1404,6 +1404,17 @@ def open_folder_endpoint(
                 "folder": str(found.parent),
             }
         else:
+            # Check if this podcast folder contains a Folienansicht MP4 video
+            folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4"))
+            if folien_vids:
+                target_file = folien_vids[0]
+                subprocess.Popen(["explorer.exe", f"/select,{str(target_file)}"])
+                return {
+                    "success": True,
+                    "message": f"Folienansicht '{target_file.name}' im Explorer markiert!",
+                    "path": str(target_file),
+                    "folder": str(found),
+                }
             os.startfile(str(found))
             return {
                 "success": True,
@@ -1416,6 +1427,29 @@ def open_folder_endpoint(
             "error": str(exc),
             "path": str(found),
         }
+
+
+@router.get(
+    "/podcast/open",
+    summary="Directly launches the podcast Folienansicht MP4 video",
+)
+def open_podcast_video_endpoint(
+    path: Optional[str] = Query(None, description="Folder or video name"),
+):
+    import os
+    found = _resolve_uzh_file_or_folder(path)
+    if found:
+        if found.is_dir():
+            folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4"))
+            if folien_vids:
+                found = folien_vids[0]
+        if found.is_file():
+            try:
+                os.startfile(str(found))
+                return {"success": True, "message": f"Video '{found.name}' gestartet!", "file": str(found)}
+            except Exception as e:
+                return {"success": False, "error": str(e)}
+    return {"success": False, "message": "Podcast-Video konnte lokal nicht geöffnet werden."}
 
 
 

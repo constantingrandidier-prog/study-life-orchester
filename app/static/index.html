@@ -12,15 +12,25 @@
   <meta name="apple-mobile-web-app-title" content="Orchester">
 </head>
 <body>
-  <!-- JS ERROR INTERCEPTOR: shows all JS errors on screen -->
-  <div id="__js_error_banner__" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;padding:12px 16px;font-size:13px;font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;border-bottom:2px solid #7f1d1d;"></div>
+  <!-- JS ERROR INTERCEPTOR: shows all JS errors on screen with 30s auto-dismiss -->
+  <div id="__js_error_banner__" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;padding:12px 16px;font-size:13px;font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;border-bottom:2px solid #7f1d1d;box-shadow:0 4px 12px rgba(0,0,0,0.5);">
+    <button type="button" onclick="document.getElementById('__js_error_banner__').style.display='none'; document.getElementById('__js_error_banner__').textContent='';" style="float:right;background:transparent;border:1px solid #fff;color:#fff;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px;font-weight:700;" title="Fehler ausblenden">✕ Schliessen</button>
+  </div>
   <script>
     (function() {
       var banner = document.getElementById('__js_error_banner__');
+      var dismissTimer = null;
       function showErr(msg) {
         if (!banner) return;
         banner.style.display = 'block';
-        banner.textContent += msg + '\n';
+        var line = document.createElement('div');
+        line.textContent = msg;
+        banner.appendChild(line);
+        if (dismissTimer) clearTimeout(dismissTimer);
+        dismissTimer = setTimeout(function() {
+          banner.style.display = 'none';
+          banner.innerHTML = '<button type="button" onclick="document.getElementById(\'__js_error_banner__\').style.display=\'none\';" style="float:right;background:transparent;border:1px solid #fff;color:#fff;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px;font-weight:700;" title="Fehler ausblenden">✕ Schliessen</button>';
+        }, 30000); // 30 seconds auto-dismiss
       }
       window.onerror = function(msg, src, line, col, err) {
         showErr('[JS ERROR] ' + msg + ' @ line ' + line + ' col ' + col + (src ? ' in ' + src.split('/').pop() : ''));
@@ -1418,7 +1428,7 @@
       }
     } catch (e) {}
   </script>
-  <script src="/static/app.js?v=21.0"></script>
+  <script src="/static/app.js?v=22.0"></script>
   <script>
     // NUCLEAR SW RESET: Unregister ALL service workers unconditionally.
     // The SW caused cache poisoning bugs. We disable it permanently.

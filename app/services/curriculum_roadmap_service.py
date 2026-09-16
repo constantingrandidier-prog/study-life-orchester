@@ -313,11 +313,11 @@ _CACHED_ROADMAP: Optional[Dict[str, Any]] = None
 _ADVISOR_LOOKUP_CACHE: Dict[str, Dict[str, Any]] = {}
 
 
-def _cached_search_lecture_advisor(query: str, target_cards: int) -> Dict[str, Any]:
+def _cached_search_lecture_advisor(query: str, target_cards: int, module_name: Optional[str] = None) -> Dict[str, Any]:
     """In-memory cache for fast advisor query during roadmap generation."""
-    key = f"{query}::{target_cards}"
+    key = f"{query}::{target_cards}::{module_name}"
     if key not in _ADVISOR_LOOKUP_CACHE:
-        _ADVISOR_LOOKUP_CACHE[key] = search_lecture_advisor(query, target_cards=target_cards)
+        _ADVISOR_LOOKUP_CACHE[key] = search_lecture_advisor(query, target_cards=target_cards, filter_module=module_name)
     return _ADVISOR_LOOKUP_CACHE[key]
 
 
@@ -792,7 +792,11 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
             didactic_info = classify_topic_didactics(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"])
             scaffolding = get_clinical_scaffolding_for_deck(c_deck["deck_name"], clean_info["clean_title"])
 
-            adv = _cached_search_lecture_advisor(f"{clean_info['lecturer']} {clean_info['clean_title']}", target_cards=take)
+            adv = _cached_search_lecture_advisor(
+                f"{clean_info['lecturer']} {clean_info['clean_title']}",
+                target_cards=take,
+                module_name=c_deck["module_name"],
+            )
             top = adv.get("top_match") or {}
             tb = top.get("timestamp_guidance") or {}
 

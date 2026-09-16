@@ -3763,21 +3763,53 @@ async function openStruggleDeckInAnki(query) {
 
 async function openStruggleSlidesQuick(path, page) {
   if (!path) {
-    alert('Für diese Karten ist keine separate Folie hinterlegt.');
+    showToast('Für diese Karten ist keine separate Folie hinterlegt.');
     return;
   }
   try {
     const res = await fetch(`/api/v1/schedule/slides/open?path=${encodeURIComponent(path)}&page=${page || 1}`);
     const data = await res.json();
     if (data.success) {
-      alert(`📄 Folie geöffnet: ${data.message}`);
+      showToast(`📄 Folie geöffnet: ${data.message}`);
     } else {
-      alert(`Hinweis: ${data.message || 'Konnte Folie nicht automatisch öffnen.'}`);
+      showToast(`Hinweis: ${data.message || 'Konnte Folie nicht automatisch öffnen.'}`);
     }
   } catch (err) {
-    alert(`Fehler beim Öffnen der Folie: ${err.message}`);
+    showToast(`Fehler beim Öffnen der Folie: ${err.message}`);
   }
 }
+
+async function openPodcastFolder(folderName) {
+  if (!folderName) {
+    showToast('Kein Podcast-Ordner hinterlegt');
+    return;
+  }
+  showToast('Öffne Podcast-Folienansicht im Explorer...');
+  try {
+    const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderName)}`);
+    const data = await res.json();
+    if (data.success) {
+      showToast(`📂 ${data.message || 'Folienansicht im Explorer markiert!'}`);
+    } else {
+      showToast(`📋 Hinweis: ${data.message || 'Ordner konnte nicht geöffnet werden'}`);
+    }
+  } catch (err) {
+    showToast('Konnte Podcast-Ordner nicht anfordern: ' + err.message);
+  }
+}
+
+async function openSlideModalQuick(path, title = '') {
+  if (!path) {
+    showToast('Kein Folienpfad hinterlegt');
+    return;
+  }
+  try {
+    fetch(`/api/v1/schedule/slides/open?path=${encodeURIComponent(path)}&page=1`).catch(() => {});
+  } catch (e) {}
+}
+
+window.openPodcastFolder = openPodcastFolder;
+window.openSlideModalQuick = openSlideModalQuick;
 
 function toggleStrugglesExpanded() {
   state.strugglesExpanded = !state.strugglesExpanded;
@@ -3965,14 +3997,14 @@ function renderScienceRhythm(data) {
               </a>
             ` : ''}
             ${b.podcast_folder_name ? `
-              <button type="button" class="btn-secondary" onclick="openPodcastFolder('${escapeHtml(b.podcast_folder_name)}')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet den lokalen Podcast-Ordner im Windows Explorer">
-                📁 Ordner
+              <button type="button" class="btn-secondary" onclick="openPodcastFolder('${escapeHtml(b.podcast_folder_name)}')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet den lokalen Podcast-Ordner zur Folienansicht im Windows Explorer">
+                📁 Ordner (Folienansicht)
               </button>
             ` : ''}
-            ${b.slide_filename ? `
-              <button type="button" class="btn-secondary" onclick="openSlideModalQuick('${escapeHtml(b.slide_rel_path || b.slide_filename)}', '${escapeHtml(b.tomorrow_lecture_title || '')}')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Folien für morgen ansehen">
+            ${(b.slide_rel_path || b.slide_filename) ? `
+              <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent(b.slide_rel_path || b.slide_filename)}" target="_blank" rel="noopener" onclick="openSlideModalQuick('${escapeHtml(b.slide_rel_path || b.slide_filename)}', '${escapeHtml(b.tomorrow_lecture_title || '')}');" class="btn-secondary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Folien für morgen ansehen (öffnet Folie direkt im Browser & PDF-Viewer)">
                 📄 Folien
-              </button>
+              </a>
             ` : ''}
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
               🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor

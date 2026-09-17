@@ -2834,7 +2834,7 @@ function renderCurriculumToday(data) {
           const folderLocal = slot.local_slide_folder_path || '';
           slideBadge = `
             <div style="display: flex; flex-direction: column; gap: 4px;">
-              <a class="curriculum-slide-link" title="Folie im PDF-Viewer &amp; Browser öffnen: ${escapeHtml(slot.matched_slide_filename)}" href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" onclick="handleOpenSlidePdf('${escapeHtml(slideRel).replace(/'/g, "\\'")}', '${escapeHtml(slideLocal).replace(/\\/g, '\\\\')}');">
+              <a class="curriculum-slide-link" title="Folie im PDF-Viewer &amp; Browser öffnen: ${escapeHtml(slot.matched_slide_filename)}" href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" rel="noopener">
                 📄 ${escapeHtml(slot.matched_slide_filename.length > 20 ? slot.matched_slide_filename.substring(0, 18) + '...' : slot.matched_slide_filename)}
               </a>
               <div style="display: flex; gap: 4px; align-items: center;">
@@ -3024,65 +3024,68 @@ async function handleStopMedia() {
   }
 }
 
+let _lastOpenLocalTime = 0;
+let _lastOpenLocalPath = '';
+
 async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei', directOpen = false) {
   if (!folderOrFilePath) {
     showToast(`⚠️ Kein Pfad für ${label} hinterlegt`);
     return;
   }
   const cleanPath = String(folderOrFilePath).trim().replace(/\\/g, '/').replace(/^['"]+|['"]+$/g, '');
+  const now = Date.now();
+
+  // Deduplicate and debounce rapid clicks / double clicks within 2.5 seconds
+  if (now - _lastOpenLocalTime < 2500 && _lastOpenLocalPath === cleanPath) {
+    console.debug('Ignoring duplicate open click within 2.5s:', cleanPath);
+    return;
+  }
+  _lastOpenLocalTime = now;
+  _lastOpenLocalPath = cleanPath;
+
   showToast(`📂 Öffnen von ${label}...`, 3000);
-
   const query = `path=${encodeURIComponent(cleanPath)}&direct_open=${directOpen ? 'true' : 'false'}`;
+  const isLocalOrigin = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
 
-  // 1. Try local server direct (127.0.0.1:8000) for instant native execution if available
-  let opened = false;
-  try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 650);
-    const localRes = await fetch(`http://127.0.0.1:8000/api/v1/schedule/folder/open?${query}`, {
-      signal: ctrl.signal
-    });
-    clearTimeout(timer);
-    if (localRes.ok) {
-      const data = await localRes.json();
-      if (data && data.success) {
-        showToast(`✅ ${data.message || `${label} im Datei-Explorer geöffnet!`}`, 4000);
-        opened = true;
+  if (isLocalOrigin) {
+    // 1. When app runs locally, execute directly on local server
+    try {
+      const localRes = await fetch(`/api/v1/schedule/folder/open?${query}`);
+      if (localRes.ok) {
+        const data = await localRes.json();
+        if (data && data.success) {
+          showToast(`✅ ${data.message || `${label} im Datei-Explorer geöffnet!`}`, 4000);
+          return;
+        }
+      }
+    } catch (_) {}
+  } else {
+    // 2. When app runs on Render / Cloud, queue exclusively through cloud backend for local agent
+    try {
+      const res = await fetch(`/api/v1/schedule/folder/open?${query}`);
+      const data = await res.json();
+      if (data && (data.success || data.queued)) {
+        showToast(`💻 Datei-Explorer wird auf deinem Laptop geöffnet (${label})...`, 4500);
         return;
       }
+    } catch (err) {
+      try {
+        await fetch('/api/v1/schedule/system/queue-action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'open_explorer', path: folderOrFilePath, direct_open: directOpen })
+        });
+        showToast(`💻 Befehl an deinen Laptop gesendet (${label})!`, 4000);
+        return;
+      } catch (_) {}
     }
-  } catch (_) {}
-
-  // 2. Relay via cloud backend (queues to local Windows agent polling Render)
-  try {
-    const res = await fetch(`/api/v1/schedule/folder/open?${query}`);
-    const data = await res.json();
-    if (data && (data.success || data.queued)) {
-      showToast(`💻 Datei-Explorer wird auf deinem Laptop geöffnet (${label})...`, 4500);
-      opened = true;
-      return;
-    }
-  } catch (err) {
-    try {
-      await fetch('/api/v1/schedule/system/queue-action', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'open_explorer', path: folderOrFilePath, direct_open: directOpen })
-      });
-      showToast(`💻 Befehl an deinen Laptop gesendet (${label})!`, 4000);
-      opened = true;
-      return;
-    } catch (_) {}
   }
 
-  // 3. Fallback: also copy path to clipboard so user can paste it into Run (Win+R)
+  // 3. Clipboard fallback
   try {
     await navigator.clipboard.writeText(folderOrFilePath);
-  } catch (_) {}
-
-  if (!opened) {
     showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Starten)`, 4000);
-  }
+  } catch (_) {}
 }
 
 async function handleOpenSlidePdf(relPath, localFilePath) {

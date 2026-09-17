@@ -192,10 +192,25 @@ def _launch_desktop_explorer(target_path_or_folder: Path):
         pass
 
 
+_EXECUTED_ACTION_IDS = set()
+_LAST_EXECUTED_PATH = ""
+_LAST_EXECUTED_TIME = 0.0
+
+
 def execute_desktop_action(act: dict):
+    global _LAST_EXECUTED_PATH, _LAST_EXECUTED_TIME
     action_type = act.get("action", "open_explorer")
+    act_id = act.get("id")
     import subprocess
+    import time
     from pathlib import Path
+
+    if act_id:
+        if act_id in _EXECUTED_ACTION_IDS:
+            return
+        _EXECUTED_ACTION_IDS.add(act_id)
+        if len(_EXECUTED_ACTION_IDS) > 200:
+            _EXECUTED_ACTION_IDS.pop()
 
     if action_type == "stop_media":
         try:
@@ -208,6 +223,13 @@ def execute_desktop_action(act: dict):
     raw_path = (act.get("path") or "").strip().replace("/", "\\")
     if not raw_path:
         return
+
+    now_t = time.time()
+    if raw_path == _LAST_EXECUTED_PATH and (now_t - _LAST_EXECUTED_TIME) < 2.5:
+        print(f"[ACTION] Unterdrücke doppelten Aufruf innerhalb 2.5s: {raw_path}", flush=True)
+        return
+    _LAST_EXECUTED_PATH = raw_path
+    _LAST_EXECUTED_TIME = now_t
 
     # Terminate any stray background VLC instances first
     try:

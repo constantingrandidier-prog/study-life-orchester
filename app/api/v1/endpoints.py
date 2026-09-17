@@ -1754,12 +1754,22 @@ def open_folder_endpoint(
             pass
 
     # Cloud / Render fallback: Queue for local background sync agent
+    clean_p = (path or "").strip()
+    now_t = time.time()
+    if any(a.get("action") == "open_explorer" and a.get("path") == clean_p and (now_t - a.get("timestamp", 0) < 3.0) for a in _PENDING_SYSTEM_COMMANDS):
+        return {
+            "success": True,
+            "queued": True,
+            "message": f"Aktion für '{clean_p}' bereits in Bearbeitung...",
+            "path": clean_p,
+        }
+
     action_obj = {
-        "id": f"act_{int(time.time() * 1000)}",
+        "id": f"act_{int(now_t * 1000)}",
         "action": "open_explorer",
-        "path": path or "",
+        "path": clean_p,
         "direct_open": bool(direct_open),
-        "timestamp": time.time(),
+        "timestamp": now_t,
     }
     _PENDING_SYSTEM_COMMANDS.append(action_obj)
 
@@ -1802,12 +1812,19 @@ def poll_system_actions_endpoint():
 def queue_system_action_endpoint(payload: dict = Body(...)):
     import time
     global _PENDING_SYSTEM_COMMANDS
+    now_t = time.time()
+    clean_p = (payload.get("path") or "").strip()
+    act_name = payload.get("action", "open_explorer")
+
+    if any(a.get("action") == act_name and a.get("path") == clean_p and (now_t - a.get("timestamp", 0) < 3.0) for a in _PENDING_SYSTEM_COMMANDS):
+        return {"success": True, "queued": True, "duplicate_suppressed": True}
+
     action_obj = {
-        "id": f"act_{int(time.time() * 1000)}",
-        "action": payload.get("action", "open_explorer"),
-        "path": payload.get("path", ""),
+        "id": f"act_{int(now_t * 1000)}",
+        "action": act_name,
+        "path": clean_p,
         "direct_open": bool(payload.get("direct_open", False)),
-        "timestamp": time.time(),
+        "timestamp": now_t,
     }
     _PENDING_SYSTEM_COMMANDS.append(action_obj)
     return {"success": True, "queued": True, "action": action_obj}

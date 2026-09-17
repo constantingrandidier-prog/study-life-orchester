@@ -131,6 +131,19 @@ def clean_topic_display(raw_deck_name: str, module_name: str) -> Dict[str, Any]:
     parts = [p.strip() for p in raw_deck_name.replace("\x1f", "::").split("::") if p.strip()]
     leaf = parts[-1] if parts else raw_deck_name
 
+    # Strip numbers and technical prefixes from leaf title
+    clean_title = re.sub(r'^[0-9]+[\s_.\-]+', '', leaf).strip()
+    clean_title = re.sub(r'^[0-9]+[\s]+', '', clean_title).strip()
+    mod_lower = module_name.lower()
+    raw_lower = raw_deck_name.lower()
+
+    # Strip erroneous tutor slash notation " / Wenger" from Erythrozyten in TB Blut
+    if "blut" in mod_lower or "immunsystem" in mod_lower:
+        clean_title = re.sub(r'\s*/\s*Wenger$', '', clean_title).strip()
+
+    if not clean_title:
+        clean_title = leaf
+
     detected_lecturer = None
     for part in parts:
         for lec in KNOWN_LECTURERS:
@@ -140,11 +153,9 @@ def clean_topic_display(raw_deck_name: str, module_name: str) -> Dict[str, Any]:
         if detected_lecturer:
             break
 
-    # Strip numbers and technical prefixes from leaf title
-    clean_title = re.sub(r'^[0-9]+[\s_.\-]+', '', leaf).strip()
-    clean_title = re.sub(r'^[0-9]+[\s]+', '', clean_title).strip()
-    if not clean_title:
-        clean_title = leaf
+    # Wenger is NOT in TB Blut (Roland Wenger only lectures in TB Atmung)
+    if ("blut" in mod_lower or "immunsystem" in mod_lower) and detected_lecturer == "Wenger":
+        detected_lecturer = "Manatschal"
 
     # Format breadcrumb (e.g. "Blut & Immunsystem › Manatschal")
     module_clean = re.sub(r'^[0-9]+[\s_.\-]+', '', module_name).strip()
@@ -307,6 +318,86 @@ def get_clinical_scaffolding_for_deck(deck_name: str, clean_title: str) -> Dict[
             "concept_goal": clean_title or "Fachkonzept des Curriculums"
         }
 
+
+CANONICAL_CURRICULUM_MAPPINGS = [
+    {
+        "match_keys": ["erythrozyt", "erythrozyten", "blut und blutplasma", "blutplasma"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-18_TB_Blut_-_Immunsystem",
+        "lecture_title": "Hämoglobin, Myoglobin & Sauerstoffbindung (Erythrozyten)",
+        "lecture_date": "2025-09-18",
+        "lecture_date_formatted": "18.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+    },
+    {
+        "match_keys": ["hämoglobin", "myoglobin", "haemoglobin"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-18_TB_Blut_-_Immunsystem",
+        "lecture_title": "Hämoglobin, Myoglobin & Sauerstoffbindung (Erythrozyten)",
+        "lecture_date": "2025-09-18",
+        "lecture_date_formatted": "18.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+    },
+    {
+        "match_keys": ["co2", "säure-base", "saure-base", "bohr-effekt", "bohr", "haldane", "hamburger"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-19_TB_Blut_-_Immunsystem",
+        "lecture_title": "Säure-Basen-Haushalt, CO2-Transport & Bohr-Effekt",
+        "lecture_date": "2025-09-19",
+        "lecture_date_formatted": "19.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+    },
+    {
+        "match_keys": ["blutgerinnung", "hämostase", "thrombozyt"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-22_TB_Blut_-_Immunsystem",
+        "lecture_title": "Hämostase: Thrombozytenaktivierung & Primäre Blutstillung",
+        "lecture_date": "2025-09-22",
+        "lecture_date_formatted": "22.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "6-7_CM_Blutgerinnung.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+    },
+    {
+        "match_keys": ["gerinnungskaskade", "fibrinolyse", "sekundäre hämostase", "gerinnung"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-25_TB_Blut_-_Immunsystem",
+        "lecture_title": "Sekundäre Hämostase: Gerinnungskaskade & Fibrinolyse",
+        "lecture_date": "2025-09-25",
+        "lecture_date_formatted": "25.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "6-7_CM_Blutgerinnung.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+    },
+    {
+        "match_keys": ["komplement", "komplementsystem", "immunantwort", "immunsystem", "tuzlak", "antikörper", "immuntoleranz", "zelluläre immunität"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-26_TB_Blut_-_Immunsystem",
+        "lecture_title": "Komplementsystem & Zelluläre Immunmechanismen",
+        "lecture_date": "2025-09-26",
+        "lecture_date_formatted": "26.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal / Dr. Tuzlak",
+        "slide_file": "8_CM_Komplementsystem.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+    },
+    {
+        "match_keys": ["einführung", "thymus", "leukozyten", "myelopoiese", "erythropoiese", "ullrich"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-15_Einfuehrung_Anatomie_TB_Blut",
+        "lecture_title": "Einführung in die Anatomie & Grundlagen Hämatologie",
+        "lecture_date": "2025-09-15",
+        "lecture_date_formatted": "15.09.2025",
+        "lecturer": "Prof. Dr. Oliver Ullrich",
+        "slide_file": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+    },
+]
 
 # Cache for the computed semester roadmap
 _CACHED_ROADMAP: Optional[Dict[str, Any]] = None
@@ -612,7 +703,16 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
         "hämoglobin": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "myoglobin": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "erythrozyten": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "erythrozyt": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "blut und blutplasma": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "blutplasma": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "komplement": "8_CM_Komplementsystem.pdf",
+        "tuzlak": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "immunsystem": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "leukozyten": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "thymus": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "myelopoiese": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "erythropoiese": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
         "herzmechanik": "Kurt_Vorlesung_Herzmechanik_HS24.pdf",
         "erregungsleitung": "Kurt_Vorlesung_Erregungsleitung_HS24.pdf",
         "ekg": "Kurt_Vorlesung_EKG_HS24.pdf",
@@ -799,6 +899,14 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             didactic_info = classify_topic_didactics(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"])
             scaffolding = get_clinical_scaffolding_for_deck(c_deck["deck_name"], clean_info["clean_title"])
 
+            deck_haystack = f"{c_deck['deck_name']} {clean_info['clean_title']}".lower()
+            canon = None
+            for mapping in CANONICAL_CURRICULUM_MAPPINGS:
+                if mapping["module"].lower() in c_deck["module_name"].lower():
+                    if any(k in deck_haystack for k in mapping["match_keys"]):
+                        canon = mapping
+                        break
+
             adv = _cached_search_lecture_advisor(
                 f"{clean_info['lecturer']} {clean_info['clean_title']}",
                 target_cards=take,
@@ -813,25 +921,34 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 saved_min = tb.get("saved_minutes")
                 timecode_guidance = f"{tb.get('start_timestamp')} – {tb.get('end_timestamp')} ({eff_min}m Stream, spart {saved_min}m)"
 
-            lec_date = top.get("date")
-            lec_date_formatted = None
-            if lec_date:
-                try:
-                    p = str(lec_date).split("-")
-                    if len(p) == 3:
-                        lec_date_formatted = f"{p[2]}.{p[1]}.{p[0]}"
-                    else:
+            if canon:
+                lec_id = canon["lecture_id"]
+                lec_title = canon["lecture_title"]
+                lec_date = canon["lecture_date"]
+                lec_date_formatted = canon["lecture_date_formatted"]
+                podcast_folder_name = canon["lecture_id"]
+                slide_file = c_deck.get("matched_slide_filename") or canon["slide_file"]
+                slide_subfolder = canon["slide_subfolder"]
+                clean_info["lecturer"] = canon["lecturer"]
+            else:
+                lec_date = top.get("date")
+                lec_date_formatted = None
+                if lec_date:
+                    try:
+                        p = str(lec_date).split("-")
+                        if len(p) == 3:
+                            lec_date_formatted = f"{p[2]}.{p[1]}.{p[0]}"
+                        else:
+                            lec_date_formatted = str(lec_date)
+                    except Exception:
                         lec_date_formatted = str(lec_date)
-                except Exception:
-                    lec_date_formatted = str(lec_date)
 
-            lec_id = top.get("id")
-            lec_title = top.get("title")
-            podcast_folder_name = lec_id if lec_id else None
-            slide_file = c_deck.get("matched_slide_filename")
-            
-            # Determine slide subfolder
-            slide_subfolder = "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal" if (slide_file and "CM_" in str(slide_file)) else "Vorlesungen im Themenblock Blut und Immunsystem"
+                lec_id = top.get("id")
+                lec_title = top.get("title")
+                podcast_folder_name = lec_id if lec_id else None
+                slide_file = c_deck.get("matched_slide_filename")
+                slide_subfolder = "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal" if (slide_file and "CM_" in str(slide_file)) else "Vorlesungen im Themenblock Blut und Immunsystem"
+
             slide_rel = f"{slide_subfolder}/{slide_file}" if slide_file else None
 
             day_slots.append({
@@ -1267,8 +1384,10 @@ def get_daily_curriculum_assignment(
                     "primary_timecode_guidance": primary_tom.get("timecode_guidance"),
                     "lecture_url": primary_tom.get("vam_url") or "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
                     "podcast_folder_name": primary_tom.get("podcast_folder_name"),
+                    "local_podcast_folder_path": primary_tom.get("local_podcast_folder_path"),
                     "slide_filename": primary_tom.get("matched_slide_filename"),
                     "slide_rel_path": primary_tom.get("slide_relative_path"),
+                    "local_slide_file_path": primary_tom.get("local_slide_file_path"),
                     "is_cycle_topic": primary_tom.get("is_cycle_topic", False),
                 }
 

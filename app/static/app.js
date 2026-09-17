@@ -2812,21 +2812,24 @@ function renderCurriculumToday(data) {
              </div>`
           : '';
 
-        // Lecture Links (VAM-Archiv & Podcast-Folder)
+        // Lecture Links (Direct Playback, Windows Explorer & VAM-Archiv)
         const lectureLinksHtml = `
           <div class="slot-lecture-links" style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
-            <a href="${slot.vam_url || 'https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983'}" target="_blank" class="btn-vam-chip" title="Vorlesungsaufzeichnung direkt im UZH VAM-Archiv öffnen">
-              🎬 VAM-Archiv
-            </a>
             ${slot.local_podcast_folder_path ? `
-              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})')" title="Vorlesungsvideo direkt im Windows Datei-Explorer auf deinem Laptop öffnen">
-                📂 Vorlesung (Explorer)
+              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesungsvideo', true)" style="font-size: 10.5px; padding: 2px 7px; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 700;" title="Spielt das Vorlesungsvideo direkt im Videoplayer auf deinem Laptop ab!">
+                ▶️ Abspielen
+              </button>
+              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})', false)" title="Vorlesungs-Ordner im Windows Datei-Explorer auf deinem Laptop öffnen" style="font-size: 10px; padding: 2px 5px;">
+                📂 Explorer
               </button>
             ` : ''}
+            <a href="${slot.vam_url || 'https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983'}" target="_blank" class="btn-vam-chip" title="Vorlesungsaufzeichnung direkt im UZH VAM-Archiv öffnen" style="font-size: 10px; padding: 2px 5px;">
+              🎬 VAM
+            </a>
           </div>
         `;
 
-        // Slide Badge & Action Links (In-Browser View, Windows Explorer Folder, OpenOLAT)
+        // Slide Badge & Action Links (Direct Open, In-Browser View, Windows Explorer Folder, OpenOLAT)
         let slideBadge;
         if (slot.matched_slide_filename) {
           const slideRel = slot.slide_relative_path || slot.matched_slide_filename;
@@ -2834,11 +2837,14 @@ function renderCurriculumToday(data) {
           const folderLocal = slot.local_slide_folder_path || '';
           slideBadge = `
             <div style="display: flex; flex-direction: column; gap: 4px;">
-              <a class="curriculum-slide-link" title="Folie im Browser / PDF-Viewer öffnen: ${escapeHtml(slot.matched_slide_filename)}" href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" onclick="handleOpenSlidePdf('${escapeHtml(slideRel).replace(/'/g, "\\'")}', '${escapeHtml(slideLocal).replace(/\\/g, '\\\\')}');">
+              <a class="curriculum-slide-link" title="Folie im PDF-Viewer &amp; Browser öffnen: ${escapeHtml(slot.matched_slide_filename)}" href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" onclick="handleOpenSlidePdf('${escapeHtml(slideRel).replace(/'/g, "\\'")}', '${escapeHtml(slideLocal).replace(/\\/g, '\\\\')}');">
                 📄 ${escapeHtml(slot.matched_slide_filename.length > 20 ? slot.matched_slide_filename.substring(0, 18) + '...' : slot.matched_slide_filename)}
               </a>
               <div style="display: flex; gap: 4px; align-items: center;">
-                <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(folderLocal || slideLocal).replace(/\\/g, '\\\\')}', 'Folien-Ordner')" title="Folien-Ordner im Windows Explorer öffnen" style="font-size: 10px; padding: 2px 5px;">
+                <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slideLocal || slideRel).replace(/\\/g, '\\\\')}', 'Folien-PDF', true)" title="Folien-PDF direkt im PDF-Viewer öffnen" style="font-size: 10px; padding: 2px 5px; color: #7ee787; border-color: rgba(46, 160, 67, 0.4);">
+                  📄 Öffnen
+                </button>
+                <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(folderLocal || slideLocal).replace(/\\/g, '\\\\')}', 'Folien-Ordner', false)" title="Folien-Ordner im Windows Explorer öffnen" style="font-size: 10px; padding: 2px 5px;">
                   📂 Ordner
                 </button>
                 <a href="${slot.olat_url || 'https://lms.uzh.ch/url/RepositoryEntry/666697737'}" target="_blank" class="btn-olat-chip" title="Skripte &amp; Unterlagen auf OpenOLAT öffnen" style="font-size: 10px; padding: 2px 5px;">
@@ -3068,7 +3074,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
 async function handleOpenSlidePdf(relPath, localFilePath) {
   const target = localFilePath || relPath;
   if (!target) return;
-  await handleOpenLocalFolder(target, 'Folien-PDF');
+  await handleOpenLocalFolder(target, 'Folien-PDF', true);
 }
 
 let _cachedRoadmapData = null;
@@ -4160,7 +4166,7 @@ async function openPodcastFolder(folderName) {
     showToast('Kein Podcast-Ordner hinterlegt');
     return;
   }
-  await handleOpenLocalFolder(folderName, 'Podcast-Folienansicht');
+  await handleOpenLocalFolder(folderName, 'Vorlesungsvideo', true);
 }
 
 async function openSlideModalQuick(path, title = '') {

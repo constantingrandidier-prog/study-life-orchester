@@ -44,7 +44,6 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "einführung",
             "blut",
             "hämatologie",
-            "erythrozyt",
             "hämatokrit",
             "hct",
             "mcv",
@@ -117,7 +116,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
     {
         "id": "2025-09-18_TB_Blut_-_Immunsystem",
         "date": "2025-09-18",
-        "title": "Hämoglobin, Myoglobin & Sauerstoffbindung",
+        "title": "Hämoglobin, Myoglobin & Sauerstoffbindung (Erythrozyten)",
         "module": "1. Blut & Immunsystem",
         "lecturer": "Prof. Dr. Cristina Manatschal / Prof. Raimund Dutzler",
         "exam_yield": "High-Yield",
@@ -128,11 +127,12 @@ LECTURES_DATA: List[Dict[str, Any]] = [
         "badge_color": "var(--status-warning, #d29922)",
         "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
         "is_audio_only": False,
-        "tradeoff_reason": "Zentrales allosterisches Kernkonzept (T- zu R-Konformation, sigmoide vs. hyperbolische O2-Bindungskurve, 2,3-BPG-Einfluss, Hill-Koeffizient ca. 2.8). Das simultane visuelle Verfolgen der Kurvenverschiebung ist vor dem Anki-Lernen essenziell; 1.2x wahrt die kognitive Synchronisation trotz rascher Artikulation der Dozentin.",
+        "tradeoff_reason": "Zentrales allosterisches Kernkonzept (T- zu R-Konformation, sigmoide vs. hyperbolische O2-Bindungskurve, 2,3-BPG-Einfluss, Hill-Koeffizient ca. 2.8, Erythrozytenmorphologie & Membranaufbau). Das simultane visuelle Verfolgen der Kurvenverschiebung ist vor dem Anki-Lernen essenziell; 1.2x wahrt die kognitive Synchronisation trotz rascher Artikulation der Dozentin.",
         "anki_facts": [
             "Kooperativer Bindungsmechanismus: T-Zustand (Tense, niedrige O2-Affinität) geht bei O2-Bindung in R-Zustand (Relaxed, hohe O2-Affinität) über.",
             "Allosterischer Effektor 2,3-Bisphosphoglycerat (2,3-BPG): Stabilisiert spezifisch die T-Form in der zentralen Kavität und verschiebt O2-Bindungskurve nach rechts.",
-            "Fetales Hämoglobin (HbF, alpha2-gamma2): Besitzt Serin statt Histidin an Position 143 (gamma-Kette), bindet 2,3-BPG schwächer und hat daher höhere O2-Affinität als HbA."
+            "Fetales Hämoglobin (HbF, alpha2-gamma2): Besitzt Serin statt Histidin an Position 143 (gamma-Kette), bindet 2,3-BPG schwächer und hat daher höhere O2-Affinität als HbA.",
+            "Erythrozyten-Funktion: Bikonkave Scheibenform optimiert Diffusionsfläche für Gastransport (O2/CO2) und osmotische Verformbarkeit in Kapillaren."
         ],
         "keywords": [
             "hämoglobin",
@@ -148,12 +148,23 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "kooperativität",
             "hill-koeffizient",
             "sigmoide bindungskurve",
-            "p50-wert"
+            "p50-wert",
+            "erythrozyt",
+            "erythrozyten",
+            "erythrozytenmorphologie",
+            "osmotische resistenz",
+            "blut und blutplasma",
+            "blutplasma",
+            "gastransport"
         ],
         "associated_decks": [
             "1 Hämoglobin",
             "Hämoglobin Teil 2",
-            "2. SJ :: 1. Blut & Immunsystem :: Hämoglobin"
+            "2. SJ :: 1. Blut & Immunsystem :: Hämoglobin",
+            "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+            "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
+            "Erythrozyten",
+            "Blut und Blutplasma"
         ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/1-4_CM_Myoglobin_Hamoglobin.pdf",
         "total_anki_cards": 245,

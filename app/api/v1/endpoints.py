@@ -1372,7 +1372,8 @@ def post_anki_cleanup_temp_deck_endpoint(payload: dict = Body(default={})):
 def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
     """Helper to locate a local UZH course file or folder across known directories."""
     from pathlib import Path
-    
+    import re
+
     base_dirs = [
         Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app"),
         Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\alles\Studium"),
@@ -1389,9 +1390,15 @@ def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
         return cand
 
     for b in base_dirs:
+        if not b.exists():
+            continue
         cand = b / clean_p
         if cand.exists():
             return cand
+        cand_pod = b / "Podcasts" / clean_p
+        if cand_pod.exists():
+            return cand_pod
+
         fname = Path(clean_p).name
         try:
             cands = list(b.glob(f"**/{fname}"))
@@ -1399,6 +1406,16 @@ def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
                 return cands[0]
         except Exception:
             pass
+
+        # Regex search if filename is embedded in a longer or mangled string
+        m = re.search(r'([A-Za-z0-9_\-\.]+\.(?:pdf|mp4))', clean_p, re.IGNORECASE)
+        if m:
+            try:
+                sub_cands = list(b.glob(f"**/*{m.group(1)}*"))
+                if sub_cands:
+                    return sub_cands[0]
+            except Exception:
+                pass
     return None
 
 
@@ -1467,10 +1484,105 @@ def open_slide_endpoint(
 def view_slide_endpoint(
     path: str = Query(..., description="Relative path or name of the slide PDF"),
 ):
-    from fastapi.responses import FileResponse
+    from fastapi.responses import FileResponse, HTMLResponse
+    import time
     found = _resolve_uzh_file_or_folder(path)
     if not found or not found.exists() or not found.is_file():
-        raise HTTPException(status_code=404, detail=f"Folie '{path}' nicht gefunden.")
+        # Cloud / Render fallback: queue desktop action to open file in Windows Explorer on laptop
+        action_obj = {
+            "id": f"act_{int(time.time() * 1000)}",
+            "action": "open_explorer",
+            "path": path,
+            "direct_open": False,
+            "timestamp": time.time(),
+        }
+        _PENDING_SYSTEM_COMMANDS.append(action_obj)
+        clean_title = Path(path.replace("/", "\\")).name
+        return HTMLResponse(
+            f"""<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folie im Datei-Explorer geöffnet</title>
+<style>
+body {{
+  background: #0d1117;
+  color: #e6edf3;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}}
+.card {{
+  background: #161b22;
+  border: 1px solid #30363d;
+  padding: 2.2rem;
+  border-radius: 10px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}}
+h2 {{ color: #7ee787; margin-top: 0; font-size: 1.35rem; }}
+p {{ color: #8b949e; line-height: 1.6; font-size: 0.95rem; }}
+.path-box {{
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 12px;
+  border-radius: 6px;
+  word-break: break-all;
+  color: #58a6ff;
+  font-family: monospace;
+  font-size: 13px;
+  margin: 1.2rem 0;
+  font-weight: 600;
+}}
+.status-pill {{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(46, 160, 67, 0.15);
+  color: #7ee787;
+  border: 1px solid rgba(46, 160, 67, 0.4);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}}
+.btn {{
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.55rem 1.4rem;
+  background: #238636;
+  border: 1px solid #2ea043;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}}
+.btn:hover {{ background: #2ea043; }}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="status-pill">💻 Befehl an Laptop übertragen</div>
+  <h2>📂 Folie wird im Datei-Explorer geöffnet!</h2>
+  <p>Da deine Vorlesungsunterlagen auf deinem Laptop gespeichert sind, hat der Orchestrator gerade deinen <strong>Windows Datei-Explorer</strong> aufgerufen und die Folie markiert:</p>
+  <div class="path-box">📄 {clean_title}</div>
+  <p style="font-size: 12.5px; color: #8b949e;">Du findest die Folie jetzt direkt vor dir in deinem Explorer-Fenster.</p>
+  <button onclick="window.close()" class="btn">Fenster schliessen</button>
+</div>
+</body>
+</html>"""
+        )
     return FileResponse(
         str(found),
         media_type="application/pdf",

@@ -3029,10 +3029,10 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
     showToast(`⚠️ Kein Pfad für ${label} hinterlegt`);
     return;
   }
-  const actionText = 'Öffnen';
-  showToast(`📂 ${actionText} von ${label}...`, 3000);
+  const cleanPath = String(folderOrFilePath).trim().replace(/\\/g, '/').replace(/^['"]+|['"]+$/g, '');
+  showToast(`📂 Öffnen von ${label}...`, 3000);
 
-  const query = `path=${encodeURIComponent(folderOrFilePath)}&direct_open=${directOpen ? 'true' : 'false'}`;
+  const query = `path=${encodeURIComponent(cleanPath)}&direct_open=${directOpen ? 'true' : 'false'}`;
 
   // 1. Try local server direct (127.0.0.1:8000) for instant native execution if available
   let opened = false;
@@ -3046,7 +3046,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
     if (localRes.ok) {
       const data = await localRes.json();
       if (data && data.success) {
-        showToast(`✅ ${data.message || `${label} ${directOpen ? 'gestartet' : 'im Explorer geöffnet'}!`}`, 4000);
+        showToast(`✅ ${data.message || `${label} im Datei-Explorer geöffnet!`}`, 4000);
         opened = true;
         return;
       }
@@ -3058,11 +3058,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
     const res = await fetch(`/api/v1/schedule/folder/open?${query}`);
     const data = await res.json();
     if (data && (data.success || data.queued)) {
-      if (data.queued) {
-        showToast(`💻 ${label} wird auf deinem Laptop ${directOpen ? 'abgespielt' : 'im Explorer geöffnet'}!`, 4500);
-      } else {
-        showToast(`✅ ${data.message || `${label} geöffnet!`}`, 4000);
-      }
+      showToast(`💻 Datei-Explorer wird auf deinem Laptop geöffnet (${label})...`, 4500);
       opened = true;
       return;
     }
@@ -3090,9 +3086,9 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
 }
 
 async function handleOpenSlidePdf(relPath, localFilePath) {
-  const target = localFilePath || relPath;
+  const target = (relPath || localFilePath || '').replace(/\\/g, '/');
   if (!target) return;
-  await handleOpenLocalFolder(target, 'Folien-PDF', true);
+  await handleOpenLocalFolder(target, 'Folien-PDF', false);
 }
 
 let _cachedRoadmapData = null;
@@ -4184,7 +4180,7 @@ async function openPodcastFolder(folderName) {
     showToast('Kein Podcast-Ordner hinterlegt');
     return;
   }
-  await handleOpenLocalFolder(folderName, 'Vorlesungsvideo', true);
+  await handleOpenLocalFolder(folderName, 'Vorlesungs-Datei', false);
 }
 
 async function openSlideModalQuick(path, title = '') {
@@ -4971,14 +4967,14 @@ function renderScienceRhythm(data) {
             <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : '#79c0ff'}; display: inline-flex; align-items: center; gap: 4px;">
               ${isPostponed ? '⏩ Nachhol-Vorlesung:' : '🌅 Vorlesung für MORGEN:'}
             </span>
-            ${(b.local_podcast_folder_path || b.podcast_folder_name) ? `
-              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">
+            ${(b.podcast_folder_name || b.local_podcast_folder_path) ? `
+              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml((b.podcast_folder_name || b.local_podcast_folder_path || '').replace(/\\/g, '/'))}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">
                 📂 Im Datei-Explorer öffnen
               </button>
             ` : ''}
-            ${(b.local_slide_file_path || b.slide_rel_path || b.slide_filename) ? `
-              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_slide_file_path || b.slide_rel_path || b.slide_filename)}', 'Folien-PDF', false)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien im Datei-Explorer oder Browser">
-                📄 Folien ansehen
+            ${(b.slide_rel_path || b.slide_filename || b.local_slide_file_path) ? `
+              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml((b.slide_rel_path || b.slide_filename || b.local_slide_file_path || '').replace(/\\/g, '/'))}', 'Folien-PDF', false)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien-PDF direkt in deinem Windows Datei-Explorer">
+                📄 Folien im Explorer
               </button>
             ` : ''}
             ${b.vam_url ? `

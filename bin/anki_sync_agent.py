@@ -106,7 +106,7 @@ def execute_desktop_action(act: dict):
             print(f"[ACTION] Fehler beim Beenden von VLC: {exc}", flush=True)
         return
 
-    raw_path = act.get("path") or ""
+    raw_path = (act.get("path") or "").strip().replace("/", "\\")
     if not raw_path:
         return
 
@@ -116,40 +116,61 @@ def execute_desktop_action(act: dict):
     except Exception:
         pass
 
-    p = Path(raw_path)
-    if not p.exists():
-        base = Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app")
-        clean = raw_path.strip().replace("/", "\\")
-        cand = base / clean
-        cand_pod = base / "Podcasts" / clean
-        if cand.exists():
-            p = cand
-        elif cand_pod.exists():
-            p = cand_pod
-        else:
-            fname = Path(clean).name
-            matches = list(base.glob(f"**/{fname}"))
+    import re
+    target = None
+    direct_p = Path(raw_path)
+    if direct_p.exists():
+        target = direct_p
+    else:
+        base_dirs = [
+            Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app"),
+            Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\alles\Studium"),
+            Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop"),
+        ]
+        for b in base_dirs:
+            if not b.exists():
+                continue
+            cand = b / raw_path
+            if cand.exists():
+                target = cand
+                break
+            cand_pod = b / "Podcasts" / raw_path
+            if cand_pod.exists():
+                target = cand_pod
+                break
+            fname = Path(raw_path).name
+            matches = list(b.glob(f"**/{fname}"))
             if matches:
-                p = matches[0]
+                target = matches[0]
+                break
+            m = re.search(r'([A-Za-z0-9_\-\.]+\.(?:pdf|mp4))', raw_path, re.IGNORECASE)
+            if m:
+                sub_matches = list(b.glob(f"**/*{m.group(1)}*"))
+                if sub_matches:
+                    target = sub_matches[0]
+                    break
 
-    if not p.exists():
+    if not target or not target.exists():
         print(f"[ACTION] Pfad lokal nicht gefunden: {raw_path}", flush=True)
         return
 
     try:
         # Guarantee a visible window by delegating to Windows Explorer (never headless os.startfile on videos)
-        if p.is_file():
-            subprocess.Popen(f'explorer.exe /select,"{str(p)}"', shell=True)
-            print(f"[ACTION] Datei im Windows Explorer markiert: {p.name}", flush=True)
+        if target.is_file():
+            cmd = f'explorer.exe /select,"{str(target)}"'
+            subprocess.Popen(cmd, shell=True)
+            print(f"[ACTION] Datei im Windows Explorer markiert: {target.name}", flush=True)
         else:
-            folien_vids = list(p.glob("*Folien*.mp4")) or list(p.glob("*.mp4")) or list(p.glob("*.pdf"))
+            folien_vids = list(target.glob("*Folien*.mp4")) or list(target.glob("*.mp4")) or list(target.glob("*.pdf"))
             if folien_vids:
                 target_file = folien_vids[0]
-                subprocess.Popen(f'explorer.exe /select,"{str(target_file)}"', shell=True)
+                cmd = f'explorer.exe /select,"{str(target_file)}"'
+                subprocess.Popen(cmd, shell=True)
                 print(f"[ACTION] Video/Folie im Explorer markiert: {target_file.name}", flush=True)
             else:
-                subprocess.Popen(f'explorer.exe "{str(p)}"', shell=True)
-                print(f"[ACTION] Ordner im Explorer geöffnet: {p.name}", flush=True)
+                cmd = f'explorer.exe "{str(target)}"'
+                subprocess.Popen(cmd, shell=True)
+                print(f"[ACTION] Ordner im Explorer geöffnet: {target.name}", flush=True)
     except Exception as e:
         print(f"[ACTION] Fehler beim Ausführen: {e}", flush=True)
 

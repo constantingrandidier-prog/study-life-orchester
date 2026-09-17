@@ -345,6 +345,13 @@ class ExamPacingResponse(BaseModel):
     due_reviews_today: Optional[int] = Field(default=0, description="Fällige Wiederholungen aus Anki")
     total_daily_cards_needed: Optional[int] = Field(default=0, description="Gesamt (Neue Karten + Wiederholungen)")
     weakness_summary: Optional[str] = Field(default=None, description="Kurzzusammenfassung der Schwachstellen")
+    base_daily_quota: Optional[int] = Field(default=90, description="Didaktische Basisquote ohne Rückstand")
+    cumulative_backlog: Optional[int] = Field(default=0, description="Echter kumulativer Rückstand seit Semesterstart")
+    backlog_spread_per_day: Optional[int] = Field(default=0, description="Auf die Resttage aufgeteilter Rückstandszuschlag")
+    backlog_explanation: Optional[str] = Field(default=None, description="Verständliche Erklärung der Rückstandsverteilung")
+    elapsed_learning_days: Optional[int] = Field(default=0, description="Abgelaufene Lerntage seit Semesterstart")
+    cards_completed_prior: Optional[int] = Field(default=0, description="Vor heute tatsächlich gelernte Karten")
+    expected_cards_prior: Optional[int] = Field(default=0, description="Bis heute erwartete Karten laut Basisquote")
 
 
 # ============================================================================

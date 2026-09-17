@@ -1805,7 +1805,9 @@ function updateMissionKpiStrip() {
   const repsDone = desktop ? (desktop.repetition_cards_count || 0) : 0;
   const repsDue = desktop ? (desktop.due_today_count != null ? desktop.due_today_count : 0) : (pacing ? (pacing.due_reviews_today || 0) : 0);
   const totalReviews = desktop ? (desktop.total_reviews_count || (newDone + repsDone)) : (newDone + repsDone);
-  const mins = desktop ? (desktop.today_time_minutes || 0) : 0;
+  const mins = desktop ? (desktop.effective_study_minutes || desktop.today_session_time_minutes || desktop.today_time_minutes || 0) : 0;
+  const cardTimerMins = desktop ? (desktop.today_time_minutes || 0) : 0;
+  const sessionMins = desktop ? (desktop.today_session_time_minutes || 0) : 0;
 
   const totalTarget = baseNew + repsDone + repsDue;
   const totalDone = newDone + repsDone;
@@ -1879,7 +1881,14 @@ function updateMissionKpiStrip() {
   if (timeSpentSub) {
     if (mins > 0 || repsDone > 0 || newDone > 0) {
       timeSpentSub.style.display = 'block';
-      timeSpentSub.textContent = `⏱️ ${mins} Min. Lernzeit • ${repsDone} Repetitionen + ${newDone} neue (${totalReviews} Reviews)`;
+      const hours = Math.floor(mins / 60);
+      const remMins = Math.round(mins % 60);
+      const timeFormatted = hours > 0 ? `${hours}h ${remMins}m` : `${Math.round(mins)} Min.`;
+      if (sessionMins > 0 && Math.abs(sessionMins - cardTimerMins) >= 5) {
+        timeSpentSub.textContent = `⏱️ ${timeFormatted} Lernzeit (${Math.round(sessionMins)}m Session • ${cardTimerMins}m reine Kartenzeit) • ${repsDone} Repetitionen + ${newDone} neue (${totalReviews} Reviews)`;
+      } else {
+        timeSpentSub.textContent = `⏱️ ${timeFormatted} Lernzeit • ${repsDone} Repetitionen + ${newDone} neue (${totalReviews} Reviews)`;
+      }
     }
   }
 
@@ -1942,7 +1951,11 @@ function renderExamPacing(data) {
     if (data.is_rest_day) {
       targetSub.textContent = data.rest_day_reason || 'Eingeplanter Ruhetag';
     } else {
-      targetSub.textContent = `Bei 6 Lerntagen/Woche (9'633 gesamt)`;
+      if (data.cumulative_backlog > 0) {
+        targetSub.textContent = `Basis ${data.base_daily_quota || 90} + ${data.backlog_spread_per_day || 1}/Tag (${data.cumulative_backlog} Karten Rückstand über ${data.learning_days_remaining} Lerntage verteilt)`;
+      } else {
+        targetSub.textContent = `Bei 6 Lerntagen/Woche (${totalCardsStr} gesamt • ${remCardsStr} offen)`;
+      }
     }
   }
 

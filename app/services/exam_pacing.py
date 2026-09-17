@@ -109,15 +109,75 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     elif is_revision_phase:
         rest_day_reason = "14-Tage Revisionsphase (Reines Wiederholen, keine neuen Karten)"
 
-    # 5. Card progress metrics
-    total_cards_completed = get_total_cards_completed_all_time(user_id=user_id)
-    remaining_curriculum_cards = max(0, total_curriculum_cards - total_cards_completed)
+    # 5. Semester Timeline & Cumulative Backlog Metrics
+    SEMESTER_START_DATE = date(2026, 9, 14)
+
+    # Total active learning days across the whole semester (before revision buffer)
+    total_semester_learning_days = 0
+    s_day = SEMESTER_START_DATE
+    while s_day < revision_start_date:
+        if s_day.weekday() not in free_weekdays and s_day.isoformat() not in joker_dates:
+            total_semester_learning_days += 1
+        s_day += timedelta(days=1)
+    total_semester_learning_days = max(1, total_semester_learning_days)
+    base_daily_quota = math.ceil(total_curriculum_cards / total_semester_learning_days)
+
+    # Active learning days strictly elapsed before curr_date
+    elapsed_learning_days = 0
+    e_day = SEMESTER_START_DATE
+    while e_day < curr_date:
+        if e_day.weekday() not in free_weekdays and e_day.isoformat() not in joker_dates:
+            elapsed_learning_days += 1
+        e_day += timedelta(days=1)
+
+    # Cards completed strictly before curr_date
+    from app.db.repository import get_db_connection
+    cards_completed_prior = 0
+    try:
+        with get_db_connection() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT COALESCE(SUM(cards_completed), 0) FROM daily_progress_logs WHERE user_id = ? AND log_date < ?",
+                (user_id, curr_date.isoformat())
+            )
+            cards_completed_prior = cur.fetchone()[0] or 0
+    except Exception:
+        cards_completed_prior = 0
+
+    expected_cards_prior = elapsed_learning_days * base_daily_quota
+    cumulative_backlog = max(0, expected_cards_prior - cards_completed_prior)
+    backlog_spread_per_day = math.ceil(cumulative_backlog / max(1, learning_days_remaining)) if (cumulative_backlog > 0 and learning_days_remaining > 0) else 0
+
+    # Remaining cards to complete across remaining learning days
+    remaining_curriculum_cards_for_quota = max(0, total_curriculum_cards - cards_completed_prior)
 
     # Calculate daily target
     if is_rest_day or is_revision_phase:
         daily_target_cards = 0
     else:
-        daily_target_cards = math.ceil(remaining_curriculum_cards / max(1, learning_days_remaining))
+        daily_target_cards = math.ceil(remaining_curriculum_cards_for_quota / max(1, learning_days_remaining))
+
+    # Detailed backlog explanation
+    if is_rest_day:
+        backlog_explanation = f"Eingeplanter Ruhetag: {rest_day_reason}"
+    elif cumulative_backlog > 0:
+        backlog_explanation = (
+            f"⚖️ +{backlog_spread_per_day} Karten/Tag aus kumulativem Rückstand "
+            f"({cumulative_backlog} Karten Rückstand aus {elapsed_learning_days} Tagen über {learning_days_remaining} verbleibende Lerntage verteilt: "
+            f"Basis {base_daily_quota} + {backlog_spread_per_day} = {daily_target_cards} neue Karten heute)."
+        )
+    elif cards_completed_prior > expected_cards_prior:
+        surplus = cards_completed_prior - expected_cards_prior
+        backlog_explanation = (
+            f"🎉 {surplus} Karten Vorsprung erarbeitet! Dein Tagespensum ist entlastet "
+            f"({daily_target_cards} statt Basis {base_daily_quota} neue Karten heute)."
+        )
+    else:
+        backlog_explanation = f"Standard-Tagesziel von {base_daily_quota} neuen Karten (Voll im Soll)."
+
+    # All-time card progress metrics (including today)
+    total_cards_completed = get_total_cards_completed_all_time(user_id=user_id)
+    remaining_curriculum_cards = max(0, total_curriculum_cards - total_cards_completed)
 
     # Today's actual logged cards (auto-synchronized with Anki Desktop - ONLY NEW CARDS)
     cards_completed_today = 0
@@ -219,6 +279,13 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
             "6_days_week": pace_6d,
             "5_days_week": pace_5d,
         },
+        "base_daily_quota": base_daily_quota,
+        "cumulative_backlog": cumulative_backlog,
+        "backlog_spread_per_day": backlog_spread_per_day,
+        "backlog_explanation": backlog_explanation,
+        "elapsed_learning_days": elapsed_learning_days,
+        "cards_completed_prior": cards_completed_prior,
+        "expected_cards_prior": expected_cards_prior,
         "advice": advice,
     }
 

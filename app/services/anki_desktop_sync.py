@@ -103,6 +103,29 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     today_time_mins = round(sum(r[6] for r in revs_rows) / 1000 / 60, 1)
     today_lapses = sum(1 for r in revs_rows if r[3] == 1)
 
+    # Real-life study session wall-clock time calculation:
+    # Reviews within 10-minute pauses (600s) are grouped into contiguous study blocks
+    sorted_revs = sorted(revs_rows, key=lambda x: x[0])
+    sessions = []
+    curr_sess = []
+    for r in sorted_revs:
+        ts = r[0] / 1000.0  # seconds
+        card_dur = max(5.0, min(180.0, r[6] / 1000.0))
+        if not curr_sess:
+            curr_sess = [ts, ts + card_dur]
+        else:
+            if ts - curr_sess[1] <= 600:
+                curr_sess[1] = max(curr_sess[1], ts + card_dur)
+            else:
+                sessions.append(curr_sess)
+                curr_sess = [ts, ts + card_dur]
+    if curr_sess:
+        sessions.append(curr_sess)
+
+    total_sess_sec = sum(s[1] - s[0] for s in sessions)
+    today_session_time_mins = round(total_sess_sec / 60, 1)
+    effective_study_mins = max(today_time_mins, today_session_time_mins)
+
     # Unique cards breakdown:
     # type = 0: new card (first learn) -> THIS counts towards the new cards pacing goal!
     # type in (1, 2): repetition / review / relearn
@@ -195,6 +218,8 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'repetition_cards_count': repetition_cards_count,
         'total_reviews_count': total_reviews_count,
         'today_time_minutes': today_time_mins,
+        'today_session_time_minutes': today_session_time_mins,
+        'effective_study_minutes': effective_study_mins,
         'today_lapses_count': today_lapses,
         'today_new_count': new_cards_count,
         'today_review_count': repetition_cards_count,
@@ -223,9 +248,9 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             save_daily_progress(
                 target_date=query_date,
                 cards_completed=new_cards_count,
-                minutes_spent=int(today_time_mins),
+                minutes_spent=int(round(effective_study_mins)),
                 source='anki_desktop_auto',
-                notes=f'Auto-Sync Anki Desktop ({new_cards_count} neue Karten, {repetition_cards_count} Repetitionen, {today_time_mins}m)',
+                notes=f'Auto-Sync Anki Desktop ({new_cards_count} neue Karten, {repetition_cards_count} Repetitionen, {effective_study_mins}m Session, {today_time_mins}m Fokuszeit)',
                 user_id='student',
             )
         except Exception:

@@ -47,14 +47,18 @@ def sync_now():
     if is_local_server_running():
         targets.append(LOCAL_BASE)
 
-    # 1. Sync yesterday's state (ensures roadmap quota calculation has exact count)
+    # 1. Sync all past days since semester start (ensures cumulative backlog is always 100% accurate)
     try:
-        yesterday_str = (date.today() - timedelta(days=1)).isoformat()
-        y_state = read_live_anki_desktop_state(target_date_str=yesterday_str)
-        for base in targets:
-            post_json(f"{base}/desktop-sync", y_state)
+        sem_start = date(2026, 9, 14)
+        curr = sem_start
+        while curr < date.today():
+            past_str = curr.isoformat()
+            past_state = read_live_anki_desktop_state(target_date_str=past_str)
+            for base in targets:
+                post_json(f"{base}/desktop-sync", past_state)
+            curr += timedelta(days=1)
     except Exception as e:
-        print("Yesterday sync error:", e, flush=True)
+        print("Semester history sync error:", e, flush=True)
 
     # 2. Sync today's state
     try:

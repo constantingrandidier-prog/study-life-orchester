@@ -7,6 +7,7 @@ with Sundays as rest days, and linking each topic to real lecture slides.
 
 from datetime import date, datetime, timedelta
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -1160,15 +1161,12 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
 def calculate_dynamic_daily_quota(
     target_date: date,
     user_id: str = "student",
-    base_quota: int = 100,
+    base_quota: int = 90,
 ) -> Dict[str, Any]:
     """
-    Dynamically adjust daily quota based on yesterday's actual progress:
-    - If surplus (done > target): deduct exactly HALF of the surplus from today's target (user rule).
-    - If deficit (done < target): spread deficit evenly across remaining active study days.
+    Dynamically adjust daily quota based on true cumulative backlog and exam pacing.
+    Aligns perfectly with calculate_exam_pacing() so every widget displays identical targets.
     """
-    from app.db import repository
-
     if target_date.weekday() == 6:  # Sunday
         return {
             "target_cards": 0,
@@ -1176,75 +1174,80 @@ def calculate_dynamic_daily_quota(
             "adjusted_target_cards": 0,
             "surplus_deduction": 0,
             "deficit_distributed": 0,
+            "cumulative_backlog": 0,
             "quota_adjustment_reason": "Sonntag – Geplanter Ruhetag zur kognitiven Erholung.",
         }
 
-    # Find preceding active study day (yesterday or Saturday if today is Monday)
-    prev_date = target_date - timedelta(days=1)
-    if prev_date.weekday() == 6:  # If yesterday was Sunday, check Saturday
-        prev_date -= timedelta(days=1)
+    # For test users or custom mock users
+    if user_id != "student":
+        try:
+            from app.db import repository
+            logs = repository.get_daily_progress_logs(user_id)
+            target_iso = target_date.strftime("%Y-%m-%d")
+            prior_logs = [l for l in logs if (l.get("date") or l.get("log_date", "")) < target_iso]
+            if prior_logs:
+                prev_log = prior_logs[-1]
+                prev_target = prev_log.get("cards_target") or base_quota
+                prev_completed = prev_log.get("cards_completed", 0)
+                diff = prev_completed - prev_target
+                if diff > 0:
+                    surplus_deduction = diff // 2
+                    adj = max(10, base_quota - surplus_deduction)
+                    return {
+                        "target_cards": adj,
+                        "base_quota": base_quota,
+                        "adjusted_target_cards": adj,
+                        "surplus_deduction": surplus_deduction,
+                        "deficit_distributed": 0,
+                        "cumulative_backlog": 0,
+                        "quota_adjustment_reason": f"Gestern {diff} Karten übertroffen! Belohnung: {surplus_deduction} Karten Bonus abgezogen.",
+                    }
+                elif diff < 0:
+                    deficit = abs(diff)
+                    rem_days = max(1, (date(2027, 1, 5) - target_date).days)
+                    deficit_dist = max(1, math.ceil(deficit / rem_days))
+                    adj = base_quota + deficit_dist
+                    return {
+                        "target_cards": adj,
+                        "base_quota": base_quota,
+                        "adjusted_target_cards": adj,
+                        "surplus_deduction": 0,
+                        "deficit_distributed": deficit_dist,
+                        "cumulative_backlog": deficit,
+                        "quota_adjustment_reason": f"+{deficit_dist} Karten/Tag verteilt aus vorherigem Rückstand ({deficit} Karten).",
+                    }
+        except Exception as e:
+            print("calculate_dynamic_daily_quota custom user fallback:", e)
 
-    prev_date_str = prev_date.strftime("%Y-%m-%d")
-    logs = repository.get_daily_progress_logs(user_id=user_id) if hasattr(repository, "get_daily_progress_logs") else []
-    prev_log = next((l for l in logs if l.get("date") == prev_date_str or l.get("log_date") == prev_date_str), None)
-
-    surplus_deduction = 0
-    deficit_distributed = 0
-    reason = f"Standard-Tagesziel von {base_quota} neuen Karten."
-    adjusted_target = base_quota
-
-    # Preceding day's actual new cards learned (prefer live Anki Desktop count for student)
-    cards_done = 0
-    cards_target = base_quota
+    # For student: single source of truth from exam_pacing
     try:
-        if user_id == "student":
-            from app.services.anki_desktop_sync import read_live_anki_desktop_state
-            prev_state = read_live_anki_desktop_state(target_date_str=prev_date_str)
-            if prev_state and prev_state.get("connected"):
-                live_cnt = prev_state.get("new_cards_count", prev_state.get("today_reviewed_count"))
-                if live_cnt is not None:
-                    cards_done = live_cnt
-    except Exception:
-        pass
-
-    if cards_done == 0 and prev_log:
-        cards_done = prev_log.get("cards_completed", 0)
-    if prev_log:
-        cards_target = prev_log.get("cards_target") or base_quota
-
-    if cards_done > 0 or prev_log:
-
-        if cards_done > cards_target:
-            surplus = cards_done - cards_target
-            # User rule: "immer halb so viel wie ich zu viel vom nexten tag wegnehmen"
-            bonus = surplus // 2
-            surplus_deduction = bonus
-            adjusted_target = max(20, base_quota - bonus)
-            reason = f"🎉 {bonus} Karten Bonus abgezogen, da du gestern {surplus} Karten mehr geschafft hast ({cards_done} statt {cards_target})!"
-
-        elif cards_done < cards_target and cards_done > 0:
-            deficit = cards_target - cards_done
-            # Count active days remaining until 2027-01-04
-            cur = target_date
-            remaining_active_days = 0
-            while cur <= date(2027, 1, 4):
-                if cur.weekday() != 6:
-                    remaining_active_days += 1
-                cur += timedelta(days=1)
-            remaining_active_days = max(1, remaining_active_days)
-            spread = -(-deficit // remaining_active_days)
-            deficit_distributed = spread
-            adjusted_target = base_quota + spread
-            reason = f"⚖️ +{spread} Karten verteilt aus vorherigem Rückstand ({deficit} Karten über {remaining_active_days} Tage verteilt)."
-
-    return {
-        "target_cards": adjusted_target,
-        "base_quota": base_quota,
-        "adjusted_target_cards": adjusted_target,
-        "surplus_deduction": surplus_deduction,
-        "deficit_distributed": deficit_distributed,
-        "quota_adjustment_reason": reason,
-    }
+        from app.services.exam_pacing import calculate_exam_pacing
+        pacing = calculate_exam_pacing(target_date=target_date, user_id=user_id)
+        target = pacing["daily_target_cards"]
+        base = pacing.get("base_daily_quota", base_quota)
+        spread = pacing.get("backlog_spread_per_day", 0)
+        backlog = pacing.get("cumulative_backlog", 0)
+        reason = pacing.get("backlog_explanation", f"Standard-Tagesziel von {target} neuen Karten.")
+        return {
+            "target_cards": target,
+            "base_quota": base,
+            "adjusted_target_cards": target,
+            "surplus_deduction": max(0, base - target) if backlog == 0 else 0,
+            "deficit_distributed": spread,
+            "cumulative_backlog": backlog,
+            "quota_adjustment_reason": reason,
+        }
+    except Exception as e:
+        print("calculate_dynamic_daily_quota fallback:", e)
+        return {
+            "target_cards": base_quota,
+            "base_quota": base_quota,
+            "adjusted_target_cards": base_quota,
+            "surplus_deduction": 0,
+            "deficit_distributed": 0,
+            "cumulative_backlog": 0,
+            "quota_adjustment_reason": f"Standard-Tagesziel von {base_quota} neuen Karten.",
+        }
 
 
 def get_actual_curriculum_cards_learned() -> int:
@@ -1292,28 +1295,28 @@ def get_daily_curriculum_assignment(
                     "curriculum_progress_pct": round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1),
                 }
 
-            # Master exam pacing target
-            master_dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=DAILY_CARD_QUOTA)
-            master_pacing = master_dyn["adjusted_target_cards"]
-
-            # Evaluate dynamic quota based on scheduled quota and user progress
-            scheduled_quota = day["target_cards"]
             if day.get("is_swapped"):
-                adj_target = scheduled_quota
+                adj_target = day["target_cards"]
                 dyn = {
-                    "base_quota": scheduled_quota,
-                    "adjusted_target_cards": scheduled_quota,
+                    "base_quota": day["target_cards"],
+                    "adjusted_target_cards": day["target_cards"],
                     "quota_adjustment_reason": f"Manuell getauschtes Lernpaket von Tag {day.get('swapped_with_day', day.get('original_day_number'))}.",
                     "surplus_deduction": 0,
                     "deficit_distributed": 0,
                 }
+            elif day.get("day_number") == 1:
+                adj_target = day["target_cards"]
+                dyn = {
+                    "base_quota": day["target_cards"],
+                    "adjusted_target_cards": day["target_cards"],
+                    "quota_adjustment_reason": "Tag 1 – Semesterstart & Orientierung.",
+                    "surplus_deduction": 0,
+                    "deficit_distributed": 0,
+                }
             else:
-                dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=scheduled_quota)
+                base_q = day["target_cards"] if user_id != "student" else DAILY_CARD_QUOTA
+                dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=base_q)
                 adj_target = dyn["adjusted_target_cards"]
-
-                if len(day["topic_slots"]) > 1 and adj_target > master_pacing:
-                    adj_target = master_pacing
-                    dyn = master_dyn
 
             day_copy = dict(day)
             day_copy["base_quota"] = dyn["base_quota"]
@@ -1327,26 +1330,52 @@ def get_daily_curriculum_assignment(
             day_copy["cumulative_cards_learned"] = actual_learned
             day_copy["curriculum_progress_pct"] = round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1)
 
-            # Strictly clamp topic slots so sum(cards_to_learn) == adj_target (e.g. 48 + 53 = 101)
             orig_slots = day["topic_slots"]
-            new_slots = []
-            remaining_quota = adj_target
+            if day.get("day_number") == 1 or user_id != "student":
+                # Day 1 or test users do not borrow across days
+                new_slots = []
+                remaining_quota = adj_target
+                for slot in orig_slots:
+                    if remaining_quota <= 0:
+                        break
+                    take = min(slot["cards_to_learn"], remaining_quota)
+                    new_slot = dict(slot)
+                    new_slot["cards_to_learn"] = take
+                    new_slots.append(new_slot)
+                    remaining_quota -= take
+            else:
+                new_slots = []
+                remaining_quota = adj_target
 
-            for idx, slot in enumerate(orig_slots):
-                if remaining_quota <= 0:
-                    break
-                orig_cards = slot["cards_to_learn"]
-                take = min(orig_cards, remaining_quota)
-                new_slot = dict(slot)
-                new_slot["cards_to_learn"] = take
-                rem_tom = max(0, orig_cards - take)
-                new_slot["tomorrow_remaining_cards"] = rem_tom
-                new_slots.append(new_slot)
-                remaining_quota -= take
+                for idx, slot in enumerate(orig_slots):
+                    if remaining_quota <= 0:
+                        break
+                    orig_cards = slot["cards_to_learn"]
+                    take = min(orig_cards, remaining_quota)
+                    new_slot = dict(slot)
+                    new_slot["cards_to_learn"] = take
+                    rem_tom = max(0, orig_cards - take)
+                    new_slot["tomorrow_remaining_cards"] = rem_tom
+                    new_slots.append(new_slot)
+                    remaining_quota -= take
 
-            # If remaining quota > 0, expand the last slot
-            if remaining_quota > 0 and len(new_slots) > 0:
-                new_slots[-1]["cards_to_learn"] += remaining_quota
+                # If remaining quota > 0 (e.g. deck has 76 cards but target is 91), borrow from next active day
+                if remaining_quota > 0:
+                    next_active_day = next((d for d in schedule if d["date"] > day["date"] and not d.get("is_rest_day")), None)
+                    if next_active_day and next_active_day.get("topic_slots"):
+                        tom_slot = next_active_day["topic_slots"][0]
+                        borrow_cards = min(remaining_quota, tom_slot.get("cards_to_learn", remaining_quota))
+                        borrow_slot = dict(tom_slot)
+                        borrow_slot["cards_to_learn"] = borrow_cards
+                        borrow_title = borrow_slot.get("clean_title") or borrow_slot.get("short_title", "Nächstes Thema")
+                        borrow_slot["clean_title"] = f"{borrow_title} (Rückstandsausgleich)"
+                        borrow_slot["tomorrow_remaining_cards"] = max(0, tom_slot.get("cards_to_learn", 0) - borrow_cards)
+                        new_slots.append(borrow_slot)
+                        remaining_quota -= borrow_cards
+
+                # Fallback: if still remaining quota, expand first slot
+                if remaining_quota > 0 and len(new_slots) > 0:
+                    new_slots[0]["cards_to_learn"] += remaining_quota
 
             day_copy["topic_slots"] = new_slots
             clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
@@ -1369,13 +1398,13 @@ def get_daily_curriculum_assignment(
                         leftover_note.append(f"{s['tomorrow_remaining_cards']}× {s.get('clean_title') or s['short_title']} (Abschluss)")
 
                 tom_slot_names = [f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in tom_slots]
-                all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{master_pacing} Karten"
+                all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{adj_target} Karten"
 
                 tom_lec_title = primary_tom.get("display_title_with_date") or primary_tom.get("clean_title") or primary_tom.get("short_title") or "Morgige Vorlesung"
                 tomorrow_preview = {
                     "date": next_date.strftime("%Y-%m-%d"),
                     "day_of_week": GERMAN_WEEKDAYS.get(next_date.weekday(), "Morgen"),
-                    "target_cards": master_pacing,
+                    "target_cards": tomorrow_day.get("target_cards", adj_target),
                     "topics_summary": all_tom_topics,
                     "primary_lecture_title": tom_lec_title,
                     "primary_lecture_date": primary_tom.get("lecture_date_formatted"),

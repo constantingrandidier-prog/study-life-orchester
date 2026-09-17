@@ -4374,10 +4374,27 @@ function handleConfigDrawerBackdrop(e) {
   }
 }
 
-function toggleRhythmBlockDone(dateStr, blockId) {
+async function toggleRhythmBlockDone(dateStr, blockId) {
   const key = `sl_rhythm_${dateStr}_${blockId}`;
-  const cur = localStorage.getItem(key) === 'true';
-  localStorage.setItem(key, String(!cur));
+  const block = (state.currentScienceRhythmData?.blocks || []).find(b => b.id === blockId);
+  const cur = (block && block.is_completed) || (localStorage.getItem(key) === 'true');
+  const nextState = !cur;
+  localStorage.setItem(key, String(nextState));
+
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+        action: nextState ? 'complete' : 'uncomplete',
+        block_id: blockId,
+      }),
+    });
+  } catch (err) {
+    console.warn('Backend rhythm completion sync note:', err);
+  }
+
   loadScienceRhythm(dateStr);
 }
 
@@ -5044,7 +5061,7 @@ function renderScienceRhythm(data) {
   data.blocks.forEach(b => {
     if (!b || !b.id) return;
     const key = `sl_rhythm_${data.date}_${b.id}`;
-    if (localStorage.getItem(key) === 'true') doneCount++;
+    if (b.is_completed || localStorage.getItem(key) === 'true') doneCount++;
   });
 
   const removedKey = `sl_rhythm_removed_${data.date}`;
@@ -5102,7 +5119,7 @@ function renderScienceRhythm(data) {
     const isLapseBlock = (b.id === 'block_evening_lapse');
     const isPostponed = Boolean(b.is_postponed);
     const key = `sl_rhythm_${data.date}_${b.id}`;
-    const isCompleted = localStorage.getItem(key) === 'true';
+    const isCompleted = Boolean(b.is_completed) || (localStorage.getItem(key) === 'true');
 
     // Parse start and end time (HH:MM)
     const [sh, sm] = b.start_time.split(':').map(Number);
@@ -5232,11 +5249,11 @@ function renderScienceRhythm(data) {
           </div>
         ` : ''}
 
-        <!-- Action Strip for Afternoon Flex Block (Lecture for Tomorrow or Postponed Lecture) -->
-        ${(b.id === 'block_afternoon_flex' || isPostponed || b.focus_type === 'postponed_catchup') && (b.vam_url || b.podcast_folder_name || b.slide_filename || b.slide_rel_path || b.local_podcast_folder_path || b.local_slide_file_path) ? `
+        <!-- Action Strip for Afternoon Flex Block, Completed Lecture, or Block 3 Transfer -->
+        ${(b.id === 'block_afternoon_flex' || b.id === 'block_podcasts' || isPostponed || b.focus_type === 'postponed_catchup') && (b.vam_url || b.podcast_folder_name || b.slide_filename || b.slide_rel_path || b.local_podcast_folder_path || b.local_slide_file_path || b.preferred_video_file) ? `
           <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-            <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : '#79c0ff'}; display: inline-flex; align-items: center; gap: 4px;">
-              ${isPostponed ? '⏩ Nachhol-Vorlesung:' : '🌅 Vorlesung für MORGEN:'}
+            <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : (b.id === 'block_podcasts' ? '#7ee787' : (b.is_completed ? '#3fb950' : '#79c0ff'))}; display: inline-flex; align-items: center; gap: 4px;">
+              ${isPostponed ? '⏩ Nachhol-Vorlesung:' : (b.id === 'block_podcasts' ? '📖 Vorlesungs-Check HEUTE:' : (b.is_completed ? '✅ Absolvierte Vorlesung:' : '🌅 Vorlesung für MORGEN:'))}
             </span>
             ${(b.podcast_folder_name || b.local_podcast_folder_path || b.preferred_video_file || b.local_podcast_file_path) ? `
               <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml((b.preferred_video_file || b.local_podcast_file_path || b.podcast_folder_name || b.local_podcast_folder_path || '').replace(/\\/g, '/'))}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">

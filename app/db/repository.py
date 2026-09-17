@@ -557,7 +557,10 @@ def save_rhythm_action(
     block_payload: Optional[Dict[str, Any]] = None,
     user_id: str = "student",
 ) -> Dict[str, Any]:
-    """Saves a block action (delete or postpone). Overwrites existing action for same block and source date."""
+    """Saves a block action (delete, postpone, complete, uncomplete, or custom). Overwrites existing action for same block and source date."""
+    if action == "uncomplete":
+        return restore_rhythm_action(source_date=source_date, block_id=block_id, user_id=user_id)
+
     payload_json = json.dumps(block_payload, ensure_ascii=False) if block_payload else None
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -586,18 +589,23 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
     """
     Returns rhythm adjustments for a given date:
     - removed_block_ids: blocks deleted or postponed out of this date
+    - completed_block_ids: blocks marked as completed
+    - custom_blocks: dict of block_id -> custom payload overrides
     - postponed_blocks: blocks postponed from a previous date INTO this target_date
     - custom_order: list of block IDs in custom user-reordered sequence
+    - custom_durations: dict of block_id -> minutes
     """
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        # 1. Blocks removed/postponed/reordered FROM this date
+        # 1. Blocks removed/postponed/completed/reordered FROM this date
         cursor.execute("""
             SELECT block_id, action, block_payload FROM rhythm_block_actions
             WHERE user_id = ? AND source_date = ?;
         """, (user_id, target_date))
         rows = cursor.fetchall()
         removed_ids = []
+        completed_ids = []
+        custom_blocks = {}
         custom_order = []
         custom_durations = {}
         for row in rows:
@@ -605,6 +613,18 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
             bid = row["block_id"]
             if act in ("delete", "postpone") and bid not in ("__custom_order__", "__custom_durations__"):
                 removed_ids.append(bid)
+            elif act in ("complete", "completed"):
+                completed_ids.append(bid)
+                if row["block_payload"]:
+                    try:
+                        custom_blocks[bid] = json.loads(row["block_payload"])
+                    except Exception:
+                        pass
+            elif act in ("custom", "update") and row["block_payload"]:
+                try:
+                    custom_blocks[bid] = json.loads(row["block_payload"])
+                except Exception:
+                    pass
             elif act == "reorder" and row["block_payload"]:
                 try:
                     payload = json.loads(row["block_payload"])
@@ -639,6 +659,8 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
 
     return {
         "removed_block_ids": removed_ids,
+        "completed_block_ids": completed_ids,
+        "custom_blocks": custom_blocks,
         "postponed_blocks": postponed,
         "custom_order": custom_order,
         "custom_durations": custom_durations,

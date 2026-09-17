@@ -133,11 +133,15 @@ def generate_daily_science_rhythm(
     active_postponed = list(postponed_blocks if postponed_blocks is not None else [])
 
     custom_durations = {}
+    completed_set = set()
+    custom_blocks = {}
     try:
         from app.db.repository import get_rhythm_actions_for_date
         db_actions = get_rhythm_actions_for_date(date_iso)
         if not removed_block_ids:
             removed_set.update(db_actions.get("removed_block_ids", []))
+        completed_set.update(db_actions.get("completed_block_ids", []))
+        custom_blocks = db_actions.get("custom_blocks", {})
         if postponed_blocks is None:
             active_postponed.extend(db_actions.get("postponed_blocks", []))
         if not custom_block_order:
@@ -185,6 +189,10 @@ def generate_daily_science_rhythm(
                     b_dict["badge"] = re.sub(r'\(\d+m\)', f'({b_dict["duration_minutes"]}m)', b_dict["badge"])
             except Exception:
                 pass
+        if bid and bid in custom_blocks:
+            b_dict.update(custom_blocks[bid])
+        if bid and (bid in completed_set or b_dict.get("is_completed")):
+            b_dict["is_completed"] = True
         dur = b_dict.get("duration_minutes", 30)
         s_time = _minutes_to_time(cur_m)
         e_time = _minutes_to_time(cur_m + dur)
@@ -268,11 +276,13 @@ def generate_daily_science_rhythm(
     # 5. Optional Block 3: Lecture / Concept Stream
     if include_lecture:
         dur_lec = 60
+        today_primary = today_slots[0] if today_slots else {}
+        b3_sub = f"Skript-Abgleich ({today_primary.get('clean_title') or today_primary.get('short_title', 'Thema')}) / Offene Karten" if today_slots else "Skript-Abgleich / Offene Karten klären"
         add_block_if_active({
             "id": "block_podcasts",
             "duration_minutes": dur_lec,
             "title": "Block 3: Transfer & Vormittags-Abschluss",
-            "subtitle": "Skript-Abgleich / Offene Karten klären",
+            "subtitle": b3_sub,
             "focus_type": "concept_stream",
             "icon": "📖",
             "color": "#79c0ff",
@@ -280,6 +290,13 @@ def generate_daily_science_rhythm(
             "description": "Kurzer Abgleich mit den Vorlesungsfolien oder Puffer für letzte offene Karten des Vormittags vor der Mittagspause.",
             "is_break": False,
             "is_mandatory": False,
+            "podcast_folder_name": today_primary.get("podcast_folder_name"),
+            "preferred_video_file": today_primary.get("preferred_video_file"),
+            "slide_filename": today_primary.get("matched_slide_filename"),
+            "slide_rel_path": today_primary.get("slide_relative_path"),
+            "local_podcast_file_path": today_primary.get("local_podcast_file_path"),
+            "local_podcast_folder_path": today_primary.get("local_podcast_folder_path"),
+            "local_slide_file_path": today_primary.get("local_slide_file_path"),
         })
 
     # 6. Lunch Break
@@ -565,6 +582,14 @@ def generate_daily_science_rhythm(
         # Sort all blocks chronologically by their start time
         blocks.sort(key=lambda b: _parse_time_to_minutes(b.get("start_time", "08:30")))
 
+    # Apply custom block overrides and completed status to all final blocks
+    for b in blocks:
+        bid = b.get("id")
+        if bid and bid in custom_blocks:
+            b.update(custom_blocks[bid])
+        if bid and (bid in completed_set or b.get("is_completed")):
+            b["is_completed"] = True
+
     return {
         "date": t_date.isoformat(),
         "start_time": _minutes_to_time(_parse_time_to_minutes(start_time_str)),
@@ -574,6 +599,7 @@ def generate_daily_science_rhythm(
         "total_study_minutes": total_study_mins,
         "total_pause_minutes": total_pause_mins,
         "mandatory_events_count": len(mandatory_events),
+        "completed_blocks_count": sum(1 for b in blocks if b.get("is_completed", False)),
         "removed_blocks_count": len(removed_set),
         "postponed_blocks_count": len(active_postponed),
         "custom_order": custom_block_order or [],

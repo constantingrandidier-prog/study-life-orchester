@@ -4806,3 +4806,67 @@ body {
     letter-spacing: 0.2px;
   }
 }
+
+/* Curriculum Day Swap Buttons & Modal */
+.btn-day-swap {
+  background: rgba(88, 166, 255, 0.08);
+  border: 1px solid rgba(88, 166, 255, 0.28);
+  color: #58a6ff;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0.22rem 0.55rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn-day-swap:hover {
+  background: rgba(88, 166, 255, 0.18);
+  border-color: rgba(88, 166, 255, 0.5);
+  color: #fff;
+}
+
+.btn-pacing-swap {
+  background: rgba(88, 166, 255, 0.09);
+  border: 1px solid rgba(88, 166, 255, 0.28);
+  color: #58a6ff;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.btn-pacing-swap:hover {
+  background: rgba(88, 166, 255, 0.2);
+  border-color: #58a6ff;
+  color: #fff;
+}
+
+.smart-suggestion-pill {
+  background: rgba(63, 185, 80, 0.08);
+  border: 1px solid rgba(63, 185, 80, 0.28);
+  color: #7ee787;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.smart-suggestion-pill:hover,
+.smart-suggestion-pill.selected {
+  background: rgba(63, 185, 80, 0.22);
+  border-color: #3fb950;
+  color: #fff;
+  transform: translateY(-1px);
+}

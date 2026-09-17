@@ -211,6 +211,9 @@
           <button type="button" class="btn-pacing-joker" id="btnToggleJokerDay" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Diesen Tag als Ruhetag markieren">
             🏖️ Joker
           </button>
+          <button type="button" class="btn-pacing-swap" id="btnSwapCurrentDay" onclick="openSwapForCurrentViewDay()" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Lernpaket dieses Tages mit einem anderen Tag der Roadmap tauschen">
+            ⇄ Tauschen
+          </button>
           <button type="button" class="btn-pacing-config" id="btnOpenPacingSettings" style="font-size: 11px; padding: 0.35rem 0.65rem;" title="Pacing-Einstellungen anpassen">
             ⚙️ Optionen
           </button>
@@ -1414,6 +1417,90 @@
         </span>
         <button type="button" class="btn-secondary" onclick="closeCurriculumRoadmapModal()" style="font-size: 11.5px; padding: 0.3rem 0.85rem;">
           Schliessen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       CURRICULUM SWAP MODAL (DIRECT 2-DAY SWAP PICKER WITH SMART SUGGESTIONS)
+       ===================================================================== -->
+  <div id="curriculumSwapModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdropClick(event)">
+    <div class="roadmap-modal-content" onclick="event.stopPropagation()" style="max-width: 540px; border-radius: 12px; border: 1px solid var(--border-subtle); background: var(--bg-surface-elevated, #161b22); box-shadow: 0 16px 40px rgba(0,0,0,0.65); overflow: hidden;">
+      
+      <!-- Header -->
+      <div style="padding: 1.1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; background: rgba(255, 255, 255, 0.02);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(56, 139, 253, 0.15); border: 1px solid rgba(56, 139, 253, 0.35); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            ⇄
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-main);">Lerntage tauschen</h3>
+            <div style="font-size: 11.5px; color: var(--text-dim); margin-top: 2px;">
+              Passe deinen Lernplan an deinen echten Terminkalender an
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeCurriculumSwapModal()" title="Schliessen">✕</button>
+      </div>
+
+      <div style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; max-height: 80vh; overflow-y: auto;">
+        
+        <!-- Source Day Card (von wo getauscht wird) -->
+        <div style="padding: 0.85rem 1rem; border-radius: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle);">
+          <div style="font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">
+            Aktuell ausgewählter Tag
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+            <div>
+              <strong id="swapSourceTitle" style="font-size: 14px; color: #58a6ff;">Tag 6 (Samstag, 19.09.2026)</strong>
+              <div id="swapSourceSub" style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">1. Blut &amp; Immunsystem • 2 Themen</div>
+            </div>
+            <span id="swapSourceBadge" class="curriculum-card-pill" style="font-size: 12px; padding: 0.25rem 0.65rem; font-weight: 700; background: rgba(248, 81, 73, 0.12); color: #ff7b72; border: 1px solid rgba(248, 81, 73, 0.3);">
+              91 Karten
+            </span>
+          </div>
+        </div>
+
+        <!-- Smart Suggestions (Tage mit wenig Karten / leichtem Pensum) -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem;">
+            <span style="font-size: 11.5px; font-weight: 600; color: var(--text-dim);">💡 Empfehlungen mit leichterem Pensum:</span>
+          </div>
+          <div id="swapSmartSuggestions" style="display: flex; flex-wrap: wrap; gap: 0.45rem;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Target Day Picker -->
+        <div>
+          <label for="swapTargetSelect" style="display: block; font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 0.4rem;">
+            Tauschen mit Tag:
+          </label>
+          <div style="position: relative;">
+            <select id="swapTargetSelect" onchange="handleSwapTargetChanged(this.value)" style="width: 100%; padding: 0.55rem 0.75rem; background: var(--bg-base, #0d1117); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-main); font-size: 12.5px; cursor: pointer;">
+              <!-- Dynamically populated with all active study days -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Preview comparison strip -->
+        <div id="swapPreviewBox" style="padding: 0.85rem; border-radius: 8px; background: rgba(56, 139, 253, 0.05); border: 1px dashed rgba(56, 139, 253, 0.35); font-size: 12px;">
+          <div style="font-weight: 600; color: #58a6ff; margin-bottom: 0.45rem;">🔄 Tausch-Vorschau:</div>
+          <div id="swapPreviewText" style="display: flex; flex-direction: column; gap: 0.35rem; color: var(--text-main); font-size: 11.5px;">
+            <!-- Preview text injected -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Buttons -->
+      <div style="padding: 0.85rem 1.25rem; background: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; align-items: center; gap: 0.65rem;">
+        <button type="button" class="btn-secondary" onclick="closeCurriculumSwapModal()" style="font-size: 12px; padding: 0.4rem 0.85rem;">
+          Abbrechen
+        </button>
+        <button type="button" id="btnConfirmSwapDays" class="btn-primary" onclick="confirmExecuteSwapDays()" style="font-size: 12px; padding: 0.4rem 1.1rem; background: #238636; border-color: #2ea043; color: white; font-weight: 600;">
+          ✓ Tage jetzt tauschen
         </button>
       </div>
     </div>

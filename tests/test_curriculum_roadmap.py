@@ -210,3 +210,48 @@ def test_assignment_adapts_to_surplus(monkeypatch):
     assert all("clean_title" in s for s in assignment["topic_slots"])
     assert all("breadcrumb" in s for s in assignment["topic_slots"])
 
+
+def test_curriculum_swap_days_endpoint_and_assignment():
+    """Verify swapping learning packages between Saturday (Day 6) and Day 12 (54 cards)."""
+    # 1. Baseline check via roadmap
+    res_base = client.get("/api/v1/schedule/curriculum/roadmap")
+    assert res_base.status_code == 200
+    sched_base = res_base.json()["schedule"]
+    d6_base = next(d for d in sched_base if d.get("day_number") == 6)
+    d12_base = next(d for d in sched_base if d.get("day_number") == 12)
+    assert d12_base["target_cards"] == 54
+
+    # 2. Call swap endpoint
+    res = client.post("/api/v1/schedule/curriculum/swap-days", json={
+        "date1": "2026-09-19",
+        "date2": "2026-09-26",
+        "day_num1": 6,
+        "day_num2": 12,
+    })
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "ok"
+
+    # 3. Check swapped assignments in roadmap
+    res_swapped = client.get("/api/v1/schedule/curriculum/roadmap")
+    sched_swapped = res_swapped.json()["schedule"]
+    d6_swapped = next(d for d in sched_swapped if d.get("day_number") == 6)
+    d12_swapped = next(d for d in sched_swapped if d.get("day_number") == 12)
+
+    assert d6_swapped["target_cards"] == 54
+    assert d6_swapped.get("is_swapped") is True
+    assert d6_swapped.get("swapped_with_day") == 12
+    assert d12_swapped.get("is_swapped") is True
+    assert d12_swapped.get("swapped_with_day") == 6
+
+    # 4. Reset swaps
+    reset_res = client.post("/api/v1/schedule/curriculum/reset-swaps")
+    assert reset_res.status_code == 200
+
+    # 5. Verify restored back to baseline
+    res_restored = client.get("/api/v1/schedule/curriculum/roadmap")
+    sched_restored = res_restored.json()["schedule"]
+    d6_restored = next(d for d in sched_restored if d.get("day_number") == 6)
+    assert d6_restored.get("is_swapped") is not True
+
+

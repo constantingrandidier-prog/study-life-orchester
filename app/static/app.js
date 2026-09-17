@@ -3309,6 +3309,9 @@ function renderRoadmapDaysList(days) {
         </div>
 
         <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+          <button type="button" class="btn-day-swap" onclick="event.stopPropagation(); openSwapDayModal('${d.date}', ${d.day_number})" title="Diesen Tag mit einem anderen Lerntag tauschen">
+            ⇄ Tauschen
+          </button>
           <span class="curriculum-card-pill" style="font-size: 11px; padding: 0.2rem 0.5rem; font-weight: 600;">
             ${d.target_cards} Karten
           </span>
@@ -3630,6 +3633,193 @@ async function resetCurriculumSwaps() {
     console.error('Error resetting swaps:', err);
     showToast('⚠️ Netzwerkfehler beim Zurücksetzen.', 'warning');
   }
+}
+
+// ============================================================================
+// FLEXIBLE CURRICULUM DAY SWAP MODAL CONTROLLER
+// ============================================================================
+
+let _swapSourceDate = null;
+let _swapSourceDayNum = null;
+
+async function ensureRoadmapDataLoaded() {
+  if (_cachedRoadmapData && Array.isArray(_cachedRoadmapData.schedule)) {
+    return _cachedRoadmapData;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/curriculum/roadmap`);
+    if (res.ok) {
+      _cachedRoadmapData = await res.json();
+      return _cachedRoadmapData;
+    }
+  } catch (e) {
+    console.warn('Failed to fetch roadmap data:', e);
+  }
+  return null;
+}
+
+async function openSwapDayModal(sourceDate, sourceDayNum) {
+  const modal = document.getElementById('curriculumSwapModal');
+  if (!modal) return;
+
+  const data = await ensureRoadmapDataLoaded();
+  if (!data || !Array.isArray(data.schedule)) {
+    showToast('⚠️ Roadmap-Daten konnten nicht geladen werden.', 'warning');
+    return;
+  }
+
+  const schedule = data.schedule;
+  const sourceDay = schedule.find(d => d.date === sourceDate || d.day_number === sourceDayNum);
+  if (!sourceDay || sourceDay.is_rest_day) {
+    showToast('⚠️ Ruhetage (Sonntage) können nicht getauscht werden.', 'info');
+    return;
+  }
+
+  _swapSourceDate = sourceDay.date;
+  _swapSourceDayNum = sourceDay.day_number;
+
+  // 1. Render Source Day Info
+  const titleEl = document.getElementById('swapSourceTitle');
+  const subEl = document.getElementById('swapSourceSub');
+  const badgeEl = document.getElementById('swapSourceBadge');
+  if (titleEl) {
+    titleEl.textContent = `Tag ${sourceDay.day_number} (${sourceDay.day_of_week}, ${sourceDay.date})`;
+  }
+  if (subEl) {
+    const topicsStr = (sourceDay.topic_slots || []).map(s => s.clean_title || s.short_title).slice(0, 3).join(', ');
+    subEl.textContent = `${sourceDay.current_module || ''} • ${topicsStr || 'Lernpaket'}`;
+  }
+  if (badgeEl) {
+    badgeEl.textContent = `${sourceDay.target_cards} Karten`;
+  }
+
+  // 2. Active days (excluding current source day and rest days)
+  const activeDays = schedule.filter(d => !d.is_rest_day && d.date !== _swapSourceDate);
+
+  // 3. Smart suggestions: find days with fewer cards than sourceDay (e.g. Day 12 with 54 cards)
+  const smartContainer = document.getElementById('swapSmartSuggestions');
+  if (smartContainer) {
+    const lightDays = activeDays
+      .filter(d => d.target_cards < sourceDay.target_cards)
+      .sort((a, b) => a.target_cards - b.target_cards)
+      .slice(0, 6);
+
+    if (lightDays.length > 0) {
+      smartContainer.innerHTML = lightDays.map(d => `
+        <button type="button" class="smart-suggestion-pill" onclick="selectSwapTargetDay('${d.date}')" title="${escapeHtml(d.current_module || '')}">
+          <span>🌱</span>
+          <strong>Tag ${d.day_number}</strong>
+          <span>(${d.target_cards} Karten • ${d.day_of_week})</span>
+        </button>
+      `).join('');
+    } else {
+      smartContainer.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">Keine Tage mit weniger Karten gefunden. Wähle unten einen Wunschtag.</span>`;
+    }
+  }
+
+  // 4. Populate Target Select Dropdown
+  const selectEl = document.getElementById('swapTargetSelect');
+  if (selectEl) {
+    selectEl.innerHTML = activeDays.map(d => {
+      const isLighter = d.target_cards < sourceDay.target_cards ? '🌱 ' : '';
+      return `<option value="${d.date}">Tag ${d.day_number}: ${d.day_of_week}, ${d.date} – ${isLighter}${d.target_cards} Karten (${escapeHtml(d.current_module || '')})</option>`;
+    }).join('');
+
+    // Pre-select Day 12 if available (or first lighter day)
+    const day12 = activeDays.find(d => d.day_number === 12);
+    if (day12) {
+      selectEl.value = day12.date;
+    } else if (activeDays.length > 0) {
+      selectEl.value = activeDays[0].date;
+    }
+  }
+
+  handleSwapTargetChanged(selectEl ? selectEl.value : null);
+  modal.style.display = 'flex';
+}
+
+function selectSwapTargetDay(targetDate) {
+  const selectEl = document.getElementById('swapTargetSelect');
+  if (selectEl) {
+    selectEl.value = targetDate;
+  }
+  handleSwapTargetChanged(targetDate);
+}
+
+function handleSwapTargetChanged(targetDate) {
+  const previewText = document.getElementById('swapPreviewText');
+  if (!previewText || !_cachedRoadmapData || !_cachedRoadmapData.schedule) return;
+
+  const schedule = _cachedRoadmapData.schedule;
+  const src = schedule.find(d => d.date === _swapSourceDate);
+  const tgt = schedule.find(d => d.date === targetDate);
+  if (!src || !tgt) return;
+
+  const srcSlots = (src.topic_slots || []).map(s => s.clean_title || s.short_title).slice(0, 2).join(', ');
+  const tgtSlots = (tgt.topic_slots || []).map(s => s.clean_title || s.short_title).slice(0, 2).join(', ');
+
+  previewText.innerHTML = `
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+      <span>📅 <strong>${src.day_of_week}, ${src.date} (Tag ${src.day_number})</strong>:</span>
+      <span style="color: #7ee787; font-weight: 700;">neu ${tgt.target_cards} Karten <span style="font-weight: 400; color: var(--text-dim); text-decoration: line-through;">(vorher ${src.target_cards})</span></span>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0;">
+      <span>📅 <strong>${tgt.day_of_week}, ${tgt.date} (Tag ${tgt.day_number})</strong>:</span>
+      <span style="color: #58a6ff; font-weight: 700;">neu ${src.target_cards} Karten <span style="font-weight: 400; color: var(--text-dim); text-decoration: line-through;">(vorher ${tgt.target_cards})</span></span>
+    </div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.35;">
+      💡 <em>Paket von Tag ${tgt.day_number} (${escapeHtml(tgtSlots)}) wird am ${src.day_of_week} gelernt.</em>
+    </div>
+  `;
+}
+
+function closeCurriculumSwapModal() {
+  const modal = document.getElementById('curriculumSwapModal');
+  if (modal) modal.style.display = 'none';
+  _swapSourceDate = null;
+  _swapSourceDayNum = null;
+}
+
+async function confirmExecuteSwapDays() {
+  const selectEl = document.getElementById('swapTargetSelect');
+  if (!selectEl || !selectEl.value || !_swapSourceDate) {
+    closeCurriculumSwapModal();
+    return;
+  }
+
+  const targetDate = selectEl.value;
+  if (targetDate === _swapSourceDate) {
+    showToast('Bitte wähle zwei unterschiedliche Tage aus.', 'info');
+    return;
+  }
+
+  const schedule = _cachedRoadmapData ? _cachedRoadmapData.schedule : [];
+  const targetDay = schedule.find(d => d.date === targetDate);
+  const targetDayNum = targetDay ? targetDay.day_number : null;
+
+  const srcDate = _swapSourceDate;
+  const srcDayNum = _swapSourceDayNum;
+
+  closeCurriculumSwapModal();
+
+  await swapCurriculumDays(srcDate, targetDate, srcDayNum, targetDayNum);
+
+  // Synchronize both views
+  if (typeof renderPageRoadmap === 'function') {
+    renderPageRoadmap();
+  }
+  if (typeof loadCurriculumToday === 'function') {
+    loadCurriculumToday(true);
+  }
+}
+
+async function openSwapForCurrentViewDay() {
+  const currentDate = state.targetDate || '2026-09-14';
+  const data = await ensureRoadmapDataLoaded();
+  const schedule = data ? data.schedule : [];
+  const currentDay = schedule.find(d => d.date === currentDate);
+  const dayNum = currentDay ? currentDay.day_number : 1;
+  openSwapDayModal(currentDate, dayNum);
 }
 
 function handleFilterRoadmap(query) {
@@ -6209,25 +6399,38 @@ async function renderPageRoadmap() {
     }
 
     if (data.schedule) {
+      _cachedRoadmapData = data;
       list.innerHTML = data.schedule.map(d => {
         const isRest = d.is_rest_day;
         const isToday = d.date === state.targetDate;
+        const isSwappedBadge = d.is_swapped
+          ? `<span style="font-size: 9.5px; color: #e3b341; background: rgba(227,179,65,0.15); border: 1px solid rgba(227,179,65,0.3); border-radius: 3px; padding: 1px 5px; margin-left: 0.35rem; display: inline-flex; align-items: center; gap: 2px;" title="Lernpaket getauscht mit Tag ${d.swapped_with_day || d.original_day_number}">🔄 Paket Tag ${d.swapped_with_day || d.original_day_number}</span>`
+          : '';
+
         return `
-          <div class="roadmap-day-card ${isRest ? 'rest-day' : ''} ${isToday ? 'today-highlight' : ''}" style="padding: 0.7rem 0.85rem; background: var(--bg-base); border: 1px solid ${isToday ? 'var(--accent-blue)' : 'var(--border-subtle)'}; border-radius: var(--radius-sm); margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 0.45rem;">
+          <div class="roadmap-day-card ${isRest ? 'rest-day' : ''} ${isToday ? 'today-highlight' : ''}" style="padding: 0.7rem 0.85rem; background: var(--bg-base); border: 1px solid ${isToday ? 'var(--accent-blue)' : 'var(--border-subtle)'}; border-radius: var(--radius-sm); margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
                 <strong style="color: ${isToday ? 'var(--accent-blue)' : 'var(--text-main)'}; font-size: 12.5px;">
                   Tag ${d.day_number || '-'}: ${d.day_of_week}, ${d.date}
                 </strong>
                 ${isRest ? '<span style="font-size: 10.5px; color: #d29922; background: rgba(210,153,34,0.15); padding: 0.1rem 0.35rem; border-radius: 3px;">🏖️ Ruhetag</span>' : ''}
+                ${isSwappedBadge}
               </div>
-              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 ${escapeHtml(d.current_module || '')} • ${d.topic_slots ? d.topic_slots.map(s => escapeHtml(s.clean_title || s.short_title)).join(', ') : ''}
               </div>
             </div>
-            <div style="text-align: right; flex-shrink: 0;">
-              <strong style="color: ${isRest ? 'var(--text-dim)' : 'var(--accent-blue)'}; font-size: 13px;">${d.target_cards}</strong>
-              <span style="font-size: 11px; color: var(--text-dim);">Karten</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+              ${!isRest ? `
+                <button type="button" class="btn-day-swap" onclick="openSwapDayModal('${d.date}', ${d.day_number})" title="Diesen Tag mit einem anderen Lerntag tauschen">
+                  ⇄ Tauschen
+                </button>
+              ` : ''}
+              <div style="text-align: right; min-width: 50px;">
+                <strong style="color: ${isRest ? 'var(--text-dim)' : 'var(--accent-blue)'}; font-size: 13px;">${d.target_cards}</strong>
+                <span style="font-size: 11px; color: var(--text-dim); display: block; line-height: 1;">Karten</span>
+              </div>
             </div>
           </div>
         `;
@@ -6396,6 +6599,12 @@ window.swapCurriculumDays = swapCurriculumDays;
 window.resetCurriculumSwaps = resetCurriculumSwaps;
 window.handleQuickSwapDay = handleQuickSwapDay;
 window.initRoadmapDragAndDrop = initRoadmapDragAndDrop;
+window.openSwapDayModal = openSwapDayModal;
+window.closeCurriculumSwapModal = closeCurriculumSwapModal;
+window.selectSwapTargetDay = selectSwapTargetDay;
+window.handleSwapTargetChanged = handleSwapTargetChanged;
+window.confirmExecuteSwapDays = confirmExecuteSwapDays;
+window.openSwapForCurrentViewDay = openSwapForCurrentViewDay;
 
 
 

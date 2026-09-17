@@ -5024,7 +5024,8 @@ function initRhythmResizeHandlers() {
       }
 
       if (pillEl) {
-        pillEl.innerHTML = `<strong>↕ ${b.duration_minutes}m</strong> (Ziehen zum Anpassen)`;
+        pillEl.innerHTML = `<strong>↕ ${b.duration_minutes}m</strong>`;
+        pillEl.style.display = 'inline-flex';
       }
     });
 
@@ -5063,6 +5064,7 @@ function initRhythmResizeHandlers() {
           const diff = newDur - startDur;
           const diffStr = diff > 0 ? `+${diff}m` : (diff < 0 ? `${diff}m` : `±0m`);
           pillEl.innerHTML = `<strong>↕ ${newDur} Min.</strong> (${diffStr}) &bull; Ende: ${b.end_time}`;
+          pillEl.style.display = 'inline-flex';
         }
 
         // Live update following cards' start/end times in DOM
@@ -5086,6 +5088,9 @@ function initRhythmResizeHandlers() {
         handle.releasePointerCapture(e.pointerId);
       } catch (_) {}
       handle.classList.remove('is-resizing');
+      if (pillEl) {
+        pillEl.style.display = 'none';
+      }
       if (rowCard) {
         rowCard.classList.remove('is-resizing-card');
         rowCard.setAttribute('draggable', 'true');
@@ -5413,11 +5418,8 @@ function renderScienceRhythm(data) {
         ` : ''}
         <!-- Draggable bottom border handle for dynamic stretching/shortening -->
         ${isDraggable ? `
-          <div class="rhythm-resize-handle" data-block-id="${b.id}" title="Untere Linie nach unten/oben ziehen zum Verlängern oder Verkürzen">
-            <div class="rhythm-resize-pill">
-              <span>↕</span>
-              <span>Linie ziehen zum Anpassen</span>
-            </div>
+          <div class="rhythm-resize-handle" data-block-id="${b.id}" title="Untere Kante ziehen zum Verlängern oder Verkürzen">
+            <div class="rhythm-resize-pill" style="display: none;"></div>
           </div>
         ` : ''}
       </div>

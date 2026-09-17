@@ -3000,26 +3000,29 @@ function renderCurriculumToday(data) {
   }
 }
 
-async function handleOpenLocalFolder(folderPath, label = 'Ordner') {
-  if (!folderPath) {
-    showToast('Kein lokaler Pfad hinterlegt');
+async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei', directOpen = false) {
+  if (!folderOrFilePath) {
+    showToast(`⚠️ Kein Pfad für ${label} hinterlegt`);
     return;
   }
-  showToast(`📂 Öffne ${label} im Windows Explorer...`, 3000);
+  const actionText = directOpen ? 'Starten' : 'Öffnen';
+  showToast(`📂 ${actionText} von ${label}...`, 3000);
 
-  // 1. Try local server direct (127.0.0.1:8000) for instant execution if available
+  const query = `path=${encodeURIComponent(folderOrFilePath)}&direct_open=${directOpen ? 'true' : 'false'}`;
+
+  // 1. Try local server direct (127.0.0.1:8000) for instant native execution if available
   let opened = false;
   try {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 600);
-    const localRes = await fetch(`http://127.0.0.1:8000/api/v1/schedule/folder/open?path=${encodeURIComponent(folderPath)}`, {
+    const timer = setTimeout(() => ctrl.abort(), 650);
+    const localRes = await fetch(`http://127.0.0.1:8000/api/v1/schedule/folder/open?${query}`, {
       signal: ctrl.signal
     });
     clearTimeout(timer);
     if (localRes.ok) {
       const data = await localRes.json();
-      if (data.success) {
-        showToast(`📂 ${label} im Explorer geöffnet!`, 4000);
+      if (data && data.success) {
+        showToast(`✅ ${data.message || `${label} ${directOpen ? 'gestartet' : 'im Explorer geöffnet'}!`}`, 4000);
         opened = true;
         return;
       }
@@ -3028,23 +3031,37 @@ async function handleOpenLocalFolder(folderPath, label = 'Ordner') {
 
   // 2. Relay via cloud backend (queues to local Windows agent polling Render)
   try {
-    const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderPath)}`);
+    const res = await fetch(`/api/v1/schedule/folder/open?${query}`);
     const data = await res.json();
-    if (data.success || data.queued) {
-      showToast(`📂 Explorer öffnet sich jetzt auf deinem Laptop!`, 4000);
+    if (data && (data.success || data.queued)) {
+      if (data.queued) {
+        showToast(`💻 ${label} wird auf deinem Laptop ${directOpen ? 'abgespielt' : 'im Explorer geöffnet'}!`, 4500);
+      } else {
+        showToast(`✅ ${data.message || `${label} geöffnet!`}`, 4000);
+      }
       opened = true;
+      return;
     }
   } catch (err) {
-    console.debug('Folder open relay note:', err);
+    try {
+      await fetch('/api/v1/schedule/system/queue-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'open_explorer', path: folderOrFilePath, direct_open: directOpen })
+      });
+      showToast(`💻 Befehl an deinen Laptop gesendet (${label})!`, 4000);
+      opened = true;
+      return;
+    } catch (_) {}
   }
 
-  // 3. Fallback: also copy path to clipboard
+  // 3. Fallback: also copy path to clipboard so user can paste it into Run (Win+R)
   try {
-    await navigator.clipboard.writeText(folderPath);
+    await navigator.clipboard.writeText(folderOrFilePath);
   } catch (_) {}
 
   if (!opened) {
-    showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Öffnen)`);
+    showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Starten)`, 4000);
   }
 }
 
@@ -4137,37 +4154,6 @@ async function openStruggleSlidesQuick(path, page) {
   }
 }
 
-async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei') {
-  if (!folderOrFilePath) {
-    showToast(`⚠️ Kein Pfad für ${label} hinterlegt.`);
-    return;
-  }
-  showToast(`📂 Öffne Windows Explorer für ${label}...`);
-  try {
-    const res = await fetch(`/api/v1/schedule/folder/open?path=${encodeURIComponent(folderOrFilePath)}`);
-    const data = await res.json();
-    if (data && data.success) {
-      if (data.queued) {
-        showToast(`💻 Windows Explorer wird auf deinem Laptop geöffnet (${label})!`);
-      } else {
-        showToast(`✅ ${data.message || `${label} im Windows Explorer geöffnet!`}`);
-      }
-    } else {
-      showToast(`⚠️ Hinweis: ${data?.message || 'Konnte Windows Explorer nicht öffnen.'}`);
-    }
-  } catch (err) {
-    try {
-      await fetch('/api/v1/schedule/system/queue-action', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'open_explorer', path: folderOrFilePath })
-      });
-      showToast(`💻 Windows Explorer wird auf deinem Laptop geöffnet (${label})!`);
-    } catch (e2) {
-      showToast(`⚠️ Fehler beim Öffnen: ${err.message}`);
-    }
-  }
-}
 
 async function openPodcastFolder(folderName) {
   if (!folderName) {
@@ -4956,25 +4942,28 @@ function renderScienceRhythm(data) {
         ` : ''}
 
         <!-- Action Strip for Afternoon Flex Block (Lecture for Tomorrow or Postponed Lecture) -->
-        ${(b.id === 'block_afternoon_flex' || isPostponed || b.focus_type === 'postponed_catchup') && (b.vam_url || b.podcast_folder_name || b.slide_filename || b.slide_rel_path) ? `
+        ${(b.id === 'block_afternoon_flex' || isPostponed || b.focus_type === 'postponed_catchup') && (b.vam_url || b.podcast_folder_name || b.slide_filename || b.slide_rel_path || b.local_podcast_folder_path || b.local_slide_file_path) ? `
           <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
             <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : '#79c0ff'}; display: inline-flex; align-items: center; gap: 4px;">
               ${isPostponed ? '⏩ Nachhol-Vorlesung:' : '🌅 Vorlesung für MORGEN:'}
             </span>
-            ${b.vam_url ? `
-              <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-primary" style="font-size: 11px; padding: 0.3rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">
-                🎬 VAM-Archiv
-              </a>
-            ` : ''}
             ${(b.local_podcast_folder_path || b.podcast_folder_name) ? `
-              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungsvideo (Folienansicht)')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet das Folienansicht-Video direkt markiert im Windows Datei-Explorer auf deinem Laptop">
-                📂 Vorlesung (Explorer)
+              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungsvideo', true)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Spielt das Vorlesungsvideo direkt im Videoplayer auf deinem Laptop ab!">
+                ▶️ Vorlesung abspielen
+              </button>
+              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungs-Ordner', false)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet den Vorlesungs-Ordner im Windows Datei-Explorer mit dem Video markiert">
+                📂 Ordner (Explorer)
               </button>
             ` : ''}
             ${(b.local_slide_file_path || b.slide_rel_path || b.slide_filename) ? `
-              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_slide_file_path || b.slide_rel_path || b.slide_filename)}', 'Vorlesungs-Folie')" style="font-size: 11px; padding: 0.3rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien-PDF direkt markiert im Windows Datei-Explorer auf deinem Laptop">
-                📄 Folie (Explorer)
+              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_slide_file_path || b.slide_rel_path || b.slide_filename)}', 'Folien-PDF', true)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien-PDF direkt im PDF-Viewer auf deinem Laptop">
+                📄 Folien öffnen
               </button>
+            ` : ''}
+            ${b.vam_url ? `
+              <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.12); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.35); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">
+                🎬 VAM-Weblink
+              </a>
             ` : ''}
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
               ${isPostponed ? '🧠 Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}

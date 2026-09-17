@@ -1407,12 +1407,13 @@ _PENDING_SYSTEM_COMMANDS: List[Dict[str, Any]] = []
 
 @router.get(
     "/slides/open",
-    summary="Opens or locates a lecture PDF slide in Windows Explorer",
-    description="Locates the UZH lecture slide PDF on disk and selects it in Windows Explorer or opens it.",
+    summary="Opens or locates a lecture PDF slide in Windows Explorer or PDF viewer",
+    description="Locates the UZH lecture slide PDF on disk and selects it in Windows Explorer or opens it directly.",
 )
 def open_slide_endpoint(
     path: str = Query(..., description="Relative path or name of the slide PDF"),
     page: Optional[int] = Query(1, description="Target page number"),
+    direct_open: Optional[bool] = Query(False, description="Directly launch PDF file in viewer"),
 ):
     import os
     import time
@@ -1422,13 +1423,22 @@ def open_slide_endpoint(
     found_file = _resolve_uzh_file_or_folder(path)
     if found_file and found_file.exists() and os.name == "nt":
         try:
-            subprocess.Popen(["explorer.exe", f"/select,{str(found_file)}"])
-            return {
-                "success": True,
-                "message": f"Folie '{found_file.name}' im Windows Explorer markiert!",
-                "file": str(found_file),
-                "page": page or 1,
-            }
+            if direct_open:
+                os.startfile(str(found_file))
+                return {
+                    "success": True,
+                    "message": f"Folie '{found_file.name}' direkt geöffnet!",
+                    "file": str(found_file),
+                    "page": page or 1,
+                }
+            else:
+                subprocess.Popen(f'explorer.exe /select,"{str(found_file)}"', shell=True)
+                return {
+                    "success": True,
+                    "message": f"Folie '{found_file.name}' im Windows Explorer markiert!",
+                    "file": str(found_file),
+                    "page": page or 1,
+                }
         except Exception as exc:
             pass
 
@@ -1437,13 +1447,14 @@ def open_slide_endpoint(
         "id": f"act_{int(time.time() * 1000)}",
         "action": "open_explorer",
         "path": path,
+        "direct_open": bool(direct_open),
         "timestamp": time.time(),
     }
     _PENDING_SYSTEM_COMMANDS.append(action_obj)
     return {
         "success": True,
         "queued": True,
-        "message": f"Folie '{path}' wird im Windows Explorer auf deinem PC geöffnet...",
+        "message": f"Folie '{path}' wird auf deinem Laptop geöffnet...",
         "path": path,
     }
 
@@ -1470,11 +1481,12 @@ def view_slide_endpoint(
 
 @router.get(
     "/folder/open",
-    summary="Opens a local UZH folder or file in Windows Explorer",
-    description="Opens the folder or selects the file directly in Windows Explorer.",
+    summary="Opens a local UZH folder or file in Windows Explorer or starts video playback",
+    description="Opens the folder or selects the file directly in Windows Explorer, or opens media directly.",
 )
 def open_folder_endpoint(
     path: Optional[str] = Query(None, description="Path to folder or file"),
+    direct_open: Optional[bool] = Query(False, description="Directly play video/file in player"),
 ):
     import os
     import time
@@ -1486,24 +1498,41 @@ def open_folder_endpoint(
     if found and found.exists() and os.name == "nt":
         try:
             if found.is_file():
-                subprocess.Popen(["explorer.exe", f"/select,{str(found)}"])
-                return {
-                    "success": True,
-                    "message": f"Datei '{found.name}' im Windows Explorer markiert!",
-                    "path": str(found),
-                    "folder": str(found.parent),
-                }
+                if direct_open:
+                    os.startfile(str(found))
+                    return {
+                        "success": True,
+                        "message": f"Datei '{found.name}' direkt geöffnet!",
+                        "path": str(found),
+                    }
+                else:
+                    subprocess.Popen(f'explorer.exe /select,"{str(found)}"', shell=True)
+                    return {
+                        "success": True,
+                        "message": f"Datei '{found.name}' im Windows Explorer markiert!",
+                        "path": str(found),
+                        "folder": str(found.parent),
+                    }
             else:
                 folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4")) or list(found.glob("*.pdf"))
                 if folien_vids:
                     target_file = folien_vids[0]
-                    subprocess.Popen(["explorer.exe", f"/select,{str(target_file)}"])
-                    return {
-                        "success": True,
-                        "message": f"Folienansicht '{target_file.name}' im Explorer markiert!",
-                        "path": str(target_file),
-                        "folder": str(found),
-                    }
+                    if direct_open:
+                        os.startfile(str(target_file))
+                        return {
+                            "success": True,
+                            "message": f"Vorlesungsvideo '{target_file.name}' direkt gestartet!",
+                            "path": str(target_file),
+                            "folder": str(found),
+                        }
+                    else:
+                        subprocess.Popen(f'explorer.exe /select,"{str(target_file)}"', shell=True)
+                        return {
+                            "success": True,
+                            "message": f"Folienansicht '{target_file.name}' im Explorer markiert!",
+                            "path": str(target_file),
+                            "folder": str(found),
+                        }
                 os.startfile(str(found))
                 return {
                     "success": True,
@@ -1518,6 +1547,7 @@ def open_folder_endpoint(
         "id": f"act_{int(time.time() * 1000)}",
         "action": "open_explorer",
         "path": path or "",
+        "direct_open": bool(direct_open),
         "timestamp": time.time(),
     }
     _PENDING_SYSTEM_COMMANDS.append(action_obj)
@@ -1525,19 +1555,20 @@ def open_folder_endpoint(
     return {
         "success": True,
         "queued": True,
-        "message": f"Windows Explorer wird auf deinem Laptop geöffnet ({path})...",
+        "message": f"Aktion wird auf deinem Laptop ausgeführt ({path})...",
         "path": path,
     }
 
 
 @router.get(
     "/podcast/open",
-    summary="Directly launches the podcast Folienansicht MP4 video in Windows Explorer",
+    summary="Directly launches the podcast Folienansicht MP4 video",
 )
 def open_podcast_video_endpoint(
     path: Optional[str] = Query(None, description="Folder or video name"),
+    direct_open: Optional[bool] = Query(True, description="Directly play video"),
 ):
-    return open_folder_endpoint(path=path)
+    return open_folder_endpoint(path=path, direct_open=direct_open)
 
 
 @router.get(
@@ -1564,6 +1595,7 @@ def queue_system_action_endpoint(payload: dict = Body(...)):
         "id": f"act_{int(time.time() * 1000)}",
         "action": payload.get("action", "open_explorer"),
         "path": payload.get("path", ""),
+        "direct_open": bool(payload.get("direct_open", False)),
         "timestamp": time.time(),
     }
     _PENDING_SYSTEM_COMMANDS.append(action_obj)

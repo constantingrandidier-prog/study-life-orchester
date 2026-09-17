@@ -2,9 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="StudyLife Orchestrator - Professioneller akademischer Tages- und Lernplaner für Studierende.">
-  <link rel="stylesheet" href="/static/style.css?v=20.0">
+  <link rel="stylesheet" href="/static/style.css?v=21.0">
   <link rel="manifest" href="/static/manifest.json">
   <meta name="theme-color" content="#161b22">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -223,98 +223,131 @@
       <div id="curriculumAdjustmentBanner" style="display: none;"></div>
       <div id="curriculumSummaryBox" style="display: none;"><span id="curriculumSummaryText"></span></div>
 
-      <!-- Minimalist & Focused 4-KPI Overview Row -->
-      <div class="mission-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; margin-top: 0.75rem; margin-bottom: 0.75rem;">
-        <!-- 1. Tagesziel -->
-        <div class="mission-kpi-box" style="padding: 0.75rem 1rem;">
-          <span class="mission-kpi-label">🎯 Tagesziel</span>
-          <div class="mission-kpi-value-row" style="margin-top: 2px;">
-            <span class="mission-kpi-val" id="pacingDailyTarget" style="font-size: 1.5rem;">100</span>
-            <span class="mission-kpi-unit">Karten neu</span>
-          </div>
-          <span class="mission-kpi-sub" style="font-size: 10.5px;" id="pacingTargetSub">Mo–Sa aktiv</span>
-          <span id="pacingNewTargetVal" style="display: none;">100</span>
-          <span id="pacingDueReviewsVal" style="display: none;">102</span>
-          <span id="pacingTargetBreakdown" style="display: none;"></span>
-        </div>
-
-        <!-- 2. Erledigt heute (Aufgeteilt: Neue & Wiederholungen) -->
-        <div class="mission-kpi-box" style="padding: 0.65rem 0.85rem; border: 1px solid rgba(63, 185, 80, 0.35); background: rgba(63, 185, 80, 0.04);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-            <span class="mission-kpi-label" style="color: #3fb950; font-weight: 600; margin: 0;">✅ Heute erledigt</span>
-            <span style="font-size: 11px; font-weight: 700; color: #3fb950; background: rgba(63, 185, 80, 0.12); padding: 0.1rem 0.45rem; border-radius: 4px;">
-              <span id="pacingCardsCompleted">0</span> / <span id="pacingCardsTargetMini">203</span>
-            </span>
-          </div>
-
-          <!-- Aufteilung: Wiederholungen & Neue Karten -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin: 0.25rem 0;">
-            <!-- Wiederholungen -->
-            <div style="background: rgba(210, 168, 255, 0.08); border: 1px solid rgba(210, 168, 255, 0.22); border-radius: 5px; padding: 0.3rem 0.45rem; text-align: center;">
-              <div style="font-size: 9.5px; font-weight: 700; color: #d2a8ff; text-transform: uppercase; letter-spacing: 0.3px;">🔄 Wiederholungen</div>
-              <div style="font-size: 1.25rem; font-weight: 700; color: #d2a8ff; line-height: 1.2; margin-top: 1px;">
-                <span id="pacingSplitReviewsVal">102</span>
-              </div>
-              <div style="font-size: 9.5px; color: var(--text-dim);" id="pacingSplitReviewsSub">fällig</div>
-            </div>
-
-            <!-- Neue Karten -->
-            <div style="background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.22); border-radius: 5px; padding: 0.3rem 0.45rem; text-align: center;">
-              <div style="font-size: 9.5px; font-weight: 700; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.3px;">✨ Neue Karten</div>
-              <div style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; line-height: 1.2; margin-top: 1px;">
-                <span id="pacingSplitNewVal">101</span>
-              </div>
-              <div style="font-size: 9.5px; color: var(--text-dim);" id="pacingSplitNewSub">Tagesziel</div>
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-top: 0.25rem;">
-            <span id="pacingRemainingSub" style="color: var(--text-muted);">Noch 203 Karten offen</span>
-            <span id="pacingCompletedRatioSub" style="color: #3fb950; font-weight: 600;">0%</span>
-          </div>
-          <span id="pacingTimeSpentSub" style="display: none;"></span>
-        </div>
-
-        <!-- 3. Fällige Wiederholungen -->
-        <div class="mission-kpi-box" style="padding: 0.75rem 1rem; border: 1px solid rgba(210, 168, 255, 0.3); background: rgba(210, 168, 255, 0.04);">
-          <span class="mission-kpi-label" style="color: #d2a8ff; font-weight: 600;">🔄 Fällig in Anki</span>
-          <div class="mission-kpi-value-row" style="margin-top: 2px;">
-            <span class="mission-kpi-val" id="pacingDueReviewsDisplay" style="color: #d2a8ff; font-size: 1.5rem;">102</span>
-            <span class="mission-kpi-unit">Reviews</span>
-          </div>
-          <span class="mission-kpi-sub" id="pacingDueReviewsSub" style="color: #d2a8ff; font-size: 10.5px;">Repetition</span>
-          <span id="kpiTomorrowCount" style="display: none;">0</span>
-          <span id="kpiTomorrowTopicsSub" style="display: none;"></span>
-          <button type="button" onclick="toggleTomorrowAnkiDetails()" id="btnToggleTomorrowKpi" style="display: none;"></button>
-          <button type="button" onclick="toggleBacklogTriageModal()" id="btnOpenTriage" style="display: none;"></button>
-        </div>
-
-        <!-- 4. Puffer vor Examen -->
-        <div class="mission-kpi-box" style="padding: 0.75rem 1rem;">
-          <span class="mission-kpi-label">📅 Puffer vor Examen</span>
-          <div class="mission-kpi-value-row" style="margin-top: 2px;">
-            <span class="mission-kpi-val" id="pacingBufferDays" style="font-size: 1.5rem;">23</span>
-            <span class="mission-kpi-unit">Tage</span>
-          </div>
-          <span class="mission-kpi-sub" style="font-size: 10.5px;" id="pacingBufferSub">Examen: 19.01.2027</span>
-          <span id="statTimeSaved" style="display: none;">2 Std.</span>
-          <span id="statTimeSavedSub" style="display: none;"></span>
-          <span id="statStreakDays" style="display: none;"></span>
-          <span id="pacingReadinessVal" style="display: none;"></span>
-        </div>
-      </div>
-
-      <!-- Clean Progress Bar & Status Advice -->
-      <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.4rem; margin-bottom: 0.85rem;">
+      <!-- Clean & Focused Progress Strip (Calm by default) -->
+      <div class="mission-focus-row">
         <div class="mission-progress-track">
           <div class="mission-progress-fill" id="pacingBarFill" style="width: 0%;"></div>
         </div>
-        <div class="mission-advice-bar" style="padding: 0.35rem 0.65rem; font-size: 11.5px;">
-          <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <span>💡</span>
-            <span id="pacingAdviceText" style="font-weight: 500; color: var(--text-main);">Noch 100 Karten offen – starte deinen Lerntag!</span>
+        <div class="mission-advice-bar">
+          <div style="display: flex; align-items: center; gap: 0.45rem; flex: 1; min-width: 0;">
+            <span style="font-size: 14px;">💡</span>
+            <span id="pacingAdviceText" style="font-weight: 500; color: var(--text-main); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Noch 100 Karten offen – starte deinen Lerntag!</span>
           </div>
-          <span class="pacing-status-indicator" id="pacingStatusBadge">🟢 Lerntag aktiv</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+            <span class="pacing-status-indicator" id="pacingStatusBadge">🟢 Lerntag aktiv</span>
+            <button type="button" class="btn-toggle-drawer" id="btnToggleMissionMetrics" onclick="toggleMissionMetricsDrawer()" title="Vertiefte Kennzahlen ein-/ausblenden">
+              <span id="toggleMetricsLabel">📊 Details</span> <span id="toggleMetricsChevron">▾</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collapsible Detailed Metrics Drawer (Hidden by default for simplicity) -->
+      <div id="missionMetricsDrawer" style="display: none; margin-top: 0.5rem; margin-bottom: 0.75rem;">
+        <!-- 4-KPI Grid (Unified & Clean) -->
+        <div class="mission-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; margin-bottom: 0.75rem;">
+          <!-- 1. Tagesziel -->
+          <div class="mission-kpi-box" style="padding: 0.75rem 1rem;">
+            <span class="mission-kpi-label">🎯 Tagesziel</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="pacingDailyTarget" style="font-size: 1.5rem;">100</span>
+              <span class="mission-kpi-unit">Karten neu</span>
+            </div>
+            <span class="mission-kpi-sub" style="font-size: 10.5px;" id="pacingTargetSub">Mo–Sa aktiv</span>
+            <span id="pacingNewTargetVal" style="display: none;">100</span>
+            <span id="pacingDueReviewsVal" style="display: none;">102</span>
+            <span id="pacingTargetBreakdown" style="display: none;"></span>
+          </div>
+
+          <!-- 2. Erledigt heute (Aufgeteilt: Neue & Wiederholungen) -->
+          <div class="mission-kpi-box" style="padding: 0.65rem 0.85rem; border: 1px solid rgba(63, 185, 80, 0.35); background: rgba(63, 185, 80, 0.04);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+              <span class="mission-kpi-label" style="color: #3fb950; font-weight: 600; margin: 0;">✅ Heute erledigt</span>
+              <span style="font-size: 11px; font-weight: 700; color: #3fb950; background: rgba(63, 185, 80, 0.12); padding: 0.1rem 0.45rem; border-radius: 4px;">
+                <span id="pacingCardsCompleted">0</span> / <span id="pacingCardsTargetMini">203</span>
+              </span>
+            </div>
+
+            <!-- Aufteilung: Wiederholungen & Neue Karten -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin: 0.25rem 0;">
+              <!-- Wiederholungen -->
+              <div style="background: rgba(210, 168, 255, 0.08); border: 1px solid rgba(210, 168, 255, 0.22); border-radius: 5px; padding: 0.3rem 0.45rem; text-align: center;">
+                <div style="font-size: 9.5px; font-weight: 700; color: #d2a8ff; text-transform: uppercase; letter-spacing: 0.3px;">🔄 Wiederholungen</div>
+                <div style="font-size: 1.25rem; font-weight: 700; color: #d2a8ff; line-height: 1.2; margin-top: 1px;">
+                  <span id="pacingSplitReviewsVal">102</span>
+                </div>
+                <div style="font-size: 9.5px; color: var(--text-dim);" id="pacingSplitReviewsSub">fällig</div>
+              </div>
+
+              <!-- Neue Karten -->
+              <div style="background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.22); border-radius: 5px; padding: 0.3rem 0.45rem; text-align: center;">
+                <div style="font-size: 9.5px; font-weight: 700; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.3px;">✨ Neue Karten</div>
+                <div style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; line-height: 1.2; margin-top: 1px;">
+                  <span id="pacingSplitNewVal">101</span>
+                </div>
+                <div style="font-size: 9.5px; color: var(--text-dim);" id="pacingSplitNewSub">Tagesziel</div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-top: 0.25rem;">
+              <span id="pacingRemainingSub" style="color: var(--text-muted);">Noch 203 Karten offen</span>
+              <span id="pacingCompletedRatioSub" style="color: #3fb950; font-weight: 600;">0%</span>
+            </div>
+            <span id="pacingTimeSpentSub" style="display: none;"></span>
+          </div>
+
+          <!-- 3. Fällige Wiederholungen -->
+          <div class="mission-kpi-box" style="padding: 0.75rem 1rem; border: 1px solid rgba(210, 168, 255, 0.3); background: rgba(210, 168, 255, 0.04);">
+            <span class="mission-kpi-label" style="color: #d2a8ff; font-weight: 600;">🔄 Fällig in Anki</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="pacingDueReviewsDisplay" style="color: #d2a8ff; font-size: 1.5rem;">102</span>
+              <span class="mission-kpi-unit">Reviews</span>
+            </div>
+            <span class="mission-kpi-sub" id="pacingDueReviewsSub" style="color: #d2a8ff; font-size: 10.5px;">Repetition</span>
+            <span id="kpiTomorrowCount" style="display: none;">0</span>
+            <span id="kpiTomorrowTopicsSub" style="display: none;"></span>
+            <button type="button" onclick="toggleTomorrowAnkiDetails()" id="btnToggleTomorrowKpi" style="display: none;"></button>
+            <button type="button" onclick="toggleBacklogTriageModal()" id="btnOpenTriage" style="display: none;"></button>
+          </div>
+
+          <!-- 4. Puffer vor Examen -->
+          <div class="mission-kpi-box" style="padding: 0.75rem 1rem;">
+            <span class="mission-kpi-label">📅 Puffer vor Examen</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="pacingBufferDays" style="font-size: 1.5rem;">23</span>
+              <span class="mission-kpi-unit">Tage</span>
+            </div>
+            <span class="mission-kpi-sub" style="font-size: 10.5px;" id="pacingBufferSub">Examen: 19.01.2027</span>
+            <span id="statTimeSaved" style="display: none;">2 Std.</span>
+            <span id="statTimeSavedSub" style="display: none;"></span>
+            <span id="statStreakDays" style="display: none;"></span>
+            <span id="pacingReadinessVal" style="display: none;"></span>
+          </div>
+        </div>
+
+        <!-- Cognitive Synergy Banner -->
+        <div id="curriculumSynergyCard" style="margin-bottom: 0.85rem; padding: 0.85rem 1rem; background: linear-gradient(135deg, rgba(56, 139, 253, 0.08), rgba(35, 134, 54, 0.08)); border: 1px solid rgba(56, 139, 253, 0.25); border-radius: var(--radius-sm, 8px);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 16px;">🧠</span>
+              <strong id="curriculumSynergyHeadline" style="font-size: 13px; color: var(--text-main);">🎯 Fokus: Leukozyten I / Ullrich (Stockmann) – Vorlesungs-Priming spart 19 Minuten!</strong>
+            </div>
+            <span style="font-size: 10px; font-weight: 600; color: #58a6ff; background: rgba(56, 139, 253, 0.15); padding: 0.12rem 0.5rem; border-radius: 12px; border: 1px solid rgba(56, 139, 253, 0.3);">Symbiose Vorlesung ↔ Anki</span>
+          </div>
+          <div id="curriculumStudySequence" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; font-size: 11.5px; color: var(--text-subtle);">
+            <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+              <span style="color: #79c0ff; font-weight: 700; min-width: 18px;">🎧</span>
+              <span><strong>Vorlesungs-Priming:</strong> Stockmann von 00:00 bis 63:06 im 1.2x Stream sichten</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+              <span style="color: #7ee787; font-weight: 700; min-width: 18px;">📇</span>
+              <span><strong>Aktives Enkodieren:</strong> 85 neue Karten im Deck 'Leukozyten I / Ullrich' ohne kognitive Reibung durcharbeiten</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
+              <span style="color: #d2a8ff; font-weight: 700; min-width: 18px;">🔗</span>
+              <span><strong>Quervernetzung:</strong> Blutbild-Interpretation: Linksverschiebung bei Infektionen</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -324,102 +357,75 @@
       <div id="ankiBacklogTriageBox" style="display: none;"><div id="triageTopicsList"></div><div id="triageCombinedQueryBar"><span id="triageCombinedQueryText"></span></div><button id="btnCopyCombinedQuery"></button><div id="triageAdviceBanner"></div></div>
 
       <!-- =====================================================================
-           COGNITIVE SYNERGY BANNER (VORLESUNG ↔ ANKI SYMBIOSIS)
-           ===================================================================== -->
-      <div id="curriculumSynergyCard" style="margin-top: 0.75rem; margin-bottom: 0.85rem; padding: 0.85rem 1rem; background: linear-gradient(135deg, rgba(56, 139, 253, 0.08), rgba(35, 134, 54, 0.08)); border: 1px solid rgba(56, 139, 253, 0.25); border-radius: var(--radius-sm, 8px);">
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-size: 16px;">🧠</span>
-            <strong id="curriculumSynergyHeadline" style="font-size: 13.5px; color: var(--text-main);">🎯 Fokus: Leukozyten I / Ullrich (Stockmann) – Vorlesungs-Priming spart 19 Minuten!</strong>
-          </div>
-          <span style="font-size: 10.5px; font-weight: 600; color: #58a6ff; background: rgba(56, 139, 253, 0.15); padding: 0.15rem 0.55rem; border-radius: 12px; border: 1px solid rgba(56, 139, 253, 0.3);">Symbiose Vorlesung ↔ Anki</span>
-        </div>
-        <div id="curriculumStudySequence" style="margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 12px; color: var(--text-subtle);">
-          <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
-            <span style="color: #79c0ff; font-weight: 700; min-width: 18px;">🎧</span>
-            <span><strong>Vorlesungs-Priming:</strong> Stockmann von 00:00 bis 63:06 im 1.2x Stream sichten</span>
-          </div>
-          <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
-            <span style="color: #7ee787; font-weight: 700; min-width: 18px;">📇</span>
-            <span><strong>Aktives Enkodieren:</strong> 85 neue Karten im Deck 'Leukozyten I / Ullrich' ohne kognitive Reibung durcharbeiten</span>
-          </div>
-          <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
-            <span style="color: #d2a8ff; font-weight: 700; min-width: 18px;">🔗</span>
-            <span><strong>Quervernetzung:</strong> Blutbild-Interpretation: Linksverschiebung bei Infektionen</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- =====================================================================
-           STRUCTURED MISSION TABLE (DESKTOP/IPAD: TABLE, MOBILE: CARD LIST)
+           STRUCTURED MISSION TOPIC CARDS (CLEAN & TAP-TO-EXPAND PROGRESSIVE DISCLOSURE)
            ===================================================================== -->
       <div id="curriculumTopicsContainer">
-        <!-- Initial pre-rendered Day 1 Table for 0ms loading latency -->
-        <div class="table-responsive-wrapper">
-          <table class="mission-table">
-            <thead>
-              <tr>
-                <th style="width: 32%;">Thema &amp; Fach</th>
-                <th style="width: 26%;">Vorlesungs-Strategie</th>
-                <th style="width: 18%;">Folie</th>
-                <th style="width: 12%; text-align: center;">Anki-Soll</th>
-                <th style="width: 12%; text-align: right;">Aktion</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="mission-slot-row" id="mission-row-0">
-                <td class="td-topic">
-                  <div class="mission-topic-title" style="display: flex; align-items: center; flex-wrap: wrap;">
-                    <span>Leukozyten I / Ullrich</span>
-                    <span style="margin-left: 6px; font-size: 10px; color: #7ee787; background: rgba(35, 134, 54, 0.15); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(35, 134, 54, 0.3);">🔄 47 gemeistert • 85 neu</span>
+        <!-- Pre-rendered Sleek Card List for Day 1 (0ms load latency) -->
+        <div class="topic-cards-list">
+          <div class="topic-card" id="topicCard-2026-09-14_0">
+            <div class="topic-card-header" onclick="toggleTopicDetails('2026-09-14_0', event)">
+              <div class="topic-card-left">
+                <button type="button" class="topic-check-btn" onclick="event.stopPropagation(); handleToggleSlotDone('2026-09-14_0', 85, 'Leukozyten I / Ullrich')" title="Als erledigt markieren">
+                  ✓
+                </button>
+                <div class="topic-card-info">
+                  <div class="topic-card-title-row">
+                    <span class="topic-card-title">Leukozyten I / Ullrich</span>
+                    <span class="curriculum-speed-badge">🟡 1.2x Stream (+19m gespart)</span>
                   </div>
-                  <div class="mission-topic-meta">
-                    <span class="curriculum-lecturer-badge">👨‍🏫 Stockmann</span>
-                    <span style="color: var(--text-dim);">Blut &amp; Immunsystem › Stockmann</span>
+                  <div class="topic-card-sub">
+                    <span>⚡ <strong>85</strong> Karten</span>
+                    <span>&bull;</span>
+                    <span>Blut &amp; Immunsystem</span>
+                    <span>&bull;</span>
+                    <span style="color: #58a6ff;">👨‍🏫 Stockmann</span>
                   </div>
-                  <div class="curriculum-slot-redthread" style="margin-top: 5px; font-size: 11px; color: #7ee787; background: rgba(35, 134, 54, 0.08); border-left: 2px solid #238636; padding: 3px 6px; border-radius: 3px; line-height: 1.35;">
-                    🧵 <strong>Roter Faden:</strong> Erst die Reifungsstufen im Knochenmark (Myeloblast -> Segmentkernige) und Phagozytose verstehen. Das verhindert stumpfes Auswendiglernen im Differentialblutbild.
+                </div>
+              </div>
+              <div class="topic-card-right">
+                <button type="button" class="topic-expand-btn">
+                  <span>Details</span>
+                  <span class="topic-expand-chevron">▾</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Expandable Details Drawer (Smooth Progressive Disclosure) -->
+            <div class="topic-card-details" style="display: none;">
+              <div class="topic-detail-block red-thread">
+                <div class="detail-label">🧵 Roter Faden</div>
+                <div class="detail-content">Erst die Reifungsstufen im Knochenmark (Myeloblast -> Segmentkernige) und Phagozytose verstehen. Das verhindert stumpfes Auswendiglernen im Differentialblutbild.</div>
+              </div>
+              <div class="topic-detail-block cross-links">
+                <div class="detail-label">🔗 Klinische Quervernetzung</div>
+                <div class="detail-content">Blutbild-Interpretation: Linksverschiebung bei Infektionen • Chemotaxis, Opsonierung (C3b) &amp; Respiratory Burst (NADPH-Oxidase) • Chronische Granulomatose &amp; akute Leukämien (Blastenkrise)</div>
+              </div>
+              <div class="topic-detail-block lecture-strategy">
+                <div class="detail-label">▶️ Vorlesung &amp; Timecodes</div>
+                <div class="detail-content">
+                  <span class="badge-timecode">▶️ 00:00 – 63:06 (63m Stream, spart 19m)</span>
+                  <div class="slot-lecture-links" style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap;">
+                    <a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" class="btn-vam-chip">🎬 VAM-Archiv</a>
                   </div>
-                  <div class="curriculum-slot-crosslinks" style="margin-top: 4px; font-size: 10.5px; color: #a5d6ff; line-height: 1.35;">
-                    🔗 <strong>Quervernetzung:</strong> Blutbild-Interpretation: Linksverschiebung bei Infektionen • Chemotaxis, Opsonierung (C3b) &amp; Respiratory Burst (NADPH-Oxidase) • Chronische Granulomatose &amp; akute Leukämien (Blastenkrise)
-                  </div>
-                  <div class="curriculum-slot-reason" style="margin-top: 3px;">💡 Deskriptiver Überblick &amp; Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!</div>
-                </td>
-                <td class="td-strategy">
-                  <span class="curriculum-speed-badge">🟡 1.2x Stream (+19m gespart)</span>
-                  <div style="margin-top: 4px; font-size: 11px; color: #58a6ff; background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.28); border-radius: 4px; padding: 2px 6px; display: inline-flex; align-items: center; gap: 4px;" title="Optimierte Video-Timecodes">
-                    <span>▶️</span> <strong>00:00 – 63:06 (63m Stream, spart 19m)</strong>
-                  </div>
-                </td>
-                <td class="td-slide">
-                  <span style="color: var(--text-dim); font-size: 11px;">–</span>
-                </td>
-                <td class="td-quota" style="text-align: center;">
-                  <div class="curriculum-card-pill"><span>⚡</span> <strong>85</strong> Karten</div>
-                </td>
-                <td class="td-action" style="text-align: right;">
-                  <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('Leukozyten I / Ullrich')" style="margin-right: 4px; background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.55rem; cursor: pointer;" title="Vorlesung &amp; Empfehlung für dieses Thema prüfen">🔍 Berater</button>
-                  <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_0', 85, 'Leukozyten I / Ullrich')">Erledigen</button>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr class="mission-table-total-row">
-                <td colspan="2">
-                  <strong>GESAMT HEUTE (1 Vorlesungsthema)</strong>
-                </td>
-                <td>
-                  <span class="badge-total-saved">⚡ 19m gespart</span>
-                </td>
-                <td style="text-align: center;">
-                  <strong style="color: var(--accent-blue); font-size: 14px;">85</strong> Karten
-                </td>
-                <td style="text-align: right;">
-                  <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()" style="padding: 0.35rem 0.75rem; font-size: 11.5px;">✓ Alle erledigt</button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+                </div>
+              </div>
+              <div class="topic-detail-actions">
+                <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('Leukozyten I / Ullrich')">🔍 Im Vorlesungs-Berater prüfen</button>
+                <button type="button" class="btn-slot-toggle" onclick="handleToggleSlotDone('2026-09-14_0', 85, 'Leukozyten I / Ullrich')">Erledigen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topics-total-bar">
+          <div class="topics-total-info">
+            <span>Gesamt heute: <strong>1 Vorlesungsthema</strong></span>
+            <span class="badge-total-saved">⚡ 19m gespart</span>
+            <span style="color: var(--accent-blue); font-weight: 700;">85 Karten</span>
+          </div>
+          <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()">
+            ✓ Alle erledigt
+          </button>
         </div>
       </div>
 
@@ -1496,6 +1502,30 @@
     </div>
   </div>
 
+  <!-- Mobile Bottom Navigation Bar (Fixed at bottom on phones) -->
+  <nav class="mobile-bottom-nav" role="navigation" aria-label="Mobile Navigation">
+    <button type="button" class="bottom-nav-item active" data-page="page-today" onclick="switchAppPage('page-today')">
+      <span class="bottom-nav-icon">🎯</span>
+      <span class="bottom-nav-label">Heute</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-page="page-advisor" onclick="switchAppPage('page-advisor')">
+      <span class="bottom-nav-icon">🔍</span>
+      <span class="bottom-nav-label">Berater</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-page="page-roadmap" onclick="switchAppPage('page-roadmap')">
+      <span class="bottom-nav-icon">🗺️</span>
+      <span class="bottom-nav-label">Roadmap</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-page="page-analytics" onclick="switchAppPage('page-analytics')">
+      <span class="bottom-nav-icon">📊</span>
+      <span class="bottom-nav-label">Radar</span>
+    </button>
+    <button type="button" class="bottom-nav-item" onclick="toggleSideMenu(true)">
+      <span class="bottom-nav-icon">☰</span>
+      <span class="bottom-nav-label">Menü</span>
+    </button>
+  </nav>
+
   <!-- Feedback Toast Notification -->
   <div class="toast" id="toastMessage">
     <span id="toastText">Aktion erfolgreich</span>
@@ -1515,7 +1545,7 @@
       }
     } catch (e) {}
   </script>
-  <script src="/static/app.js?v=40.0"></script>
+  <script src="/static/app.js?v=41.0"></script>
   <script>
     // NUCLEAR SW RESET: Unregister ALL service workers unconditionally.
     // The SW caused cache poisoning bugs. We disable it permanently.

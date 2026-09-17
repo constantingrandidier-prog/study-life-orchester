@@ -2675,6 +2675,45 @@ async function loadCurriculumToday(forceRefresh = false) {
   }
 }
 
+function toggleMissionMetricsDrawer() {
+  const drawer = document.getElementById('missionMetricsDrawer');
+  const label = document.getElementById('toggleMetricsLabel');
+  const chevron = document.getElementById('toggleMetricsChevron');
+  if (!drawer) return;
+  const isHidden = (drawer.style.display === 'none' || !drawer.style.display);
+  drawer.style.display = isHidden ? 'block' : 'none';
+  if (label) label.textContent = isHidden ? '📊 Weniger' : '📊 Details';
+  if (chevron) chevron.textContent = isHidden ? '▴' : '▾';
+  try {
+    localStorage.setItem('sl_mission_metrics_open', isHidden ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function toggleTopicDetails(slotKey, event) {
+  if (event) {
+    if (event.target.closest('button') && !event.target.closest('.topic-expand-btn')) return;
+    if (event.target.closest('a')) return;
+  }
+  const card = document.getElementById(`topicCard-${slotKey}`);
+  if (!card) return;
+  const details = card.querySelector('.topic-card-details');
+  const chevron = card.querySelector('.topic-expand-chevron');
+  const expandText = card.querySelector('.expand-text');
+  if (!details) return;
+
+  const isHidden = (details.style.display === 'none' || !details.style.display);
+  details.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) {
+    card.classList.add('expanded');
+    if (chevron) chevron.textContent = '▴';
+    if (expandText) expandText.textContent = 'Weniger';
+  } else {
+    card.classList.remove('expanded');
+    if (chevron) chevron.textContent = '▾';
+    if (expandText) expandText.textContent = 'Details';
+  }
+}
+
 function renderCurriculumToday(data) {
   if (!data || data.error) return;
   const dayBadge = document.getElementById('curriculumDayBadge');
@@ -2913,46 +2952,66 @@ function renderCurriculumToday(data) {
         const escapedSlotKey = escapeHtml(slotKey).replace(/'/g, "\\'");
 
         return `
-          <tr class="mission-slot-row ${isDone ? 'row-completed' : ''}" id="mission-row-${idx}">
-            <td class="td-topic">
-              <div class="mission-topic-title" style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
-                <span style="font-weight: 600; font-size: 13.5px; color: var(--text-main);">${escapeHtml(displayTitle)}</span>
-                ${dateBadge}
-                ${ankiStatusBadge}
+          <div class="topic-card ${isDone ? 'is-done' : ''}" id="topicCard-${escapedSlotKey}">
+            <div class="topic-card-header" onclick="toggleTopicDetails('${escapedSlotKey}', event)">
+              <div class="topic-card-left">
+                <button type="button" class="topic-check-btn ${isDone ? 'done' : ''}" onclick="event.stopPropagation(); handleToggleSlotDone('${escapedSlotKey}', ${cards}, '${escapedTitle}')" title="${isDone ? 'Als offen markieren' : 'Als erledigt markieren'}">
+                  ${isDone ? '✓' : ''}
+                </button>
+                <div class="topic-card-info">
+                  <div class="topic-card-title-row">
+                    <span class="topic-card-title">${escapeHtml(displayTitle)}</span>
+                    ${dateBadge}
+                    ${ankiStatusBadge}
+                  </div>
+                  <div class="topic-card-sub">
+                    <span class="topic-card-quota-pill">⚡ <strong>${cards}</strong> Karten neu</span>
+                    ${didacticBadge}
+                    ${breadcrumb ? `<span>&bull;</span> <span>${escapeHtml(breadcrumb)}</span>` : ''}
+                    ${lecturerBadge ? `<span>&bull;</span> ${lecturerBadge}` : ''}
+                  </div>
+                </div>
               </div>
-              <div class="mission-topic-meta">
-                ${lecturerBadge}
-                <span style="color: var(--text-dim);">${escapeHtml(breadcrumb)}</span>
+              <div class="topic-card-right">
+                <button type="button" class="topic-expand-btn" onclick="toggleTopicDetails('${escapedSlotKey}', event)">
+                  <span class="expand-text">Details</span>
+                  <span class="topic-expand-chevron">▾</span>
+                </button>
               </div>
+            </div>
+
+            <!-- Expandable Details Drawer (Collapsible on Demand) -->
+            <div class="topic-card-details" style="display: none;">
               ${redThreadHtml}
               ${crossLinksHtml}
               ${reasonHtml}
-            </td>
-            <td class="td-strategy">
-              ${didacticBadge}
-              ${timecodePill}
-              ${lectureLinksHtml}
-            </td>
-            <td class="td-slide">
-              ${slideBadge}
-            </td>
-            <td class="td-quota" style="text-align: center;">
-              <div class="curriculum-card-pill">
-                <span>⚡</span> <strong>${cards}</strong> Karten
-              </div>
-              ${slot.tomorrow_remaining_cards ? `
-                <div style="margin-top: 3px; font-size: 10px; color: #79c0ff; font-weight: 600;" title="Restkarten dieses Decks werden morgen gelernt">
-                  ↳ +${slot.tomorrow_remaining_cards} morgen
+              ${(timecodePill || lectureLinksHtml) ? `
+                <div class="topic-detail-block lecture-strategy">
+                  <div class="detail-label">▶️ Vorlesungs-Video &amp; Timecodes</div>
+                  <div class="detail-content">
+                    ${timecodePill}
+                    ${lectureLinksHtml}
+                  </div>
                 </div>
               ` : ''}
-            </td>
-            <td class="td-action" style="text-align: right;">
-              <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('${escapedTitle}')" style="margin-right: 4px; background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.55rem; cursor: pointer;" title="Vorlesung &amp; Empfehlung für dieses Thema prüfen">🔍 Berater</button>
-              <button type="button" class="btn-slot-toggle ${isDone ? 'done' : ''}" onclick="handleToggleSlotDone('${escapedSlotKey}', ${cards}, '${escapedTitle}')">
-                ${isDone ? '✓ Erledigt' : 'Erledigen'}
-              </button>
-            </td>
-          </tr>
+              ${slot.matched_slide_filename ? `
+                <div class="topic-detail-block slides">
+                  <div class="detail-label">📄 Vorlesungsfolien &amp; Skripte</div>
+                  <div class="detail-content">
+                    ${slideBadge}
+                  </div>
+                </div>
+              ` : ''}
+              <div class="topic-detail-actions">
+                <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('${escapedTitle}')" style="background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.65rem; cursor: pointer;">
+                  🔍 Im Vorlesungs-Berater prüfen
+                </button>
+                <button type="button" class="btn-slot-toggle ${isDone ? 'done' : ''}" onclick="handleToggleSlotDone('${escapedSlotKey}', ${cards}, '${escapedTitle}')">
+                  ${isDone ? '↩️ Als offen markieren' : '✓ Erledigen'}
+                </button>
+              </div>
+            </div>
+          </div>
         `;
       }).join('');
 
@@ -2961,37 +3020,18 @@ function renderCurriculumToday(data) {
       const savedStr = hoursSaved > 0 ? `${hoursSaved}h ${minsSaved > 0 ? minsSaved + 'm' : ''}` : `${minsSaved}m`;
 
       topicsContainer.innerHTML = `
-        <div class="table-responsive-wrapper">
-          <table class="mission-table">
-            <thead>
-              <tr>
-                <th style="width: 32%;">Thema &amp; Fach</th>
-                <th style="width: 26%;">Vorlesungs-Strategie</th>
-                <th style="width: 18%;">Folie</th>
-                <th style="width: 12%; text-align: center;">Anki-Soll</th>
-                <th style="width: 12%; text-align: right;">Aktion</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-            <tfoot>
-              <tr class="mission-table-total-row">
-                <td colspan="2">
-                  <strong>GESAMT HEUTE (${data.topic_slots.length} Vorlesungsthemen)</strong>
-                </td>
-                <td>
-                  <span class="badge-total-saved">⚡ ${savedStr} gespart</span>
-                </td>
-                <td style="text-align: center;">
-                  <strong style="color: var(--accent-blue); font-size: 14px;">${data.target_cards || 100}</strong> Karten
-                </td>
-                <td style="text-align: right;">
-                  <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()" style="padding: 0.35rem 0.75rem; font-size: 11.5px;">✓ Alle erledigt</button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+        <div class="topic-cards-list">
+          ${rowsHtml}
+        </div>
+        <div class="topics-total-bar">
+          <div class="topics-total-info">
+            <span>Gesamt heute: <strong>${data.topic_slots.length} Vorlesungsthemen</strong></span>
+            <span class="badge-total-saved">⚡ ${savedStr} gespart</span>
+            <span style="color: var(--accent-blue); font-weight: 700;">${data.target_cards || 100} Karten</span>
+          </div>
+          <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()">
+            ✓ Alle erledigt
+          </button>
         </div>
       `;
 
@@ -5422,6 +5462,8 @@ window.handleNudgeBlockDuration = handleNudgeBlockDuration;
 window.handlePromptBlockDuration = handlePromptBlockDuration;
 window.initRhythmResizeHandlers = initRhythmResizeHandlers;
 window.saveRhythmDurationsToBackend = saveRhythmDurationsToBackend;
+window.toggleMissionMetricsDrawer = toggleMissionMetricsDrawer;
+window.toggleTopicDetails = toggleTopicDetails;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {
@@ -5453,7 +5495,7 @@ function switchAppPage(pageId) {
   if (!pageId) return;
   if (!pageId.startsWith('page-')) pageId = 'page-' + pageId;
 
-  const navBtns = document.querySelectorAll('.nav-tab-btn');
+  const navBtns = document.querySelectorAll('.nav-tab-btn, .bottom-nav-item, .side-menu-item');
   navBtns.forEach(btn => {
     if (btn.getAttribute('data-page') === pageId) {
       btn.classList.add('active');

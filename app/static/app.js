@@ -191,6 +191,13 @@ function formatGermanDateWithWeekday(isoDateString) {
   };
 }
 
+function formatGermanDate(isoDateString) {
+  if (!isoDateString) return '';
+  const info = formatGermanDateWithWeekday(isoDateString);
+  return info.shortFormatted || isoDateString;
+}
+window.formatGermanDate = formatGermanDate;
+
 function updateWeekdayDisplays() {
   const info = formatGermanDateWithWeekday(state.targetDate);
   if (dom.headerWeekdayDisplay) {

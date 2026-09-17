@@ -2460,9 +2460,13 @@ def search_lecture_advisor(
             if matched_module_val and matched_module_val.lower() in mod_l:
                 score += 80
 
-            # C. Exact query in title
+            # C. Exact query in title or slide filename
             if q_raw in title_l:
                 score += 120
+            slide_pdf_l = (l.get("slide_pdf") or "").lower()
+            folien_fn_l = (l.get("folien_filename") or "").lower()
+            if q_raw and (q_raw in slide_pdf_l or q_raw in folien_fn_l):
+                score += 250
 
             # D. Token-based matching
             for tok in tokens:

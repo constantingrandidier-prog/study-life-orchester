@@ -5220,12 +5220,10 @@ function renderScienceRhythm(data) {
                 📄 Folien öffnen
               </a>
             ` : ''}
-            ${b.vam_url ? `
-              <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.12); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.35); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">
-                🎬 VAM-Stream
-              </a>
-            ` : ''}
-            <button type="button" onclick="handleStopMedia()" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(218, 54, 51, 0.15); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Stoppt sofort alle im Hintergrund laufenden Audio- oder Videoplayer (VLC)">
+            <button type="button" onclick="consultAdvisorForLecture('${escapeHtml(b.tomorrow_lecture_title || b.title || '')}', '${escapeHtml(b.slide_filename || '')}')" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(88, 166, 255, 0.15); color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Vorlesungs- und Folien-Empfehlung im Vorlesungsberater">
+              💡 Vorlesungsberater
+            </button>
+            <button type="button" onclick="handleStopMedia()" class="btn-secondary" style="font-size: 9.5px; padding: 0.2rem 0.45rem; background: rgba(218, 54, 51, 0.12); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.35); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 500;" title="Stoppt sofort alle im Hintergrund laufenden Audio- oder Videoplayer (VLC)">
               ⏹️ Ton beenden
             </button>
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
@@ -6032,6 +6030,28 @@ window.consultAdvisorForTopic = function(topicName) {
     input.value = cleaned;
     handleAdvisorSearch(cleaned);
   }
+};
+
+// 1-Click Jump from Schedule Block / Slide directly to Lecture Advisor
+window.consultAdvisorForLecture = function(lectureTitle, slideFilename) {
+  switchAppPage('page-advisor');
+  let q = lectureTitle || '';
+  // Remove prefixes like "Nachmittag: Vorlesung für MORGEN sichten – "
+  q = q.replace(/^Nachmittag:\s*Vorlesung\s*für\s*MORGEN\s*sichten\s*–\s*/i, '');
+  // Remove date hints like "(22.09.2025)"
+  q = q.replace(/\s*\(\d{2}\.\d{2}\.\d{4}\)/g, '');
+  q = q.replace(/\s*\(.*?\)/g, '');
+  q = q.trim();
+
+  // If multiple comma-separated topics, take the primary topic (e.g. "Thrombozyten")
+  const primaryTopic = q.split(',')[0].trim() || q;
+
+  const input = document.getElementById('advisorSearchInput');
+  if (input) {
+    input.value = primaryTopic;
+    handleAdvisorSearch(primaryTopic);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 

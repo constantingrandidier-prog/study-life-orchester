@@ -92,6 +92,82 @@ def sync_now():
         flush=True,
     )
 
+
+def execute_desktop_action(act: dict):
+    action_type = act.get("action", "open_explorer")
+    import subprocess
+    from pathlib import Path
+
+    if action_type == "stop_media":
+        try:
+            subprocess.run("taskkill /F /IM vlc.exe /T 2>nul", shell=True)
+            print("[ACTION] Alle laufenden VLC/Audio-Prozesse erfolgreich beendet.", flush=True)
+        except Exception as exc:
+            print(f"[ACTION] Fehler beim Beenden von VLC: {exc}", flush=True)
+        return
+
+    raw_path = act.get("path") or ""
+    if not raw_path:
+        return
+
+    # Terminate any stray background VLC instances first
+    try:
+        subprocess.run("taskkill /F /IM vlc.exe /T 2>nul", shell=True)
+    except Exception:
+        pass
+
+    p = Path(raw_path)
+    if not p.exists():
+        base = Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app")
+        clean = raw_path.strip().replace("/", "\\")
+        cand = base / clean
+        cand_pod = base / "Podcasts" / clean
+        if cand.exists():
+            p = cand
+        elif cand_pod.exists():
+            p = cand_pod
+        else:
+            fname = Path(clean).name
+            matches = list(base.glob(f"**/{fname}"))
+            if matches:
+                p = matches[0]
+
+    if not p.exists():
+        print(f"[ACTION] Pfad lokal nicht gefunden: {raw_path}", flush=True)
+        return
+
+    try:
+        # Guarantee a visible window by delegating to Windows Explorer (never headless os.startfile on videos)
+        if p.is_file():
+            subprocess.Popen(f'explorer.exe /select,"{str(p)}"', shell=True)
+            print(f"[ACTION] Datei im Windows Explorer markiert: {p.name}", flush=True)
+        else:
+            folien_vids = list(p.glob("*Folien*.mp4")) or list(p.glob("*.mp4")) or list(p.glob("*.pdf"))
+            if folien_vids:
+                target_file = folien_vids[0]
+                subprocess.Popen(f'explorer.exe /select,"{str(target_file)}"', shell=True)
+                print(f"[ACTION] Video/Folie im Explorer markiert: {target_file.name}", flush=True)
+            else:
+                subprocess.Popen(f'explorer.exe "{str(p)}"', shell=True)
+                print(f"[ACTION] Ordner im Explorer geöffnet: {p.name}", flush=True)
+    except Exception as e:
+        print(f"[ACTION] Fehler beim Ausführen: {e}", flush=True)
+
+
+
+def check_and_execute_pending_actions():
+    poll_url = "https://study-life-orchester.onrender.com/api/v1/schedule/system/poll-actions"
+    try:
+        req = urllib.request.Request(poll_url, headers={"User-Agent": "AnkiLiveSyncAgent/2.0"})
+        with urllib.request.urlopen(req, timeout=2.0, context=SSL_CTX) as resp:
+            if resp.status == 200:
+                data = json.loads(resp.read().decode("utf-8"))
+                for act in data.get("actions", []):
+                    execute_desktop_action(act)
+    except Exception:
+        pass
+
+
 if __name__ == "__main__":
     if "--once" in sys.argv:
         sync_now()
@@ -103,6 +179,7 @@ if __name__ == "__main__":
         sync_now()
         while True:
             try:
+                check_and_execute_pending_actions()
                 now = time.time()
                 file_changed = False
                 if col and col.exists():
@@ -117,5 +194,5 @@ if __name__ == "__main__":
                     last_periodic = now
             except Exception as exc:
                 print(f"Sync loop error: {exc}", flush=True)
-            time.sleep(5)
+            time.sleep(1)
 

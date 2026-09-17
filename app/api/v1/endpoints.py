@@ -1497,43 +1497,32 @@ def open_folder_endpoint(
     found = _resolve_uzh_file_or_folder(path)
     if found and found.exists() and os.name == "nt":
         try:
+            # Stop any orphaned invisible media player instances
+            try:
+                subprocess.run("taskkill /F /IM vlc.exe /T 2>nul", shell=True)
+            except Exception:
+                pass
+
             if found.is_file():
-                if direct_open:
-                    os.startfile(str(found))
-                    return {
-                        "success": True,
-                        "message": f"Datei '{found.name}' direkt geöffnet!",
-                        "path": str(found),
-                    }
-                else:
-                    subprocess.Popen(f'explorer.exe /select,"{str(found)}"', shell=True)
-                    return {
-                        "success": True,
-                        "message": f"Datei '{found.name}' im Windows Explorer markiert!",
-                        "path": str(found),
-                        "folder": str(found.parent),
-                    }
+                subprocess.Popen(f'explorer.exe /select,"{str(found)}"', shell=True)
+                return {
+                    "success": True,
+                    "message": f"Datei '{found.name}' im Windows Explorer geöffnet!",
+                    "path": str(found),
+                    "folder": str(found.parent),
+                }
             else:
                 folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4")) or list(found.glob("*.pdf"))
                 if folien_vids:
                     target_file = folien_vids[0]
-                    if direct_open:
-                        os.startfile(str(target_file))
-                        return {
-                            "success": True,
-                            "message": f"Vorlesungsvideo '{target_file.name}' direkt gestartet!",
-                            "path": str(target_file),
-                            "folder": str(found),
-                        }
-                    else:
-                        subprocess.Popen(f'explorer.exe /select,"{str(target_file)}"', shell=True)
-                        return {
-                            "success": True,
-                            "message": f"Folienansicht '{target_file.name}' im Explorer markiert!",
-                            "path": str(target_file),
-                            "folder": str(found),
-                        }
-                os.startfile(str(found))
+                    subprocess.Popen(f'explorer.exe /select,"{str(target_file)}"', shell=True)
+                    return {
+                        "success": True,
+                        "message": f"Vorlesungsfenster im Datei-Explorer geöffnet ({target_file.name})!",
+                        "path": str(target_file),
+                        "folder": str(found),
+                    }
+                subprocess.Popen(f'explorer.exe "{str(found)}"', shell=True)
                 return {
                     "success": True,
                     "message": f"Ordner '{found.name}' im Windows Explorer geöffnet!",
@@ -1600,6 +1589,40 @@ def queue_system_action_endpoint(payload: dict = Body(...)):
     }
     _PENDING_SYSTEM_COMMANDS.append(action_obj)
     return {"success": True, "queued": True, "action": action_obj}
+
+
+@router.post(
+    "/system/stop-media",
+    summary="Stops any running VLC or audio playback immediately",
+)
+def stop_media_endpoint():
+    import os
+    import subprocess
+    import time
+    global _PENDING_SYSTEM_COMMANDS
+
+    killed = False
+    if os.name == "nt":
+        try:
+            res = subprocess.run("taskkill /F /IM vlc.exe /T 2>nul", shell=True)
+            killed = (res.returncode == 0)
+        except Exception:
+            pass
+
+    action_obj = {
+        "id": f"act_{int(time.time() * 1000)}",
+        "action": "stop_media",
+        "timestamp": time.time(),
+    }
+    _PENDING_SYSTEM_COMMANDS.append(action_obj)
+
+    return {
+        "success": True,
+        "message": "Audiowiedergabe / VLC erfolgreich gestoppt.",
+        "local_kill": killed,
+        "queued": True,
+    }
+
 
 
 

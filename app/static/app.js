@@ -2816,10 +2816,7 @@ function renderCurriculumToday(data) {
         const lectureLinksHtml = `
           <div class="slot-lecture-links" style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
             ${slot.local_podcast_folder_path ? `
-              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesungsvideo', true)" style="font-size: 10.5px; padding: 2px 7px; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 700;" title="Spielt das Vorlesungsvideo direkt im Videoplayer auf deinem Laptop ab!">
-                ▶️ Abspielen
-              </button>
-              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})', false)" title="Vorlesungs-Ordner im Windows Datei-Explorer auf deinem Laptop öffnen" style="font-size: 10px; padding: 2px 5px;">
+              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})', false)" title="Vorlesungs-Ordner mit Video direkt im Windows Datei-Explorer auf deinem Laptop öffnen" style="font-size: 10px; padding: 2px 6px; color: #7ee787; border-color: rgba(46, 160, 67, 0.4);">
                 📂 Explorer
               </button>
             ` : ''}
@@ -3006,12 +3003,33 @@ function renderCurriculumToday(data) {
   }
 }
 
+async function handleStopMedia() {
+  showToast('⏹️ Beende Audiowiedergabe...', 2000);
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 650);
+    await fetch('http://127.0.0.1:8000/api/v1/schedule/system/stop-media', {
+      method: 'POST',
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+  } catch (_) {}
+
+  try {
+    const res = await fetch('/api/v1/schedule/system/stop-media', { method: 'POST' });
+    const data = await res.json();
+    showToast('⏹️ Alle Hintergrund-Audioplayer (VLC) gestoppt!', 4000);
+  } catch (err) {
+    showToast('⏹️ Stopp-Befehl gesendet.', 3000);
+  }
+}
+
 async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei', directOpen = false) {
   if (!folderOrFilePath) {
     showToast(`⚠️ Kein Pfad für ${label} hinterlegt`);
     return;
   }
-  const actionText = directOpen ? 'Starten' : 'Öffnen';
+  const actionText = 'Öffnen';
   showToast(`📂 ${actionText} von ${label}...`, 3000);
 
   const query = `path=${encodeURIComponent(folderOrFilePath)}&direct_open=${directOpen ? 'true' : 'false'}`;
@@ -4954,23 +4972,23 @@ function renderScienceRhythm(data) {
               ${isPostponed ? '⏩ Nachhol-Vorlesung:' : '🌅 Vorlesung für MORGEN:'}
             </span>
             ${(b.local_podcast_folder_path || b.podcast_folder_name) ? `
-              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungsvideo', true)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Spielt das Vorlesungsvideo direkt im Videoplayer auf deinem Laptop ab!">
-                ▶️ Vorlesung abspielen
-              </button>
-              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungs-Ordner', false)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet den Vorlesungs-Ordner im Windows Datei-Explorer mit dem Video markiert">
-                📂 Ordner (Explorer)
+              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_podcast_folder_path || b.podcast_folder_name)}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">
+                📂 Im Datei-Explorer öffnen
               </button>
             ` : ''}
             ${(b.local_slide_file_path || b.slide_rel_path || b.slide_filename) ? `
-              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_slide_file_path || b.slide_rel_path || b.slide_filename)}', 'Folien-PDF', true)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien-PDF direkt im PDF-Viewer auf deinem Laptop">
-                📄 Folien öffnen
+              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml(b.local_slide_file_path || b.slide_rel_path || b.slide_filename)}', 'Folien-PDF', false)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien im Datei-Explorer oder Browser">
+                📄 Folien ansehen
               </button>
             ` : ''}
             ${b.vam_url ? `
               <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.12); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.35); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">
-                🎬 VAM-Weblink
+                🎬 VAM-Stream
               </a>
             ` : ''}
+            <button type="button" onclick="handleStopMedia()" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(218, 54, 51, 0.15); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Stoppt sofort alle im Hintergrund laufenden Audio- oder Videoplayer (VLC)">
+              ⏹️ Ton beenden
+            </button>
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
               ${isPostponed ? '🧠 Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}
             </span>

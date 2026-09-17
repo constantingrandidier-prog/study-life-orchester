@@ -4973,9 +4973,9 @@ function renderScienceRhythm(data) {
               </button>
             ` : ''}
             ${(b.slide_rel_path || b.slide_filename || b.local_slide_file_path) ? `
-              <button type="button" class="btn-secondary" onclick="handleOpenLocalFolder('${escapeHtml((b.slide_rel_path || b.slide_filename || b.local_slide_file_path || '').replace(/\\/g, '/'))}', 'Folien-PDF', false)" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Folien-PDF direkt in deinem Windows Datei-Explorer">
-                📄 Folien im Explorer
-              </button>
+              <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent((b.slide_rel_path || b.slide_filename || b.local_slide_file_path || '').replace(/\\/g, '/'))}" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; text-decoration: none;" title="Öffnet die Folien-PDF direkt im Browser">
+                📄 Folien öffnen
+              </a>
             ` : ''}
             ${b.vam_url ? `
               <a href="${escapeHtml(b.vam_url)}" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 139, 253, 0.12); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.35); border-radius: 4px; font-weight: 600;" title="Öffnet das VAM Vorlesungs-Archiv im Browser">

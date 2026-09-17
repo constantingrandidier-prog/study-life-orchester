@@ -1378,6 +1378,7 @@ def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
         Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop\UNI sem app"),
         Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\alles\Studium"),
         Path(r"C:\Users\Constantin Grandidie\OneDrive - Universität Zürich UZH\Desktop"),
+        Path(__file__).resolve().parent.parent.parent / "data" / "slides",
         Path(__file__).resolve().parent.parent.parent.parent / "UNI sem app",
         Path(__file__).resolve().parent.parent.parent,
     ]
@@ -1417,6 +1418,115 @@ def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
             except Exception:
                 pass
     return None
+
+
+def _launch_desktop_explorer(target_path_or_folder: Path):
+    """Launches Windows Explorer directly onto the user's interactive desktop (WinSta0\\Default) and brings it to front."""
+    import os
+    import subprocess
+    import ctypes
+    from ctypes import wintypes
+    import time
+
+    if os.name != "nt":
+        return
+
+    # Terminate any rogue headless VLC instances
+    try:
+        subprocess.run("taskkill /F /IM vlc.exe /T 2>nul", shell=True)
+    except Exception:
+        pass
+
+    target_str = str(target_path_or_folder).replace("/", "\\")
+    is_file = target_path_or_folder.is_file()
+
+    if is_file:
+        cmd = f'explorer.exe /select,"{target_str}"'
+    else:
+        cmd = f'explorer.exe "{target_str}"'
+
+    launched = False
+    try:
+        class STARTUPINFO(ctypes.Structure):
+            _fields_ = [
+                ('cb', wintypes.DWORD),
+                ('lpReserved', wintypes.LPWSTR),
+                ('lpDesktop', wintypes.LPWSTR),
+                ('lpTitle', wintypes.LPWSTR),
+                ('dwX', wintypes.DWORD),
+                ('dwY', wintypes.DWORD),
+                ('dwXSize', wintypes.DWORD),
+                ('dwYSize', wintypes.DWORD),
+                ('dwXCountChars', wintypes.DWORD),
+                ('dwYCountChars', wintypes.DWORD),
+                ('dwFillAttribute', wintypes.DWORD),
+                ('dwFlags', wintypes.DWORD),
+                ('wShowWindow', wintypes.WORD),
+                ('cbReserved2', wintypes.WORD),
+                ('lpReserved2', ctypes.c_void_p),
+                ('hStdInput', wintypes.HANDLE),
+                ('hStdOutput', wintypes.HANDLE),
+                ('hStdError', wintypes.HANDLE),
+            ]
+
+        class PROCESS_INFORMATION(ctypes.Structure):
+            _fields_ = [
+                ('hProcess', wintypes.HANDLE),
+                ('hThread', wintypes.HANDLE),
+                ('dwProcessId', wintypes.DWORD),
+                ('dwThreadId', wintypes.DWORD),
+            ]
+
+        si = STARTUPINFO()
+        si.cb = ctypes.sizeof(STARTUPINFO)
+        si.lpDesktop = 'WinSta0\\Default'
+        pi = PROCESS_INFORMATION()
+
+        res = ctypes.windll.kernel32.CreateProcessW(
+            None, cmd, None, None, False, 0, None, None, ctypes.byref(si), ctypes.byref(pi)
+        )
+        if res:
+            ctypes.windll.kernel32.CloseHandle(pi.hProcess)
+            ctypes.windll.kernel32.CloseHandle(pi.hThread)
+            launched = True
+    except Exception:
+        pass
+
+    if not launched:
+        if is_file:
+            explorer_args = f'/select,\\"{target_str}\\"'
+        else:
+            explorer_args = f'\\"{target_str}\\"'
+        task_cmd = f'explorer.exe {explorer_args}'
+        create_cmd = f'schtasks /create /tn "StudyLifeOpen" /tr "{task_cmd}" /sc once /st 23:59 /f'
+        subprocess.run(create_cmd, shell=True, capture_output=True)
+        subprocess.run('schtasks /run /tn "StudyLifeOpen"', shell=True, capture_output=True)
+
+    try:
+        user32 = ctypes.windll.user32
+        h_desk = user32.OpenDesktopW("Default", 0, False, 0x01FF)
+        if h_desk:
+            user32.SetThreadDesktop(h_desk)
+            user32.AllowSetForegroundWindow(-1)
+            time.sleep(0.3)
+            
+            def _enum_cb(hwnd, lparam):
+                if user32.IsWindowVisible(hwnd):
+                    length = user32.GetWindowTextLengthW(hwnd)
+                    if length > 0:
+                        buff = ctypes.create_unicode_buffer(length + 1)
+                        user32.GetWindowTextW(hwnd, buff, length + 1)
+                        title = buff.value
+                        if "Datei-Explorer" in title or "Explorer" in title or target_path_or_folder.name in title:
+                            user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+                            user32.SetForegroundWindow(hwnd)
+                            user32.BringWindowToTop(hwnd)
+                return True
+
+            WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
+            user32.EnumWindows(WNDENUMPROC(_enum_cb), 0)
+    except Exception:
+        pass
 
 
 _PENDING_SYSTEM_COMMANDS: List[Dict[str, Any]] = []
@@ -1616,7 +1726,7 @@ def open_folder_endpoint(
                 pass
 
             if found.is_file():
-                subprocess.Popen(f'explorer.exe /select,"{str(found)}"', shell=True)
+                _launch_desktop_explorer(found)
                 return {
                     "success": True,
                     "message": f"Datei '{found.name}' im Windows Explorer geöffnet!",
@@ -1627,14 +1737,14 @@ def open_folder_endpoint(
                 folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4")) or list(found.glob("*.pdf"))
                 if folien_vids:
                     target_file = folien_vids[0]
-                    subprocess.Popen(f'explorer.exe /select,"{str(target_file)}"', shell=True)
+                    _launch_desktop_explorer(target_file)
                     return {
                         "success": True,
                         "message": f"Vorlesungsfenster im Datei-Explorer geöffnet ({target_file.name})!",
                         "path": str(target_file),
                         "folder": str(found),
                     }
-                subprocess.Popen(f'explorer.exe "{str(found)}"', shell=True)
+                _launch_desktop_explorer(found)
                 return {
                     "success": True,
                     "message": f"Ordner '{found.name}' im Windows Explorer geöffnet!",

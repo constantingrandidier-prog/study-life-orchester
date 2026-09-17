@@ -93,6 +93,105 @@ def sync_now():
     )
 
 
+def _launch_desktop_explorer(target_path_or_folder: Path):
+    """Launches Windows Explorer directly onto the user's interactive desktop (WinSta0\\Default) and brings it to front."""
+    import subprocess
+    import ctypes
+    from ctypes import wintypes
+    import time
+
+    target_str = str(target_path_or_folder).replace("/", "\\")
+    is_file = target_path_or_folder.is_file()
+
+    if is_file:
+        cmd = f'explorer.exe /select,"{target_str}"'
+    else:
+        cmd = f'explorer.exe "{target_str}"'
+
+    launched = False
+    try:
+        class STARTUPINFO(ctypes.Structure):
+            _fields_ = [
+                ('cb', wintypes.DWORD),
+                ('lpReserved', wintypes.LPWSTR),
+                ('lpDesktop', wintypes.LPWSTR),
+                ('lpTitle', wintypes.LPWSTR),
+                ('dwX', wintypes.DWORD),
+                ('dwY', wintypes.DWORD),
+                ('dwXSize', wintypes.DWORD),
+                ('dwYSize', wintypes.DWORD),
+                ('dwXCountChars', wintypes.DWORD),
+                ('dwYCountChars', wintypes.DWORD),
+                ('dwFillAttribute', wintypes.DWORD),
+                ('dwFlags', wintypes.DWORD),
+                ('wShowWindow', wintypes.WORD),
+                ('cbReserved2', wintypes.WORD),
+                ('lpReserved2', ctypes.c_void_p),
+                ('hStdInput', wintypes.HANDLE),
+                ('hStdOutput', wintypes.HANDLE),
+                ('hStdError', wintypes.HANDLE),
+            ]
+
+        class PROCESS_INFORMATION(ctypes.Structure):
+            _fields_ = [
+                ('hProcess', wintypes.HANDLE),
+                ('hThread', wintypes.HANDLE),
+                ('dwProcessId', wintypes.DWORD),
+                ('dwThreadId', wintypes.DWORD),
+            ]
+
+        si = STARTUPINFO()
+        si.cb = ctypes.sizeof(STARTUPINFO)
+        si.lpDesktop = 'WinSta0\\Default'
+        pi = PROCESS_INFORMATION()
+
+        res = ctypes.windll.kernel32.CreateProcessW(
+            None, cmd, None, None, False, 0, None, None, ctypes.byref(si), ctypes.byref(pi)
+        )
+        if res:
+            ctypes.windll.kernel32.CloseHandle(pi.hProcess)
+            ctypes.windll.kernel32.CloseHandle(pi.hThread)
+            launched = True
+    except Exception:
+        pass
+
+    if not launched:
+        if is_file:
+            explorer_args = f'/select,\\"{target_str}\\"'
+        else:
+            explorer_args = f'\\"{target_str}\\"'
+        task_cmd = f'explorer.exe {explorer_args}'
+        create_cmd = f'schtasks /create /tn "StudyLifeOpen" /tr "{task_cmd}" /sc once /st 23:59 /f'
+        subprocess.run(create_cmd, shell=True, capture_output=True)
+        subprocess.run('schtasks /run /tn "StudyLifeOpen"', shell=True, capture_output=True)
+
+    try:
+        user32 = ctypes.windll.user32
+        h_desk = user32.OpenDesktopW("Default", 0, False, 0x01FF)
+        if h_desk:
+            user32.SetThreadDesktop(h_desk)
+            user32.AllowSetForegroundWindow(-1)
+            time.sleep(0.3)
+            
+            def _enum_cb(hwnd, lparam):
+                if user32.IsWindowVisible(hwnd):
+                    length = user32.GetWindowTextLengthW(hwnd)
+                    if length > 0:
+                        buff = ctypes.create_unicode_buffer(length + 1)
+                        user32.GetWindowTextW(hwnd, buff, length + 1)
+                        title = buff.value
+                        if "Datei-Explorer" in title or "Explorer" in title or target_path_or_folder.name in title:
+                            user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+                            user32.SetForegroundWindow(hwnd)
+                            user32.BringWindowToTop(hwnd)
+                return True
+
+            WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
+            user32.EnumWindows(WNDENUMPROC(_enum_cb), 0)
+    except Exception:
+        pass
+
+
 def execute_desktop_action(act: dict):
     action_type = act.get("action", "open_explorer")
     import subprocess
@@ -155,21 +254,17 @@ def execute_desktop_action(act: dict):
         return
 
     try:
-        # Guarantee a visible window by delegating to Windows Explorer (never headless os.startfile on videos)
         if target.is_file():
-            cmd = f'explorer.exe /select,"{str(target)}"'
-            subprocess.Popen(cmd, shell=True)
+            _launch_desktop_explorer(target)
             print(f"[ACTION] Datei im Windows Explorer markiert: {target.name}", flush=True)
         else:
             folien_vids = list(target.glob("*Folien*.mp4")) or list(target.glob("*.mp4")) or list(target.glob("*.pdf"))
             if folien_vids:
                 target_file = folien_vids[0]
-                cmd = f'explorer.exe /select,"{str(target_file)}"'
-                subprocess.Popen(cmd, shell=True)
+                _launch_desktop_explorer(target_file)
                 print(f"[ACTION] Video/Folie im Explorer markiert: {target_file.name}", flush=True)
             else:
-                cmd = f'explorer.exe "{str(target)}"'
-                subprocess.Popen(cmd, shell=True)
+                _launch_desktop_explorer(target)
                 print(f"[ACTION] Ordner im Explorer geöffnet: {target.name}", flush=True)
     except Exception as e:
         print(f"[ACTION] Fehler beim Ausführen: {e}", flush=True)

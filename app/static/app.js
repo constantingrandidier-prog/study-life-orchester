@@ -4306,6 +4306,25 @@ async function loadScienceRhythm(targetDate) {
       recalculateRhythmTimes(data);
     }
 
+    // Check if client or server has custom durations for blocks on this date
+    const durationsKey = `sl_rhythm_durations_${dateStr}`;
+    const localDurations = JSON.parse(localStorage.getItem(durationsKey) || '{}');
+    if (data.custom_durations && typeof data.custom_durations === 'object') {
+      for (const [k, v] of Object.entries(data.custom_durations)) {
+        if (localDurations[k] === undefined) {
+          localDurations[k] = v;
+        }
+      }
+    }
+    if (Object.keys(localDurations).length > 0 && Array.isArray(data.blocks)) {
+      data.blocks.forEach(b => {
+        if (b && b.id && localDurations[b.id]) {
+          b.duration_minutes = parseInt(localDurations[b.id], 10);
+        }
+      });
+      recalculateRhythmTimes(data);
+    }
+
     // Update Feierabend badge
     const feierabendEl = document.getElementById('rhythmFeierabendBadge');
     if (feierabendEl && data.feierabend_time) {
@@ -4473,8 +4492,10 @@ async function executeDeleteRhythmBlock() {
 async function restoreRhythmBlocks(dateStr) {
   const removedKey = `sl_rhythm_removed_${dateStr}`;
   const orderKey = `sl_rhythm_order_${dateStr}`;
+  const durationsKey = `sl_rhythm_durations_${dateStr}`;
   localStorage.removeItem(removedKey);
   localStorage.removeItem(orderKey);
+  localStorage.removeItem(durationsKey);
 
   try {
     await fetch('/api/v1/schedule/rhythm-action/restore', {
@@ -4635,6 +4656,10 @@ function initRhythmDragAndDrop() {
 
   // 1. Desktop Drag & Drop
   container.addEventListener('dragstart', (e) => {
+    if (e.target.closest('.rhythm-resize-handle') || e.target.closest('.btn-duration-nudge') || e.target.closest('.duration-badge-pill')) {
+      e.preventDefault();
+      return;
+    }
     const row = e.target.closest('.rhythm-row-card:not(#rhythmRow-evening_free)');
     if (!row) return;
     _desktopRhythmDragSource = row;
@@ -4694,6 +4719,9 @@ function initRhythmDragAndDrop() {
 
   // 2. Touch Support (Mobile & iPad - Touch & Hold or Drag Handle)
   container.addEventListener('touchstart', (e) => {
+    if (e.target.closest('.rhythm-resize-handle') || e.target.closest('.btn-duration-nudge') || e.target.closest('.duration-badge-pill')) {
+      return;
+    }
     const handle = e.target.closest('.rhythm-drag-handle');
     const row = e.target.closest('.rhythm-row-card:not(#rhythmRow-evening_free)');
     if (!row) return;
@@ -4785,6 +4813,199 @@ function initRhythmDragAndDrop() {
   });
 }
 
+async function saveRhythmDurationsToBackend(dateStr, durationsMap) {
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+        action: 'durations',
+        block_id: '__custom_durations__',
+        block_payload: { durations: durationsMap },
+      }),
+    });
+  } catch (err) {
+    console.warn('Backend rhythm durations save failed:', err);
+  }
+}
+
+function handleNudgeBlockDuration(dateStr, blockId, deltaMinutes, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const data = state.currentScienceRhythmData;
+  if (!data || !Array.isArray(data.blocks)) return;
+  const b = data.blocks.find(x => x.id === blockId);
+  if (!b) return;
+
+  const currentDur = b.duration_minutes || 45;
+  const newDur = Math.max(5, Math.min(360, currentDur + deltaMinutes));
+  if (newDur === currentDur) return;
+
+  b.duration_minutes = newDur;
+  recalculateRhythmTimes(data);
+
+  const durationsKey = `sl_rhythm_durations_${dateStr}`;
+  const durationsMap = JSON.parse(localStorage.getItem(durationsKey) || '{}');
+  durationsMap[blockId] = newDur;
+  localStorage.setItem(durationsKey, JSON.stringify(durationsMap));
+
+  saveRhythmDurationsToBackend(dateStr, durationsMap);
+  renderScienceRhythm(data);
+
+  const diffStr = deltaMinutes > 0 ? `+${deltaMinutes}m` : `${deltaMinutes}m`;
+  showToast(`⏱️ ${b.title}: ${diffStr} (jetzt ${newDur} Min.) – Ablauf neu berechnet!`, 3500);
+}
+
+function handlePromptBlockDuration(dateStr, blockId, currentMinutes, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const val = prompt(`Dauer für diesen Block in Minuten festlegen:`, String(currentMinutes));
+  if (val === null) return;
+  const num = parseInt(val.trim(), 10);
+  if (isNaN(num) || num < 5 || num > 360) {
+    showToast('⚠️ Bitte eine gültige Minutenzahl zwischen 5 und 360 eingeben.');
+    return;
+  }
+  const diff = num - currentMinutes;
+  handleNudgeBlockDuration(dateStr, blockId, diff, null);
+}
+
+function initRhythmResizeHandlers() {
+  const handles = document.querySelectorAll('.rhythm-resize-handle');
+  handles.forEach(handle => {
+    let isResizing = false;
+    let startY = 0;
+    let startDur = 0;
+    const blockId = handle.dataset.blockId;
+    const rowCard = document.getElementById(`rhythmRow-${blockId}`);
+    const pillEl = handle.querySelector('.rhythm-resize-pill');
+
+    handle.addEventListener('dragstart', e => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const data = state.currentScienceRhythmData;
+      if (!data || !Array.isArray(data.blocks)) return;
+      const b = data.blocks.find(x => x.id === blockId);
+      if (!b) return;
+
+      isResizing = true;
+      startY = e.clientY;
+      startDur = b.duration_minutes || 45;
+
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch (_) {}
+
+      handle.classList.add('is-resizing');
+      if (rowCard) {
+        rowCard.classList.add('is-resizing-card');
+        rowCard.setAttribute('draggable', 'false');
+      }
+
+      if (pillEl) {
+        pillEl.innerHTML = `<strong>↕ ${b.duration_minutes}m</strong> (Ziehen zum Anpassen)`;
+      }
+    });
+
+    handle.addEventListener('pointermove', (e) => {
+      if (!isResizing) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const data = state.currentScienceRhythmData;
+      if (!data) return;
+      const b = data.blocks.find(x => x.id === blockId);
+      if (!b) return;
+
+      const deltaY = e.clientY - startY;
+      // 2.5px drag per minute, snapped to 5 minutes
+      const deltaMinutes = Math.round((deltaY / 2.5) / 5) * 5;
+      const newDur = Math.max(5, Math.min(360, startDur + deltaMinutes));
+
+      if (b.duration_minutes !== newDur) {
+        b.duration_minutes = newDur;
+        recalculateRhythmTimes(data);
+
+        // Update current card live
+        if (rowCard) {
+          const timeTextEl = rowCard.querySelector('.rhythm-card-times');
+          const durBadgeEl = rowCard.querySelector('.rhythm-card-duration-text');
+          if (timeTextEl) {
+            timeTextEl.innerHTML = `${b.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${b.end_time}`;
+          }
+          if (durBadgeEl) {
+            durBadgeEl.textContent = `${newDur} Min.`;
+          }
+        }
+
+        if (pillEl) {
+          const diff = newDur - startDur;
+          const diffStr = diff > 0 ? `+${diff}m` : (diff < 0 ? `${diff}m` : `±0m`);
+          pillEl.innerHTML = `<strong>↕ ${newDur} Min.</strong> (${diffStr}) &bull; Ende: ${b.end_time}`;
+        }
+
+        // Live update following cards' start/end times in DOM
+        data.blocks.forEach(otherB => {
+          if (otherB.id === blockId || otherB.id === 'evening_free') return;
+          const otherRow = document.getElementById(`rhythmRow-${otherB.id}`);
+          if (otherRow) {
+            const ot = otherRow.querySelector('.rhythm-card-times');
+            if (ot) {
+              ot.innerHTML = `${otherB.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${otherB.end_time}`;
+            }
+          }
+        });
+      }
+    });
+
+    const finishResize = (e) => {
+      if (!isResizing) return;
+      isResizing = false;
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+      handle.classList.remove('is-resizing');
+      if (rowCard) {
+        rowCard.classList.remove('is-resizing-card');
+        rowCard.setAttribute('draggable', 'true');
+      }
+
+      const data = state.currentScienceRhythmData;
+      if (!data) return;
+      const b = data.blocks.find(x => x.id === blockId);
+      if (!b) return;
+
+      const dateStr = data.date;
+      const durationsKey = `sl_rhythm_durations_${dateStr}`;
+      const durationsMap = JSON.parse(localStorage.getItem(durationsKey) || '{}');
+      durationsMap[blockId] = b.duration_minutes;
+      localStorage.setItem(durationsKey, JSON.stringify(durationsMap));
+
+      saveRhythmDurationsToBackend(dateStr, durationsMap);
+
+      renderScienceRhythm(data);
+      const diff = b.duration_minutes - startDur;
+      const diffMsg = diff > 0 ? `+${diff} Min. verlängert` : (diff < 0 ? `${Math.abs(diff)} Min. gekürzt` : `Dauer unverändert`);
+      showToast(`⏱️ ${b.title}: ${diffMsg} (${b.duration_minutes}m) – Tagesplan angepasst!`, 4000);
+    };
+
+    handle.addEventListener('pointerup', finishResize);
+    handle.addEventListener('pointercancel', finishResize);
+  });
+}
+
 function renderScienceRhythm(data) {
   const container = document.getElementById('scienceRhythmBlocksContainer');
   if (!container || !data || data.error || !Array.isArray(data.blocks)) return;
@@ -4810,7 +5031,9 @@ function renderScienceRhythm(data) {
   const orderKey = `sl_rhythm_order_${data.date}`;
   const localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
   const localOrder = JSON.parse(localStorage.getItem(orderKey) || '[]');
-  const hasAdjustments = (data.removed_blocks_count > 0 || localRemoved.length > 0 || data.postponed_blocks_count > 0 || localOrder.length > 0 || (Array.isArray(data.custom_order) && data.custom_order.length > 0));
+  const durationsKey = `sl_rhythm_durations_${data.date}`;
+  const localDurations = JSON.parse(localStorage.getItem(durationsKey) || '{}');
+  const hasAdjustments = (data.removed_blocks_count > 0 || localRemoved.length > 0 || data.postponed_blocks_count > 0 || localOrder.length > 0 || (Array.isArray(data.custom_order) && data.custom_order.length > 0) || Object.keys(localDurations).length > 0 || (data.custom_durations && Object.keys(data.custom_durations).length > 0));
 
   const progressEl = document.getElementById('scienceRhythmProgressText');
   if (progressEl) {
@@ -4899,12 +5122,16 @@ function renderScienceRhythm(data) {
             </div>
           ` : ''}
 
-          <!-- Left: Time & Duration -->
-          <div style="min-width: 85px; flex-shrink: 0;">
-            <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #f0f6fc;">
+          <!-- Left: Time & Duration with Nudge & Click-to-edit -->
+          <div style="min-width: 95px; flex-shrink: 0;">
+            <div class="rhythm-card-times" style="font-family: monospace; font-size: 12px; font-weight: 700; color: #f0f6fc;">
               ${b.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${b.end_time}
             </div>
-            <div style="font-size: 10px; color: var(--text-muted);">${b.duration_minutes} Min.</div>
+            <div style="display: flex; align-items: center; gap: 3px; margin-top: 3px;">
+              ${isDraggable ? `<button type="button" class="btn-duration-nudge" onclick="handleNudgeBlockDuration('${data.date}', '${b.id}', -15, event)" title="15 Min. kürzen">–15</button>` : ''}
+              <span class="duration-badge-pill rhythm-card-duration-text" onclick="handlePromptBlockDuration('${data.date}', '${b.id}', ${b.duration_minutes}, event)" title="Klicken zum manuellen Einstellen der Minuten">${b.duration_minutes}m</span>
+              ${isDraggable ? `<button type="button" class="btn-duration-nudge btn-duration-plus" onclick="handleNudgeBlockDuration('${data.date}', '${b.id}', 15, event)" title="15 Min. verlängern">+15</button>` : ''}
+            </div>
           </div>
 
           <!-- Center: Icon & Title & Subtitle -->
@@ -5056,12 +5283,22 @@ function renderScienceRhythm(data) {
             ` : ''}
           </div>
         ` : ''}
+        <!-- Draggable bottom border handle for dynamic stretching/shortening -->
+        ${isDraggable ? `
+          <div class="rhythm-resize-handle" data-block-id="${b.id}" title="Untere Linie nach unten/oben ziehen zum Verlängern oder Verkürzen">
+            <div class="rhythm-resize-pill">
+              <span>↕</span>
+              <span>Linie ziehen zum Anpassen</span>
+            </div>
+          </div>
+        ` : ''}
       </div>
     `;
   });
 
   container.innerHTML = tomorrowAlertHtml + html;
   initRhythmDragAndDrop();
+  initRhythmResizeHandlers();
 
   const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
   if (indicatorEl) {
@@ -5125,6 +5362,10 @@ window.handleQuickMoveRhythmBlock = handleQuickMoveRhythmBlock;
 window.moveRhythmBlock = moveRhythmBlock;
 window.reorderRhythmBlockTo = reorderRhythmBlockTo;
 window.recalculateRhythmTimes = recalculateRhythmTimes;
+window.handleNudgeBlockDuration = handleNudgeBlockDuration;
+window.handlePromptBlockDuration = handlePromptBlockDuration;
+window.initRhythmResizeHandlers = initRhythmResizeHandlers;
+window.saveRhythmDurationsToBackend = saveRhythmDurationsToBackend;
 
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {

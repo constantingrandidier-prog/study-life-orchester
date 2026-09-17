@@ -599,10 +599,11 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
         rows = cursor.fetchall()
         removed_ids = []
         custom_order = []
+        custom_durations = {}
         for row in rows:
             act = row["action"]
             bid = row["block_id"]
-            if act in ("delete", "postpone") and bid != "__custom_order__":
+            if act in ("delete", "postpone") and bid not in ("__custom_order__", "__custom_durations__"):
                 removed_ids.append(bid)
             elif act == "reorder" and row["block_payload"]:
                 try:
@@ -610,6 +611,12 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
                     custom_order = payload.get("order", [])
                 except Exception:
                     custom_order = []
+            elif act == "durations" and row["block_payload"]:
+                try:
+                    payload = json.loads(row["block_payload"])
+                    custom_durations = payload.get("durations", {})
+                except Exception:
+                    custom_durations = {}
 
         # 2. Blocks postponed INTO this target_date
         cursor.execute("""
@@ -634,6 +641,7 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
         "removed_block_ids": removed_ids,
         "postponed_blocks": postponed,
         "custom_order": custom_order,
+        "custom_durations": custom_durations,
     }
 
 

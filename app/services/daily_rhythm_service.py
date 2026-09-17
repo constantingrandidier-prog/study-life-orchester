@@ -132,6 +132,7 @@ def generate_daily_science_rhythm(
     removed_set = set(removed_block_ids or [])
     active_postponed = list(postponed_blocks if postponed_blocks is not None else [])
 
+    custom_durations = {}
     try:
         from app.db.repository import get_rhythm_actions_for_date
         db_actions = get_rhythm_actions_for_date(date_iso)
@@ -141,6 +142,7 @@ def generate_daily_science_rhythm(
             active_postponed.extend(db_actions.get("postponed_blocks", []))
         if not custom_block_order:
             custom_block_order = db_actions.get("custom_order", [])
+        custom_durations = db_actions.get("custom_durations", {})
     except Exception:
         pass
 
@@ -175,6 +177,14 @@ def generate_daily_science_rhythm(
         bid = b_dict.get("id")
         if bid and bid in removed_set:
             return False
+        if bid and custom_durations and bid in custom_durations:
+            try:
+                b_dict["duration_minutes"] = int(custom_durations[bid])
+                if "badge" in b_dict and isinstance(b_dict["badge"], str) and "(" in b_dict["badge"] and "m)" in b_dict["badge"]:
+                    import re
+                    b_dict["badge"] = re.sub(r'\(\d+m\)', f'({b_dict["duration_minutes"]}m)', b_dict["badge"])
+            except Exception:
+                pass
         dur = b_dict.get("duration_minutes", 30)
         s_time = _minutes_to_time(cur_m)
         e_time = _minutes_to_time(cur_m + dur)
@@ -526,6 +536,12 @@ def generate_daily_science_rhythm(
                 calc_study += b.get("duration_minutes", m_end_m - m_start_m)
             else:
                 dur = b.get("duration_minutes", 45)
+                if custom_durations and b.get("id") in custom_durations:
+                    try:
+                        dur = int(custom_durations[b["id"]])
+                        b["duration_minutes"] = dur
+                    except Exception:
+                        pass
                 b["start_time"] = _minutes_to_time(c_m)
                 c_m += dur
                 b["end_time"] = _minutes_to_time(c_m)
@@ -559,6 +575,7 @@ def generate_daily_science_rhythm(
         "removed_blocks_count": len(removed_set),
         "postponed_blocks_count": len(active_postponed),
         "custom_order": custom_block_order or [],
+        "custom_durations": custom_durations,
         "blocks": blocks,
         "mandatory_events": [
             {

@@ -2355,6 +2355,119 @@ body {
   background: rgba(56, 139, 253, 0.1);
 }
 
+/* Rhythm Block Duration Drag & Resize Handle */
+.rhythm-resize-handle {
+  position: relative;
+  height: 18px;
+  margin-top: 6px;
+  margin-bottom: -4px;
+  margin-left: -0.9rem;
+  margin-right: -0.9rem;
+  padding: 0 0.9rem;
+  cursor: row-resize;
+  cursor: ns-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  user-select: none;
+  z-index: 5;
+  transition: all 0.15s ease;
+}
+
+.rhythm-resize-handle::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+.rhythm-resize-handle:hover::before,
+.rhythm-resize-handle.is-resizing::before {
+  height: 3px;
+  background: #58a6ff;
+  box-shadow: 0 0 10px rgba(88, 166, 255, 0.7);
+}
+
+.rhythm-resize-pill {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.rhythm-resize-handle:hover .rhythm-resize-pill,
+.rhythm-resize-handle.is-resizing .rhythm-resize-pill {
+  color: #58a6ff;
+  border-color: rgba(88, 166, 255, 0.6);
+  background: #0d1117;
+  box-shadow: 0 0 12px rgba(88, 166, 255, 0.35);
+  transform: scale(1.06);
+}
+
+.rhythm-row-card.is-resizing-card {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 16px rgba(88, 166, 255, 0.25) !important;
+  background: rgba(56, 139, 253, 0.05) !important;
+}
+
+.btn-duration-nudge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.2;
+}
+
+.btn-duration-nudge:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-duration-nudge.btn-duration-plus:hover {
+  background: rgba(35, 134, 54, 0.3);
+  color: #7ee787;
+  border-color: rgba(46, 160, 67, 0.5);
+}
+
+.duration-badge-pill {
+  font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 600;
+}
+
+.duration-badge-pill:hover {
+  color: #79c0ff;
+  background: rgba(56, 139, 253, 0.15);
+  text-decoration: underline;
+}
+
 .roadmap-day-row.rest-day {
   opacity: 0.6;
   background: rgba(255, 255, 255, 0.02);

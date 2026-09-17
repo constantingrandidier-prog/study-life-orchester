@@ -1267,7 +1267,11 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
 
             # Recalculate cumulative cards & progress percentages cleanly
             total_curriculum_cards = base_data.get("total_cards", 8729)
-            running_cum = 0
+            initial_baseline = 185
+            if base_data.get("schedule"):
+                first_d = base_data["schedule"][0]
+                initial_baseline = first_d.get("cumulative_cards_learned", 185) - first_d.get("target_cards", 0)
+            running_cum = initial_baseline
             for d in schedule_days:
                 if not d.get("is_rest_day"):
                     running_cum += d.get("target_cards", 0)
@@ -1417,16 +1421,7 @@ def get_daily_curriculum_assignment(
                     "curriculum_progress_pct": round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1),
                 }
 
-            if day.get("is_swapped"):
-                adj_target = day["target_cards"]
-                dyn = {
-                    "base_quota": day["target_cards"],
-                    "adjusted_target_cards": day["target_cards"],
-                    "quota_adjustment_reason": f"Manuell getauschtes Lernpaket von Tag {day.get('swapped_with_day', day.get('original_day_number'))}.",
-                    "surplus_deduction": 0,
-                    "deficit_distributed": 0,
-                }
-            elif day.get("day_number") == 1:
+            if day.get("day_number") == 1:
                 adj_target = day["target_cards"]
                 dyn = {
                     "base_quota": day["target_cards"],
@@ -1439,6 +1434,9 @@ def get_daily_curriculum_assignment(
                 base_q = day["target_cards"] if user_id != "student" else DAILY_CARD_QUOTA
                 dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=base_q)
                 adj_target = dyn["adjusted_target_cards"]
+                if day.get("is_swapped"):
+                    orig_num = day.get('swapped_with_day', day.get('original_day_number'))
+                    dyn["quota_adjustment_reason"] = f"Lernpaket von Tag {orig_num} vorgezogen: {dyn['quota_adjustment_reason']}"
 
             day_copy = dict(day)
             day_copy["base_quota"] = dyn["base_quota"]

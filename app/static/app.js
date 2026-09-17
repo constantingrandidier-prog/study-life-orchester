@@ -2680,37 +2680,69 @@ function toggleMissionMetricsDrawer() {
   const label = document.getElementById('toggleMetricsLabel');
   const chevron = document.getElementById('toggleMetricsChevron');
   if (!drawer) return;
-  const isHidden = (drawer.style.display === 'none' || !drawer.style.display);
-  drawer.style.display = isHidden ? 'block' : 'none';
-  if (label) label.textContent = isHidden ? '📊 Weniger' : '📊 Details';
-  if (chevron) chevron.textContent = isHidden ? '▴' : '▾';
+  const isHidden = (drawer.style.display === 'none' || !drawer.style.display || !drawer.classList.contains('open'));
+  if (isHidden) {
+    drawer.classList.add('open');
+    drawer.style.display = 'block';
+    if (label) label.textContent = '📊 Weniger';
+    if (chevron) chevron.textContent = '▴';
+  } else {
+    drawer.classList.remove('open');
+    drawer.style.display = 'none';
+    if (label) label.textContent = '📊 Details';
+    if (chevron) chevron.textContent = '▾';
+  }
   try {
     localStorage.setItem('sl_mission_metrics_open', isHidden ? 'true' : 'false');
   } catch (e) {}
 }
 
-function toggleTopicDetails(slotKey, event) {
+function toggleTopicDetails(target, event) {
   if (event) {
-    if (event.target.closest('button') && !event.target.closest('.topic-expand-btn')) return;
-    if (event.target.closest('a')) return;
+    if (typeof event.stopPropagation === 'function') {
+      event.stopPropagation();
+    }
+    const t = event.target;
+    if (t && (t.closest('.topic-check-btn') || t.closest('.btn-slot-advisor') || t.closest('.btn-slot-toggle') || t.closest('a') || t.closest('input'))) {
+      return;
+    }
   }
-  const card = document.getElementById(`topicCard-${slotKey}`);
+
+  let card = null;
+  if (target && target.nodeType) {
+    card = target.closest('.topic-card');
+  }
+  if (!card && event) {
+    if (event.currentTarget && event.currentTarget.closest) {
+      card = event.currentTarget.closest('.topic-card');
+    } else if (event.target && event.target.closest) {
+      card = event.target.closest('.topic-card');
+    }
+  }
+  if (!card && typeof target === 'string') {
+    card = document.getElementById(`topicCard-${target}`) || document.querySelector(`[data-slot-key="${target}"]`);
+  }
+
   if (!card) return;
+
   const details = card.querySelector('.topic-card-details');
   const chevron = card.querySelector('.topic-expand-chevron');
   const expandText = card.querySelector('.expand-text');
   if (!details) return;
 
-  const isHidden = (details.style.display === 'none' || !details.style.display);
-  details.style.display = isHidden ? 'flex' : 'none';
-  if (isHidden) {
+  const isExpanded = card.classList.contains('expanded');
+  const willExpand = !isExpanded;
+
+  if (willExpand) {
     card.classList.add('expanded');
-    if (chevron) chevron.textContent = '▴';
+    details.style.display = 'flex';
     if (expandText) expandText.textContent = 'Weniger';
+    if (chevron) chevron.textContent = '▴';
   } else {
     card.classList.remove('expanded');
-    if (chevron) chevron.textContent = '▾';
+    details.style.display = 'none';
     if (expandText) expandText.textContent = 'Details';
+    if (chevron) chevron.textContent = '▾';
   }
 }
 
@@ -2952,8 +2984,8 @@ function renderCurriculumToday(data) {
         const escapedSlotKey = escapeHtml(slotKey).replace(/'/g, "\\'");
 
         return `
-          <div class="topic-card ${isDone ? 'is-done' : ''}" id="topicCard-${escapedSlotKey}">
-            <div class="topic-card-header" onclick="toggleTopicDetails('${escapedSlotKey}', event)">
+          <div class="topic-card ${isDone ? 'is-done' : ''}" id="topicCard-${escapedSlotKey}" data-slot-key="${escapedSlotKey}">
+            <div class="topic-card-header" onclick="toggleTopicDetails(this, event)">
               <div class="topic-card-left">
                 <button type="button" class="topic-check-btn ${isDone ? 'done' : ''}" onclick="event.stopPropagation(); handleToggleSlotDone('${escapedSlotKey}', ${cards}, '${escapedTitle}')" title="${isDone ? 'Als offen markieren' : 'Als erledigt markieren'}">
                   ${isDone ? '✓' : ''}
@@ -2973,7 +3005,7 @@ function renderCurriculumToday(data) {
                 </div>
               </div>
               <div class="topic-card-right">
-                <button type="button" class="topic-expand-btn" onclick="toggleTopicDetails('${escapedSlotKey}', event)">
+                <button type="button" class="topic-expand-btn" onclick="toggleTopicDetails(this, event)">
                   <span class="expand-text">Details</span>
                   <span class="topic-expand-chevron">▾</span>
                 </button>

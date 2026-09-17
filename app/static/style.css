@@ -4530,15 +4530,24 @@ body {
   transform: rotate(180deg);
 }
 
+#missionMetricsDrawer.open {
+  display: block !important;
+  animation: topicFadeIn 0.2s ease-in-out;
+}
+
 /* Collapsible Details Drawer */
 .topic-card-details {
   border-top: 1px solid var(--border-subtle);
   background: rgba(0, 0, 0, 0.2);
   padding: 0.85rem 1rem;
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 0.65rem;
   animation: topicFadeIn 0.18s ease-in-out;
+}
+
+.topic-card.expanded .topic-card-details {
+  display: flex !important;
 }
 
 @keyframes topicFadeIn {
@@ -4706,6 +4715,12 @@ body {
 
   .topic-card-details {
     padding: 0.75rem 0.85rem !important;
+  }
+
+  .topic-expand-btn {
+    min-height: 28px;
+    padding: 0.25rem 0.6rem !important;
+    font-size: 11.5px !important;
   }
 
   .topic-detail-actions {

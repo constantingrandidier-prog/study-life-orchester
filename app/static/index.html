@@ -362,8 +362,8 @@
       <div id="curriculumTopicsContainer">
         <!-- Pre-rendered Sleek Card List for Day 1 (0ms load latency) -->
         <div class="topic-cards-list">
-          <div class="topic-card" id="topicCard-2026-09-14_0">
-            <div class="topic-card-header" onclick="toggleTopicDetails('2026-09-14_0', event)">
+          <div class="topic-card" id="topicCard-2026-09-14_0" data-slot-key="2026-09-14_0">
+            <div class="topic-card-header" onclick="toggleTopicDetails(this, event)">
               <div class="topic-card-left">
                 <button type="button" class="topic-check-btn" onclick="event.stopPropagation(); handleToggleSlotDone('2026-09-14_0', 85, 'Leukozyten I / Ullrich')" title="Als erledigt markieren">
                   ✓
@@ -383,8 +383,8 @@
                 </div>
               </div>
               <div class="topic-card-right">
-                <button type="button" class="topic-expand-btn">
-                  <span>Details</span>
+                <button type="button" class="topic-expand-btn" onclick="toggleTopicDetails(this, event)">
+                  <span class="expand-text">Details</span>
                   <span class="topic-expand-chevron">▾</span>
                 </button>
               </div>

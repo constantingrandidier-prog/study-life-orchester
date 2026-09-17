@@ -52,7 +52,6 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "knochenmark",
             "hämatopoese",
             "leukozyten",
-            "thrombozyten",
             "referenzbereich"
         ],
         "associated_decks": [
@@ -60,7 +59,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "Grundlagen Hämatologie",
             "2. SJ :: 1. Blut & Immunsystem :: Einführung"
         ],
-        "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "slide_pdf": None,
         "total_anki_cards": 120,
         "chapters": [
             {
@@ -240,25 +239,120 @@ LECTURES_DATA: List[Dict[str, Any]] = [
     {
         "id": "2025-09-19_TB_Blut_-_Immunsystem",
         "date": "2025-09-19",
-        "title": "Säure-Basen-Haushalt, CO2-Transport & Bohr-Effekt",
+        "title": "Hämoglobin Teil 2, Hämatopoiese & Leukozyten",
         "module": "1. Blut & Immunsystem",
-        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "lecturer": "Dr. Cristina Manatschal / Prof. Johannes Vogel / Prof. Christian Stockmann",
         "exam_yield": "High-Yield",
         "visual_dependency": "Hoch",
-        "lecturer_tempo": "Langsam",
-        "silence_ratio": 0.795,
+        "lecturer_tempo": "Normal",
+        "silence_ratio": 0.18,
+        "recommendation": "1.2x",
+        "badge_color": "var(--status-warning, #d29922)",
+        "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
+        "is_audio_only": False,
+        "tradeoff_reason": "Drei Dozentenabschnitte: Dr. Manatschal vertieft allosterische Sauerstoffbindung (Hill-Konstante, P50); Prof. Vogel erklärt Hämatopoiese, Pulsoxymetrie und Anämien (Sichelzelle, Thalassämien); Prof. Stockmann führt Leukozyten & Granulozyten ein. 1.2x wahrt kognitives Tempo und spart wertvolle Zeit.",
+        "anki_facts": [
+            "Hill-Gleichung & Koeffizient nH: Maß für Kooperativität (Hb nH ca. 2.8; nH = 1 keine Kooperativität).",
+            "Anämie-Klassifikation: Mikrozytär-hypochrom (Eisenmangel, Thalassämie), Normozytär-normochrom (ACD, renale Anämie), Makrozytär-hyperchrom (B12-/Folsäuremangel).",
+            "Granulozyten: Neutrophile (60–70% der Leukozyten, Phagozytose, NETs), Eosinophile (Parasitenabwehr, Allergie), Basophile (Histamin, Heparin)."
+        ],
+        "keywords": [
+            "hämoglobin",
+            "hill-gleichung",
+            "hämatopoiese",
+            "anämie",
+            "anämien",
+            "sichelzellanämie",
+            "thalassämie",
+            "pulsoxymetrie",
+            "leukozyten",
+            "granulozyten",
+            "neutrophile",
+            "eosinophile",
+            "basophile",
+            "monozyten",
+            "dendritische zellen"
+        ],
+        "associated_decks": [
+            "1 Hämoglobin",
+            "Hämoglobin Teil 2",
+            "Leukozyten",
+            "Hämatopoiese",
+            "2. SJ :: 1. Blut & Immunsystem :: Leukozyten"
+        ],
+        "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/1-4_CM_Myoglobin_Hamoglobin.pdf",
+        "total_anki_cards": 210,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "40:00",
+                "duration_min": 40,
+                "title": "Dr. Cristina Manatschal: Hämoglobin Sauerstoffbindung Teil 2 & Allosterie",
+                "cards_count": 60,
+                "cards_range": "1–60",
+                "slide_range": "Folien 35–52",
+                "topics": ["Hämoglobin", "Hill-Gleichung", "Kooperativität", "Allosterie"],
+                "summary": "Vertiefung Hämoglobin-Allosterie mit 60 prüfungsrelevanten Anki-Karten."
+            },
+            {
+                "start": "40:00",
+                "end": "95:00",
+                "duration_min": 55,
+                "title": "Prof. Johannes Vogel: Hämatopoiese, Pulsoxymetrie & Anämieformen",
+                "cards_count": 80,
+                "cards_range": "61–140",
+                "slide_range": "Physiologie Folien",
+                "topics": ["Hämatopoiese", "Anämien", "Pulsoxymetrie", "Thalassämien"],
+                "summary": "Pathophysiologie der Erythropoese und Anämien mit 80 Anki-Karten."
+            },
+            {
+                "start": "95:00",
+                "end": "172:00",
+                "duration_min": 77,
+                "title": "Prof. Christian Stockmann: Leukozyten (Granulozyten, Monozyten, DC)",
+                "cards_count": 70,
+                "cards_range": "141–210",
+                "slide_range": "Anatomie Folien",
+                "topics": ["Leukozyten", "Neutrophile", "Eosinophile", "Basophile", "Monozyten"],
+                "summary": "Morphologie und Differenzierung der Leukozyten mit 70 Anki-Karten."
+            }
+        ]
+    },
+    {
+        "id": "2025-09-22_TB_Blut_-_Immunsystem",
+        "date": "2025-09-22",
+        "title": "Lymphatisches System & Säure-Basen-Haushalt / CO2-Transport",
+        "module": "1. Blut & Immunsystem",
+        "lecturer": "Prof. Christian Stockmann / Dr. Cristina Manatschal",
+        "exam_yield": "High-Yield",
+        "visual_dependency": "Hoch",
+        "lecturer_tempo": "Normal",
+        "silence_ratio": 0.164,
         "recommendation": "1.0x",
         "badge_color": "var(--status-done, #3fb950)",
         "badge_label": "🟢 1.0x Voller Fokus (Kernprüfungskonzept)",
         "is_audio_only": False,
-        "tradeoff_reason": "Höchste intrinsische kognitive Belastung (Carboanhydrase-Gleichgewicht, Haldane- vs. Bohr-Effekt, Hamburger-Shift / Anionenaustauscher AE1). Absolute UZH-Kernprüfungskonzepte, die kausal durchdrungen werden müssen. Jede Beschleunigung über 1.0x führt zu Verständnisbrüchen.",
+        "tradeoff_reason": "Kombiniert zwei anspruchsvolle Schwerpunkte: Prof. Stockmann erklärt die Anatomie des lymphatischen Systems (Thymus, Lymphknoten, Milz [rote vs. weiße Pulpa], Tonsillen). Dr. Manatschal erklärt die Kernkonzepte des Säure-Basen-Haushalts (Carboanhydrase-Gleichgewicht, Bohr- vs. Haldane-Effekt, Hamburger-Shift / AE1). Voller Fokus empfohlen.",
         "anki_facts": [
+            "Primäre vs. sekundäre lymphatische Organe: Primär = Knochenmark & Thymus (Prägung/Reifung); Sekundär = Milz, Lymphknoten, MALT/Tonsillen (Antigenbegegnung).",
+            "Milzanatomie: Rote Pulpa (Erythrozyten-Mauserung in Milzsinus & Billroth-Strängen); Weiße Pulpa (PALS = T-Zellzone um Zentralarterie; Malpighi-Körperchen = B-Zell-Follikel).",
             "Bohr-Effekt: Sinkender pH und steigender pCO2 verringern die O2-Affinität von Hb (Rechtsverschiebung, erleichterte O2-Abgabe im Gewebe).",
-            "Haldane-Effekt: Desoxygeniertes Hb bindet H+ und CO2 (Carbamat) besser als oxygeniertes Hb (erleichterte CO2-Aufnahme im Gewebe, Abgabe in Alveolen).",
-            "Hamburger-Shift (Chlorid-Shift): Bicarbonat (HCO3-) verlässt Erythrozyten im Austausch gegen Cl- via AE1 (Band 3), um das Membranpotenzial neutral zu halten."
+            "Hamburger-Shift (Chlorid-Shift): Bicarbonat (HCO3-) verlässt Erythrozyten im Austausch gegen Cl- via AE1 (Band 3)."
         ],
         "keywords": [
+            "lymphatisches system",
+            "lymphsystem",
+            "lymphatische organe",
+            "thymus",
+            "milz",
+            "lymphknoten",
+            "tonsillen",
+            "malt",
+            "pals",
+            "weisse pulpa",
+            "rote pulpa",
             "säure-base",
+            "säure-basen-haushalt",
             "co2-transport",
             "bohr-effekt",
             "haldane-effekt",
@@ -266,114 +360,188 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "carboanhydrase",
             "bicarbonat",
             "hco3-",
-            "pco2",
-            "ph-wert",
-            "henderson-hasselbalch",
-            "azidose",
-            "alkalose",
-            "ae1"
+            "ph-wert"
         ],
         "associated_decks": [
+            "Lymphatisches System",
+            "Lymphatische Organe",
             "2 CO2-Transport",
             "Säure-Basen-Haushalt",
+            "2. SJ :: 1. Blut & Immunsystem :: Lymphatisches System",
             "2. SJ :: 1. Blut & Immunsystem :: CO2-Transport"
         ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/5_CM_Saure-Base_CO2-Transport.pdf",
-        "total_anki_cards": 220,
+        "total_anki_cards": 230,
         "chapters": [
             {
                 "start": "00:00",
-                "end": "22:00",
-                "duration_min": 22,
-                "title": "Grundlagen Säure-Basen & Carboanhydrase-Gleichgewicht",
-                "cards_count": 50,
-                "cards_range": "1–50",
-                "slide_range": "Folien 1–15",
+                "end": "75:00",
+                "duration_min": 75,
+                "title": "Prof. Christian Stockmann: Lymphatisches System & Organe (Thymus, LK, Milz, Tonsillen)",
+                "cards_count": 110,
+                "cards_range": "1–110",
+                "slide_range": "Anatomie Folien",
                 "topics": [
-                    "Carboanhydrase",
-                    "Bicarbonat",
-                    "HCO3-",
-                    "pCO2",
-                    "Henderson-Hasselbalch"
+                    "Lymphsystem",
+                    "Thymus",
+                    "Lymphknoten",
+                    "Milz",
+                    "PALS",
+                    "MALT"
                 ],
-                "summary": "Behandelt die Folien Folien 1–15 mit 50 prüfungsrelevanten Anki-Karten."
+                "summary": "Aufbau und Funktion der primären und sekundären lymphatischen Organe mit 110 Anki-Karten."
             },
             {
-                "start": "22:00",
-                "end": "48:30",
-                "duration_min": 26,
-                "title": "Bohr-Effekt: Protonen- und CO2-Einfluss auf die O2-Affinität",
-                "cards_count": 75,
-                "cards_range": "51–125",
-                "slide_range": "Folien 16–30",
+                "start": "75:00",
+                "end": "115:00",
+                "duration_min": 40,
+                "title": "Dr. Cristina Manatschal: Säure-Basen-Grundlagen, Carboanhydrase & Bohr-Effekt",
+                "cards_count": 65,
+                "cards_range": "111–175",
+                "slide_range": "Folien 1–30",
                 "topics": [
                     "Bohr-Effekt",
-                    "Protonenbindung",
-                    "Gewebe-O2-Abgabe",
-                    "Rechtsverschiebung"
+                    "Carboanhydrase",
+                    "Bicarbonat",
+                    "Protonenbindung"
                 ],
-                "summary": "Behandelt die Folien Folien 16–30 mit 75 prüfungsrelevanten Anki-Karten."
+                "summary": "Behandelt Folien 1–30 der Säure-Base-Vorlesung mit 65 Anki-Karten."
             },
             {
-                "start": "48:30",
-                "end": "68:00",
-                "duration_min": 20,
-                "title": "Haldane-Effekt & Alveoläre CO2-Freisetzung",
+                "start": "115:00",
+                "end": "154:00",
+                "duration_min": 39,
+                "title": "Dr. Cristina Manatschal: Haldane-Effekt, Hamburger-Shift (AE1) & Säure-Basen-Störungen",
                 "cards_count": 55,
-                "cards_range": "126–180",
-                "slide_range": "Folien 31–42",
+                "cards_range": "176–230",
+                "slide_range": "Folien 31–52",
                 "topics": [
                     "Haldane-Effekt",
-                    "Carbamat",
-                    "Desoxygeniertes Hb",
-                    "CO2-Abgabe"
-                ],
-                "summary": "Behandelt die Folien Folien 31–42 mit 55 prüfungsrelevanten Anki-Karten."
-            },
-            {
-                "start": "68:00",
-                "end": "86:00",
-                "duration_min": 18,
-                "title": "Hamburger-Shift (Anionenaustauscher AE1) & Säure-Basen-Störungen",
-                "cards_count": 40,
-                "cards_range": "181–220",
-                "slide_range": "Folien 43–52",
-                "topics": [
                     "Hamburger-Shift",
-                    "Chlorid-Shift",
                     "AE1",
-                    "Band 3",
-                    "Azidose"
+                    "Chlorid-Shift"
                 ],
-                "summary": "Behandelt die Folien Folien 43–52 mit 40 prüfungsrelevanten Anki-Karten."
+                "summary": "Behandelt Folien 31–52 der Säure-Base-Vorlesung mit 55 Anki-Karten."
             }
         ]
     },
     {
-        "id": "2025-09-22_TB_Blut_-_Immunsystem",
-        "date": "2025-09-22",
-        "title": "Hämostase: Thrombozytenaktivierung & Primäre Blutstillung",
+        "id": "2025-09-25_TB_Blut_-_Immunsystem",
+        "date": "2025-09-25",
+        "title": "T-Zell-Aktivierung, Immuntoleranz & Blutgruppen (AB0 / Rhesus)",
         "module": "1. Blut & Immunsystem",
-        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "lecturer": "Prof. Christian Stockmann / Dr. Selma Tuzlak / Prof. Johannes Vogel",
         "exam_yield": "High-Yield",
         "visual_dependency": "Hoch",
         "lecturer_tempo": "Normal",
-        "silence_ratio": 0.164,
+        "silence_ratio": 0.21,
         "recommendation": "1.2x",
         "badge_color": "var(--status-warning, #d29922)",
         "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
         "is_audio_only": False,
-        "tradeoff_reason": "Mehrstufige Kaskade von Adhäsion (vWF / GP Ib-V-IX), Aktivierung (TxA2, ADP, Ca2+) bis Aggregation (GP IIb/IIIa, Fibrinogenbrücken). Das visuelle Flussdiagramm ist direkte Grundlage für die klinische Pharmakologie (ASS, Clopidogrel, Tirofiban); 1.2x spart Zeit ohne Informationsverlust.",
+        "tradeoff_reason": "Prof. Stockmann (APC & CD4+/CD8+ T-Zell-Differenzierung), Dr. Tuzlak (zentrale/periphere Immuntoleranz, Treg, Autoimmunität) und Prof. Vogel (Rheologie, Viskosität vs. Hämatokrit, Blutgruppen AB0 & Rhesus-System SSP166). Das Präsentationsvideo (Prof_Erklaerung.mp4) zeigt die Folien; 1.2x spart Zeit ohne Verständnisverlust.",
         "anki_facts": [
-            "Thrombozytenadhäsion: Subendotheliales Kollagen bindet von-Willebrand-Faktor (vWF), der an den Thrombozytenrezeptor GP Ib-V-IX koppelt.",
-            "Thrombozytenaggregation: Aktiviertes Glykoprotein IIb/IIIa (Integrin alphaIIb-beta3) bindet Fibrinogen und bildet Quervernetzungen zwischen Thrombozyten.",
-            "Pharmakologische Targets: ASS hemmt irreversibel COX-1 (TxA2-Synthese); Clopidogrel/Prasugrel blockieren P2Y12 (ADP-Rezeptor)."
+            "T-Zell-Aktivierung benötigt 3 Signale: Signal 1 = TCR bindet MHC-Peptid; Signal 2 = Kostimulation CD28 mit CD80/CD86 (B7); Signal 3 = Zytokine (z.B. IL-2 zur Proliferation).",
+            "Immuntoleranz: Zentrale Toleranz im Thymus (positive Selektion nach MHC-Affinität, negative Selektion via AIRE gegen Selbstantigene); Periphere Toleranz via Treg und Anergie.",
+            "AB0-System: Kohlenhydrat-Antigene auf Erythrozyten (H-Substanz mit Fucose; A = N-Acetylgalaktosamin; B = Galaktose); Isoagglutinine sind natürlich vorkommende IgM-Antikörper."
         ],
         "keywords": [
+            "t-zellen",
+            "t-zell-aktivierung",
+            "cd4",
+            "cd8",
+            "apc",
+            "antigenpräsentation",
+            "mhc",
+            "immuntoleranz",
+            "zentrale toleranz",
+            "periphere toleranz",
+            "treg",
+            "anergie",
+            "blutgruppen",
+            "blutgruppe",
+            "ab0",
+            "rhesus",
+            "transfusion",
+            "rheologie",
+            "viskosität"
+        ],
+        "associated_decks": [
+            "T-Zellen",
+            "Immuntoleranz",
+            "Blutgruppen",
+            "SSP166",
+            "2. SJ :: 1. Blut & Immunsystem :: Immuntoleranz",
+            "2. SJ :: 1. Blut & Immunsystem :: Blutgruppen"
+        ],
+        "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Tuzlak_Immuntoleranz.pdf",
+        "total_anki_cards": 220,
+        "chapters": [
+            {
+                "start": "00:00",
+                "end": "45:00",
+                "duration_min": 45,
+                "title": "Prof. Christian Stockmann: Antigenpräsentierende Zellen (APC) & T-Zell-Differenzierung",
+                "cards_count": 65,
+                "cards_range": "1–65",
+                "slide_range": "Anatomie Folien",
+                "topics": ["APC", "MHC I / II", "CD4+", "CD8+ T-Zellen"],
+                "summary": "Zelluläre Immunität und T-Zell-Priming mit 65 Anki-Karten."
+            },
+            {
+                "start": "45:00",
+                "end": "85:00",
+                "duration_min": 40,
+                "title": "Dr. Selma Tuzlak: Immuntoleranz (Zentrale & periphere Toleranz, Treg)",
+                "cards_count": 75,
+                "cards_range": "66–140",
+                "slide_range": "Folien Tuzlak_Immuntoleranz.pdf",
+                "topics": ["Zentrale Toleranz", "AIRE", "Periphere Toleranz", "Treg", "Anergie"],
+                "summary": "Behandelt Folien aus Tuzlak_Immuntoleranz.pdf mit 75 Anki-Karten."
+            },
+            {
+                "start": "85:00",
+                "end": "170:00",
+                "duration_min": 85,
+                "title": "Prof. Johannes Vogel: Rheologie, Hämatokrit & Blutgruppen AB0 / Rhesus (SSP166)",
+                "cards_count": 80,
+                "cards_range": "141–220",
+                "slide_range": "Physiologie Folien",
+                "topics": ["Rheologie", "Viskosität", "AB0-System", "Rhesus", "Transfusionsreaktion"],
+                "summary": "Blutgruppenantigene und Transfusionsmedizin mit 80 Anki-Karten."
+            }
+        ]
+    },
+    {
+        "id": "2025-09-26_TB_Blut_-_Immunsystem",
+        "date": "2025-09-26",
+        "title": "Blutgerinnung, Thrombozyten & Wundheilung / Autoimmunität",
+        "module": "1. Blut & Immunsystem",
+        "lecturer": "Dr. Cristina Manatschal / Dr. Selma Tuzlak",
+        "exam_yield": "High-Yield",
+        "visual_dependency": "Hoch",
+        "lecturer_tempo": "Normal",
+        "silence_ratio": 0.15,
+        "recommendation": "1.2x",
+        "badge_color": "var(--status-warning, #d29922)",
+        "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
+        "is_audio_only": False,
+        "tradeoff_reason": "Absolutes Kernprüfungsthema: Dr. Manatschal (00:00–48:00) erklärt die komplette Hämostase (Thrombozytenadhäsion via vWF/GP Ib, Aktivierung durch ADP/TxA2, Aggregation via GP IIb/IIIa, extrinsische/intrinsische Gerinnungskaskade, Thrombinbildung, Fibrinogen-Polymerisation durch FXIII, Vitamin K-Gla-Domänen, Fibrinolyse und Wundheilung auf 6-7_CM_Blutgerinnung.pdf). Anschliessend Dr. Tuzlak (48:00–159:00) über Entzündung, Zytokine & Autoimmunität. Das Präsentationsvideo (Prof_Erklaerung.mp4) zeigt die Folien!",
+        "anki_facts": [
+            "Primäre Hämostase: Endothelverletzung -> Kollagenexposition -> vWF bindet GP Ib-V-IX -> Thrombozytenadhäsion -> Aktivierung (Freisetzung von ADP, TxA2, Serotonin) -> Shape Change -> Aggregation via GP IIb/IIIa (Integrin alphaIIb-beta3) mit Fibrinogen.",
+            "Sekundäre Hämostase: Tissue Factor (TF) + FVIIa aktiviert FX -> FXa + FVa + Ca2+ (Prothrombinase) spaltet Prothrombin (II) zu Thrombin (IIa) -> Thrombin spaltet Fibrinogen (I) zu Fibrin (Ia) -> Quervernetzung durch FXIIIa.",
+            "Vitamin K: Essentiell für gamma-Glutamylcarboxylase zur Bildung von Gla-Domänen für Ca2+-Bindung der Faktoren II, VII, IX, X, Protein C und S.",
+            "Fibrinolyse & Wundheilung: tPA aktiviert Plasminogen zu Plasmin -> spaltet Fibrin (Entstehung von D-Dimeren); Thrombozyten sezernieren PDGF & TGF-beta zur Fibroblasten-Proliferation und Gewebereparatur."
+        ],
+        "keywords": [
+            "blutgerinnung",
+            "gerinnung",
             "hämostase",
-            "blutstillung",
+            "primäre hämostase",
+            "sekundäre hämostase",
             "thrombozyten",
-            "thrombozytenaktivierung",
+            "thrombozyt",
+            "wundheilung",
             "vwf",
             "von-willebrand",
             "gp ib",
@@ -383,190 +551,109 @@ LECTURES_DATA: List[Dict[str, Any]] = [
             "txa2",
             "ass",
             "clopidogrel",
-            "primäre hämostase",
-            "blutgerinnung",
-            "gerinnung",
-            "blutstillung"
+            "gerinnungskaskade",
+            "tissue factor",
+            "faktor vii",
+            "faktor x",
+            "faktor viii",
+            "faktor ix",
+            "prothrombin",
+            "thrombin",
+            "fibrinogen",
+            "fibrin",
+            "faktor xiii",
+            "vitamin k",
+            "cumarine",
+            "heparin",
+            "fibrinolyse",
+            "plasmin",
+            "tpa",
+            "d-dimere",
+            "entzündung",
+            "zytokine",
+            "autoimmunität"
         ],
         "associated_decks": [
             "3 Hämostase",
             "3 Blutgerinnung",
             "Blutgerinnung",
-            "Thrombozytenaktivierung",
-            "2. SJ :: 1. Blut & Immunsystem :: Primäre Hämostase"
-        ],
-        "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/6-7_CM_Blutgerinnung.pdf",
-        "total_anki_cards": 210,
-        "chapters": [
-            {
-                "start": "00:00",
-                "end": "26:00",
-                "duration_min": 26,
-                "title": "Thrombozytenadhäsion: Endothelschaden, Kollagen & vWF",
-                "cards_count": 65,
-                "cards_range": "1–65",
-                "slide_range": "Folien 1–18",
-                "topics": [
-                    "vWF",
-                    "von-Willebrand-Faktor",
-                    "GP Ib-V-IX",
-                    "Subendotheliales Kollagen"
-                ],
-                "summary": "Behandelt die Folien Folien 1–18 mit 65 prüfungsrelevanten Anki-Karten."
-            },
-            {
-                "start": "26:00",
-                "end": "55:30",
-                "duration_min": 30,
-                "title": "Thrombozytenaktivierung: Granulafreisetzung & Botenstoffe (TxA2, ADP)",
-                "cards_count": 80,
-                "cards_range": "66–145",
-                "slide_range": "Folien 19–34",
-                "topics": [
-                    "Thromboxan A2",
-                    "TxA2",
-                    "ADP",
-                    "P2Y12",
-                    "Dichte Granula"
-                ],
-                "summary": "Behandelt die Folien Folien 19–34 mit 80 prüfungsrelevanten Anki-Karten."
-            },
-            {
-                "start": "55:30",
-                "end": "84:00",
-                "duration_min": 28,
-                "title": "Thrombozytenaggregation: GP IIb/IIIa-Komplex & Hemmstoffe (ASS, Clopidogrel)",
-                "cards_count": 65,
-                "cards_range": "146–210",
-                "slide_range": "Folien 35–48",
-                "topics": [
-                    "GP IIb/IIIa",
-                    "Fibrinogenbrücken",
-                    "ASS",
-                    "Clopidogrel"
-                ],
-                "summary": "Behandelt die Folien Folien 35–48 mit 65 prüfungsrelevanten Anki-Karten."
-            }
-        ]
-    },
-    {
-        "id": "2025-09-25_TB_Blut_-_Immunsystem",
-        "date": "2025-09-25",
-        "title": "Sekundäre Hämostase: Gerinnungskaskade & Fibrinolyse",
-        "module": "1. Blut & Immunsystem",
-        "lecturer": "Prof. Dr. Cristina Manatschal",
-        "exam_yield": "High-Yield",
-        "visual_dependency": "Hoch",
-        "lecturer_tempo": "Normal",
-        "silence_ratio": 0.246,
-        "recommendation": "1.2x",
-        "badge_color": "var(--status-warning, #d29922)",
-        "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
-        "is_audio_only": False,
-        "tradeoff_reason": "Extrinsischer Weg (Tissue Factor / FVIIa) vs. Intrinsischer Weg (FXII, XI, IX, VIII), Tenase- & Prothrombinase-Komplex sowie Vitamin-K-Abhängigkeit (Faktoren II, VII, IX, X, Protein C/S). Die visuelle Schematik verhindert Verwechslungen in MC-Fragen; 1.2x schafft kognitiven Raum für die Anki-Festigung.",
-        "anki_facts": [
-            "Extrinsischer Tenase-Komplex: Tissue Factor (TF) + Faktor VIIa + Ca2+ aktiviert Faktor X zu Xa.",
-            "Prothrombinase-Komplex: Faktor Xa + Faktor Va + Ca2+ + Phospholipide spaltet Prothrombin (II) zu Thrombin (IIa).",
-            "Vitamin-K-abhängige Faktoren: II, VII, IX, X sowie inhibitorische Proteine C und S (benötigen posttranslationale gamma-Carboxylierung von Glutamat)."
-        ],
-        "keywords": [
-            "sekundäre hämostase",
-            "gerinnungskaskade",
-            "fibrinolyse",
-            "thrombin",
-            "fibrin",
-            "faktor x",
-            "faktor viii",
-            "faktor ix",
-            "hämophilie",
-            "vitamin k",
-            "antithrombin",
-            "plasmin",
-            "tpa"
-        ],
-        "associated_decks": [
-            "4 Gerinnungskaskade",
-            "Fibrinolyse",
-            "2. SJ :: 1. Blut & Immunsystem :: Gerinnung"
+            "Thrombozyten und Wundheilung",
+            "Thrombozyten",
+            "Wundheilung",
+            "Gerinnungskaskade",
+            "2. SJ :: 1. Blut & Immunsystem :: Primäre Hämostase",
+            "2. SJ :: 1. Blut & Immunsystem :: Sekundäre Hämostase",
+            "2. SJ - 1 :: TB Blut/Immunsystem :: Thrombozyten und Wundheilung / Manatschal"
         ],
         "slide_pdf": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal/6-7_CM_Blutgerinnung.pdf",
         "total_anki_cards": 235,
         "chapters": [
             {
                 "start": "00:00",
-                "end": "25:00",
-                "duration_min": 25,
-                "title": "Extrinsischer Weg & Tenase-Komplex (Tissue Factor & FVIIa)",
-                "cards_count": 60,
-                "cards_range": "1–60",
-                "slide_range": "Folien 1–16",
+                "end": "22:00",
+                "duration_min": 22,
+                "title": "Dr. Cristina Manatschal: Thrombozytenadhäsion, -aktivierung & -aggregation (Primäre Hämostase)",
+                "cards_count": 65,
+                "cards_range": "1–65",
+                "slide_range": "Folien 1–25",
                 "topics": [
-                    "Extrinsischer Weg",
-                    "Tissue Factor",
-                    "TF",
-                    "Faktor VIIa",
-                    "Faktor X"
+                    "Thrombozyten",
+                    "vWF",
+                    "GP Ib",
+                    "GP IIb/IIIa",
+                    "TxA2",
+                    "ADP",
+                    "ASS"
                 ],
-                "summary": "Behandelt die Folien Folien 1–16 mit 60 prüfungsrelevanten Anki-Karten."
+                "summary": "Primäre Blutstillung auf Folien 1–25 aus 6-7_CM_Blutgerinnung.pdf mit 65 Anki-Karten."
             },
             {
-                "start": "25:00",
-                "end": "53:00",
-                "duration_min": 28,
-                "title": "Intrinsischer Weg & Prothrombinase-Komplex (FXa, FVa, Ca2+)",
+                "start": "22:00",
+                "end": "48:00",
+                "duration_min": 26,
+                "title": "Dr. Cristina Manatschal: Gerinnungskaskade, Thrombin, Vitamin K, Fibrinolyse & Wundheilung",
                 "cards_count": 85,
-                "cards_range": "61–145",
-                "slide_range": "Folien 17–33",
+                "cards_range": "66–150",
+                "slide_range": "Folien 26–55",
                 "topics": [
-                    "Intrinsischer Weg",
-                    "FXII",
-                    "FIXa-FVIIIa",
-                    "Prothrombinase",
-                    "Thrombin IIa"
-                ],
-                "summary": "Behandelt die Folien Folien 17–33 mit 85 prüfungsrelevanten Anki-Karten."
-            },
-            {
-                "start": "53:00",
-                "end": "71:00",
-                "duration_min": 18,
-                "title": "Vitamin-K-Abhängigkeit & Antikoagulation (Cumarine / Heparin)",
-                "cards_count": 50,
-                "cards_range": "146–195",
-                "slide_range": "Folien 34–42",
-                "topics": [
+                    "Tissue Factor",
+                    "Faktor Xa",
+                    "Thrombin",
+                    "Fibrin",
+                    "FXIII",
                     "Vitamin K",
-                    "gamma-Carboxylierung",
-                    "Faktoren 1972",
-                    "Protein C/S"
+                    "Fibrinolyse",
+                    "Wundheilung"
                 ],
-                "summary": "Behandelt die Folien Folien 34–42 mit 50 prüfungsrelevanten Anki-Karten."
+                "summary": "Sekundäre Hämostase und Wundheilung auf Folien 26–55 aus 6-7_CM_Blutgerinnung.pdf mit 85 Anki-Karten."
             },
             {
-                "start": "71:00",
-                "end": "87:30",
-                "duration_min": 17,
-                "title": "Fibrinolyse: Plasminogen, tPA, D-Dimere & Antithrombin III",
-                "cards_count": 40,
-                "cards_range": "196–235",
-                "slide_range": "Folien 43–50",
+                "start": "48:00",
+                "end": "159:00",
+                "duration_min": 111,
+                "title": "Dr. Selma Tuzlak: Entzündungsmediatoren, Zytokine & Autoimmunität / Multiple Sklerose",
+                "cards_count": 85,
+                "cards_range": "151–235",
+                "slide_range": "Folien Tuzlak_Autoimmunitat und Antikorper.pdf",
                 "topics": [
-                    "Fibrinolyse",
-                    "Plasmin",
-                    "tPA",
-                    "D-Dimere",
-                    "Antithrombin III"
+                    "Entzündung",
+                    "Zytokine",
+                    "IL-1",
+                    "TNF-alpha",
+                    "Autoimmunität",
+                    "Multiple Sklerose",
+                    "Ocrelizumab"
                 ],
-                "summary": "Behandelt die Folien Folien 43–50 mit 40 prüfungsrelevanten Anki-Karten."
+                "summary": "Entzündungsmechanismen und Autoimmunopathien mit 85 Anki-Karten."
             }
         ]
     },
     {
-        "id": "2025-09-26_TB_Blut_-_Immunsystem",
-        "date": "2025-09-26",
+        "id": "8_CM_Komplementsystem",
+        "date": "2025-09-29",
         "title": "Komplementsystem & Zelluläre Immunmechanismen",
         "module": "1. Blut & Immunsystem",
-        "lecturer": "Prof. Dr. Cristina Manatschal / Dr. Tuzlak",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
         "exam_yield": "Low-Yield",
         "visual_dependency": "Niedrig",
         "lecturer_tempo": "Langsam",
@@ -613,14 +700,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
                 "cards_count": 65,
                 "cards_range": "1–65",
                 "slide_range": "Folien 1–20",
-                "topics": [
-                    "Klassischer Weg",
-                    "C1q",
-                    "Lektinweg",
-                    "MBL",
-                    "Alternativweg",
-                    "C3-Konvertase"
-                ],
+                "topics": ["Klassischer Weg", "C1q", "Lektinweg", "MBL", "Alternativweg", "C3-Konvertase"],
                 "summary": "Behandelt die Folien Folien 1–20 mit 65 prüfungsrelevanten Anki-Karten."
             },
             {
@@ -631,14 +711,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
                 "cards_count": 75,
                 "cards_range": "66–140",
                 "slide_range": "Folien 21–38",
-                "topics": [
-                    "MAC",
-                    "C5b-9",
-                    "Opsonierung",
-                    "C3b",
-                    "Phagozytose",
-                    "Zelllyse"
-                ],
+                "topics": ["MAC", "C5b-9", "Opsonierung", "C3b", "Phagozytose", "Zelllyse"],
                 "summary": "Behandelt die Folien Folien 21–38 mit 75 prüfungsrelevanten Anki-Karten."
             },
             {
@@ -649,14 +722,7 @@ LECTURES_DATA: List[Dict[str, Any]] = [
                 "cards_count": 50,
                 "cards_range": "141–190",
                 "slide_range": "Folien 39–50",
-                "topics": [
-                    "Anaphylatoxine",
-                    "C3a",
-                    "C5a",
-                    "CD59",
-                    "DAF",
-                    "CD55"
-                ],
+                "topics": ["Anaphylatoxine", "C3a", "C5a", "CD59", "DAF", "CD55"],
                 "summary": "Behandelt die Folien Folien 39–50 mit 50 prüfungsrelevanten Anki-Karten."
             }
         ]

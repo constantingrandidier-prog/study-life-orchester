@@ -303,11 +303,11 @@
     "deck_id": 1789378222994,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
     "card_count": 76,
-    "new_cards": 76,
-    "mastered_cards": 0,
-    "learning_cards": 0,
+    "new_cards": 1,
+    "mastered_cards": 75,
+    "learning_cards": 17,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222995,

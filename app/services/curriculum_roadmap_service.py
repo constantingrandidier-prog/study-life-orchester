@@ -325,78 +325,182 @@ CANONICAL_CURRICULUM_MAPPINGS = [
         "match_keys": ["erythrozyt", "erythrozyten", "blut und blutplasma", "blutplasma"],
         "module": "1. Blut & Immunsystem",
         "lecture_id": "2025-09-18_TB_Blut_-_Immunsystem",
-        "lecture_title": "Hämoglobin, Myoglobin & Sauerstoffbindung (Erythrozyten)",
+        "lecture_title": "Erythrozyten, Blutplasma & Sauerstoffbindung",
         "lecture_date": "2025-09-18",
         "lecture_date_formatted": "18.09.2025",
-        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "lecturer": "Prof. Dr. Johannes Vogel / Prof. Dr. Cristina Manatschal",
         "slide_file": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "preferred_video_file": "2025-09-18_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "10:00 – 166:00 (Fokus: Vogel Erythrozyten & Manatschal Hb/Mb)",
     },
     {
         "match_keys": ["hämoglobin", "myoglobin", "haemoglobin"],
         "module": "1. Blut & Immunsystem",
         "lecture_id": "2025-09-18_TB_Blut_-_Immunsystem",
-        "lecture_title": "Hämoglobin, Myoglobin & Sauerstoffbindung (Erythrozyten)",
+        "lecture_title": "Hämoglobin, Myoglobin & Sauerstoffbindung",
         "lecture_date": "2025-09-18",
         "lecture_date_formatted": "18.09.2025",
         "lecturer": "Prof. Dr. Cristina Manatschal",
         "slide_file": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "preferred_video_file": "2025-09-18_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "100:00 – 166:00 (66m Stream)",
     },
     {
         "match_keys": ["co2", "säure-base", "saure-base", "bohr-effekt", "bohr", "haldane", "hamburger"],
         "module": "1. Blut & Immunsystem",
-        "lecture_id": "2025-09-19_TB_Blut_-_Immunsystem",
-        "lecture_title": "Säure-Basen-Haushalt, CO2-Transport & Bohr-Effekt",
-        "lecture_date": "2025-09-19",
-        "lecture_date_formatted": "19.09.2025",
-        "lecturer": "Prof. Dr. Cristina Manatschal",
-        "slide_file": "5_CM_Saure-Base_CO2-Transport.pdf",
-        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
-    },
-    {
-        "match_keys": ["blutgerinnung", "hämostase", "thrombozyt"],
-        "module": "1. Blut & Immunsystem",
         "lecture_id": "2025-09-22_TB_Blut_-_Immunsystem",
-        "lecture_title": "Hämostase: Thrombozytenaktivierung & Primäre Blutstillung",
+        "lecture_title": "Säure-Basen-Haushalt, CO2-Transport & Bohr-Effekt",
         "lecture_date": "2025-09-22",
         "lecture_date_formatted": "22.09.2025",
         "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "preferred_video_file": "2025-09-22_TB_Blut_-_Immunsystem_Folien.mp4",
+        "timecode_guidance": "75:00 – 154:00 (79m Stream)",
+    },
+    {
+        "match_keys": [
+            "thrombozyt", "thrombozyten", "wundheilung", "blutgerinnung", "hämostase",
+            "blutstillung", "blutgruppen", "blutgruppe"
+        ],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-26_TB_Blut_-_Immunsystem",
+        "lecture_title": "Blutgerinnung, Hämostase & Thrombozytenaktivierung",
+        "lecture_date": "2025-09-26",
+        "lecture_date_formatted": "26.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
         "slide_file": "6-7_CM_Blutgerinnung.pdf",
         "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "preferred_video_file": "2025-09-26_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "00:00 – 48:00 (48m Stream, spart 42m)",
     },
     {
         "match_keys": ["gerinnungskaskade", "fibrinolyse", "sekundäre hämostase", "gerinnung"],
         "module": "1. Blut & Immunsystem",
-        "lecture_id": "2025-09-25_TB_Blut_-_Immunsystem",
-        "lecture_title": "Sekundäre Hämostase: Gerinnungskaskade & Fibrinolyse",
-        "lecture_date": "2025-09-25",
-        "lecture_date_formatted": "25.09.2025",
+        "lecture_id": "2025-09-26_TB_Blut_-_Immunsystem",
+        "lecture_title": "Sekundäre Hämostase: Gerinnungskaskade, Fibrinolyse & Wundheilung",
+        "lecture_date": "2025-09-26",
+        "lecture_date_formatted": "26.09.2025",
         "lecturer": "Prof. Dr. Cristina Manatschal",
         "slide_file": "6-7_CM_Blutgerinnung.pdf",
         "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "preferred_video_file": "2025-09-26_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "15:00 – 48:00 (33m Stream)",
     },
     {
-        "match_keys": ["komplement", "komplementsystem", "immunantwort", "immunsystem", "tuzlak", "antikörper", "immuntoleranz", "zelluläre immunität"],
+        "match_keys": ["autoimmunität", "autoimmun", "multiple sklerose", "antikörper", "monoklonal", "entzündung"],
         "module": "1. Blut & Immunsystem",
         "lecture_id": "2025-09-26_TB_Blut_-_Immunsystem",
-        "lecture_title": "Komplementsystem & Zelluläre Immunmechanismen",
+        "lecture_title": "Autoimmunität, Entzündung & Monoklonale Antikörper",
         "lecture_date": "2025-09-26",
         "lecture_date_formatted": "26.09.2025",
-        "lecturer": "Prof. Dr. Cristina Manatschal / Dr. Tuzlak",
-        "slide_file": "8_CM_Komplementsystem.pdf",
-        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "lecturer": "Dr. Selma Tuzlak",
+        "slide_file": "Tuzlak_Autoimmunitat und Antikorper.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-26_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "48:00 – 160:00 (112m Stream)",
     },
     {
-        "match_keys": ["einführung", "thymus", "leukozyten", "myelopoiese", "erythropoiese", "ullrich"],
+        "match_keys": ["immuntoleranz", "toleranz", "anergie"],
         "module": "1. Blut & Immunsystem",
-        "lecture_id": "2025-09-15_Einfuehrung_Anatomie_TB_Blut",
-        "lecture_title": "Einführung in die Anatomie & Grundlagen Hämatologie",
-        "lecture_date": "2025-09-15",
-        "lecture_date_formatted": "15.09.2025",
-        "lecturer": "Prof. Dr. Oliver Ullrich",
+        "lecture_id": "2025-09-25_TB_Blut_-_Immunsystem",
+        "lecture_title": "Immuntoleranz & T-Zell-Aktivierung",
+        "lecture_date": "2025-09-25",
+        "lecture_date_formatted": "25.09.2025",
+        "lecturer": "Dr. Selma Tuzlak / Prof. Christian Stockmann",
+        "slide_file": "Tuzlak_Immuntoleranz.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-25_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "45:00 – 85:00 (40m Stream)",
+    },
+    {
+        "match_keys": ["b-zell", "b zell", "b-lymphozyt"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-25_TB_Blut_-_Immunsystem",
+        "lecture_title": "B-Zell-Entstehung & Reifung",
+        "lecture_date": "2025-09-25",
+        "lecture_date_formatted": "25.09.2025",
+        "lecturer": "Dr. Selma Tuzlak",
+        "slide_file": "Tuzlak_B Zell Entstehung Reifung.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-25_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+        "timecode_guidance": "50:00 – 85:00 (35m Stream)",
+    },
+    {
+        "match_keys": ["rekombination", "v(d)j", "rag"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-25_TB_Blut_-_Immunsystem",
+        "lecture_title": "Rekombination adaptiver Immunrezeptoren",
+        "lecture_date": "2025-09-25",
+        "lecture_date_formatted": "25.09.2025",
+        "lecturer": "Dr. Selma Tuzlak",
+        "slide_file": "Tuzlak_RekombinationAdapImmunRezept.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-25_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+    },
+    {
+        "match_keys": ["thymus", "lymphatisches system", "lymphatisch", "milz", "tonsill"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-22_TB_Blut_-_Immunsystem",
+        "lecture_title": "Lymphatisches System & Organe (Thymus, Milz, Lymphknoten)",
+        "lecture_date": "2025-09-22",
+        "lecture_date_formatted": "22.09.2025",
+        "lecturer": "Prof. Christian Stockmann",
+        "slide_file": None,
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-22_TB_Blut_-_Immunsystem_Folien.mp4",
+        "timecode_guidance": "00:00 – 75:00 (75m Stream)",
+    },
+    {
+        "match_keys": ["leukozyten", "granulozyt", "monozyt", "dendrit"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-19_TB_Blut_-_Immunsystem",
+        "lecture_title": "Leukozyten, Granulozyten & Dendritische Zellen",
+        "lecture_date": "2025-09-19",
+        "lecture_date_formatted": "19.09.2025",
+        "lecturer": "Prof. Christian Stockmann",
+        "slide_file": None,
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-19_TB_Blut_-_Immunsystem_Folien.mp4",
+        "timecode_guidance": "95:00 – 172:00 (77m Stream)",
+    },
+    {
+        "match_keys": ["adaptives und angeborenes", "angeborenes immunsystem", "basisabwehr", "phasen der immunantwort", "tuzlak_adaptiv"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-25_TB_Blut_-_Immunsystem",
+        "lecture_title": "Das angeborene und erworbene Immunsystem",
+        "lecture_date": "2025-09-25",
+        "lecture_date_formatted": "25.09.2025",
+        "lecturer": "Dr. Selma Tuzlak",
         "slide_file": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
         "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-25_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+    },
+    {
+        "match_keys": ["komplement", "komplementsystem"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-26_TB_Blut_-_Immunsystem",
+        "lecture_title": "Komplementsystem (kein Prüfungsstoff)",
+        "lecture_date": "2025-09-26",
+        "lecture_date_formatted": "26.09.2025",
+        "lecturer": "Prof. Dr. Cristina Manatschal",
+        "slide_file": "8_CM_Komplementsystem.pdf",
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal",
+        "preferred_video_file": "2025-09-26_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+    },
+    {
+        "match_keys": ["einführung", "ullrich", "knochenmark", "hämatopoese", "myelopoiese"],
+        "module": "1. Blut & Immunsystem",
+        "lecture_id": "2025-09-15_Einfuehrung_Anatomie_TB_Blut",
+        "lecture_title": "Einführung in die Anatomie, Fallvorstellung & Knochenmark",
+        "lecture_date": "2025-09-15",
+        "lecture_date_formatted": "15.09.2025",
+        "lecturer": "Dr. Kreutmair / Prof. Stockmann",
+        "slide_file": None,
+        "slide_subfolder": "Vorlesungen im Themenblock Blut und Immunsystem",
+        "preferred_video_file": "2025-09-15_Einfuehrung_Anatomie_TB_Blut_Folien.mp4",
     },
 ]
 
@@ -688,17 +792,23 @@ def get_all_curriculum_decks() -> List[Dict[str, Any]]:
 
 def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]]) -> Optional[str]:
     """Find the most relevant local lecture slide PDF for a given deck."""
-    deck_lower = deck_name.lower()
     leaf_clean = deck_name.split("::")[-1].strip().lower()
 
-    # Direct keyword mapping
+    # Direct keyword mapping on the leaf topic (NOT parent path to avoid matching 'immunsystem' for every deck!)
     mappings = {
+        "thrombozyt": "6-7_CM_Blutgerinnung.pdf",
+        "thrombozyten": "6-7_CM_Blutgerinnung.pdf",
+        "wundheilung": "6-7_CM_Blutgerinnung.pdf",
         "blutgerinnung": "6-7_CM_Blutgerinnung.pdf",
         "hämostase": "6-7_CM_Blutgerinnung.pdf",
         "gerinnung": "6-7_CM_Blutgerinnung.pdf",
+        "blutstillung": "6-7_CM_Blutgerinnung.pdf",
+        "blutgruppen": "6-7_CM_Blutgerinnung.pdf",
+        "blutgruppe": "6-7_CM_Blutgerinnung.pdf",
         "co2": "5_CM_Saure-Base_CO2-Transport.pdf",
         "co2-transport": "5_CM_Saure-Base_CO2-Transport.pdf",
         "säure-base": "5_CM_Saure-Base_CO2-Transport.pdf",
+        "saure-base": "5_CM_Saure-Base_CO2-Transport.pdf",
         "bohr": "5_CM_Saure-Base_CO2-Transport.pdf",
         "haldane": "5_CM_Saure-Base_CO2-Transport.pdf",
         "hämoglobin": "1-4_CM_Myoglobin_Hamoglobin.pdf",
@@ -708,12 +818,18 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
         "blut und blutplasma": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "blutplasma": "1-4_CM_Myoglobin_Hamoglobin.pdf",
         "komplement": "8_CM_Komplementsystem.pdf",
-        "tuzlak": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
-        "immunsystem": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
-        "leukozyten": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
-        "thymus": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
-        "myelopoiese": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
-        "erythropoiese": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "autoimmun": "Tuzlak_Autoimmunitat und Antikorper.pdf",
+        "autoimmunität": "Tuzlak_Autoimmunitat und Antikorper.pdf",
+        "multiple sklerose": "Tuzlak_Autoimmunitat und Antikorper.pdf",
+        "antikörper": "Tuzlak_Autoimmunitat und Antikorper.pdf",
+        "immuntoleranz": "Tuzlak_Immuntoleranz.pdf",
+        "toleranz": "Tuzlak_Immuntoleranz.pdf",
+        "b-zell": "Tuzlak_B Zell Entstehung Reifung.pdf",
+        "b zell": "Tuzlak_B Zell Entstehung Reifung.pdf",
+        "rekombination": "Tuzlak_RekombinationAdapImmunRezept.pdf",
+        "adaptives": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "angeborenes": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+        "phasen der immunantwort": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
         "herzmechanik": "Kurt_Vorlesung_Herzmechanik_HS24.pdf",
         "erregungsleitung": "Kurt_Vorlesung_Erregungsleitung_HS24.pdf",
         "ekg": "Kurt_Vorlesung_EKG_HS24.pdf",
@@ -728,13 +844,13 @@ def _find_best_slide_match(deck_name: str, available_slides: List[Dict[str, Any]
     }
 
     for kw, pdf_name in mappings.items():
-        if kw in leaf_clean or kw in deck_lower:
+        if kw in leaf_clean:
             return pdf_name
 
-    # Check against scanned slide names
+    # Check against scanned slide names using words of length >= 5
     for s in available_slides:
         fn_lower = s.get("filename", "").lower()
-        words = [w for w in re.split(r'[\s_\-::]+', leaf_clean) if len(w) >= 4]
+        words = [w for w in re.split(r'[\s_\-::]+', leaf_clean) if len(w) >= 5 and w not in ["blut", "immun", "system", "themenblock"]]
         if any(w in fn_lower for w in words):
             return s.get("filename")
 
@@ -928,9 +1044,12 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 lec_date = canon["lecture_date"]
                 lec_date_formatted = canon["lecture_date_formatted"]
                 podcast_folder_name = canon["lecture_id"]
-                slide_file = c_deck.get("matched_slide_filename") or canon["slide_file"]
+                slide_file = canon.get("slide_file") or c_deck.get("matched_slide_filename")
                 slide_subfolder = canon["slide_subfolder"]
                 clean_info["lecturer"] = canon["lecturer"]
+                preferred_vid = canon.get("preferred_video_file")
+                if canon.get("timecode_guidance"):
+                    timecode_guidance = canon["timecode_guidance"]
             else:
                 lec_date = top.get("date")
                 lec_date_formatted = None
@@ -949,6 +1068,7 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 podcast_folder_name = lec_id if lec_id else None
                 slide_file = c_deck.get("matched_slide_filename")
                 slide_subfolder = "Vorlesungen im Themenblock Blut und Immunsystem/Cristina Manatschal" if (slide_file and "CM_" in str(slide_file)) else "Vorlesungen im Themenblock Blut und Immunsystem"
+                preferred_vid = None
 
             slide_rel = f"{slide_subfolder}/{slide_file}" if slide_file else None
 
@@ -962,9 +1082,11 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "lecture_id": lec_id,
                 "lecture_title": lec_title,
                 "podcast_folder_name": podcast_folder_name,
+                "preferred_video_file": preferred_vid,
                 "slide_folder_relative": slide_subfolder,
                 "slide_relative_path": slide_rel,
                 "local_podcast_folder_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\Podcasts\\{podcast_folder_name}" if podcast_folder_name else None,
+                "local_podcast_file_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\Podcasts\\{podcast_folder_name}\\{preferred_vid}" if (podcast_folder_name and preferred_vid) else None,
                 "local_slide_folder_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\{slide_subfolder.replace('/', chr(92))}",
                 "local_slide_file_path": f"C:\\Users\\Constantin Grandidie\\OneDrive - Universität Zürich UZH\\Desktop\\UNI sem app\\{slide_subfolder.replace('/', chr(92))}\\{slide_file}" if slide_file else None,
                 "vam_url": "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
@@ -977,8 +1099,8 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "already_mastered_cards": c_deck.get("mastered_cards", 0),
                 "remaining_new_cards": c_deck["remaining"],
                 "deck_progress_pct": round(((c_deck["total_deck_cards"] - c_deck["remaining"]) / max(1, c_deck["total_deck_cards"])) * 100, 1),
-                "matched_slide_filename": c_deck["matched_slide_filename"],
-                "slide_coverage_pct": 82.0 if c_deck["matched_slide_filename"] else 70.0,
+                "matched_slide_filename": slide_file,
+                "slide_coverage_pct": 82.0 if slide_file else 70.0,
                 "is_cycle_topic": didactic_info["is_cycle_topic"],
                 "recommended_mode": didactic_info["recommended_mode"],
                 "badge_label": didactic_info["badge_label"],
@@ -1414,6 +1536,8 @@ def get_daily_curriculum_assignment(
                     "lecture_url": primary_tom.get("vam_url") or "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
                     "podcast_folder_name": primary_tom.get("podcast_folder_name"),
                     "local_podcast_folder_path": primary_tom.get("local_podcast_folder_path"),
+                    "local_podcast_file_path": primary_tom.get("local_podcast_file_path"),
+                    "preferred_video_file": primary_tom.get("preferred_video_file"),
                     "slide_filename": primary_tom.get("matched_slide_filename"),
                     "slide_rel_path": primary_tom.get("slide_relative_path"),
                     "local_slide_file_path": primary_tom.get("local_slide_file_path"),

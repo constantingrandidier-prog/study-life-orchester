@@ -2835,8 +2835,8 @@ function renderCurriculumToday(data) {
         // Lecture Links (Direct Playback, Windows Explorer & VAM-Archiv)
         const lectureLinksHtml = `
           <div class="slot-lecture-links" style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
-            ${slot.local_podcast_folder_path ? `
-              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_folder_path).replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})', false)" title="Vorlesungs-Ordner mit Video direkt im Windows Datei-Explorer auf deinem Laptop öffnen" style="font-size: 10px; padding: 2px 6px; color: #7ee787; border-color: rgba(46, 160, 67, 0.4);">
+            ${(slot.local_podcast_folder_path || slot.local_podcast_file_path || slot.preferred_video_file) ? `
+              <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_file_path || slot.local_podcast_folder_path || slot.preferred_video_file || '').replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})', false)" title="Vorlesungs-Ordner mit Video direkt im Windows Datei-Explorer auf deinem Laptop öffnen" style="font-size: 10px; padding: 2px 6px; color: #7ee787; border-color: rgba(46, 160, 67, 0.4);">
                 📂 Explorer
               </button>
             ` : ''}
@@ -5209,6 +5209,27 @@ function renderScienceRhythm(data) {
               🎯 Exakt ${b.target_cards || 101} Karten HEUTE
             </span>
           </div>
+          <div style="margin-top: 0.35rem; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 11px; font-weight: 700; color: #7ee787; display: inline-flex; align-items: center; gap: 4px;">
+              🎬 Vorlesung &amp; Folien für HEUTE:
+            </span>
+            ${b.topic_slots.map(s => {
+              const vidPath = (s.preferred_video_file || s.local_podcast_file_path || s.podcast_folder_name || s.local_podcast_folder_path || '').replace(/\\/g, '/');
+              const slideRel = (s.slide_relative_path || s.matched_slide_filename || s.local_slide_file_path || '').replace(/\\/g, '/');
+              return `
+                ${vidPath ? `
+                  <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(vidPath)}', 'Vorlesung (${escapeHtml(s.clean_title || s.short_title)})', false)" style="font-size: 10.5px; padding: 2px 7px; color: #7ee787; border: 1px solid rgba(46, 160, 67, 0.4); border-radius: 4px; background: rgba(46, 160, 67, 0.12); cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 600;" title="Öffnet das passende Vorlesungsvideo zu diesem Kartendeck im Datei-Explorer">
+                    📂 ${escapeHtml(s.clean_title || s.short_title)}
+                  </button>
+                ` : ''}
+                ${slideRel ? `
+                  <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" rel="noopener" style="font-size: 10.5px; padding: 2px 7px; color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.4); border-radius: 4px; background: rgba(88, 166, 255, 0.12); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; font-weight: 600;" title="Öffnet die Folien-PDF zu diesem Thema">
+                    📄 ${escapeHtml(s.matched_slide_filename || 'Folien')}
+                  </a>
+                ` : ''}
+              `;
+            }).join('')}
+          </div>
         ` : ''}
 
         <!-- Action Strip for Afternoon Flex Block (Lecture for Tomorrow or Postponed Lecture) -->
@@ -5217,8 +5238,8 @@ function renderScienceRhythm(data) {
             <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : '#79c0ff'}; display: inline-flex; align-items: center; gap: 4px;">
               ${isPostponed ? '⏩ Nachhol-Vorlesung:' : '🌅 Vorlesung für MORGEN:'}
             </span>
-            ${(b.podcast_folder_name || b.local_podcast_folder_path) ? `
-              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml((b.podcast_folder_name || b.local_podcast_folder_path || '').replace(/\\/g, '/'))}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">
+            ${(b.podcast_folder_name || b.local_podcast_folder_path || b.preferred_video_file || b.local_podcast_file_path) ? `
+              <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml((b.preferred_video_file || b.local_podcast_file_path || b.podcast_folder_name || b.local_podcast_folder_path || '').replace(/\\/g, '/'))}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">
                 📂 Im Datei-Explorer öffnen
               </button>
             ` : ''}

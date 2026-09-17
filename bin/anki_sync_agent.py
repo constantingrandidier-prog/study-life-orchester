@@ -284,9 +284,21 @@ def execute_desktop_action(act: dict):
             _launch_desktop_explorer(target)
             print(f"[ACTION] Datei im Windows Explorer markiert: {target.name}", flush=True)
         else:
-            folien_vids = list(target.glob("*Folien*.mp4")) or list(target.glob("*.mp4")) or list(target.glob("*.pdf"))
-            if folien_vids:
-                target_file = folien_vids[0]
+            SLIDE_VIDEO_PREFERENCE = {
+                "2025-09-18_TB_Blut_-_Immunsystem": "2025-09-18_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+                "2025-09-25_TB_Blut_-_Immunsystem": "2025-09-25_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+                "2025-09-26_TB_Blut_-_Immunsystem": "2025-09-26_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+            }
+            target_file = None
+            pref_name = SLIDE_VIDEO_PREFERENCE.get(target.name)
+            if pref_name and (target / pref_name).exists():
+                target_file = target / pref_name
+            else:
+                folien_vids = list(target.glob("*Folien*.mp4")) or list(target.glob("*.mp4")) or list(target.glob("*.pdf"))
+                if folien_vids:
+                    target_file = folien_vids[0]
+
+            if target_file:
                 _launch_desktop_explorer(target_file)
                 print(f"[ACTION] Video/Folie im Explorer markiert: {target_file.name}", flush=True)
             else:

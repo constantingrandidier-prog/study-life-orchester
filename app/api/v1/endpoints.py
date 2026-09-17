@@ -1734,9 +1734,21 @@ def open_folder_endpoint(
                     "folder": str(found.parent),
                 }
             else:
-                folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4")) or list(found.glob("*.pdf"))
-                if folien_vids:
-                    target_file = folien_vids[0]
+                SLIDE_VIDEO_PREFERENCE = {
+                    "2025-09-18_TB_Blut_-_Immunsystem": "2025-09-18_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+                    "2025-09-25_TB_Blut_-_Immunsystem": "2025-09-25_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+                    "2025-09-26_TB_Blut_-_Immunsystem": "2025-09-26_TB_Blut_-_Immunsystem_Prof_Erklaerung.mp4",
+                }
+                target_file = None
+                pref_name = SLIDE_VIDEO_PREFERENCE.get(found.name)
+                if pref_name and (found / pref_name).exists():
+                    target_file = found / pref_name
+                else:
+                    folien_vids = list(found.glob("*Folien*.mp4")) or list(found.glob("*.mp4")) or list(found.glob("*.pdf"))
+                    if folien_vids:
+                        target_file = folien_vids[0]
+
+                if target_file:
                     _launch_desktop_explorer(target_file)
                     return {
                         "success": True,

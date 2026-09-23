@@ -218,6 +218,10 @@ function stepDate(delta) {
   try {
     localStorage.setItem('sl_selected_date', nextIso);
   } catch (e) {}
+  // Reset daily rhythm start time to normal 08:30 on date switch
+  state.rhythmStartTime = '08:30';
+  const timeInput = document.getElementById('rhythmStartTimeInput');
+  if (timeInput) timeInput.value = '08:30';
   updateWeekdayDisplays();
   loadSchedule();
   loadExamPacing();
@@ -236,6 +240,12 @@ function goToToday() {
   try {
     localStorage.setItem('sl_selected_date', todayIso);
   } catch (e) {}
+  if (localStorage.getItem('sl_rhythm_start') === '11:49') {
+    localStorage.removeItem('sl_rhythm_start');
+  }
+  state.rhythmStartTime = localStorage.getItem('sl_rhythm_start') || '08:30';
+  const timeInput = document.getElementById('rhythmStartTimeInput');
+  if (timeInput) timeInput.value = state.rhythmStartTime;
   updateWeekdayDisplays();
   loadSchedule();
   loadExamPacing();
@@ -4703,6 +4713,9 @@ window.closeForecastDrawers = closeForecastDrawers;
 // ============================================================================
 
 // Quick-Orchestrator State
+if (localStorage.getItem('sl_rhythm_start') === '11:49') {
+  localStorage.removeItem('sl_rhythm_start');
+}
 state.rhythmStartTime = localStorage.getItem('sl_rhythm_start') || '08:30';
 state.rhythmLunch = parseInt(localStorage.getItem('sl_rhythm_lunch') || '75', 10);
 state.rhythmIncludeLecture = localStorage.getItem('sl_rhythm_lecture') !== 'false';

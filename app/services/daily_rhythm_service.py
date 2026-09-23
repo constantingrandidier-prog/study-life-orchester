@@ -175,13 +175,9 @@ def generate_daily_science_rhythm(
     rep_gross_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
     new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0))
 
-    # If the student started reviews in Anki on this date, adopt that exact start time automatically!
+    # Standard normal start of the study day is 08:30
     used_anki_start = False
     effective_start_str = start_time_str or "08:30"
-    if anki_first_review_time:
-        if (start_time_str == "08:30" or not start_time_str):
-            effective_start_str = anki_first_review_time
-            used_anki_start = True
 
     cur_m = _parse_time_to_minutes(effective_start_str)
     blocks: List[Dict[str, Any]] = []
@@ -233,26 +229,29 @@ def generate_daily_science_rhythm(
     # 1. Block 1: Morning Reps (dynamisch an tatsächliche Anki-Last angepasst)
 
     if is_today_date:
-        # Dynamisch: 50s pro Karte, gerundet auf 15-Minuten-Raster (mindestens 30m, maximal 240m)
+        # Dynamisch für heute: 50s pro Karte, gerundet auf 15-Minuten-Raster (mindestens 30m, maximal 240m)
         calc_reps_mins = max(30, min(240, round((cards_due_today * SECS_PER_REVIEW) / 60.0)))
         dur_reps = int(round(calc_reps_mins / 15.0) * 15)
+        is_reps_completed = (cards_due_today == 0)
+        reps_title = f"Block 1: Morgen-Repetitionen ({cards_due_today} Karten)" if cards_due_today > 0 else "Block 1: Morgen-Repetitionen (Erledigt)"
+        reps_subtitle = f"{cards_due_today} fällig · ~{calc_reps_mins} Min. benötigt"
     else:
-        calc_reps_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
+        # Für zukünftige Tage: niemals vorab als 'Erledigt' markieren! Volle Zeit einplanen.
+        effective_due = cards_due_today if cards_due_today > 0 else 100
+        calc_reps_mins = max(30, min(240, round((effective_due * SECS_PER_REVIEW) / 60.0)))
         dur_reps = int(round(calc_reps_mins / 15.0) * 15)
+        is_reps_completed = False
+        reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten)"
+        reps_subtitle = f"{effective_due} fällig · ~{calc_reps_mins} Min. eingeplant"
 
-    reps_title = f"Block 1: Morgen-Repetitionen ({cards_due_today} Karten)" if cards_due_today > 0 else "Block 1: Morgen-Repetitionen (Erledigt)"
-    reps_badge = f"⚡ Anki-Start {anki_first_review_time} ({dur_reps}m)" if used_anki_start else f"Active Recall ({dur_reps}m)"
-    reps_desc = f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten."
-    if used_anki_start:
-        reps_desc += f" ⚡ Startzeit um {anki_first_review_time} Uhr automatisch von deiner ersten Anki-Wiederholung übernommen."
-    else:
-        reps_desc += " Plan passt sich automatisch an deinen Lernfortschritt an."
+    reps_badge = f"Active Recall ({dur_reps}m)"
+    reps_desc = f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten. Plan passt sich automatisch an deinen Lernfortschritt an."
 
     add_block_if_active({
         "id": "block_morning_reps",
         "duration_minutes": dur_reps,
         "title": reps_title,
-        "subtitle": f"{cards_due_today} fällig · ~{calc_reps_mins} Min. benötigt",
+        "subtitle": reps_subtitle,
         "focus_type": "active_recall",
         "icon": "🧠",
         "color": "#58a6ff",
@@ -260,7 +259,7 @@ def generate_daily_science_rhythm(
         "description": reps_desc,
         "is_break": False,
         "is_mandatory": False,
-        "is_completed": (cards_due_today == 0),
+        "is_completed": is_reps_completed,
         "cards_due": cards_due_today,
     })
 

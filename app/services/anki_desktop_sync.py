@@ -207,6 +207,55 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     yesterday_total_reviews = y_rows[0] or 0
     yesterday_time_mins = round(y_rows[1] or 0.0, 1)
 
+    # Calculate real-time cumulative learned cards in 2. SJ curriculum
+    conn.create_collation('unicase', lambda a, b: 0)
+    cur.execute("""
+        SELECT count(*),
+               sum(case when c.reps > 0 or c.type > 0 then 1 else 0 end)
+        FROM cards c
+        JOIN decks d ON c.did = d.id
+        WHERE (lower(d.name) LIKE '%2. sj%' OR lower(d.name) LIKE '%hs 2021%' OR lower(d.name) LIKE '%3. semester%')
+          AND lower(d.name) NOT LIKE '%mündlich%'
+    """)
+    row_curr = cur.fetchone()
+    total_curr = (row_curr[0] if row_curr else 0) or 8729
+    mastered_curr = (row_curr[1] if row_curr else 0) or 0
+    pct_curr = round((mastered_curr / max(1, total_curr)) * 100, 1)
+
+    # Extract deck-level snapshot to keep Render / cloud in exact lockstep
+    snapshot_sql = """
+        SELECT c.did,
+               count(*) as total,
+               sum(case when c.reps = 0 and c.queue = 0 then 1 else 0 end) as new_cnt,
+               sum(case when c.reps > 0 then 1 else 0 end) as mastered_cnt,
+               sum(case when c.queue in (1, 3) then 1 else 0 end) as learning_cnt,
+               avg(length(n.flds)) as avg_len
+        FROM cards c
+        LEFT JOIN notes n ON c.nid = n.id
+        GROUP BY c.did
+    """
+    card_stats = cur.execute(snapshot_sql).fetchall()
+    snapshot_decks = []
+    for s_did, s_tot, s_new, s_mast, s_lrn, s_len in card_stats:
+        raw_name = decks.get(s_did, "")
+        if not raw_name:
+            continue
+        n_low = raw_name.lower()
+        if ("2. sj" in n_low) or ("hs 2021" in n_low) or ("3. semester" in n_low):
+            if "mündlich" in n_low or "muendlich" in n_low:
+                continue
+            snapshot_decks.append({
+                "deck_id": s_did,
+                "deck_name": raw_name,
+                "card_count": s_tot,
+                "new_cards": s_new or 0,
+                "mastered_cards": s_mast or 0,
+                "learning_cards": s_lrn or 0,
+                "avg_card_chars": round(s_len or 320.0, 1),
+                "is_completed": (s_new == 0 and s_mast > 0),
+                "is_in_progress": (s_new > 0 and s_mast > 0),
+            })
+
     result = {
         'connected': True,
         'source': 'Anki Desktop (Benutzer 1)',
@@ -232,6 +281,11 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'yesterday_total_reviews_count': yesterday_total_reviews,
         'yesterday_time_minutes': yesterday_time_mins,
         'due_today_count': due_today_cnt,
+        'due_reviews_count': due_today_cnt,
+        'cumulative_cards_learned': mastered_curr,
+        'total_curriculum_cards': total_curr,
+        'curriculum_progress_pct': pct_curr,
+        'curriculum_snapshot': snapshot_decks,
         'due_tomorrow_count': tomorrow_count,
         'due_tomorrow_deck_breakdown': tomorrow_breakdown,
         'due_tomorrow_topics': tomorrow_topics,

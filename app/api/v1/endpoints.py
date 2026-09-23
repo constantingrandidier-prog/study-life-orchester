@@ -996,6 +996,18 @@ def get_anki_weaknesses_endpoint() -> AnkiWeaknessResponse:
     return AnkiWeaknessResponse(**res)
 
 
+@router.post(
+    "/anki/weaknesses-sync",
+    summary="Receive weakness payload from laptop background watcher",
+    description="Syncs pre-calculated weaknesses and topic tree to cloud server.",
+)
+def post_anki_weaknesses_sync_endpoint(payload: dict):
+    """Cache weakness state on cloud."""
+    from app.services.anki_weakness_service import cache_weaknesses
+    cache_weaknesses(payload)
+    return {"status": "ok", "cached": True}
+
+
 @router.get(
     "/stats/comparison",
     response_model=ProgressComparisonResponse,
@@ -1129,6 +1141,17 @@ from app.services.anki_backlog_triage import (
 def post_anki_desktop_sync_endpoint(payload: dict):
     """Receive live sync payload from local Anki watcher."""
     cache_desktop_sync_state(payload)
+
+    # Persist updated curriculum snapshot if provided
+    snap = payload.get("curriculum_snapshot")
+    if snap and isinstance(snap, list) and len(snap) > 0:
+        try:
+            snap_file = Path(__file__).resolve().parent.parent.parent / "data" / "curriculum_anki_snapshot.json"
+            snap_file.parent.mkdir(parents=True, exist_ok=True)
+            snap_file.write_text(json.dumps(snap, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+
     new_cnt = payload.get("new_cards_count", payload.get("today_reviewed_count", 0))
     today_mins = int(payload.get("today_time_minutes", 0))
     try:

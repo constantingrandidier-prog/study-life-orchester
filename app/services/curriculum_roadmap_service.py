@@ -733,6 +733,14 @@ def _extract_decks_from_anki() -> List[Dict[str, Any]]:
             pass
 
     # Cloud / Render container fallback
+    try:
+        from app.services.anki_desktop_sync import get_cached_desktop_sync_state
+        cached = get_cached_desktop_sync_state()
+        if cached and cached.get("curriculum_snapshot"):
+            return cached["curriculum_snapshot"]
+    except Exception:
+        pass
+
     if snapshot_path.exists():
         try:
             return json.loads(snapshot_path.read_text(encoding="utf-8"))
@@ -1633,6 +1641,14 @@ def get_actual_curriculum_cards_learned() -> int:
     """Return the exact count of unique cards newly learned in the 2. SJ curriculum.
     Directly queries local Anki database or the committed snapshot.
     """
+    try:
+        from app.services.anki_desktop_sync import get_cached_desktop_sync_state
+        cached = get_cached_desktop_sync_state()
+        if cached and cached.get("cumulative_cards_learned", 0) > 0:
+            return int(cached["cumulative_cards_learned"])
+    except Exception:
+        pass
+
     try:
         decks = _extract_decks_from_anki()
         if decks:

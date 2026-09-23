@@ -100,6 +100,15 @@ def sync_now():
     except Exception as e:
         print("Triage sync error:", e, flush=True)
 
+    # 5. Sync weaknesses & full deck tree
+    try:
+        from app.services.anki_weakness_service import get_anki_due_and_weaknesses
+        weaknesses = get_anki_due_and_weaknesses()
+        for base in targets:
+            post_json(f"{base}/weaknesses-sync", weaknesses)
+    except Exception as e:
+        print("Weakness sync error:", e, flush=True)
+
     revs = state.get("today_reviewed_count", 0)
     reps = state.get("repetition_cards_count", 0)
     due_today = state.get("due_today_count", 0)

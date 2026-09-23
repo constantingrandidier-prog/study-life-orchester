@@ -24,6 +24,53 @@ def find_default_anki_collection() -> Optional[Path]:
     return None
 
 
+import json
+_CACHED_WEAKNESSES = None
+
+
+def cache_weaknesses(payload: Dict[str, Any]):
+    global _CACHED_WEAKNESSES
+    _CACHED_WEAKNESSES = payload
+    try:
+        from app.db.repository import get_db_connection
+        with get_db_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS anki_weaknesses_cache (
+                    id INTEGER PRIMARY KEY,
+                    payload_json TEXT NOT NULL,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            """)
+            cur.execute("""
+                INSERT INTO anki_weaknesses_cache (id, payload_json, updated_at)
+                VALUES (1, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(id) DO UPDATE SET
+                    payload_json = excluded.payload_json,
+                    updated_at = CURRENT_TIMESTAMP;
+            """, (json.dumps(payload),))
+    except Exception:
+        pass
+
+
+def get_cached_weaknesses() -> Optional[Dict[str, Any]]:
+    global _CACHED_WEAKNESSES
+    if _CACHED_WEAKNESSES:
+        return _CACHED_WEAKNESSES
+    try:
+        from app.db.repository import get_db_connection
+        with get_db_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("CREATE TABLE IF NOT EXISTS anki_weaknesses_cache (id INTEGER PRIMARY KEY, payload_json TEXT, updated_at TIMESTAMP)")
+            row = cur.execute("SELECT payload_json FROM anki_weaknesses_cache WHERE id = 1").fetchone()
+            if row:
+                _CACHED_WEAKNESSES = json.loads(row[0])
+                return _CACHED_WEAKNESSES
+    except Exception:
+        pass
+    return None
+
+
 def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any]:
     """
     Extract real due cards count, learning cards, and topic weakness metrics from local Anki database.
@@ -31,11 +78,15 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
     """
     target_path = Path(col_path) if col_path else find_default_anki_collection()
     if not target_path or not target_path.exists():
+        w_cached = get_cached_weaknesses()
+        if w_cached:
+            return w_cached
+
         try:
             from app.services.anki_desktop_sync import get_cached_desktop_sync_state
             cached = get_cached_desktop_sync_state()
             if cached:
-                due_c = cached.get("due_reviews_count", cached.get("cards_due_tomorrow", 102))
+                due_c = cached.get("due_today_count", cached.get("due_reviews_count", 0))
                 return {
                     "available": True,
                     "collection_path": "synced_via_daemon",
@@ -43,9 +94,9 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
                     "learning_cards_count": cached.get("learning_cards_count", 0),
                     "review_cards_count": due_c,
                     "new_cards_count": cached.get("new_cards_count", 8729),
-                    "weakness_topics": [],
-                    "overdue_topics": [],
-                    "all_topics": [],
+                    "weakness_topics": cached.get("weakness_topics", []),
+                    "overdue_topics": cached.get("overdue_topics", []),
+                    "all_topics": cached.get("all_topics", []),
                     "summary": f"{due_c} Wiederholungen synchronisiert.",
                 }
         except Exception:

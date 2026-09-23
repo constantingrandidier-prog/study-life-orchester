@@ -6,6 +6,7 @@
     "new_cards": 40,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 259.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -16,6 +17,7 @@
     "new_cards": 292,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 793.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -26,6 +28,7 @@
     "new_cards": 28,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 398.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -36,6 +39,7 @@
     "new_cards": 0,
     "mastered_cards": 23,
     "learning_cards": 0,
+    "avg_card_chars": 201.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -46,6 +50,7 @@
     "new_cards": 41,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 526.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -56,6 +61,7 @@
     "new_cards": 141,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 321.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -66,6 +72,7 @@
     "new_cards": 165,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 233.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -76,6 +83,7 @@
     "new_cards": 97,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 338.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -86,6 +94,7 @@
     "new_cards": 49,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 292.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -96,6 +105,7 @@
     "new_cards": 69,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 309.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -106,6 +116,7 @@
     "new_cards": 18,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 372.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -116,6 +127,7 @@
     "new_cards": 42,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 353.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -126,6 +138,7 @@
     "new_cards": 34,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 376.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -136,6 +149,7 @@
     "new_cards": 46,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 399.8,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -146,6 +160,7 @@
     "new_cards": 44,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 414.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -156,6 +171,7 @@
     "new_cards": 39,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 393.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -166,6 +182,7 @@
     "new_cards": 39,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 471.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -176,6 +193,7 @@
     "new_cards": 30,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 433.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -186,6 +204,7 @@
     "new_cards": 285,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 242.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -196,6 +215,7 @@
     "new_cards": 250,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 262.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -206,6 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 50,
     "learning_cards": 0,
+    "avg_card_chars": 224.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -213,11 +234,12 @@
     "deck_id": 1789378222985,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
     "card_count": 123,
-    "new_cards": 123,
-    "mastered_cards": 0,
+    "new_cards": 31,
+    "mastered_cards": 92,
     "learning_cards": 0,
+    "avg_card_chars": 223.7,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222986,
@@ -226,6 +248,7 @@
     "new_cards": 50,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 203.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -236,6 +259,7 @@
     "new_cards": 172,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 267.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -246,6 +270,7 @@
     "new_cards": 173,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 255.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -253,9 +278,10 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 12,
-    "mastered_cards": 77,
+    "new_cards": 31,
+    "mastered_cards": 101,
     "learning_cards": 0,
+    "avg_card_chars": 432.8,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -266,6 +292,7 @@
     "new_cards": 25,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 424.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -276,6 +303,7 @@
     "new_cards": 63,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 359.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -286,6 +314,7 @@
     "new_cards": 37,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 493.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -296,6 +325,7 @@
     "new_cards": 24,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 426.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -303,11 +333,12 @@
     "deck_id": 1789378222994,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
     "card_count": 76,
-    "new_cards": 1,
-    "mastered_cards": 75,
-    "learning_cards": 17,
-    "is_completed": false,
-    "is_in_progress": true
+    "new_cards": 0,
+    "mastered_cards": 76,
+    "learning_cards": 0,
+    "avg_card_chars": 262.9,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222995,
@@ -316,6 +347,7 @@
     "new_cards": 79,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 287.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -326,6 +358,7 @@
     "new_cards": 63,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 507.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -336,6 +369,7 @@
     "new_cards": 0,
     "mastered_cards": 35,
     "learning_cards": 0,
+    "avg_card_chars": 306.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -346,6 +380,7 @@
     "new_cards": 324,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 248.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -356,6 +391,7 @@
     "new_cards": 71,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 382.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -366,6 +402,7 @@
     "new_cards": 52,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 256.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -376,6 +413,7 @@
     "new_cards": 54,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 275.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -386,6 +424,7 @@
     "new_cards": 120,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 268.8,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -396,6 +435,7 @@
     "new_cards": 70,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 263.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -406,6 +446,7 @@
     "new_cards": 43,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 213.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -416,6 +457,7 @@
     "new_cards": 19,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 256.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -426,6 +468,7 @@
     "new_cards": 61,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 252.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -436,6 +479,7 @@
     "new_cards": 62,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 231.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -446,6 +490,7 @@
     "new_cards": 104,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 290.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -456,6 +501,7 @@
     "new_cards": 50,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 252.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -466,6 +512,7 @@
     "new_cards": 212,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 504.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -476,6 +523,7 @@
     "new_cards": 133,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 545.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -486,6 +534,7 @@
     "new_cards": 125,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 499.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -496,6 +545,7 @@
     "new_cards": 201,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 362.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -506,6 +556,7 @@
     "new_cards": 233,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 464.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -513,20 +564,22 @@
     "deck_id": 1789378223017,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
     "card_count": 64,
-    "new_cards": 64,
-    "mastered_cards": 0,
+    "new_cards": 23,
+    "mastered_cards": 39,
     "learning_cards": 0,
+    "avg_card_chars": 489.5,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223018,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
     "card_count": 52,
-    "new_cards": 52,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 52,
     "learning_cards": 0,
-    "is_completed": false,
+    "avg_card_chars": 435.2,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -536,6 +589,7 @@
     "new_cards": 68,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 296.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -543,10 +597,11 @@
     "deck_id": 1789378223020,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
     "card_count": 72,
-    "new_cards": 72,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 72,
     "learning_cards": 0,
-    "is_completed": false,
+    "avg_card_chars": 592.2,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -556,6 +611,7 @@
     "new_cards": 197,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 321.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -566,6 +622,7 @@
     "new_cards": 97,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 337.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -576,6 +633,7 @@
     "new_cards": 71,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 394.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -586,6 +644,7 @@
     "new_cards": 50,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 327.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -596,6 +655,7 @@
     "new_cards": 68,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 288.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -606,6 +666,7 @@
     "new_cards": 42,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 221.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -616,6 +677,7 @@
     "new_cards": 20,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 137.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -626,6 +688,7 @@
     "new_cards": 59,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 192.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -636,6 +699,7 @@
     "new_cards": 20,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 189.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -646,6 +710,7 @@
     "new_cards": 32,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 182.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -656,6 +721,7 @@
     "new_cards": 22,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 161.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -666,6 +732,7 @@
     "new_cards": 222,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 240.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -676,6 +743,7 @@
     "new_cards": 93,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 334.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -686,6 +754,7 @@
     "new_cards": 36,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 258.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -696,6 +765,7 @@
     "new_cards": 31,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 256.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -706,6 +776,7 @@
     "new_cards": 50,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 307.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -716,6 +787,7 @@
     "new_cards": 109,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 279.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -726,6 +798,7 @@
     "new_cards": 77,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 205.5,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -736,6 +809,7 @@
     "new_cards": 59,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 576.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -746,6 +820,7 @@
     "new_cards": 120,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 260.8,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -756,6 +831,7 @@
     "new_cards": 57,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 346.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -766,6 +842,7 @@
     "new_cards": 66,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 312.8,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -776,6 +853,7 @@
     "new_cards": 74,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 825.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -786,6 +864,7 @@
     "new_cards": 43,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 465.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -796,6 +875,7 @@
     "new_cards": 130,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 569.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -806,6 +886,7 @@
     "new_cards": 130,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 502.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -816,6 +897,7 @@
     "new_cards": 125,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 435.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -826,6 +908,7 @@
     "new_cards": 109,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 649.3,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -836,6 +919,7 @@
     "new_cards": 82,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 402.0,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -846,6 +930,7 @@
     "new_cards": 21,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 186.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -856,6 +941,7 @@
     "new_cards": 133,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 303.6,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -866,6 +952,7 @@
     "new_cards": 19,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 236.2,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -876,6 +963,7 @@
     "new_cards": 112,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 241.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -886,6 +974,7 @@
     "new_cards": 123,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 351.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -896,6 +985,7 @@
     "new_cards": 48,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 401.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -906,6 +996,7 @@
     "new_cards": 227,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 252.1,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -916,6 +1007,7 @@
     "new_cards": 90,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 289.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -926,6 +1018,7 @@
     "new_cards": 93,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 332.8,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -936,6 +1029,7 @@
     "new_cards": 56,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 230.4,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -946,6 +1040,7 @@
     "new_cards": 142,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 249.7,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -956,6 +1051,7 @@
     "new_cards": 137,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 255.8,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -966,6 +1062,7 @@
     "new_cards": 131,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 378.9,
     "is_completed": false,
     "is_in_progress": false
   },
@@ -976,6 +1073,7 @@
     "new_cards": 42,
     "mastered_cards": 0,
     "learning_cards": 0,
+    "avg_card_chars": 266.0,
     "is_completed": false,
     "is_in_progress": false
   }

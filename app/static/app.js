@@ -1694,6 +1694,12 @@ function updateAnkiDueBadges(dueCount) {
   });
   const headerSync = document.getElementById('headerSyncText');
   if (headerSync) headerSync.textContent = `Anki: ${dueCount} fällig`;
+
+  const weaknessPill = document.getElementById('weaknessDuePill');
+  if (weaknessPill) {
+    const lrn = state.learningCardsCount || 0;
+    weaknessPill.textContent = `${dueCount} fällig (${lrn} Lernphase, ${dueCount} Review)`;
+  }
 }
 
 /**
@@ -4252,6 +4258,27 @@ function renderAnkiDesktopWidget(data) {
   const tomCnt = data.due_tomorrow_count || 0;
   const topics = data.due_tomorrow_topics || [];
 
+  // Update semester overall card progress if available
+  if (data.cumulative_cards_learned !== undefined) {
+    const cardsProgress = document.getElementById('currCardsProgress');
+    const progressBarFill = document.getElementById('currProgressBarFill');
+    const actual = data.cumulative_cards_learned;
+    const total = data.total_curriculum_cards || 8729;
+    const pct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : (Math.round((actual / Math.max(1, total)) * 1000) / 10);
+    if (cardsProgress) {
+      cardsProgress.textContent = `${actual.toLocaleString()} / ${total.toLocaleString()} Karten (${pct}%)`;
+    }
+    if (progressBarFill) {
+      progressBarFill.style.width = `${Math.min(100, Math.max(1, pct))}%`;
+    }
+  }
+
+  // Update real-time due reviews across all badges & weakness pill
+  const dueLive = (data.due_today_count !== undefined) ? data.due_today_count : data.due_reviews_count;
+  if (dueLive !== undefined) {
+    updateAnkiDueBadges(dueLive);
+  }
+
   // 1. Update Mission KPI strip with live Anki counts
   updateMissionKpiStrip();
 
@@ -5975,6 +6002,7 @@ window.toggleTopicDetails = toggleTopicDetails;
 setInterval(() => {
   loadAnkiDesktopStatus(false);
   loadWorkloadForecast(false);
+  loadAnkiWeaknesses();
 }, 30000);
 
 // Run on page load (support immediate execution if DOM is already ready)

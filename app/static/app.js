@@ -287,6 +287,16 @@ function init() {
     console.warn('UI setup non-fatal warning:', e);
   }
 
+  // Clear stale curriculum cache to ensure harmonized roadmap packages load freshly
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('sl_curr_cache_')) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch (e) {}
+
   // Prioritize critical curriculum & pacing data
   loadCurriculumToday();
   loadSchedule();

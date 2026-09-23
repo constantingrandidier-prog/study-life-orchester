@@ -356,8 +356,8 @@ if __name__ == "__main__":
                         last_mtime = m
                         file_changed = True
 
-                # Sync if database changed OR every 30 seconds periodically
-                if file_changed or (now - last_periodic >= 30):
+                # Sync if database changed OR every 60 seconds periodically
+                if file_changed or (now - last_periodic >= 60):
                     sync_now()
                     last_periodic = now
             except Exception as exc:

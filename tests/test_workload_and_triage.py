@@ -86,18 +86,21 @@ def test_daily_science_rhythm_starts_at_830():
     # Block 1 starts at 08:30
     assert blocks[0]["start_time"] == "08:30"
     assert "Morgen-Repetitionen" in blocks[0]["title"]
-    # Pause 1 at 09:30
-    assert blocks[1]["start_time"] == "09:30"
+    # Pause 1 comes after Block 1 (time depends on cards_due)
     assert blocks[1]["is_break"] is True
-    # Block 2 (New cards) starts at 09:45
-    assert blocks[2]["start_time"] == "09:45"
+    # Block 2 (New cards) comes after Pause 1
     assert "Neue Karten" in blocks[2]["title"]
+    # Block 2 starts after Block 1 ends (ordering is correct)
+    block1_end = blocks[0]["end_time"]
+    block2_start = blocks[2]["start_time"]
+    assert block2_start > block1_end
 
 def test_api_daily_rhythm_endpoint():
     resp = client.get("/api/v1/schedule/daily-rhythm?target_date=2026-09-15")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["start_time"] == "08:30"
+    assert data["configured_start_time"] == "08:30"
+    assert "start_time" in data
     assert "blocks" in data
     assert len(data["blocks"]) >= 6
 

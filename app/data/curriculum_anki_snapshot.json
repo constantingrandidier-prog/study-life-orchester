@@ -226,7 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 50,
     "learning_cards": 0,
-    "avg_card_chars": 224.2,
+    "avg_card_chars": 224.4,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -234,12 +234,12 @@
     "deck_id": 1789378222985,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
     "card_count": 123,
-    "new_cards": 31,
-    "mastered_cards": 92,
+    "new_cards": 0,
+    "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 223.7,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 236.6,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222986,
@@ -278,12 +278,12 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 31,
-    "mastered_cards": 101,
+    "new_cards": 0,
+    "mastered_cards": 104,
     "learning_cards": 0,
-    "avg_card_chars": 432.8,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 434.8,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222990,
@@ -578,7 +578,7 @@
     "new_cards": 0,
     "mastered_cards": 52,
     "learning_cards": 0,
-    "avg_card_chars": 435.2,
+    "avg_card_chars": 435.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -600,7 +600,7 @@
     "new_cards": 0,
     "mastered_cards": 72,
     "learning_cards": 0,
-    "avg_card_chars": 592.2,
+    "avg_card_chars": 592.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -817,12 +817,12 @@
     "deck_id": 1789378223040,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
     "card_count": 120,
-    "new_cards": 120,
-    "mastered_cards": 0,
-    "learning_cards": 0,
+    "new_cards": 112,
+    "mastered_cards": 7,
+    "learning_cards": 7,
     "avg_card_chars": 260.8,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223041,

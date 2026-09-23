@@ -274,6 +274,7 @@ def clean_topic_display(raw_deck_name: str, module_name: str) -> Dict[str, Any]:
     # Strip numbers and technical prefixes from leaf title
     clean_title = re.sub(r'^[0-9]+[\s_.\-]+', '', leaf).strip()
     clean_title = re.sub(r'^[0-9]+[\s]+', '', clean_title).strip()
+    clean_title = re.sub(r'[🟢⚫🔴🟡⚪⭐▪️▫️▶️]', '', clean_title).strip()
     mod_lower = module_name.lower()
     raw_lower = raw_deck_name.lower()
 
@@ -897,34 +898,78 @@ def get_all_curriculum_decks() -> List[Dict[str, Any]]:
             "is_in_progress": False,
         } for d in synth]
 
-    # Classify each deck into one of the 6 modules
+    # Classify each deck into one of the 6 modules cleanly by TB folder or fallback keywords
     classified: Dict[str, List[Dict[str, Any]]] = {mod_name: [] for _, mod_name, _ in DIDACTIC_MODULES}
     unclassified: List[Dict[str, Any]] = []
 
     for d in raw_decks:
-        dname_lower = d["deck_name"].lower()
-        matched = False
-        for _, mod_name, keywords in DIDACTIC_MODULES:
-            if any(k in dname_lower for k in keywords):
-                classified[mod_name].append({**d, "module_name": mod_name})
-                matched = True
-                break
-        if not matched:
-            unclassified.append({**d, "module_name": "4. Verdauung & Ernährung"})
+        nl = d["deck_name"].lower()
+        if "tb blut" in nl or "themenblock blut" in nl:
+            classified["1. Blut & Immunsystem"].append({**d, "module_name": "1. Blut & Immunsystem"})
+        elif "tb herz" in nl or "themenblock herz" in nl:
+            classified["2. Herz-Kreislauf"].append({**d, "module_name": "2. Herz-Kreislauf"})
+        elif "tb atmung" in nl or "themenblock atmung" in nl:
+            classified["3. Atmung & Lunge"].append({**d, "module_name": "3. Atmung & Lunge"})
+        elif "tb verdauung" in nl or "themenblock verdauung" in nl:
+            classified["4. Verdauung & Ernährung"].append({**d, "module_name": "4. Verdauung & Ernährung"})
+        elif "tb stoffwechsel" in nl or "themenblock stoffwechsel" in nl:
+            classified["5. Stoffwechsel & Biochemie"].append({**d, "module_name": "5. Stoffwechsel & Biochemie"})
+        elif "tb endokrinologie" in nl or "themenblock endokrin" in nl:
+            classified["6. Endokrinologie & Hormone"].append({**d, "module_name": "6. Endokrinologie & Hormone"})
+        else:
+            matched = False
+            for _, mod_name, keywords in DIDACTIC_MODULES:
+                if any(k in nl for k in keywords):
+                    classified[mod_name].append({**d, "module_name": mod_name})
+                    matched = True
+                    break
+            if not matched:
+                unclassified.append({**d, "module_name": "4. Verdauung & Ernährung"})
 
     for d in unclassified:
         classified["4. Verdauung & Ernährung"].append(d)
 
-    # Sequence decks module by module:
-    # In-progress first, then uncompleted in pedagogical order, then fully completed
+    # Pedagogical order for Module 1 (Blut & Immunsystem)
+    didactic_m1_order = [
+        "einführung und abschluss",
+        "leukozyten i / ullrich",
+        "erythropoiese, myelopoiese",
+        "blut und blutplasma / wenger",
+        "erythrozyten / wenger",
+        "thrombozyten, wundheilung, blutgruppen",
+        "phasen der immunantwort ulli",
+        "thymus und lymphatisches system / ullrich",
+        "zelluläre immunität und immunsystem ulli",
+        "1 myoglobin, hämoglobin",
+        "2 co2-transport",
+        "3 blutgerinnung",
+        "zelluläre immunität und immunsystem 2",
+        "das angeborene und erworbene immunsystem",
+        "immuntoleranz",
+        "monoklonale antikörper in diagnostik und therapie",
+        "autoimmunität und entzündung",
+        "rekombination adaptiver immunrezeptoren",
+        "zellentstehung und reifung",
+    ]
+
+    def m1_sort_key(d: Dict[str, Any]) -> int:
+        dname = d["deck_name"].lower()
+        for idx, prefix in enumerate(didactic_m1_order):
+            if prefix in dname:
+                return idx
+        return 99
+
+    # Sequence decks module by module
     ordered_decks = []
     for _, mod_name, _ in DIDACTIC_MODULES:
         mod_decks = classified[mod_name]
-        mod_decks.sort(key=lambda x: (
-            x.get("is_completed", False),
-            not x.get("is_in_progress", False),
-            x["deck_name"]
-        ))
+        if mod_name == "1. Blut & Immunsystem":
+            mod_decks.sort(key=m1_sort_key)
+        else:
+            mod_decks.sort(key=lambda x: (
+                0 if "einführung" in x["deck_name"].lower() or "einfuehrung" in x["deck_name"].lower() else (2 if "abschluss" in x["deck_name"].lower() else 1),
+                x["deck_name"]
+            ))
         for d in mod_decks:
             ordered_decks.append({
                 "deck_name": d["deck_name"],
@@ -1040,9 +1085,10 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
         matched_slide = _find_best_slide_match(d["deck_name"], available_slides)
         deck_queue.append({
             "deck_name": d["deck_name"],
-            "remaining": d.get("new_cards", d["card_count"]),
+            "remaining": d["card_count"],
             "total_deck_cards": d["card_count"],
             "mastered_cards": d.get("mastered_cards", 0),
+            "new_cards": d.get("new_cards", d["card_count"]),
             "is_completed": d.get("is_completed", False),
             "is_in_progress": d.get("is_in_progress", False),
             "module_name": d["module_name"],
@@ -1054,7 +1100,7 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
     cur_date = SEMESTER_START_DATE
     schedule_days = []
     deck_idx = 0
-    cumulative_cards = already_mastered_initial
+    cumulative_cards = 0
     active_day_counter = 0
 
     module_stats: Dict[str, Dict[str, Any]] = {}
@@ -1069,8 +1115,12 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             "active_days": 0,
         }
 
+    TARGET_MIN = 75
+    TARGET_MAX = 95
+    TARGET_OPT = 85
+
     while deck_idx < len(deck_queue):
-        # Skip fully completed decks
+        # Skip fully exhausted decks in simulation
         if deck_queue[deck_idx]["remaining"] == 0:
             deck_idx += 1
             continue
@@ -1085,7 +1135,7 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "date": date_str,
                 "day_of_week": day_name,
                 "day_number": None,
-                "total_active_days": 97,
+                "total_active_days": 104,
                 "is_rest_day": True,
                 "target_cards": 0,
                 "topic_slots": [],
@@ -1119,60 +1169,64 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
 
         active_day_counter += 1
         current_day_module = deck_queue[deck_idx]["module_name"]
-        cur_deck = deck_queue[deck_idx]
 
-        # Didactic Concept Chunking:
-        # 1) If deck > 130 cards: split into 2 logical halves
-        # 2) If deck >= 75 cards (or <= 130): full deck as a standalone session
-        # 3) If deck < 75 cards: take full deck, greedily pack with subsequent decks in same module up to max 125 cards
+        # Smoothed Didactic Concept Chunking (Strict 75-95 cards/day target)
         candidate_slots = []
-        if cur_deck["remaining"] > 130:
-            take = (cur_deck["remaining"] + 1) // 2
-            candidate_slots.append((cur_deck, take))
-            cur_deck["remaining"] -= take
-        elif cur_deck["remaining"] >= 75:
-            take = cur_deck["remaining"]
-            candidate_slots.append((cur_deck, take))
-            cur_deck["remaining"] = 0
-            deck_idx += 1
-        else:
-            take = cur_deck["remaining"]
-            candidate_slots.append((cur_deck, take))
-            cur_deck["remaining"] = 0
-            deck_idx += 1
-            tot = take
-            # Cross-module fill: if we still have very few cards (< 50) after exhausting
-            # the current deck at a module boundary, pull from the next module too
-            # so no day ends up with an unworkably small load.
-            MIN_CARDS_PER_DAY = 50
-            while deck_idx < len(deck_queue) and tot < 75:
-                next_d = deck_queue[deck_idx]
-                if next_d["remaining"] == 0:
-                    deck_idx += 1
-                    continue
-                is_cross_module = next_d["module_name"] != cur_deck["module_name"]
-                if is_cross_module and tot >= MIN_CARDS_PER_DAY:
-                    # Enough cards already; honour module boundaries
+        tot = 0
+        while deck_idx < len(deck_queue) and tot < TARGET_MIN:
+            c_d = deck_queue[deck_idx]
+            if c_d["remaining"] == 0:
+                deck_idx += 1
+                continue
+
+            needed_min = TARGET_MIN - tot
+            needed_max = TARGET_MAX - tot
+            needed_opt = TARGET_OPT - tot
+
+            if c_d["remaining"] <= needed_max:
+                take = c_d["remaining"]
+                candidate_slots.append((c_d, take))
+                tot += take
+                c_d["remaining"] = 0
+                deck_idx += 1
+            else:
+                # c_d["remaining"] > needed_max
+                if tot == 0:
+                    if c_d["remaining"] > 170:
+                        take = TARGET_OPT
+                    else:
+                        take = (c_d["remaining"] + 1) // 2
+                    candidate_slots.append((c_d, take))
+                    tot += take
+                    c_d["remaining"] -= take
+
+                    if tot < TARGET_MIN and deck_idx + 1 < len(deck_queue):
+                        next_d = deck_queue[deck_idx + 1]
+                        if next_d["remaining"] > 0:
+                            if tot + next_d["remaining"] <= TARGET_MAX:
+                                top_needed = next_d["remaining"]
+                            else:
+                                top_needed = min(TARGET_OPT - tot, next_d["remaining"])
+                                if next_d["remaining"] - top_needed < 15 and tot + next_d["remaining"] <= TARGET_MAX + 3:
+                                    top_needed = next_d["remaining"]
+                            if top_needed > 0:
+                                candidate_slots.append((next_d, top_needed))
+                                tot += top_needed
+                                next_d["remaining"] -= top_needed
                     break
-                if tot + next_d["remaining"] <= 125:
-                    take_next = next_d["remaining"]
-                    candidate_slots.append((next_d, take_next))
-                    next_d["remaining"] = 0
-                    deck_idx += 1
-                    tot += take_next
-                    if is_cross_module and tot >= MIN_CARDS_PER_DAY:
-                        break
                 else:
-                    # Next deck cannot fit in its entirety without exceeding 125.
-                    # Only top up if truly orphaned (< 40 cards) – e.g. a deck with only
-                    # 12 new cards remaining. Full topic units like EKG (54 cards) are
-                    # fine as standalone days and should NOT be padded.
-                    if tot < 40:
-                        needed = min(95 - tot, next_d["remaining"])
-                        if needed >= 15 and (next_d["remaining"] - needed) >= 15:
-                            candidate_slots.append((next_d, needed))
-                            next_d["remaining"] -= needed
-                            tot += needed
+                    rem_after = c_d["remaining"] - needed_opt
+                    if rem_after >= 15:
+                        take = needed_opt
+                    elif c_d["remaining"] <= needed_max:
+                        take = c_d["remaining"]
+                        c_d["remaining"] = 0
+                        deck_idx += 1
+                    else:
+                        take = min(needed_max, c_d["remaining"] - 15) if c_d["remaining"] > 30 else needed_opt
+                    candidate_slots.append((c_d, take))
+                    tot += take
+                    c_d["remaining"] -= take
                     break
 
         day_slots = []
@@ -1278,8 +1332,8 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "cards_to_learn": take,
                 "total_deck_cards": c_deck["total_deck_cards"],
                 "already_mastered_cards": c_deck.get("mastered_cards", 0),
-                "remaining_new_cards": c_deck["remaining"],
-                "deck_progress_pct": round(((c_deck["total_deck_cards"] - c_deck["remaining"]) / max(1, c_deck["total_deck_cards"])) * 100, 1),
+                "remaining_new_cards": c_deck.get("new_cards", c_deck["total_deck_cards"]),
+                "deck_progress_pct": round(((c_deck["total_deck_cards"] - c_deck.get("new_cards", c_deck["total_deck_cards"])) / max(1, c_deck["total_deck_cards"])) * 100, 1),
                 "matched_slide_filename": slide_file,
                 "slide_coverage_pct": 82.0 if slide_file else 70.0,
                 "is_cycle_topic": didactic_info["is_cycle_topic"],
@@ -1424,6 +1478,12 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             "exam_yield_badge": day_yield_badge,
         })
         cur_date += timedelta(days=1)
+
+    for d in schedule_days:
+        d["total_active_days"] = active_day_counter
+        if not d.get("is_rest_day") and d.get("day_number"):
+            clean_topics_summary = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in d.get("topic_slots", []))
+            d["summary"] = f"Tag {d['day_number']}/{active_day_counter}: {d['target_cards']} neue Karten ({clean_topics_summary}) im Modul {d['current_module']}."
 
     completion_date_obj = cur_date - timedelta(days=1)
     completion_date_str = completion_date_obj.strftime("%Y-%m-%d")
@@ -1757,7 +1817,7 @@ def _sync_active_day_assignment(
 
     day["topic_slots"] = new_slots
     clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
-    day["summary"] = f"Tag {day['day_number']}/97: {day['target_cards']} neue Karten ({clean_topics})."
+    day["summary"] = f"Tag {day['day_number']}/{day.get('total_active_days', 104)}: {day['target_cards']} neue Karten ({clean_topics})."
 
     # Recalculate cognitive metrics for active day
     total_new_cards = sum(s.get("cards_to_learn", 0) for s in new_slots)

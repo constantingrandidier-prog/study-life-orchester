@@ -1639,6 +1639,201 @@ async function handleSyncLocalAnki(e) {
 }
 window.handleSyncLocalAnki = handleSyncLocalAnki;
 
+// ============================================================================
+// AUTO-SYNC via AnkiConnect + DYNAMIC PLAN SHIFT
+// ============================================================================
+
+// State für aktuell fällige Repes (wird durch auto-sync aktuell gehalten)
+let _ankiDueCount = null;
+let _autoSyncInterval = null;
+let _planShiftMinutes = 0;
+
+/**
+ * Ruft AnkiConnect-Sync auf → Anki Desktop synchronisiert mit AnkiWeb (iPad-Daten).
+ * Danach: due_count aus DB lesen und Plan-Verschiebung berechnen.
+ */
+async function runAnkiConnectSync() {
+  try {
+    const res = await fetch(`${API_BASE}/anki/connect-sync`, { method: 'POST' });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (data.due_count !== null && data.due_count !== undefined) {
+      const oldCount = _ankiDueCount;
+      _ankiDueCount = data.due_count;
+
+      // Badges aktualisieren
+      updateAnkiDueBadges(_ankiDueCount);
+
+      // Plan-Verschiebung prüfen
+      checkAndShiftPlan(_ankiDueCount);
+
+      if (oldCount !== null && oldCount !== _ankiDueCount) {
+        console.log(`[AnkiSync] Due: ${oldCount} → ${_ankiDueCount}`);
+      }
+    }
+  } catch (err) {
+    // Stille Fehler – AnkiConnect nicht erreichbar
+  }
+}
+
+/** Aktualisiert alle Due-Badges in der App */
+function updateAnkiDueBadges(dueCount) {
+  const els = ['navBadgeDue', 'sideBadgeDue', 'pacingDueReviewsDisplay', 'pacingDueReviewsVal'];
+  els.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (id === 'navBadgeDue') {
+      el.textContent = dueCount;
+      el.style.display = dueCount > 0 ? '' : 'none';
+    } else if (id === 'sideBadgeDue') {
+      el.textContent = `${dueCount} fällig`;
+    } else {
+      el.textContent = dueCount;
+    }
+  });
+  const headerSync = document.getElementById('headerSyncText');
+  if (headerSync) headerSync.textContent = `Anki: ${dueCount} fällig`;
+}
+
+/**
+ * Prüft ob der Anki-Review-Block schon hätte fertig sein sollen.
+ * Falls ja UND noch Repes offen: berechnet Verschiebung und zeigt Banner.
+ */
+function checkAndShiftPlan(dueCount) {
+  if (!state.targetDate) return;
+
+  // Nur für heute relevant
+  const todayStr = new Date().toISOString().split('T')[0];
+  if (state.targetDate !== todayStr) return;
+
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+
+  // Suche den Anki-Review-Block im Stundenplan (study-session Blöcke)
+  // Ein overrun liegt vor wenn: Block-Ende < jetzt UND dueCount > 0
+  let overrunBlock = null;
+  state.studySessions.forEach(s => {
+    if (!s.end_time) return;
+    const end = new Date(s.end_time);
+    const endMins = end.getHours() * 60 + end.getMinutes();
+    // Ist es ein Review-Block? Erkennen an "Wiederholung" im Grund oder topic_name
+    const isReviewBlock = (s.reason || '').toLowerCase().includes('wiederhol') ||
+                          (s.topic_name || '').toLowerCase().includes('wiederhol') ||
+                          (s.cluster_name || '').toLowerCase().includes('wiederhol');
+    if (isReviewBlock && endMins < nowMins && dueCount > 0) {
+      overrunBlock = { ...s, endMins };
+    }
+  });
+
+  if (!overrunBlock) {
+    // Kein overrun → Banner entfernen
+    const banner = document.getElementById('ankiOverrunBanner');
+    if (banner) banner.style.display = 'none';
+    _planShiftMinutes = 0;
+    return;
+  }
+
+  // Verschiebung berechnen: ~36s pro Karte
+  const extraSeconds = dueCount * 36;
+  const shiftMins = Math.ceil(extraSeconds / 60);
+  _planShiftMinutes = shiftMins;
+
+  showPlanShiftBanner(dueCount, shiftMins);
+}
+
+/** Zeigt das Verschiebungs-Banner über dem Stundenplan */
+function showPlanShiftBanner(dueCount, shiftMins) {
+  let banner = document.getElementById('ankiOverrunBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'ankiOverrunBanner';
+    banner.style.cssText = `
+      margin: 0.5rem 0 0.75rem 0;
+      padding: 0.65rem 1rem;
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    `;
+    // Vor dem Timeline-Container einfügen
+    const tc = dom.timelineContainer;
+    if (tc && tc.parentNode) tc.parentNode.insertBefore(banner, tc);
+  }
+
+  const h = Math.floor(shiftMins / 60);
+  const m = shiftMins % 60;
+  const shiftStr = h > 0 ? `${h}h ${m > 0 ? m + 'min' : ''}` : `${m} min`;
+
+  banner.style.display = 'flex';
+  banner.innerHTML = `
+    <div style="font-size: 12.5px; color: #f87171; font-weight: 600;">
+      Noch ${dueCount} Repes offen — Plan ~${shiftStr} verschoben
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button onclick="applyPlanShift()" style="font-size: 11px; padding: 0.3rem 0.75rem; background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.4); border-radius: 6px; color: #f87171; cursor: pointer;">
+        Plan anpassen
+      </button>
+      <button onclick="document.getElementById('ankiOverrunBanner').style.display='none'" style="font-size: 11px; padding: 0.3rem 0.5rem; background: transparent; border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-dim); cursor: pointer;">
+        ✕
+      </button>
+    </div>
+  `;
+}
+
+/** Verschiebt alle Blöcke nach dem aktuellen Zeitpunkt um _planShiftMinutes */
+function applyPlanShift() {
+  if (_planShiftMinutes <= 0) return;
+  const shiftMs = _planShiftMinutes * 60 * 1000;
+  const now = new Date();
+
+  // Nur zukünftige Blöcke verschieben (fixe Vorlesungen NICHT anfassen)
+  state.studySessions = state.studySessions.map(s => {
+    const start = new Date(s.start_time);
+    if (start > now) {
+      return {
+        ...s,
+        start_time: new Date(start.getTime() + shiftMs).toISOString(),
+        end_time: new Date(new Date(s.end_time).getTime() + shiftMs).toISOString(),
+      };
+    }
+    return s;
+  });
+
+  state.freeSlots = state.freeSlots.map(slot => {
+    const s = slot.start_time || slot.start;
+    const start = new Date(s);
+    if (start > now) {
+      return {
+        ...slot,
+        start_time: new Date(start.getTime() + shiftMs).toISOString(),
+        end_time: new Date(new Date(slot.end_time || slot.end).getTime() + shiftMs).toISOString(),
+      };
+    }
+    return slot;
+  });
+
+  renderTimeline();
+  const banner = document.getElementById('ankiOverrunBanner');
+  if (banner) banner.style.display = 'none';
+  _planShiftMinutes = 0;
+  showToast(`Plan um ${_planShiftMinutes > 0 ? _planShiftMinutes : 'mehrere'} Minuten verschoben`);
+}
+window.applyPlanShift = applyPlanShift;
+
+/** Startet den Auto-Sync-Timer (alle 90 Sekunden) */
+function startAnkiAutoSync() {
+  if (_autoSyncInterval) clearInterval(_autoSyncInterval);
+  // Sofort einmal laufen lassen
+  runAnkiConnectSync();
+  // Dann alle 90s
+  _autoSyncInterval = setInterval(runAnkiConnectSync, 90_000);
+}
+
 async function handleSyncAnkiWebFromTab3(e) {
   if (e && e.preventDefault) e.preventDefault();
 
@@ -2818,32 +3013,17 @@ function renderCurriculumToday(data) {
       synergyCard.style.display = 'none';
     } else {
       synergyCard.style.display = 'block';
-      synergyHeadline.textContent = data.synergy_headline || `🎯 Fokus: ${data.current_module || 'Lernsession'}`;
+      // Short headline: just topic name, no emoji prefix
+      const headlineText = data.synergy_headline || `Fokus: ${data.current_module || 'Lernsession'}`;
+      synergyHeadline.textContent = headlineText.replace(/^🎯\s*/u, '').replace(/\s*[-–].*$/, '').trim();
+      // Compact step list: show step text only, no big icons
       if (Array.isArray(data.recommended_study_sequence) && data.recommended_study_sequence.length > 0) {
-        const icons = ['🎧', '📇', '🔗'];
-        const colors = ['#79c0ff', '#7ee787', '#d2a8ff'];
-        studySequence.innerHTML = data.recommended_study_sequence.map((step, sIdx) => {
-          const icon = icons[sIdx] || '💡';
-          const color = colors[sIdx] || '#e6edf3';
-          return `
-            <div style="display: flex; align-items: flex-start; gap: 0.45rem;">
-              <span style="color: ${color}; font-weight: 700; min-width: 18px;">${icon}</span>
-              <span>${escapeHtml(step.replace(/^[0-9]\.\s*(\p{Emoji}|\S+)?\s*/u, ''))}</span>
-            </div>
-          `;
+        studySequence.innerHTML = data.recommended_study_sequence.map((step) => {
+          const cleanStep = step.replace(/^[0-9]+\.\s*/u, '').replace(/^[\p{Emoji}]\s*/u, '').trim();
+          return `<div style="color: var(--text-muted); font-size: 11px;">${escapeHtml(cleanStep)}</div>`;
         }).join('');
       } else {
-        studySequence.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 0.45rem;">
-            <span>🎧</span> <span>1. Vorlesung im Standard-Stream (1.2x) sichten</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.45rem;">
-            <span>📇</span> <span>2. Anki-Soll konzentriert enkodieren</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.45rem;">
-            <span>🔗</span> <span>3. Quervernetzung in klinische Krankheitsbilder einbetten</span>
-          </div>
-        `;
+        studySequence.innerHTML = '';
       }
     }
   }
@@ -2852,17 +3032,16 @@ function renderCurriculumToday(data) {
     if (data.is_rest_day) {
       topicsContainer.innerHTML = `
         <div style="padding: 1.5rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: var(--radius-sm); text-align: center; color: var(--text-dim);">
-          <div style="font-size: 26px; margin-bottom: 0.5rem;">🏖️</div>
-          <strong style="font-size: 14px; color: var(--text-main);">${escapeHtml(data.summary || 'Sonntag ist studienfrei!')}</strong>
+          <strong style="font-size: 14px; color: var(--text-main);">${escapeHtml(data.summary || 'Sonntag – Ruhetag')}</strong>
           <div style="margin-top: 0.85rem;">
-            <button class="btn-secondary" style="font-size: 12px; padding: 0.4rem 1rem;" onclick="stepDate(1)">Montag (nächsten Lerntag) anzeigen →</button>
+            <button class="btn-secondary" style="font-size: 12px; padding: 0.4rem 1rem;" onclick="stepDate(1)">Nächster Lerntag →</button>
           </div>
         </div>
       `;
     } else if (!data.topic_slots || data.topic_slots.length === 0) {
       topicsContainer.innerHTML = `
         <div style="padding: 1.5rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: var(--radius-sm); text-align: center; color: var(--text-dim);">
-          Keine neuen Karten für diesen Tag terminiert.
+          Keine Karten für diesen Tag.
         </div>
       `;
     } else {
@@ -2886,13 +3065,13 @@ function renderCurriculumToday(data) {
         }
 
         if (slot.recommended_mode === 'stream_1_0') {
-          didacticBadge = `<span class="curriculum-focus-badge" title="Prüfungsrelevanter Regelkreis/Diagramme">🟠 1.0x Voller Fokus (Kernprüfungskonzept)</span>`;
+          didacticBadge = `<span class="curriculum-focus-badge">1.0x</span>`;
         } else if (slot.recommended_mode === 'stream_1_4') {
-          didacticBadge = `<span class="curriculum-speed-badge" title="High-Speed Stream">🟡 1.4x High-Speed (+${timeSavedMin}m gespart)</span>`;
+          didacticBadge = `<span class="curriculum-speed-badge">1.4x (+${timeSavedMin}m)</span>`;
         } else if (slot.recommended_mode === 'skipped') {
-          didacticBadge = `<span class="curriculum-skip-badge" title="Reines Faktenwissen / Nomenklatur">🔴 Vorlesung skippen (+${timeSavedMin}m gespart)</span>`;
+          didacticBadge = `<span class="curriculum-skip-badge">Skip (+${timeSavedMin}m)</span>`;
         } else {
-          didacticBadge = `<span class="curriculum-speed-badge" title="Standard-Stream & Dozentenschwerpunkte">🟡 ${slot.speed_factor || 1.2}x Stream (+${timeSavedMin}m gespart)</span>`;
+          didacticBadge = `<span class="curriculum-speed-badge">${slot.speed_factor || 1.2}x (+${timeSavedMin}m)</span>`;
         }
         totalTimeSavedMinutes += timeSavedMin;
 
@@ -2957,14 +3136,14 @@ function renderCurriculumToday(data) {
         // Scaffolding: Red Thread
         const redThreadHtml = slot.red_thread
           ? `<div class="curriculum-slot-redthread" style="margin-top: 5px; font-size: 11px; color: #7ee787; background: rgba(35, 134, 54, 0.08); border-left: 2px solid #238636; padding: 3px 6px; border-radius: 3px; line-height: 1.35;">
-               🧵 <strong>Roter Faden:</strong> ${escapeHtml(slot.red_thread)}
+               <strong>Roter Faden:</strong> ${escapeHtml(slot.red_thread)}
              </div>`
           : '';
 
         // Scaffolding: Clinical Cross-Links
         const crossLinksHtml = (Array.isArray(slot.cross_links) && slot.cross_links.length > 0)
           ? `<div class="curriculum-slot-crosslinks" style="margin-top: 4px; font-size: 10.5px; color: #a5d6ff; line-height: 1.35;">
-               🔗 <strong>Quervernetzung:</strong> ${slot.cross_links.map(cl => escapeHtml(cl)).join(' • ')}
+               <strong>Quervernetzung:</strong> ${slot.cross_links.map(cl => escapeHtml(cl)).join(' • ')}
              </div>`
           : '';
 
@@ -2997,10 +3176,12 @@ function renderCurriculumToday(data) {
                     ${ankiStatusBadge}
                   </div>
                   <div class="topic-card-sub">
-                    <span class="topic-card-quota-pill">⚡ <strong>${cards}</strong> Karten neu</span>
+                    <span class="topic-card-quota-pill"><strong>${cards}</strong> Karten</span>
+                    ${slot.difficulty_badge ? `<span class="difficulty-badge ${slot.difficulty_level || 'medium'}" style="font-size: 10px; padding: 1px 6px;">${slot.difficulty_badge}</span>` : ''}
+                    ${slot.yield_badge ? `<span class="yield-badge ${slot.exam_yield || ''}" style="font-size: 10px; padding: 1px 6px;" title="${escapeHtml(slot.yield_badge)}">${slot.yield_stars || ''} ${slot.yield_label || ''}</span>` : ''}
                     ${didacticBadge}
                     ${breadcrumb ? `<span>&bull;</span> <span>${escapeHtml(breadcrumb)}</span>` : ''}
-                    ${lecturerBadge ? `<span>&bull;</span> ${lecturerBadge}` : ''}
+                    ${slot.lecturer ? `<span>&bull;</span> <span class="curriculum-lecturer-badge">${escapeHtml(slot.lecturer)}</span>` : ''}
                   </div>
                 </div>
               </div>
@@ -3012,14 +3193,14 @@ function renderCurriculumToday(data) {
               </div>
             </div>
 
-            <!-- Expandable Details Drawer (Collapsible on Demand) -->
+            <!-- Expandable Details Drawer -->
             <div class="topic-card-details" style="display: none;">
               ${redThreadHtml}
               ${crossLinksHtml}
               ${reasonHtml}
               ${(timecodePill || lectureLinksHtml) ? `
                 <div class="topic-detail-block lecture-strategy">
-                  <div class="detail-label">▶️ Vorlesungs-Video &amp; Timecodes</div>
+                  <div class="detail-label">Video & Timecodes</div>
                   <div class="detail-content">
                     ${timecodePill}
                     ${lectureLinksHtml}
@@ -3028,7 +3209,7 @@ function renderCurriculumToday(data) {
               ` : ''}
               ${slot.matched_slide_filename ? `
                 <div class="topic-detail-block slides">
-                  <div class="detail-label">📄 Vorlesungsfolien &amp; Skripte</div>
+                  <div class="detail-label">Folien</div>
                   <div class="detail-content">
                     ${slideBadge}
                   </div>
@@ -3036,10 +3217,10 @@ function renderCurriculumToday(data) {
               ` : ''}
               <div class="topic-detail-actions">
                 <button type="button" class="btn-slot-advisor" onclick="consultAdvisorForTopic('${escapedTitle}')" style="background: rgba(88,166,255,0.12); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3); border-radius: 4px; font-size: 11px; padding: 0.35rem 0.65rem; cursor: pointer;">
-                  🔍 Im Vorlesungs-Berater prüfen
+                  Berater
                 </button>
                 <button type="button" class="btn-slot-toggle ${isDone ? 'done' : ''}" onclick="handleToggleSlotDone('${escapedSlotKey}', ${cards}, '${escapedTitle}')">
-                  ${isDone ? '↩️ Als offen markieren' : '✓ Erledigen'}
+                  ${isDone ? '↩ Offen' : '✓ Erledigt'}
                 </button>
               </div>
             </div>
@@ -3308,14 +3489,15 @@ function renderRoadmapDaysList(days) {
           ${slotsText}
         </div>
 
-        <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
           <button type="button" class="btn-day-swap" onclick="event.stopPropagation(); openSwapDayModal('${d.date}', ${d.day_number})" title="Diesen Tag mit einem anderen Lerntag tauschen">
             ⇄ Tauschen
           </button>
-          <span class="curriculum-card-pill" style="font-size: 11px; padding: 0.2rem 0.5rem; font-weight: 600;">
-            ${d.target_cards} Karten
+          <span class="difficulty-badge ${d.difficulty_level || 'medium'}" style="font-size: 10.5px; padding: 0.15rem 0.45rem;" title="${escapeHtml(d.difficulty_reason || '')}">
+            ${d.difficulty_badge || (d.target_cards + ' Karten')}
           </span>
-          <span style="font-size: 10.5px; color: var(--text-muted); min-width: 50px; text-align: right;">
+          ${d.exam_yield_badge ? `<span class="yield-badge ${d.exam_yield || ''}" style="font-size: 10px; padding: 0.15rem 0.4rem;" title="${escapeHtml(d.exam_yield_badge)}">${d.yield_stars || ''} ${d.yield_label || ''}</span>` : ''}
+          <span style="font-size: 10.5px; color: var(--text-muted); min-width: 40px; text-align: right;">
             ${d.curriculum_progress_pct}%
           </span>
         </div>
@@ -3541,7 +3723,13 @@ async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
   const num2 = dayNum2 || d2.day_number;
 
   // Optimistic swap in memory
-  const swapKeys = ['target_cards', 'adjusted_target_cards', 'topic_slots', 'current_module', 'summary', 'synergy_headline', 'recommended_study_sequence'];
+  const swapKeys = [
+    'target_cards', 'adjusted_target_cards', 'topic_slots', 'current_module', 
+    'summary', 'synergy_headline', 'recommended_study_sequence',
+    'estimated_study_minutes', 'avg_seconds_per_card', 'difficulty_level',
+    'difficulty_label', 'difficulty_badge', 'difficulty_reason',
+    'exam_yield', 'yield_stars', 'yield_label', 'exam_yield_badge'
+  ];
   const temp = {};
   swapKeys.forEach(k => temp[k] = d1[k]);
   swapKeys.forEach(k => d1[k] = d2[k]);
@@ -3564,22 +3752,46 @@ async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
   });
 
   renderRoadmapDaysList(_cachedRoadmapData.schedule);
+  if (typeof renderPageRoadmap === 'function') {
+    renderPageRoadmap();
+  }
 
-  // Invalidate daily caches
+  // Calculate preceding active study days for date1 and date2 (for 24h-lecture-priming sync)
+  const getPrevActiveDateStr = (dateStr) => {
+    if (!_cachedRoadmapData || !Array.isArray(_cachedRoadmapData.schedule)) return null;
+    const sorted = _cachedRoadmapData.schedule
+      .filter(d => !d.is_rest_day)
+      .sort((a, b) => a.date.localeCompare(b.date));
+    const idx = sorted.findIndex(d => d.date === dateStr);
+    return (idx > 0) ? sorted[idx - 1].date : null;
+  };
+
+  const prevDate1 = getPrevActiveDateStr(date1);
+  const prevDate2 = getPrevActiveDateStr(date2);
+
+  // Invalidate daily caches for swapped dates AND their previous days so the 24h-pipeline reflects the new tomorrow lecture!
   try {
-    localStorage.removeItem(`sl_curr_cache_${date1}`);
-    localStorage.removeItem(`sl_curr_cache_${date2}`);
+    const datesToClear = [date1, date2, prevDate1, prevDate2].filter(Boolean);
+    datesToClear.forEach(dStr => {
+      localStorage.removeItem(`sl_curr_cache_${dStr}`);
+      localStorage.removeItem(`sl_rhythm_cache_${dStr}`);
+    });
   } catch (_) {}
 
-  // If viewing affected date, reload daily rhythm immediately
+  // If currently viewing any affected date (the swapped days OR their preceding days), reload live immediately
   const currentDate = state.targetDate || '2026-09-14';
-  if (currentDate === date1 || currentDate === date2) {
+  if ([date1, date2, prevDate1, prevDate2].includes(currentDate)) {
     if (typeof loadScienceRhythm === 'function') {
       loadScienceRhythm(currentDate);
     }
+    if (typeof loadCurriculumToday === 'function') {
+      loadCurriculumToday(true);
+    }
   }
 
-  showToast(`🔄 Tag ${num1} (${cards2} Karten) mit Tag ${num2} (${cards1} Karten) getauscht!`, 'success');
+  const badge1 = d1.difficulty_badge || `${cards2} Karten`;
+  const badge2 = d2.difficulty_badge || `${cards1} Karten`;
+  showToast(`🔄 Tag ${num1} (${badge1}) mit Tag ${num2} (${badge2}) getauscht! 24h-Vorlesungen am Vortag synchronisiert.`, 'success');
 
   // Persist to backend database
   try {
@@ -3690,30 +3902,38 @@ async function openSwapDayModal(sourceDate, sourceDayNum) {
     subEl.textContent = `${sourceDay.current_module || ''} • ${topicsStr || 'Lernpaket'}`;
   }
   if (badgeEl) {
-    badgeEl.textContent = `${sourceDay.target_cards} Karten`;
+    const minStr = sourceDay.estimated_study_minutes ? ` (~${sourceDay.estimated_study_minutes} Min.)` : '';
+    const yieldBadge = sourceDay.exam_yield_badge ? `<span class="yield-badge ${sourceDay.exam_yield || ''}" style="font-size: 11px; padding: 0.2rem 0.55rem; margin-left: 4px;" title="${escapeHtml(sourceDay.exam_yield_badge)}">${sourceDay.exam_yield_badge}</span>` : '';
+    badgeEl.innerHTML = `<span class="difficulty-badge ${sourceDay.difficulty_level || 'medium'}" style="font-size: 11px; padding: 0.2rem 0.55rem;">${sourceDay.difficulty_badge || (sourceDay.target_cards + ' Karten' + minStr)}</span>${yieldBadge}`;
   }
 
   // 2. Active days (excluding current source day and rest days)
   const activeDays = schedule.filter(d => !d.is_rest_day && d.date !== _swapSourceDate);
+  const srcMinutes = sourceDay.estimated_study_minutes || Math.round(sourceDay.target_cards * 0.9);
 
-  // 3. Smart suggestions: find days with fewer cards than sourceDay (e.g. Day 12 with 54 cards)
+  // 3. Smart suggestions: find days with lower cognitive load / study minutes
   const smartContainer = document.getElementById('swapSmartSuggestions');
   if (smartContainer) {
     const lightDays = activeDays
-      .filter(d => d.target_cards < sourceDay.target_cards)
-      .sort((a, b) => a.target_cards - b.target_cards)
+      .filter(d => (d.estimated_study_minutes || Math.round(d.target_cards * 0.9)) < srcMinutes)
+      .sort((a, b) => (a.estimated_study_minutes || a.target_cards) - (b.estimated_study_minutes || b.target_cards))
       .slice(0, 6);
 
     if (lightDays.length > 0) {
-      smartContainer.innerHTML = lightDays.map(d => `
-        <button type="button" class="smart-suggestion-pill" onclick="selectSwapTargetDay('${d.date}')" title="${escapeHtml(d.current_module || '')}">
-          <span>🌱</span>
-          <strong>Tag ${d.day_number}</strong>
-          <span>(${d.target_cards} Karten • ${d.day_of_week})</span>
-        </button>
-      `).join('');
+      smartContainer.innerHTML = lightDays.map(d => {
+        const icon = d.difficulty_level === 'easy' ? '🟢' : (d.difficulty_level === 'medium' ? '🟡' : (d.difficulty_level === 'very_hard' ? '🔥' : '🔴'));
+        const estMin = d.estimated_study_minutes || Math.round(d.target_cards * 0.9);
+        const stars = d.yield_stars ? ` • ${d.yield_stars}` : '';
+        return `
+          <button type="button" class="smart-suggestion-pill ${d.difficulty_level || 'easy'}" onclick="selectSwapTargetDay('${d.date}')" title="${escapeHtml(d.difficulty_reason || d.current_module || '')}">
+            <span>${icon}</span>
+            <strong>Tag ${d.day_number}</strong>
+            <span>(${d.target_cards} Karten • ~${estMin}m${stars})</span>
+          </button>
+        `;
+      }).join('');
     } else {
-      smartContainer.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">Keine Tage mit weniger Karten gefunden. Wähle unten einen Wunschtag.</span>`;
+      smartContainer.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">Keine Tage mit geringerer Belastung gefunden. Wähle unten einen Wunschtag.</span>`;
     }
   }
 
@@ -3721,8 +3941,11 @@ async function openSwapDayModal(sourceDate, sourceDayNum) {
   const selectEl = document.getElementById('swapTargetSelect');
   if (selectEl) {
     selectEl.innerHTML = activeDays.map(d => {
-      const isLighter = d.target_cards < sourceDay.target_cards ? '🌱 ' : '';
-      return `<option value="${d.date}">Tag ${d.day_number}: ${d.day_of_week}, ${d.date} – ${isLighter}${d.target_cards} Karten (${escapeHtml(d.current_module || '')})</option>`;
+      const estMin = d.estimated_study_minutes || Math.round(d.target_cards * 0.9);
+      const diffIcon = d.difficulty_level === 'easy' ? '🟢' : (d.difficulty_level === 'medium' ? '🟡' : (d.difficulty_level === 'very_hard' ? '🔥' : '🔴'));
+      const isLighter = estMin < srcMinutes ? '🌱 ' : '';
+      const yieldInfo = d.yield_stars ? ` • ${d.yield_stars} ${d.yield_label || ''}` : '';
+      return `<option value="${d.date}">Tag ${d.day_number}: ${d.day_of_week}, ${d.date} – ${isLighter}${d.target_cards} Karten (~${estMin}m • ${diffIcon} ${d.difficulty_label || ''}${yieldInfo}) – ${escapeHtml(d.current_module || '')}</option>`;
     }).join('');
 
     // Pre-select Day 12 if available (or first lighter day)
@@ -3758,17 +3981,50 @@ function handleSwapTargetChanged(targetDate) {
   const srcSlots = (src.topic_slots || []).map(s => s.clean_title || s.short_title).slice(0, 2).join(', ');
   const tgtSlots = (tgt.topic_slots || []).map(s => s.clean_title || s.short_title).slice(0, 2).join(', ');
 
+  const srcMin = src.estimated_study_minutes || Math.round(src.target_cards * 0.9);
+  const tgtMin = tgt.estimated_study_minutes || Math.round(tgt.target_cards * 0.9);
+  const timeDiffMin = srcMin - tgtMin;
+
+  const getPrevDay = (dStr) => {
+    const sorted = schedule.filter(d => !d.is_rest_day).sort((a, b) => a.date.localeCompare(b.date));
+    const idx = sorted.findIndex(d => d.date === dStr);
+    return (idx > 0) ? sorted[idx - 1] : null;
+  };
+  const srcPrev = getPrevDay(src.date);
+  const tgtPrev = getPrevDay(tgt.date);
+
+  const tgtFirstTitle = (tgt.topic_slots && tgt.topic_slots[0]) ? (tgt.topic_slots[0].clean_title || tgt.topic_slots[0].short_title) : 'Morgen';
+  const srcFirstTitle = (src.topic_slots && src.topic_slots[0]) ? (src.topic_slots[0].clean_title || src.topic_slots[0].short_title) : 'Original';
+
+  let savingHighlight = '';
+  if (timeDiffMin > 0) {
+    savingHighlight = `
+      <div style="margin-top: 0.45rem; padding: 0.45rem 0.65rem; background: rgba(46,160,67,0.15); border: 1px solid rgba(46,160,67,0.35); border-radius: 6px; color: #7ee787; font-size: 11.5px; font-weight: 600;">
+        💡 Entlastung am ${src.day_of_week}: neu ~${tgtMin} Min. statt ~${srcMin} Min. (-${timeDiffMin} Min. / -${Math.round(timeDiffMin / 60 * 10) / 10}h Zeitersparnis!)
+      </div>
+    `;
+  } else if (timeDiffMin < 0) {
+    savingHighlight = `
+      <div style="margin-top: 0.45rem; padding: 0.45rem 0.65rem; background: rgba(240,136,62,0.12); border: 1px solid rgba(240,136,62,0.3); border-radius: 6px; color: #f0883e; font-size: 11.5px; font-weight: 500;">
+        ⚠️ Hinweis: Am ${src.day_of_week} erhöht sich der Lernaufwand um ~${Math.abs(timeDiffMin)} Minuten.
+      </div>
+    `;
+  }
+
   previewText.innerHTML = `
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
       <span>📅 <strong>${src.day_of_week}, ${src.date} (Tag ${src.day_number})</strong>:</span>
-      <span style="color: #7ee787; font-weight: 700;">neu ${tgt.target_cards} Karten <span style="font-weight: 400; color: var(--text-dim); text-decoration: line-through;">(vorher ${src.target_cards})</span></span>
+      <span style="color: #7ee787; font-weight: 700;">neu ${tgt.target_cards} Karten <span style="font-size: 11px; font-weight: 400; color: #a5d6ff;">(~${tgtMin}m • ${tgt.difficulty_label || ''}${tgt.yield_stars ? ' • ' + tgt.yield_stars : ''})</span></span>
     </div>
-    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0;">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
       <span>📅 <strong>${tgt.day_of_week}, ${tgt.date} (Tag ${tgt.day_number})</strong>:</span>
-      <span style="color: #58a6ff; font-weight: 700;">neu ${src.target_cards} Karten <span style="font-weight: 400; color: var(--text-dim); text-decoration: line-through;">(vorher ${tgt.target_cards})</span></span>
+      <span style="color: #58a6ff; font-weight: 700;">neu ${src.target_cards} Karten <span style="font-size: 11px; font-weight: 400; color: #a5d6ff;">(~${srcMin}m • ${src.difficulty_label || ''}${src.yield_stars ? ' • ' + src.yield_stars : ''})</span></span>
     </div>
-    <div style="font-size: 11px; color: var(--text-muted); margin-top: 0.35rem; line-height: 1.35;">
-      💡 <em>Paket von Tag ${tgt.day_number} (${escapeHtml(tgtSlots)}) wird am ${src.day_of_week} gelernt.</em>
+    ${savingHighlight}
+    <div style="font-size: 11px; color: #79c0ff; margin-top: 0.45rem; line-height: 1.45; background: rgba(56,139,253,0.08); padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid rgba(56,139,253,0.25);">
+      🎧 <strong>24h-Vorlesungs-Sync am Vortag:</strong>
+      <div style="margin-top: 3px;">• Am Vortag (${srcPrev ? srcPrev.day_of_week + ', ' + srcPrev.date : 'Vortag'}) zeigt der Nachmittag neu die Vorlesung zu <em>${escapeHtml(tgtFirstTitle)}</em>!</div>
+      ${tgtPrev ? `<div style="margin-top: 2px;">• Am ${tgtPrev.day_of_week}, ${tgtPrev.date} wird entsprechend <em>${escapeHtml(srcFirstTitle)}</em> vorbereitet.</div>` : ''}
     </div>
   `;
 }
@@ -3822,22 +4078,23 @@ async function openSwapForCurrentViewDay() {
   openSwapDayModal(currentDate, dayNum);
 }
 
-function handleFilterRoadmap(query) {
-  if (!_cachedRoadmapData || !_cachedRoadmapData.schedule) return;
-  const q = (query || '').toLowerCase().trim();
-  if (!q) {
-    renderRoadmapDaysList(_cachedRoadmapData.schedule);
-    return;
-  }
+function handleFilterRoadmap(query, targetListId) {
+  // Supports both the modal roadmap (#roadmapDaysList) and the page roadmap (#pageRoadmapDaysList)
+  const schedule = _cachedRoadmapData ? _cachedRoadmapData.schedule : (state.roadmapData ? state.roadmapData.schedule : null);
+  if (!schedule) return;
 
-  const filtered = _cachedRoadmapData.schedule.filter(d => {
+  const q = (query || '').toLowerCase().trim();
+
+  const filtered = !q ? schedule : schedule.filter(d => {
     if (d.date.includes(q)) return true;
     if (d.day_of_week && d.day_of_week.toLowerCase().includes(q)) return true;
     if (d.current_module && d.current_module.toLowerCase().includes(q)) return true;
     if (d.day_number && `tag ${d.day_number}`.includes(q)) return true;
+    if (d.exam_yield && d.exam_yield.toLowerCase().includes(q)) return true;
+    if (d.difficulty_level && d.difficulty_level.toLowerCase().includes(q)) return true;
     if (d.topic_slots) {
       return d.topic_slots.some(s =>
-        s.deck_name.toLowerCase().includes(q) ||
+        (s.deck_name && s.deck_name.toLowerCase().includes(q)) ||
         (s.short_title && s.short_title.toLowerCase().includes(q)) ||
         (s.clean_title && s.clean_title.toLowerCase().includes(q)) ||
         (s.lecturer && s.lecturer.toLowerCase().includes(q))
@@ -3846,7 +4103,32 @@ function handleFilterRoadmap(query) {
     return false;
   });
 
-  renderRoadmapDaysList(filtered);
+  if (targetListId) {
+    // Render into page roadmap list
+    const list = document.getElementById(targetListId);
+    if (!list) return;
+    const tempRoadmapData = _cachedRoadmapData || state.roadmapData;
+    if (tempRoadmapData) {
+      const savedCache = _cachedRoadmapData;
+      _cachedRoadmapData = tempRoadmapData;
+      const tempList = document.getElementById('roadmapDaysList');
+      if (!tempList) {
+        // Temporarily set the container so renderRoadmapDaysList can find it
+        const fakeEl = document.createElement('div');
+        fakeEl.id = 'roadmapDaysList';
+        document.body.appendChild(fakeEl);
+        renderRoadmapDaysList(filtered);
+        list.innerHTML = fakeEl.innerHTML;
+        fakeEl.remove();
+      } else {
+        renderRoadmapDaysList(filtered);
+        list.innerHTML = tempList.innerHTML;
+      }
+      _cachedRoadmapData = savedCache;
+    }
+  } else {
+    renderRoadmapDaysList(filtered);
+  }
 }
 
 // Interactive slot completion toggle
@@ -6400,41 +6682,22 @@ async function renderPageRoadmap() {
 
     if (data.schedule) {
       _cachedRoadmapData = data;
-      list.innerHTML = data.schedule.map(d => {
-        const isRest = d.is_rest_day;
-        const isToday = d.date === state.targetDate;
-        const isSwappedBadge = d.is_swapped
-          ? `<span style="font-size: 9.5px; color: #e3b341; background: rgba(227,179,65,0.15); border: 1px solid rgba(227,179,65,0.3); border-radius: 3px; padding: 1px 5px; margin-left: 0.35rem; display: inline-flex; align-items: center; gap: 2px;" title="Lernpaket getauscht mit Tag ${d.swapped_with_day || d.original_day_number}">🔄 Paket Tag ${d.swapped_with_day || d.original_day_number}</span>`
-          : '';
-
-        return `
-          <div class="roadmap-day-card ${isRest ? 'rest-day' : ''} ${isToday ? 'today-highlight' : ''}" style="padding: 0.7rem 0.85rem; background: var(--bg-base); border: 1px solid ${isToday ? 'var(--accent-blue)' : 'var(--border-subtle)'}; border-radius: var(--radius-sm); margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
-            <div style="flex: 1; min-width: 0;">
-              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-                <strong style="color: ${isToday ? 'var(--accent-blue)' : 'var(--text-main)'}; font-size: 12.5px;">
-                  Tag ${d.day_number || '-'}: ${d.day_of_week}, ${d.date}
-                </strong>
-                ${isRest ? '<span style="font-size: 10.5px; color: #d29922; background: rgba(210,153,34,0.15); padding: 0.1rem 0.35rem; border-radius: 3px;">🏖️ Ruhetag</span>' : ''}
-                ${isSwappedBadge}
-              </div>
-              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                ${escapeHtml(d.current_module || '')} • ${d.topic_slots ? d.topic_slots.map(s => escapeHtml(s.clean_title || s.short_title)).join(', ') : ''}
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
-              ${!isRest ? `
-                <button type="button" class="btn-day-swap" onclick="openSwapDayModal('${d.date}', ${d.day_number})" title="Diesen Tag mit einem anderen Lerntag tauschen">
-                  ⇄ Tauschen
-                </button>
-              ` : ''}
-              <div style="text-align: right; min-width: 50px;">
-                <strong style="color: ${isRest ? 'var(--text-dim)' : 'var(--accent-blue)'}; font-size: 13px;">${d.target_cards}</strong>
-                <span style="font-size: 11px; color: var(--text-dim); display: block; line-height: 1;">Karten</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      // Render into a temporary #roadmapDaysList if it doesn't exist, then copy to page list
+      const modalList = document.getElementById('roadmapDaysList');
+      if (modalList) {
+        renderRoadmapDaysList(data.schedule);
+        list.innerHTML = modalList.innerHTML;
+        // Reassign event listeners by reinitializing DnD on the page list
+        initRoadmapDragAndDrop();
+      } else {
+        // Temporarily create a shadow container
+        const shadow = document.createElement('div');
+        shadow.id = 'roadmapDaysList';
+        document.body.appendChild(shadow);
+        renderRoadmapDaysList(data.schedule);
+        list.innerHTML = shadow.innerHTML;
+        shadow.remove();
+      }
     }
   } catch (err) {
     console.warn('Roadmap fetch error:', err);
@@ -6577,6 +6840,10 @@ document.addEventListener('DOMContentLoaded', () => {
       switchAppPage(savedPage);
     }
   } catch (e) {}
+
+  // Automatischer Anki-Sync via AnkiConnect (alle 90s)
+  // Hält iPad-Reviews aktuell und verschiebt Plan bei Overrun
+  setTimeout(startAnkiAutoSync, 3000); // 3s Verzögerung damit App erst lädt
 });
 
 // Window exports

@@ -81,6 +81,85 @@ PURE_FACT_KEYWORDS = [
     "antihypertensiva", "biomarker"
 ]
 
+TOPIC_VERY_HARD_KEYWORDS = [
+    "gerinnung", "hämostase", "haemostase", "thrombose", "kaskade", "fibrinolyse", "antikoagulan",
+    "säure-base", "saure-base", "henderson", "astrup", "bikarbonat", "azidose", "alkalose",
+    "erregungsleitung", "aktionspotenzial", "ekg", "rhythmusstörung", "arrhythmi", "antiarrhythmika",
+    "herzmechanik", "druck-volumen", "pv-loop", "wiggers", "frank-starling", "laplace",
+    "raas", "renin", "angiotensin", "aldosteron", "barorezeptor", "blutdruckregulation", "kreislaufregulation",
+    "atemmechanik", "compliance", "resistance", "alveolär", "gasaustausch",
+    "biotransformation", "glykolyse", "gluconeogenese", "citratzyklus",
+    "endokrines pankreas", "insulin", "glukagon", "hormonelle regulation",
+    "zelluläre immunität", "zellulaere immunitaet", "adaptive immun", "immuntoleranz", "autoimmunität",
+    "tuzlak", "stockmann", "wenger"
+]
+
+TOPIC_EASY_KEYWORDS = [
+    "histologie", "mikroskop", "wandschicht", "zellmorphologie", "myelopoiese", "erythropoiese",
+    "vitamin", "spurenelement", "mineralstoff", "kauapparat", "zahn", "zahne", "gaumen", "mundhöhle", "mundhohle",
+    "anatomie oesophagus", "anatomie magen", "anatomie dickdarm", "anatomie duenndarm", "anatomie leber",
+    "anatomie rektum", "anatomie trachea", "nomenklatur", "definition", "repetition", "einführung", "abschluss",
+    "venensystem", "arterien", "arteriolen", "kapillaren", "stoffchemie"
+]
+
+HIGH_YIELD_EXAM_KEYWORDS = [
+    "gerinnung", "hämostase", "haemostase", "thrombose", "antikoagulan",
+    "ekg", "erregungsleitung", "arrhythmi", "wiggers", "druck-volumen", "pv-loop", "frank-starling",
+    "säure-base", "azidose", "alkalose", "astrup",
+    "raas", "renin", "aldosteron", "blutdruckregulation",
+    "atemmechanik", "compliance", "gasaustausch",
+    "immunologie", "leukozyten", "zelluläre immunität", "tuzlak", "stockmann",
+    "insulin", "glukagon", "diabetes", "endokrin"
+]
+
+LOW_YIELD_EXAM_KEYWORDS = [
+    "kauapparat", "zahn", "zahne", "gaumen", "mundhöhle", "spurenelement", "mineralstoff",
+    "einführung", "abschluss", "stoffchemie"
+]
+
+
+def classify_topic_difficulty_and_yield(deck_name: str, clean_title: str, module_name: str) -> Dict[str, Any]:
+    """Classify intrinsic medical topic difficulty and exam importance (High-Yield vs Low-Yield)."""
+    haystack = f"{deck_name} {clean_title} {module_name}".lower()
+
+    # 1. Intrinsic Topic Difficulty (Inhaltliche Tiefe des Themas)
+    if any(k in haystack for k in TOPIC_VERY_HARD_KEYWORDS):
+        diff = "hard"
+        diff_label = "🔴 Anspruchsvoll (Regelkreis/Mechanismus)"
+        diff_mult = 1.35
+    elif any(k in haystack for k in TOPIC_EASY_KEYWORDS):
+        diff = "easy"
+        diff_label = "🟢 Deskriptiv (Fakten/Anatomie)"
+        diff_mult = 0.75
+    else:
+        diff = "medium"
+        diff_label = "🟡 Standard (Konzepte/Klinik)"
+        diff_mult = 1.00
+
+    # 2. Exam Yield / Wichtigkeit (Prüfungsrelevanz für UZH / USMLE)
+    if any(k in haystack for k in HIGH_YIELD_EXAM_KEYWORDS):
+        ey = "high_yield"
+        stars = "⭐⭐⭐"
+        ey_label = "Prüfungs-Kern (High-Yield)"
+    elif any(k in haystack for k in LOW_YIELD_EXAM_KEYWORDS):
+        ey = "low_yield"
+        stars = "⭐"
+        ey_label = "Basiswissen (Low-Yield)"
+    else:
+        ey = "medium_yield"
+        stars = "⭐⭐"
+        ey_label = "Wichtig (Medium-Yield)"
+
+    return {
+        "topic_difficulty": diff,
+        "topic_difficulty_label": diff_label,
+        "topic_difficulty_multiplier": diff_mult,
+        "exam_yield": ey,
+        "yield_stars": stars,
+        "yield_label": ey_label,
+        "yield_badge": f"{stars} {ey_label}",
+    }
+
 
 def classify_topic_didactics(deck_name: str, clean_title: str, module_name: str) -> Dict[str, Any]:
     """Classify a curriculum topic into: 1.0x Voller Fokus, 1.2x Standard-Stream, or Skip for Anki."""
@@ -110,6 +189,66 @@ def classify_topic_didactics(deck_name: str, clean_title: str, module_name: str)
             "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
             "didactic_reason": "Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!",
         }
+
+
+def calculate_card_cognitive_metrics(
+    card_count: int,
+    avg_card_chars: float = 320.0,
+    is_cycle_topic: bool = False,
+    recommended_mode: str = "stream_1_2",
+    topic_difficulty_mult: float = 1.0,
+    exam_yield: str = "medium_yield",
+) -> Dict[str, Any]:
+    """Calculate realistic new-card study time in medical school based on text length, conceptual difficulty, and yield."""
+    safe_chars = max(80.0, min(1500.0, float(avg_card_chars or 320.0)))
+    # Non-linear character volume scale: 300 chars is baseline 1.0; 140 chars is ~0.70; 800 chars is ~1.55
+    char_factor = max(0.70, min(1.70, (safe_chars / 300.0) ** 0.55))
+
+    # Realistic base duration for NEW cards in medical school: ~55s per standard card
+    base_seconds = 55.0
+
+    # Yield multiplier (students invest more deep thinking into high-yield exam topics)
+    yield_mult = 1.10 if exam_yield == "high_yield" else (0.85 if exam_yield == "low_yield" else 1.0)
+
+    # Calculate realistic seconds per new card (30s minimum for fast clozes up to 135s for dense multi-step essays)
+    raw_seconds = base_seconds * char_factor * topic_difficulty_mult * yield_mult
+    seconds_per_card = max(30, min(135, int(round(raw_seconds))))
+
+    # Total estimated study minutes for this card package
+    study_minutes = max(1, int(round((card_count * seconds_per_card) / 60.0)))
+
+    # Cognitive load score (1.0 to 10.0 scale)
+    cognitive_load_score = round(min(10.0, max(1.0, (study_minutes / 70.0) * 5.0)), 1)
+
+    # Classification
+    if study_minutes < 45 or seconds_per_card <= 35:
+        level = "easy"
+        label = "🟢 Leicht"
+        reason = f"Kurze Fakten/Nomenklatur (~{seconds_per_card}s/Neukarte) • Geringe kognitive Ermüdung."
+    elif study_minutes <= 75:
+        level = "medium"
+        label = "🟡 Mittel"
+        reason = f"Standard-Physiologie (~{seconds_per_card}s/Neukarte) • Gut machbare Concept-Session."
+    elif study_minutes <= 110:
+        level = "hard"
+        label = "🔴 Intensiv"
+        reason = f"Anspruchsvolle Mechanismen & Kaskaden (~{seconds_per_card}s/Neukarte) • Hohe Konzentration erforderlich."
+    else:
+        level = "very_hard"
+        label = "🔥 Marathon"
+        reason = f"Sehr umfangreiches, komplexes Stoffgebiet (~{seconds_per_card}s/Neukarte) • Plane Pausen ein!"
+
+    return {
+        "avg_card_chars": round(safe_chars, 1),
+        "seconds_per_card": seconds_per_card,
+        "estimated_study_minutes": study_minutes,
+        "cognitive_load_score": cognitive_load_score,
+        "difficulty_level": level,
+        "difficulty_label": label,
+        "difficulty_badge": f"{label} (~{study_minutes} Min.)",
+        "difficulty_reason": reason,
+    }
+
 
 GERMAN_WEEKDAYS = {
     0: "Montag",
@@ -550,18 +689,20 @@ def _extract_decks_from_anki() -> List[Dict[str, Any]]:
             # Get all decks
             d_map = dict(conn.execute("SELECT id, name FROM decks").fetchall())
             card_stats = conn.execute("""
-                SELECT did,
+                SELECT c.did,
                        count(*) as total,
-                       sum(case when reps = 0 and queue = 0 then 1 else 0 end) as new_cnt,
-                       sum(case when reps > 0 then 1 else 0 end) as mastered_cnt,
-                       sum(case when queue in (1, 3) then 1 else 0 end) as learning_cnt
-                FROM cards
-                GROUP BY did
+                       sum(case when c.reps = 0 and c.queue = 0 then 1 else 0 end) as new_cnt,
+                       sum(case when c.reps > 0 then 1 else 0 end) as mastered_cnt,
+                       sum(case when c.queue in (1, 3) then 1 else 0 end) as learning_cnt,
+                       avg(length(n.flds)) as avg_len
+                FROM cards c
+                LEFT JOIN notes n ON c.nid = n.id
+                GROUP BY c.did
             """).fetchall()
             conn.close()
 
             decks = []
-            for did, total, new_cnt, mastered_cnt, learning_cnt in card_stats:
+            for did, total, new_cnt, mastered_cnt, learning_cnt, avg_len in card_stats:
                 raw_name = d_map.get(did, "").replace("\x1f", " :: ")
                 if not raw_name:
                     continue
@@ -577,6 +718,7 @@ def _extract_decks_from_anki() -> List[Dict[str, Any]]:
                         "new_cards": new_cnt or 0,
                         "mastered_cards": mastered_cnt or 0,
                         "learning_cards": learning_cnt or 0,
+                        "avg_card_chars": round(avg_len or 320.0, 1),
                         "is_completed": (new_cnt == 0 and mastered_cnt > 0),
                         "is_in_progress": (new_cnt > 0 and mastered_cnt > 0),
                     })
@@ -896,6 +1038,7 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             "is_completed": d.get("is_completed", False),
             "is_in_progress": d.get("is_in_progress", False),
             "module_name": d["module_name"],
+            "avg_card_chars": d.get("avg_card_chars", 320.0),
             "is_cycle_topic": is_cycle,
             "matched_slide_filename": matched_slide,
         })
@@ -951,7 +1094,17 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                     "1. Spaziergang oder Sport an der frischen Luft",
                     "2. Schlaf & Regeneration zur Festigung der synaptischen Plastizität",
                     "3. Optional: Kurze Wiederholung fälliger Review-Karten bei Bedarf"
-                ]
+                ],
+                "estimated_study_minutes": 0,
+                "avg_seconds_per_card": 0.0,
+                "difficulty_level": "rest",
+                "difficulty_label": "☕ Ruhetag",
+                "difficulty_badge": "☕ Ruhetag",
+                "difficulty_reason": "Geplanter Ruhetag zur kognitiven Erholung.",
+                "exam_yield": "rest",
+                "yield_stars": "☕",
+                "yield_label": "Regeneration",
+                "exam_yield_badge": "☕ Regeneration",
             })
             cur_date += timedelta(days=1)
             continue
@@ -980,27 +1133,38 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             cur_deck["remaining"] = 0
             deck_idx += 1
             tot = take
+            # Cross-module fill: if we still have very few cards (< 50) after exhausting
+            # the current deck at a module boundary, pull from the next module too
+            # so no day ends up with an unworkably small load.
+            MIN_CARDS_PER_DAY = 50
             while deck_idx < len(deck_queue) and tot < 75:
                 next_d = deck_queue[deck_idx]
                 if next_d["remaining"] == 0:
                     deck_idx += 1
                     continue
-                if next_d["module_name"] != cur_deck["module_name"]:
+                is_cross_module = next_d["module_name"] != cur_deck["module_name"]
+                if is_cross_module and tot >= MIN_CARDS_PER_DAY:
+                    # Enough cards already; honour module boundaries
                     break
-                if next_d["remaining"] > 130:
-                    needed = 100 - tot
-                    take_next = min(needed, next_d["remaining"])
-                    candidate_slots.append((next_d, take_next))
-                    next_d["remaining"] -= take_next
-                    tot += take_next
-                    break
-                elif tot + next_d["remaining"] <= 125:
+                if tot + next_d["remaining"] <= 125:
                     take_next = next_d["remaining"]
                     candidate_slots.append((next_d, take_next))
                     next_d["remaining"] = 0
                     deck_idx += 1
                     tot += take_next
+                    if is_cross_module and tot >= MIN_CARDS_PER_DAY:
+                        break
                 else:
+                    # Next deck cannot fit in its entirety without exceeding 125.
+                    # Only top up if truly orphaned (< 40 cards) – e.g. a deck with only
+                    # 12 new cards remaining. Full topic units like EKG (54 cards) are
+                    # fine as standalone days and should NOT be padded.
+                    if tot < 40:
+                        needed = min(95 - tot, next_d["remaining"])
+                        if needed >= 15 and (next_d["remaining"] - needed) >= 15:
+                            candidate_slots.append((next_d, needed))
+                            next_d["remaining"] -= needed
+                            tot += needed
                     break
 
         day_slots = []
@@ -1015,6 +1179,15 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             clean_info = clean_topic_display(c_deck["deck_name"], c_deck["module_name"])
             didactic_info = classify_topic_didactics(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"])
             scaffolding = get_clinical_scaffolding_for_deck(c_deck["deck_name"], clean_info["clean_title"])
+            topic_eval = classify_topic_difficulty_and_yield(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"])
+            cog_metrics = calculate_card_cognitive_metrics(
+                card_count=take,
+                avg_card_chars=c_deck.get("avg_card_chars", 320.0),
+                is_cycle_topic=didactic_info["is_cycle_topic"],
+                recommended_mode=didactic_info["recommended_mode"],
+                topic_difficulty_mult=topic_eval["topic_difficulty_multiplier"],
+                exam_yield=topic_eval["exam_yield"],
+            )
 
             deck_haystack = f"{c_deck['deck_name']} {clean_info['clean_title']}".lower()
             canon = None
@@ -1106,6 +1279,19 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "badge_label": didactic_info["badge_label"],
                 "didactic_reason": didactic_info["didactic_reason"],
                 "speed_factor": didactic_info["speed_factor"],
+                "topic_difficulty": topic_eval["topic_difficulty"],
+                "topic_difficulty_label": topic_eval["topic_difficulty_label"],
+                "exam_yield": topic_eval["exam_yield"],
+                "yield_stars": topic_eval["yield_stars"],
+                "yield_label": topic_eval["yield_label"],
+                "yield_badge": topic_eval["yield_badge"],
+                "avg_card_chars": cog_metrics["avg_card_chars"],
+                "seconds_per_card": cog_metrics["seconds_per_card"],
+                "estimated_study_minutes": cog_metrics["estimated_study_minutes"],
+                "cognitive_load_score": cog_metrics["cognitive_load_score"],
+                "difficulty_level": cog_metrics["difficulty_level"],
+                "difficulty_label": cog_metrics["difficulty_label"],
+                "difficulty_badge": cog_metrics["difficulty_badge"],
                 "video_timestamp_guidance": timecode_guidance,
                 "video_start_time": tb.get("start_timestamp"),
                 "video_end_time": tb.get("end_timestamp"),
@@ -1119,6 +1305,43 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             cumulative_cards += take
 
         day_total_cards = sum(s["cards_to_learn"] for s in day_slots)
+        day_est_min = sum(s.get("estimated_study_minutes", 0) for s in day_slots)
+        day_avg_sec = round(sum(s.get("seconds_per_card", 55) * s["cards_to_learn"] for s in day_slots) / max(1, day_total_cards), 1)
+
+        if day_est_min < 55:
+            day_diff_level = "easy"
+            day_diff_label = "🟢 Leicht"
+            day_diff_reason = f"Kurze Fakten/Übersicht (~{day_avg_sec}s/Neukarte) • Geringe kognitive Belastung."
+        elif day_est_min <= 85:
+            day_diff_level = "medium"
+            day_diff_label = "🟡 Mittel"
+            day_diff_reason = f"Ausgewogene Standard-Physiologie (~{day_avg_sec}s/Neukarte) • Solide Session."
+        elif day_est_min <= 125:
+            day_diff_level = "hard"
+            day_diff_label = "🔴 Intensiv"
+            day_diff_reason = f"Anspruchsvolle Mechanismen & Kaskaden (~{day_avg_sec}s/Neukarte) • Hohe Konzentration erforderlich."
+        else:
+            day_diff_level = "very_hard"
+            day_diff_label = "🔥 Marathon"
+            day_diff_reason = f"Sehr umfangreiches, komplexes Stoffgebiet (~{day_avg_sec}s/Neukarte) • Unbedingt Pausen einplanen!"
+
+        day_diff_badge = f"{day_diff_label} (~{day_est_min} Min.)"
+
+        if any(s.get("exam_yield") == "high_yield" for s in day_slots):
+            day_yield = "high_yield"
+            day_yield_stars = "⭐⭐⭐"
+            day_yield_label = "Prüfungs-Kern (High-Yield)"
+        elif any(s.get("exam_yield") == "medium_yield" for s in day_slots):
+            day_yield = "medium_yield"
+            day_yield_stars = "⭐⭐"
+            day_yield_label = "Wichtig (Medium-Yield)"
+        else:
+            day_yield = "low_yield"
+            day_yield_stars = "⭐"
+            day_yield_label = "Basiswissen (Low-Yield)"
+
+        day_yield_badge = f"{day_yield_stars} {day_yield_label}"
+
         first_slot = day_slots[0]
         primary_title = first_slot.get("clean_title") or first_slot["short_title"]
         primary_lecturer = first_slot.get("lecturer") or "Dozent"
@@ -1181,6 +1404,16 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             "revision_buffer_days": 15,
             "synergy_headline": synergy_headline,
             "recommended_study_sequence": study_sequence,
+            "estimated_study_minutes": day_est_min,
+            "avg_seconds_per_card": day_avg_sec,
+            "difficulty_level": day_diff_level,
+            "difficulty_label": day_diff_label,
+            "difficulty_badge": day_diff_badge,
+            "difficulty_reason": day_diff_reason,
+            "exam_yield": day_yield,
+            "yield_stars": day_yield_stars,
+            "yield_label": day_yield_label,
+            "exam_yield_badge": day_yield_badge,
         })
         cur_date += timedelta(days=1)
 
@@ -1245,6 +1478,16 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
                         "summary": d["summary"],
                         "synergy_headline": d.get("synergy_headline"),
                         "recommended_study_sequence": d.get("recommended_study_sequence"),
+                        "estimated_study_minutes": d.get("estimated_study_minutes", 45),
+                        "avg_seconds_per_card": d.get("avg_seconds_per_card", 28.0),
+                        "difficulty_level": d.get("difficulty_level", "medium"),
+                        "difficulty_label": d.get("difficulty_label", "🟡 Mittel"),
+                        "difficulty_badge": d.get("difficulty_badge", "🟡 Mittel"),
+                        "difficulty_reason": d.get("difficulty_reason", ""),
+                        "exam_yield": d.get("exam_yield", "medium_yield"),
+                        "yield_stars": d.get("yield_stars", "⭐⭐"),
+                        "yield_label": d.get("yield_label", "Wichtig"),
+                        "exam_yield_badge": d.get("exam_yield_badge", "⭐⭐ Wichtig"),
                     }
 
             for d in schedule_days:
@@ -1260,6 +1503,16 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
                         d["summary"] = pkg["summary"]
                         d["synergy_headline"] = pkg["synergy_headline"]
                         d["recommended_study_sequence"] = pkg["recommended_study_sequence"]
+                        d["estimated_study_minutes"] = pkg.get("estimated_study_minutes", 45)
+                        d["avg_seconds_per_card"] = pkg.get("avg_seconds_per_card", 28.0)
+                        d["difficulty_level"] = pkg.get("difficulty_level", "medium")
+                        d["difficulty_label"] = pkg.get("difficulty_label", "🟡 Mittel")
+                        d["difficulty_badge"] = pkg.get("difficulty_badge", "🟡 Mittel")
+                        d["difficulty_reason"] = pkg.get("difficulty_reason", "")
+                        d["exam_yield"] = pkg.get("exam_yield", "medium_yield")
+                        d["yield_stars"] = pkg.get("yield_stars", "⭐⭐")
+                        d["yield_label"] = pkg.get("yield_label", "Wichtig")
+                        d["exam_yield_badge"] = pkg.get("exam_yield_badge", "⭐⭐ Wichtig")
                         if assigned_num != d.get("day_number"):
                             d["is_swapped"] = True
                             d["swapped_with_day"] = assigned_num
@@ -1540,6 +1793,15 @@ def get_daily_curriculum_assignment(
                     "slide_rel_path": primary_tom.get("slide_relative_path"),
                     "local_slide_file_path": primary_tom.get("local_slide_file_path"),
                     "is_cycle_topic": primary_tom.get("is_cycle_topic", False),
+                    "estimated_study_minutes": tomorrow_day.get("estimated_study_minutes", 45),
+                    "difficulty_level": tomorrow_day.get("difficulty_level", "medium"),
+                    "difficulty_label": tomorrow_day.get("difficulty_label", "🟡 Mittel"),
+                    "difficulty_badge": tomorrow_day.get("difficulty_badge", "🟡 Mittel"),
+                    "difficulty_reason": tomorrow_day.get("difficulty_reason", ""),
+                    "exam_yield": tomorrow_day.get("exam_yield", "medium_yield"),
+                    "yield_stars": tomorrow_day.get("yield_stars", "⭐⭐"),
+                    "yield_label": tomorrow_day.get("yield_label", "Wichtig"),
+                    "exam_yield_badge": tomorrow_day.get("exam_yield_badge", "⭐⭐ Wichtig"),
                 }
 
             day_copy["tomorrow_preview"] = tomorrow_preview

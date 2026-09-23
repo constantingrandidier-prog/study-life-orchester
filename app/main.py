@@ -1,11 +1,13 @@
 # Study-Life Orchestrator v6.0 (AnkiWeb Hierarchical Tree & 2. SJ Real Slides)
 from pathlib import Path
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 from app.api.v1.endpoints import router as schedule_router
 from app.core.config import settings
+from app.auth import check_credentials, create_token, verify_token
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
@@ -67,7 +69,75 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ---------------------------------------------------------------------------
+# Auth middleware — protects only '/' and '/app'
+# ---------------------------------------------------------------------------
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
+    """
+    Redirect unauthenticated *browser* requests for '/' and '/app' to /login.
+    API clients (no text/html in Accept) are never redirected so that JSON
+    responses continue to work without a session cookie.
+    All other paths (/api/*, /static/*, /auth/*, /login, /docs, /health, …) are unprotected.
+    """
+    protected_paths = {"/", "/app"}
+    path = request.url.path
+
+    if path in protected_paths:
+        accept = request.headers.get("accept", "")
+        is_browser = "text/html" in accept
+        if is_browser:
+            token = request.cookies.get("sl_session")
+            if not token or not verify_token(token):
+                return RedirectResponse(url="/login", status_code=302)
+
+    return await call_next(request)
+
+# ---------------------------------------------------------------------------
+# Auth schemas
+# ---------------------------------------------------------------------------
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+# ---------------------------------------------------------------------------
+# Auth endpoints
+# ---------------------------------------------------------------------------
+@app.post("/auth/login", tags=["Auth"])
+def auth_login(payload: LoginRequest):
+    """Validate credentials, set session cookie, return token."""
+    if not check_credentials(payload.username, payload.password):
+        raise HTTPException(status_code=401, detail="Invalid username or password.")
+    token = create_token(payload.username)
+    response = JSONResponse(content={"token": token})
+    response.set_cookie(
+        key="sl_session",
+        value=token,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 7,  # 7 days
+    )
+    return response
+
+
+@app.get("/auth/logout", tags=["Auth"])
+def auth_logout():
+    """Clear session cookie and redirect to login."""
+    response = RedirectResponse(url="/login", status_code=302)
+    response.delete_cookie("sl_session")
+    return response
+
+# ---------------------------------------------------------------------------
+# Login page
+# ---------------------------------------------------------------------------
+@app.get("/login", tags=["Auth"])
+def login_page():
+    """Serve the login HTML page."""
+    return FileResponse(STATIC_DIR / "login.html")
+
+# ---------------------------------------------------------------------------
 # Include API v1 routes
+# ---------------------------------------------------------------------------
 app.include_router(schedule_router, prefix=settings.api_v1_prefix)
 
 # Mount static frontend directory

@@ -206,20 +206,39 @@ def generate_daily_science_rhythm(
         blocks.append(b_dict)
         return True
 
-    # 1. Block 1: Morning Reps
-    dur_reps = 60
+    # 1. Block 1: Morning Reps (dynamisch an tatsächliche Anki-Last angepasst)
+    now = datetime.now()
+    is_today_date = (t_date == now.date())
+
+    if is_today_date:
+        # Dynamisch: 36s pro Karte, gerundet auf 15-Minuten-Raster (mindestens 30m, maximal 180m)
+        calc_reps_mins = max(30, min(180, round((cards_due_today * 36.0) / 60.0)))
+        dur_reps = int(round(calc_reps_mins / 15.0) * 15)
+        # Prüfen, ob der Tag heute ist und ob Repetitionen überzogen wurden
+        now_minutes = now.hour * 60 + now.minute
+        if cards_due_today > 0 and now_minutes > cur_m:
+            needed_from_now = max(15, round((cards_due_today * 36.0) / 60.0))
+            needed_from_now = int(round(needed_from_now / 15.0) * 15)
+            dur_reps = (now_minutes - cur_m) + needed_from_now
+    else:
+        calc_reps_mins = 60
+        dur_reps = 60
+
+    reps_title = f"Block 1: Morgen-Repetitionen ({cards_due_today} Karten)" if cards_due_today > 0 else "Block 1: Morgen-Repetitionen (Erledigt)"
     add_block_if_active({
         "id": "block_morning_reps",
         "duration_minutes": dur_reps,
-        "title": "Block 1: Morgen-Repetitionen (~100 Karten)",
-        "subtitle": "Active Recall & Elvanse-Anflutung",
+        "title": reps_title,
+        "subtitle": f"{cards_due_today} fällig · ~{calc_reps_mins} Min. benötigt",
         "focus_type": "active_recall",
         "icon": "🧠",
         "color": "#58a6ff",
         "badge": f"Active Recall ({dur_reps}m)",
-        "description": f"Das Gehirn ist frisch. Fällige Wiederholungen (~{cards_due_today} Karten, ~{rep_gross_mins} Min. Brutto) abarbeiten. Bringt dich ohne Überforderung in den Lernflow.",
+        "description": f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten. Plan passt sich automatisch an deinen Lernfortschritt an.",
         "is_break": False,
         "is_mandatory": False,
+        "is_completed": (cards_due_today == 0),
+        "cards_due": cards_due_today,
     })
 
     # 2. Pause 1

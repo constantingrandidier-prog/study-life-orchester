@@ -60,6 +60,20 @@ def sync_now():
     except Exception as e:
         print("Semester history sync error:", e, flush=True)
 
+    # 0. Trigger AnkiConnect to sync Anki Desktop with AnkiWeb (pulls iPad reviews automatically!)
+    try:
+        ac_req = urllib.request.Request(
+            "http://127.0.0.1:8765",
+            data=json.dumps({"action": "sync", "version": 6}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(ac_req, timeout=5) as ac_resp:
+            pass
+        time.sleep(1.0)
+    except Exception:
+        pass
+
     # 2. Sync today's state
     try:
         state = read_live_anki_desktop_state()

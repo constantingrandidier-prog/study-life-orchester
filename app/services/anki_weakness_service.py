@@ -68,11 +68,21 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
     conn = sqlite3.connect(uri, uri=True)
     cur = conn.cursor()
 
-    # 1. Total queues count
+    # 1. Total queues count — only count cards that are actually due TODAY
+    # Anki stores due as days since collection creation (crt field)
+    import time as _time
+    crt = cur.execute("SELECT crt FROM col").fetchone()[0]
+    today_anki_day = int((_time.time() - crt) / 86400)
+
     queue_counts = dict(cur.execute("SELECT queue, count(*) FROM cards GROUP BY queue").fetchall())
     new_cards = queue_counts.get(0, 0)
+    # queue=1: intraday learning steps (always due)
     learning_cards = queue_counts.get(1, 0)
-    review_cards = queue_counts.get(2, 0)
+    # queue=2: review cards — only those with due <= today are actually due
+    review_cards_due_today = cur.execute(
+        "SELECT count(*) FROM cards WHERE queue=2 AND due <= ?", (today_anki_day,)
+    ).fetchone()[0]
+    review_cards = review_cards_due_today
     total_due = learning_cards + review_cards
 
     # 2. Decks map
@@ -84,13 +94,14 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
         clean = clean.replace("1year :: ", "")
         decks_map[did] = clean
 
-    # 3. Cards by deck
+    # 3. Cards by deck — only queue=2 cards due today + all queue=1
     deck_card_stats = {}
     for did, total, due in cur.execute("""
-        SELECT did, count(id), sum(case when queue in (1, 2) then 1 else 0 end)
+        SELECT did, count(id),
+               sum(case when queue=1 OR (queue=2 AND due <= ?) then 1 else 0 end)
         FROM cards
         GROUP BY did
-    """).fetchall():
+    """, (today_anki_day,)).fetchall():
         deck_card_stats[did] = {"total": total, "due": due or 0}
 
     # 4. Review history by deck (Revlog)

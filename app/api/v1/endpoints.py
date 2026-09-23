@@ -774,6 +774,45 @@ def sync_local_anki_endpoint(
         )
 
 
+@router.post(
+    "/anki/connect-sync",
+    summary="Trigger Anki Desktop sync via AnkiConnect plugin",
+)
+def anki_connect_sync_endpoint():
+    """Trigger Anki Desktop to sync with AnkiWeb via AnkiConnect, then return fresh due count."""
+    import urllib.request as _req
+    import json as _json
+    import time as _time
+
+    def _ac(action: str):
+        payload = _json.dumps({"action": action, "version": 6, "params": {}}).encode()
+        r = _req.urlopen(
+            _req.Request("http://localhost:8765", data=payload, headers={"Content-Type": "application/json"}),
+            timeout=10,
+        )
+        return _json.loads(r.read())
+
+    result = {"synced": False, "due_count": None, "error": None}
+
+    # 1. Trigger Anki Desktop → AnkiWeb sync (pulls iPad reviews)
+    try:
+        sync_res = _ac("sync")
+        result["synced"] = sync_res.get("error") is None
+    except Exception as e:
+        result["error"] = f"AnkiConnect nicht erreichbar: {e}"
+
+    # 2. Wait for sync, then read fresh due count from local DB
+    _time.sleep(2)
+    try:
+        from app.services.anki_weakness_service import get_anki_due_and_weaknesses
+        data = get_anki_due_and_weaknesses()
+        result["due_count"] = data.get("due_reviews_count", 0)
+    except Exception as e:
+        result["error"] = (result.get("error") or "") + f" | {e}"
+
+    return result
+
+
 @router.get(
     "/ankiweb/stats",
     summary="Get current AnkiWeb telemetry metrics scoped to the target deck",

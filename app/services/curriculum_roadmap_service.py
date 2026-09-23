@@ -1869,8 +1869,19 @@ def _sync_active_day_assignment(
     for d in schedule_days:
         if not d.get("is_rest_day"):
             running_cum += d.get("target_cards", 0)
-            d["cumulative_cards_learned"] = running_cum
-            d["curriculum_progress_pct"] = round((running_cum / max(1, total_cards)) * 100, 1)
+            d["planned_cumulative_cards"] = running_cum
+            d["actual_cards_learned"] = actual_learned
+            if d.get("date") == active_str:
+                d["cumulative_cards_learned"] = actual_learned
+                d["curriculum_progress_pct"] = round((actual_learned / max(1, total_cards)) * 100, 1)
+            else:
+                d["cumulative_cards_learned"] = running_cum
+                d["curriculum_progress_pct"] = round((running_cum / max(1, total_cards)) * 100, 1)
+        else:
+            d["planned_cumulative_cards"] = running_cum
+            d["actual_cards_learned"] = actual_learned
+            if d.get("date") == active_str:
+                d["cumulative_cards_learned"] = actual_learned
 
 
 def get_daily_curriculum_assignment(

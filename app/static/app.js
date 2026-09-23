@@ -3272,18 +3272,25 @@ function renderCurriculumToday(data) {
   }
 
   if (cardsProgress) {
-    const actual = (data.cumulative_cards_learned !== undefined ? data.cumulative_cards_learned : (data.actual_cards_learned || 0));
-    const total = (data.total_curriculum_cards || 9676);
-    const pct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : (Math.round((actual / Math.max(1, total)) * 1000) / 10);
-    cardsProgress.textContent = `${actual.toLocaleString()} / ${total.toLocaleString()} Karten (${pct}%)`;
-    if (data.planned_cumulative_cards) {
-      cardsProgress.title = `Tatsächlich neu gelernt: ${actual} Karten | Geplanter Soll-Stand laut Roadmap: ${data.planned_cumulative_cards} Karten`;
+    // Semester-Gesamtfortschritt must ALWAYS display true cards learned so far
+    let actual = 0;
+    if (data.actual_cards_learned !== undefined && data.actual_cards_learned !== null) {
+      actual = data.actual_cards_learned;
+    } else if (state.ankiDesktopData && state.ankiDesktopData.cumulative_cards_learned !== undefined) {
+      actual = state.ankiDesktopData.cumulative_cards_learned;
+    } else if (localStorage.getItem('sl_real_cumulative_cards')) {
+      actual = parseInt(localStorage.getItem('sl_real_cumulative_cards'), 10);
+    } else if (data.cumulative_cards_learned !== undefined) {
+      actual = data.cumulative_cards_learned;
     }
-  }
-
-  if (progressBarFill) {
-    const fillPct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : 1.6;
-    progressBarFill.style.width = `${Math.min(100, Math.max(1, fillPct))}%`;
+    const total = (data.total_curriculum_cards || 8729);
+    const pct = Math.round((actual / Math.max(1, total)) * 1000) / 10;
+    cardsProgress.textContent = `${actual.toLocaleString('de-CH')} / ${total.toLocaleString('de-CH')} Karten (${pct}%)`;
+    if (progressBarFill) {
+      progressBarFill.style.width = `${Math.min(100, Math.max(1, pct))}%`;
+    }
+    const planned = data.planned_cumulative_cards || data.cumulative_cards_learned || actual;
+    cardsProgress.title = `Tatsächlich neu gelernt: ${actual} Karten | Geplanter Soll-Stand laut Roadmap: ${planned} Karten`;
   }
 
   if (countdownDays) {
@@ -4323,8 +4330,11 @@ function renderAnkiDesktopWidget(data) {
     const actual = data.cumulative_cards_learned;
     const total = data.total_curriculum_cards || 8729;
     const pct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : (Math.round((actual / Math.max(1, total)) * 1000) / 10);
+    try {
+      localStorage.setItem('sl_real_cumulative_cards', String(actual));
+    } catch (e) {}
     if (cardsProgress) {
-      cardsProgress.textContent = `${actual.toLocaleString()} / ${total.toLocaleString()} Karten (${pct}%)`;
+      cardsProgress.textContent = `${actual.toLocaleString('de-CH')} / ${total.toLocaleString('de-CH')} Karten (${pct}%)`;
     }
     if (progressBarFill) {
       progressBarFill.style.width = `${Math.min(100, Math.max(1, pct))}%`;

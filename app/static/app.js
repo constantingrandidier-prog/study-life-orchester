@@ -4980,6 +4980,22 @@ async function loadScienceRhythm(targetDate) {
       feierabendEl.textContent = `${data.feierabend_time} Uhr`;
     }
 
+    // Update Anki Auto-Start badge and input
+    const ankiBadge = document.getElementById('rhythmAnkiStartBadge');
+    if (ankiBadge) {
+      if (data.used_anki_start && data.anki_first_review_time) {
+        ankiBadge.style.display = 'inline-block';
+        ankiBadge.textContent = `⚡ Anki: ${data.anki_first_review_time}`;
+        ankiBadge.title = `Startzeit wurde automatisch von deiner ersten Anki-Wiederholung (${data.anki_first_review_time} Uhr) übernommen`;
+        if (timeInput && (!localStorage.getItem('sl_rhythm_start') || localStorage.getItem('sl_rhythm_start') === '08:30')) {
+          timeInput.value = data.start_time;
+          state.rhythmStartTime = data.start_time;
+        }
+      } else {
+        ankiBadge.style.display = 'none';
+      }
+    }
+
     renderScienceRhythm(data);
   } catch (err) {
     console.warn('Daily science rhythm fetch failed:', err);

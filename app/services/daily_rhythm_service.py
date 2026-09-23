@@ -94,6 +94,7 @@ def generate_daily_science_rhythm(
     removed_block_ids: Optional[List[str]] = None,
     postponed_blocks: Optional[List[Dict[str, Any]]] = None,
     custom_block_order: Optional[List[str]] = None,
+    anki_first_review_time: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Generates the scientific ultradian study schedule with precise time arithmetic.
@@ -174,7 +175,15 @@ def generate_daily_science_rhythm(
     rep_gross_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
     new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0))
 
-    cur_m = _parse_time_to_minutes(start_time_str)
+    # If the student started reviews in Anki on this date, adopt that exact start time automatically!
+    used_anki_start = False
+    effective_start_str = start_time_str or "08:30"
+    if anki_first_review_time:
+        if (start_time_str == "08:30" or not start_time_str):
+            effective_start_str = anki_first_review_time
+            used_anki_start = True
+
+    cur_m = _parse_time_to_minutes(effective_start_str)
     blocks: List[Dict[str, Any]] = []
     total_study_mins = 0
     total_pause_mins = 0
@@ -232,6 +241,13 @@ def generate_daily_science_rhythm(
         dur_reps = int(round(calc_reps_mins / 15.0) * 15)
 
     reps_title = f"Block 1: Morgen-Repetitionen ({cards_due_today} Karten)" if cards_due_today > 0 else "Block 1: Morgen-Repetitionen (Erledigt)"
+    reps_badge = f"⚡ Anki-Start {anki_first_review_time} ({dur_reps}m)" if used_anki_start else f"Active Recall ({dur_reps}m)"
+    reps_desc = f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten."
+    if used_anki_start:
+        reps_desc += f" ⚡ Startzeit um {anki_first_review_time} Uhr automatisch von deiner ersten Anki-Wiederholung übernommen."
+    else:
+        reps_desc += " Plan passt sich automatisch an deinen Lernfortschritt an."
+
     add_block_if_active({
         "id": "block_morning_reps",
         "duration_minutes": dur_reps,
@@ -240,8 +256,8 @@ def generate_daily_science_rhythm(
         "focus_type": "active_recall",
         "icon": "🧠",
         "color": "#58a6ff",
-        "badge": f"Active Recall ({dur_reps}m)",
-        "description": f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten. Plan passt sich automatisch an deinen Lernfortschritt an.",
+        "badge": reps_badge,
+        "description": reps_desc,
         "is_break": False,
         "is_mandatory": False,
         "is_completed": (cards_due_today == 0),
@@ -568,7 +584,7 @@ def generate_daily_science_rhythm(
             ordered_blocks.append(free_block)
 
         # Recalculate sequential start and end times
-        c_m = _parse_time_to_minutes(start_time_str)
+        c_m = _parse_time_to_minutes(effective_start_str)
         calc_study = 0
         calc_pause = 0
         for b in ordered_blocks:
@@ -618,7 +634,10 @@ def generate_daily_science_rhythm(
 
     return {
         "date": t_date.isoformat(),
-        "start_time": _minutes_to_time(_parse_time_to_minutes(start_time_str)),
+        "start_time": _minutes_to_time(_parse_time_to_minutes(effective_start_str)),
+        "configured_start_time": start_time_str,
+        "anki_first_review_time": anki_first_review_time,
+        "used_anki_start": used_anki_start,
         "lunch_duration_minutes": dur_lunch,
         "include_lecture": include_lecture,
         "feierabend_time": feierabend_time,

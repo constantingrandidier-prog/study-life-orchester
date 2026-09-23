@@ -1264,6 +1264,7 @@ def get_daily_rhythm_endpoint(
     if due_val is None:
         due_val = anki_st.get("due_reviews_count")
     due_today = int(due_val) if due_val is not None else 100
+    anki_first_rev = anki_st.get("first_review_time")
     
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     curr_assign = get_daily_curriculum_assignment(t_date)
@@ -1283,6 +1284,7 @@ def get_daily_rhythm_endpoint(
         curriculum_assignment=curr_assign,
         removed_block_ids=rem_list,
         custom_block_order=order_list,
+        anki_first_review_time=anki_first_rev,
     )
 
 

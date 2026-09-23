@@ -973,7 +973,7 @@ function renderTimeline() {
       completed: !!state.taskCompletions[id],
       recommendation: isMandatory ? 'attend' : (ev.recommendation || 'stream'),
       recommendation_reason: isMandatory ? 'Offizielles Praktikum / Testatkurs an der UZH. Hier gilt Anwesenheitspflicht vor Ort!' : (ev.recommendation_reason || ''),
-      badge_label: isMandatory ? '🏛️ OBLIGATORISCH (Präsenzpflicht)' : (ev.badge_label || ''),
+      badge_label: isMandatory ? 'OBLIGATORISCH (Präsenzpflicht)' : (ev.badge_label || ''),
       badge_color: isMandatory ? '#a371f7' : (ev.badge_color || ''),
       consumption_mode: isMandatory ? 'live' : (ev.consumption_mode || 'live_1_0'),
       speed_factor: isMandatory ? 1.0 : (ev.speed_factor || 1.0),
@@ -1136,16 +1136,16 @@ function renderTimeline() {
     if (block.type === 'lecture') {
       const rec = block.recommendation || 'stream';
       let ampelBadgeClass = 'ampel-stream';
-      let ampelIcon = '🟡';
+      let ampelIcon = '';
       let ampelLabel = 'Streamen (1.0x / 1.2x / 1.4x)';
 
       if (rec === 'attend') {
         ampelBadgeClass = 'ampel-attend';
-        ampelIcon = '🟢';
+        ampelIcon = '';
         ampelLabel = 'Präsenz / Live besuchen';
       } else if (rec === 'skip') {
         ampelBadgeClass = 'ampel-skip';
-        ampelIcon = '🔴';
+        ampelIcon = '';
         ampelLabel = 'Skip & Anki bevorzugen';
       }
 
@@ -1172,12 +1172,12 @@ function renderTimeline() {
             <span class="ampel-badge ${ampelBadgeClass}">
               ${block.badge_label || (ampelIcon + ' Empfehlung: ' + ampelLabel)}
             </span>
-            ${timeSaved > 0 ? `<span class="time-saved-badge">⚡ ${timeSaved} Min eingespart</span>` : ''}
+            ${timeSaved > 0 ? `<span class="time-saved-badge">${timeSaved} Min eingespart</span>` : ''}
           </div>
           ${block.matched_slide_filename ? `
             <div style="margin-top: 0.35rem; display: flex; align-items: center; gap: 0.4rem; font-size: 11px;">
               <span class="slide-file-badge" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 500;">
-                📑 Folie: ${block.matched_slide_filename} ${block.slide_coverage_pct !== null ? `<strong>(${block.slide_coverage_pct}% Deckung)</strong>` : ''}
+                Folie: ${block.matched_slide_filename} ${block.slide_coverage_pct !== null ? `<strong>(${block.slide_coverage_pct}% Deckung)</strong>` : ''}
               </span>
             </div>
           ` : ''}
@@ -1185,8 +1185,8 @@ function renderTimeline() {
           <div class="speed-pill-group">
             <span class="speed-pill-label">Modus:</span>
             ${speedButtonsHtml}
-            <a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" class="btn-vam-action" title="Vorlesungsaufzeichnungen im VAM-Archiv öffnen">🎬 VAM-Archiv</a>
-            <a href="https://lms.uzh.ch/url/RepositoryEntry/666697737" target="_blank" class="btn-vam-action" title="Kursunterlagen & Skripte auf OpenOLAT öffnen">📄 Skripte</a>
+            <a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" class="btn-vam-action" title="Vorlesungsaufzeichnungen im VAM-Archiv öffnen">VAM-Archiv</a>
+            <a href="https://lms.uzh.ch/url/RepositoryEntry/666697737" target="_blank" class="btn-vam-action" title="Kursunterlagen & Skripte auf OpenOLAT öffnen">Skripte</a>
           </div>
         </div>
       `;
@@ -1647,11 +1647,11 @@ async function handleSyncLocalAnki(e) {
     }
 
     if (btn) {
-      btn.innerHTML = '<span>✅</span> Deck erfolgreich synchronisiert';
+      btn.innerHTML = 'Deck erfolgreich synchronisiert';
       btn.style.borderColor = 'var(--status-done)';
       setTimeout(() => {
         btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Gewähltes Deck synchronisieren';
+        btn.innerHTML = 'Gewähltes Deck synchronisieren';
         btn.style.borderColor = '';
       }, 3000);
     }
@@ -1668,7 +1668,7 @@ async function handleSyncLocalAnki(e) {
     }
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<span>⚠️</span> Fehler - Erneut versuchen';
+      btn.innerHTML = 'Fehler - Erneut versuchen';
     }
   }
 }
@@ -1979,7 +1979,7 @@ async function loadAnkiWebStatus() {
     }
 
     if (snippetEl) {
-      snippetEl.innerHTML = `📊 <strong>${escapeHtml(deckName)}:</strong> ${cards.toLocaleString()} Karten • <strong>${reviews.toLocaleString()} Reviews</strong> (seit immer) • <strong>${ret}%</strong> Retention • <strong>${speed}s</strong>/Karte (~${kpm} K/Min) • <strong>${streak}</strong> Tage aktiv${firstDate ? ' (seit ' + firstDate + ')' : ''}`;
+      snippetEl.innerHTML = `<strong>${escapeHtml(deckName)}:</strong> ${cards.toLocaleString()} Karten • <strong>${reviews.toLocaleString()} Reviews</strong> (seit immer) • <strong>${ret}%</strong> Retention • <strong>${speed}s</strong>/Karte (~${kpm} K/Min) • <strong>${streak}</strong> Tage aktiv${firstDate ? ' (seit ' + firstDate + ')' : ''}`;
     }
 
     if (syncLabel) {
@@ -2055,7 +2055,7 @@ function updateMissionKpiStrip() {
   const totalTarget = baseNew + repsDone + repsDue;
   const totalDone = newDone + repsDone;
 
-  // 2. Box 2: ✅ Heute erledigt
+  // 2. Box 2: Heute erledigt
   const completedEl = document.getElementById('pacingCardsCompleted');
   const targetMini = document.getElementById('pacingCardsTargetMini');
   const splitReviewsVal = document.getElementById('pacingSplitReviewsVal');
@@ -2075,7 +2075,7 @@ function updateMissionKpiStrip() {
   }
   if (splitReviewsSub) {
     if (repsDue === 0 && repsDone > 0) {
-      splitReviewsSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">✅ alle erledigt</span>`;
+      splitReviewsSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">alle erledigt</span>`;
     } else if (repsDue > 0) {
       splitReviewsSub.textContent = `${repsDone} erledigt (${repsDue} offen)`;
     } else {
@@ -2089,7 +2089,7 @@ function updateMissionKpiStrip() {
   if (splitNewSub) {
     const remNew = Math.max(0, baseNew - newDone);
     if (remNew === 0 && baseNew > 0) {
-      splitNewSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">🎉 Tagesziel erreicht!</span>`;
+      splitNewSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">Tagesziel erreicht!</span>`;
     } else {
       splitNewSub.textContent = `noch ${remNew} offen`;
     }
@@ -2101,10 +2101,10 @@ function updateMissionKpiStrip() {
       remainingSub.textContent = 'Ruhetag – Keine Pflichtkarten';
       remainingSub.style.color = '#d29922';
     } else if (remainingNew === 0 && repsDue === 0) {
-      remainingSub.textContent = `🎉 Alles erledigt! ${totalDone} Karten gemeistert.`;
+      remainingSub.textContent = `Alles erledigt! ${totalDone} Karten gemeistert.`;
       remainingSub.style.color = '#3fb950';
     } else if (repsDue === 0) {
-      remainingSub.textContent = `Noch ${remainingNew} neue Karten offen (alle ${repsDone} Repetitionen erledigt! 🎉)`;
+      remainingSub.textContent = `Noch ${remainingNew} neue Karten offen (alle ${repsDone} Repetitionen erledigt!)`;
       remainingSub.style.color = '#58a6ff';
     } else {
       remainingSub.textContent = `Noch ${remainingNew} neue + ${repsDue} Wiederholungen offen`;
@@ -2135,7 +2135,7 @@ function updateMissionKpiStrip() {
     }
   }
 
-  // 3. Box 3: 🔄 Fällig in Anki
+  // 3. Box 3: Fällig in Anki
   const dueDisp = document.getElementById('pacingDueReviewsDisplay');
   const dueSub = document.getElementById('pacingDueReviewsSub');
   if (dueDisp) {
@@ -2167,10 +2167,10 @@ function renderExamPacing(data) {
   const jokerBtn = document.getElementById('btnToggleJokerDay');
   if (statusBadge) {
     if (data.is_rest_day) {
-      statusBadge.textContent = `🏖️ ${data.rest_day_reason || 'Ruhetag aktiv'}`;
+      statusBadge.textContent = `${data.rest_day_reason || 'Ruhetag aktiv'}`;
       statusBadge.className = 'pacing-status-indicator rest-day';
     } else {
-      statusBadge.textContent = '🟢 Lerntag aktiv';
+      statusBadge.textContent = 'Lerntag aktiv';
       statusBadge.className = 'pacing-status-indicator';
     }
   }
@@ -2178,10 +2178,10 @@ function renderExamPacing(data) {
   if (jokerBtn) {
     const isJoker = data.is_rest_day && (data.rest_day_reason || '').includes('Joker');
     if (isJoker) {
-      jokerBtn.innerHTML = '🏖️ Joker-Tag beenden';
+      jokerBtn.innerHTML = 'Joker-Tag beenden';
       jokerBtn.classList.add('active');
     } else {
-      jokerBtn.innerHTML = '🏖️ Joker-Tag (Pause)';
+      jokerBtn.innerHTML = 'Joker-Tag (Pause)';
       jokerBtn.classList.remove('active');
     }
   }
@@ -2223,7 +2223,7 @@ async function handleQuickAddCards(delta) {
 async function handleMarkAllTargetDone() {
   if (!currentPacingData) return;
   const target = currentPacingData.daily_target_cards;
-  await savePacingProgress(target, `🎉 Tagesziel von ${target} Karten als erledigt markiert!`);
+  await savePacingProgress(target, `Tagesziel von ${target} Karten als erledigt markiert!`);
 }
 
 async function handleSaveManualProgress() {
@@ -2250,7 +2250,7 @@ async function handleSyncFromAnkiForToday() {
     const target = currentPacingData ? currentPacingData.daily_target_cards : 100;
     const cardsToday = Math.min(reviewed > 0 ? reviewed : 35, target);
     
-    await savePacingProgress(cardsToday, `⚡ ${cardsToday} Karten aus Anki Desktop übernommen!`);
+    await savePacingProgress(cardsToday, `${cardsToday} Karten aus Anki Desktop übernommen!`);
   } catch (err) {
     showToast('Konnte Anki nicht abfragen: ' + err.message);
   }
@@ -2289,9 +2289,9 @@ async function handleToggleJokerDay() {
     currentPacingData = updated;
     renderExamPacing(updated);
     if (updated.is_rest_day) {
-      showToast('🏖️ Joker-Tag aktiviert! Heutige Karten wurden auf Folgetage verteilt.');
+      showToast('Joker-Tag aktiviert! Heutige Karten wurden auf Folgetage verteilt.');
     } else {
-      showToast('🟢 Joker-Tag beendet – Normaler Lerntag reaktiviert.');
+      showToast('Joker-Tag beendet – Normaler Lerntag reaktiviert.');
     }
   } catch (err) {
     showToast('Fehler beim Umschalten des Joker-Tags: ' + err.message);
@@ -2329,7 +2329,7 @@ async function handlePacingConfigChange() {
     const updated = await res.json();
     currentPacingData = updated;
     renderExamPacing(updated);
-    showToast('⚙️ Lernrhythmus aktualisiert');
+    showToast('Lernrhythmus aktualisiert');
   } catch (err) {
     showToast('Fehler beim Speichern der Einstellungen: ' + err.message);
   }
@@ -2401,7 +2401,7 @@ async function loadAnkiWeaknesses() {
 
     const headerSyncText = document.getElementById('headerSyncText');
     if (headerSyncText) {
-      headerSyncText.textContent = `⚡ Anki Live: ${dueCount} fällig`;
+      headerSyncText.textContent = `Anki Live: ${dueCount} fällig`;
     }
     const sideBadgeDue = document.getElementById('sideBadgeDue');
     if (sideBadgeDue) {
@@ -2443,7 +2443,7 @@ async function loadAnkiWeaknesses() {
         const acuteWeaknesses = (data.weakness_topics || []).filter(w => w.fail_rate >= 25.0).slice(0, 3);
         if (acuteWeaknesses.length > 0) {
           if (btnToggle) btnToggle.style.display = 'inline-block';
-          let html = '<div style="font-size: 11px; color: #f85149; font-weight: 600; margin-bottom: 0.35rem;">⚠️ Akute Themen mit hoher Fehlerquote:</div>';
+          let html = '<div style="font-size: 11px; color: #f85149; font-weight: 600; margin-bottom: 0.35rem;">Akute Themen mit hoher Fehlerquote:</div>';
           acuteWeaknesses.forEach(w => {
             const escapedName = w.deck_name.replace(/'/g, "\\'");
             html += `
@@ -2458,7 +2458,7 @@ async function loadAnkiWeaknesses() {
                   </div>
                 </div>
                 <button type="button" class="btn-speed-pill active" onclick="handleFocusWeakness('${escapedName}')" style="font-size: 11px;">
-                  ⚡ Fokussieren
+                  Fokussieren
                 </button>
               </div>
             `;
@@ -2466,7 +2466,7 @@ async function loadAnkiWeaknesses() {
           html += `
             <div style="margin-top: 0.4rem; text-align: right;">
               <button type="button" class="btn-secondary" onclick="openAnkiDeckTreeModal()" style="font-size: 11px; padding: 0.25rem 0.6rem;">
-                📂 Alle ${state.allAnkiTopics.length} Decks im Baum öffnen &rarr;
+                Alle ${state.allAnkiTopics.length} Decks im Baum öffnen &rarr;
               </button>
             </div>
           `;
@@ -2636,7 +2636,7 @@ function renderTreeNodeHtml(node, level, filterLower) {
         <div style="flex: 1; min-width: 0;">
           <div class="tree-leaf-title" style="word-break: break-word;">${node.name}</div>
           <div class="tree-leaf-meta">
-            ${d.due_reviews_count > 0 ? `<span style="color: #f85149; font-weight: 600;">⚡ ${d.due_reviews_count} fällig</span>` : `<span style="color: var(--status-free);">✓ 0 fällig</span>`}
+            ${d.due_reviews_count > 0 ? `<span style="color: #f85149; font-weight: 600;">${d.due_reviews_count} fällig</span>` : `<span style="color: var(--status-free);">✓ 0 fällig</span>`}
             <span>${d.total_cards} Karten</span>
             ${d.fail_rate > 0 ? `<span style="color: #e3b341;">Fehler: ${d.fail_rate}%</span>` : ''}
             <span>Ease: ${d.avg_ease}</span>
@@ -2644,7 +2644,7 @@ function renderTreeNodeHtml(node, level, filterLower) {
           </div>
         </div>
         <button type="button" class="btn-speed-pill active" onclick="handleFocusWeakness('${escapedName}'); closeAnkiDeckTreeModal();" style="font-size: 11px; white-space: nowrap;">
-          ⚡ Fokussieren
+          Fokussieren
         </button>
       </div>
     `;
@@ -2662,7 +2662,7 @@ function renderTreeNodeHtml(node, level, filterLower) {
       <div class="tree-folder-row" onclick="toggleDeckTreeNode('${node.fullPath.replace(/'/g, "\\'")}')">
         <div class="tree-folder-title">
           <span class="${chevronClass}">▶</span>
-          <span>📁 ${node.name}</span>
+          <span>${node.name}</span>
         </div>
         <div style="display: flex; align-items: center; gap: 0.4rem;">
           ${node.dueCards > 0 ? `<span class="badge-lecture" style="background: rgba(248,81,73,0.15); color: #f85149; font-size: 10.5px; padding: 0.1rem 0.4rem; border-radius: 4px;">${node.dueCards} fällig</span>` : ''}
@@ -2741,16 +2741,16 @@ async function loadOlatStatus() {
 
     if (badge) {
       if (data.needs_vpn) {
-        badge.textContent = '🔒 UZH VPN erforderlich (Heimnetzwerk)';
+        badge.textContent = 'UZH VPN erforderlich (Heimnetzwerk)';
         badge.className = 'status-badge';
         badge.style.background = 'rgba(210, 153, 34, 0.15)';
         badge.style.color = '#d29922';
         badge.style.border = '1px solid rgba(210, 153, 34, 0.3)';
       } else if (data.online) {
-        badge.textContent = '🟢 Online & WebDAV bereit';
+        badge.textContent = 'Online & WebDAV bereit';
         badge.className = 'status-badge badge-done';
       } else {
-        badge.textContent = '🔴 Offline';
+        badge.textContent = 'Offline';
         badge.className = 'status-badge';
       }
     }
@@ -2763,7 +2763,7 @@ async function loadOlatStatus() {
     if (vpnNotice) {
       if (data.needs_vpn) {
         vpnNotice.style.display = 'block';
-        vpnNotice.innerHTML = `⚠️ <strong>UZH-Sicherheitsbarriere aktiv:</strong> Der OpenOLAT WebDAV-Server blockiert Verbindungen außerhalb der UZH. Bitte starte <strong>Cisco AnyConnect / UZH VPN</strong>, um Dateien automatisch herunterzuladen.`;
+        vpnNotice.innerHTML = `<strong>UZH-Sicherheitsbarriere aktiv:</strong> Der OpenOLAT WebDAV-Server blockiert Verbindungen außerhalb der UZH. Bitte starte <strong>Cisco AnyConnect / UZH VPN</strong>, um Dateien automatisch herunterzuladen.`;
       } else {
         vpnNotice.style.display = 'none';
       }
@@ -2797,11 +2797,11 @@ const DAY1_FALLBACK_ASSIGNMENT = {
   quota_adjustment_reason: 'Concept-Session: 85 neue Karten.',
   surplus_deduction: 0,
   deficit_distributed: 0,
-  synergy_headline: '🎯 Fokus: Leukozyten I / Ullrich (Stockmann) – Vorlesungs-Priming spart 19 Minuten!',
+  synergy_headline: 'Fokus: Leukozyten I / Ullrich (Stockmann) – Vorlesungs-Priming spart 19 Minuten!',
   recommended_study_sequence: [
-    '1. 🎧 Vorlesungs-Priming: Stockmann von 00:00 bis 63:06 im 1.2x Stream sichten',
-    '2. 📇 Aktives Enkodieren: 85 neue Karten im Deck \'Leukozyten I / Ullrich\' ohne kognitive Reibung durcharbeiten',
-    '3. 🔗 Quervernetzung: Blutbild-Interpretation: Linksverschiebung bei Infektionen'
+    '1. Vorlesungs-Priming: Stockmann von 00:00 bis 63:06 im 1.2x Stream sichten',
+    '2. Aktives Enkodieren: 85 neue Karten im Deck \'Leukozyten I / Ullrich\' ohne kognitive Reibung durcharbeiten',
+    '3. Quervernetzung: Blutbild-Interpretation: Linksverschiebung bei Infektionen'
   ],
   topic_slots: [
     {
@@ -2820,7 +2820,7 @@ const DAY1_FALLBACK_ASSIGNMENT = {
       slide_coverage_pct: 82.0,
       is_cycle_topic: false,
       recommended_mode: 'stream_1_2',
-      badge_label: '🟡 1.2x Standard-Stream (+25m gespart)',
+      badge_label: '1.2x Standard-Stream (+25m gespart)',
       didactic_reason: 'Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!',
       speed_factor: 1.2,
       video_timestamp_guidance: '00:00 – 63:06 (63m Stream, spart 19m)',
@@ -2905,7 +2905,7 @@ async function loadCurriculumToday(forceRefresh = false) {
         renderCurriculumToday(DAY1_FALLBACK_ASSIGNMENT);
       } else {
         const summaryText = document.getElementById('curriculumSummaryText');
-        if (summaryText) summaryText.textContent = 'Verbindung unterbrochen. Klicke auf 🔄 Aktualisieren.';
+        if (summaryText) summaryText.textContent = 'Verbindung unterbrochen. Klicke auf Aktualisieren.';
       }
     }
   }
@@ -2920,12 +2920,12 @@ function toggleMissionMetricsDrawer() {
   if (isHidden) {
     drawer.classList.add('open');
     drawer.style.display = 'block';
-    if (label) label.textContent = '📊 Weniger';
+    if (label) label.textContent = 'Weniger';
     if (chevron) chevron.textContent = '▴';
   } else {
     drawer.classList.remove('open');
     drawer.style.display = 'none';
-    if (label) label.textContent = '📊 Details';
+    if (label) label.textContent = 'Details';
     if (chevron) chevron.textContent = '▾';
   }
   try {
@@ -2997,7 +2997,7 @@ function renderCurriculumToday(data) {
 
   if (dayBadge) {
     if (data.is_rest_day) {
-      dayBadge.textContent = '🏖️ Ruhetag';
+      dayBadge.textContent = 'Ruhetag';
       dayBadge.style.background = 'rgba(210, 153, 34, 0.15)';
       dayBadge.style.color = '#d29922';
       dayBadge.style.borderColor = 'rgba(210, 153, 34, 0.3)';
@@ -3032,7 +3032,7 @@ function renderCurriculumToday(data) {
         adjustmentBanner.classList.add('neutral');
       }
       adjustmentBanner.innerHTML = `
-        <span style="font-size: 15px;">${data.surplus_deduction > 0 ? '🎉' : data.deficit_distributed > 0 ? '⚖️' : '🎯'}</span>
+        
         <div style="flex: 1; font-weight: 500;">${escapeHtml(data.quota_adjustment_reason)}</div>
       `;
     } else {
@@ -3128,11 +3128,11 @@ function renderCurriculumToday(data) {
           <div class="slot-lecture-links" style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
             ${(slot.local_podcast_folder_path || slot.local_podcast_file_path || slot.preferred_video_file) ? `
               <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slot.local_podcast_file_path || slot.local_podcast_folder_path || slot.preferred_video_file || '').replace(/\\/g, '\\\\')}', 'Vorlesung (${escapeHtml(slot.podcast_folder_name || '')})', false)" title="Vorlesungs-Ordner mit Video direkt im Windows Datei-Explorer auf deinem Laptop öffnen" style="font-size: 10px; padding: 2px 6px; color: #7ee787; border-color: rgba(46, 160, 67, 0.4);">
-                📂 Explorer
+                Explorer
               </button>
             ` : ''}
             <a href="${slot.vam_url || 'https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983'}" target="_blank" class="btn-vam-chip" title="Vorlesungsaufzeichnung direkt im UZH VAM-Archiv öffnen" style="font-size: 10px; padding: 2px 5px;">
-              🎬 VAM
+              VAM
             </a>
           </div>
         `;
@@ -3146,17 +3146,17 @@ function renderCurriculumToday(data) {
           slideBadge = `
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <a class="curriculum-slide-link" title="Folie im PDF-Viewer &amp; Browser öffnen: ${escapeHtml(slot.matched_slide_filename)}" href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" rel="noopener">
-                📄 ${escapeHtml(slot.matched_slide_filename.length > 20 ? slot.matched_slide_filename.substring(0, 18) + '...' : slot.matched_slide_filename)}
+                ${escapeHtml(slot.matched_slide_filename.length > 20 ? slot.matched_slide_filename.substring(0, 18) + '...' : slot.matched_slide_filename)}
               </a>
               <div style="display: flex; gap: 4px; align-items: center;">
                 <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(slideLocal || slideRel).replace(/\\/g, '\\\\')}', 'Folien-PDF', true)" title="Folien-PDF direkt im PDF-Viewer öffnen" style="font-size: 10px; padding: 2px 5px; color: #7ee787; border-color: rgba(46, 160, 67, 0.4);">
-                  📄 Öffnen
+                  Öffnen
                 </button>
                 <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(folderLocal || slideLocal).replace(/\\/g, '\\\\')}', 'Folien-Ordner', false)" title="Folien-Ordner im Windows Explorer öffnen" style="font-size: 10px; padding: 2px 5px;">
-                  📂 Ordner
+                  Ordner
                 </button>
                 <a href="${slot.olat_url || 'https://lms.uzh.ch/url/RepositoryEntry/666697737'}" target="_blank" class="btn-olat-chip" title="Skripte &amp; Unterlagen auf OpenOLAT öffnen" style="font-size: 10px; padding: 2px 5px;">
-                  🌐 OLAT
+                  OLAT
                 </a>
               </div>
             </div>
@@ -3166,12 +3166,12 @@ function renderCurriculumToday(data) {
         }
 
         const lecturerBadge = slot.lecturer
-          ? `<span class="curriculum-lecturer-badge">👨‍🏫 ${escapeHtml(slot.lecturer)}</span>`
+          ? `<span class="curriculum-lecturer-badge">${escapeHtml(slot.lecturer)}</span>`
           : '';
 
         // Completion & In-Progress status badge
         const ankiStatusBadge = (slot.already_mastered_cards > 0)
-          ? `<span style="margin-left: 6px; font-size: 10px; color: #7ee787; background: rgba(35, 134, 54, 0.15); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(35, 134, 54, 0.3);">🔄 ${slot.already_mastered_cards} gemeistert • ${slot.cards_to_learn} neu</span>`
+          ? `<span style="margin-left: 6px; font-size: 10px; color: #7ee787; background: rgba(35, 134, 54, 0.15); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(35, 134, 54, 0.3);">${slot.already_mastered_cards} gemeistert • ${slot.cards_to_learn} neu</span>`
           : '';
 
         // Scaffolding: Red Thread
@@ -3192,11 +3192,11 @@ function renderCurriculumToday(data) {
         const rawTitle = slot.clean_title || slot.short_title || 'Thema';
         const displayTitle = slot.display_title_with_date || (slot.lecture_date_formatted ? `${rawTitle} (${slot.lecture_date_formatted})` : rawTitle);
         const dateBadge = slot.lecture_date_formatted
-          ? `<span class="lecture-date-badge" title="Aufzeichnungsdatum der Vorlesung">📅 Gedreht: ${escapeHtml(slot.lecture_date_formatted)}</span>`
+          ? `<span class="lecture-date-badge" title="Aufzeichnungsdatum der Vorlesung">Gedreht: ${escapeHtml(slot.lecture_date_formatted)}</span>`
           : '';
 
         const reasonHtml = slot.didactic_reason
-          ? `<div class="curriculum-slot-reason" style="margin-top: 3px;">💡 ${escapeHtml(slot.didactic_reason)}</div>`
+          ? `<div class="curriculum-slot-reason" style="margin-top: 3px;">${escapeHtml(slot.didactic_reason)}</div>`
           : '';
 
         const cards = slot.cards_to_learn !== undefined ? slot.cards_to_learn : 0;
@@ -3280,7 +3280,7 @@ function renderCurriculumToday(data) {
         <div class="topics-total-bar">
           <div class="topics-total-info">
             <span>Gesamt heute: <strong>${data.topic_slots.length} Vorlesungsthemen</strong></span>
-            <span class="badge-total-saved">⚡ ${savedStr} gespart</span>
+            <span class="badge-total-saved">${savedStr} gespart</span>
             <span style="color: var(--accent-blue); font-weight: 700;">${data.target_cards || 100} Karten</span>
           </div>
           <button type="button" class="btn-mini-done" onclick="handleMarkAllTargetDone()">
@@ -3350,7 +3350,7 @@ let _lastOpenLocalPath = '';
 
 async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei', directOpen = false) {
   if (!folderOrFilePath) {
-    showToast(`⚠️ Kein Pfad für ${label} hinterlegt`);
+    showToast(`Kein Pfad für ${label} hinterlegt`);
     return;
   }
   const cleanPath = String(folderOrFilePath).trim().replace(/\\/g, '/').replace(/^['"]+|['"]+$/g, '');
@@ -3364,7 +3364,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
   _lastOpenLocalTime = now;
   _lastOpenLocalPath = cleanPath;
 
-  showToast(`📂 Öffnen von ${label}...`, 3000);
+  showToast(`Öffnen von ${label}...`, 3000);
   const query = `path=${encodeURIComponent(cleanPath)}&direct_open=${directOpen ? 'true' : 'false'}`;
   const isLocalOrigin = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
 
@@ -3375,7 +3375,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
       if (localRes.ok) {
         const data = await localRes.json();
         if (data && data.success) {
-          showToast(`✅ ${data.message || `${label} im Datei-Explorer geöffnet!`}`, 4000);
+          showToast(`${data.message || `${label} im Datei-Explorer geöffnet!`}`, 4000);
           return;
         }
       }
@@ -3386,7 +3386,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
       const res = await fetch(`/api/v1/schedule/folder/open?${query}`);
       const data = await res.json();
       if (data && (data.success || data.queued)) {
-        showToast(`💻 Datei-Explorer wird auf deinem Laptop geöffnet (${label})...`, 4500);
+        showToast(`Datei-Explorer wird auf deinem Laptop geöffnet (${label})...`, 4500);
         return;
       }
     } catch (err) {
@@ -3396,7 +3396,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'open_explorer', path: folderOrFilePath, direct_open: directOpen })
         });
-        showToast(`💻 Befehl an deinen Laptop gesendet (${label})!`, 4000);
+        showToast(`Befehl an deinen Laptop gesendet (${label})!`, 4000);
         return;
       } catch (_) {}
     }
@@ -3405,7 +3405,7 @@ async function handleOpenLocalFolder(folderOrFilePath, label = 'Vorlesungs-Datei
   // 3. Clipboard fallback
   try {
     await navigator.clipboard.writeText(folderOrFilePath);
-    showToast(`📋 Pfad in Zwischenablage kopiert (Win+R zum Starten)`, 4000);
+    showToast(`Pfad in Zwischenablage kopiert (Win+R zum Starten)`, 4000);
   } catch (_) {}
 }
 
@@ -3434,7 +3434,7 @@ function handleSelectRoadmapDay(dateStr) {
   loadScienceRhythm(dateStr);
   closeCurriculumRoadmapModal();
   switchAppPage('page-today');
-  showToast(`📅 Tagesplan für ${dateStr} geladen`);
+  showToast(`Tagesplan für ${dateStr} geladen`);
 }
 
 async function openCurriculumRoadmapModal() {
@@ -3511,9 +3511,9 @@ function renderRoadmapDaysList(days) {
       return `
         <div class="roadmap-day-row rest-day ${todayHighlightClass}" data-date="${d.date}" data-day-num="${d.day_number || ''}" data-is-rest="true" onclick="handleSelectRoadmapDay('${d.date}')" style="cursor: pointer; ${isToday ? 'border-left: 4px solid #58a6ff; background: rgba(88, 166, 255, 0.08);' : ''}">
           <div class="roadmap-day-date">
-            <span>🏖️</span>
+            
             <span>${d.date} (${d.day_of_week || 'So'})</span>
-            ${isToday ? '<span class="status-badge" style="font-size: 9.5px; background: rgba(88,166,255,0.25); color: #79c0ff; border: 1px solid rgba(88,166,255,0.4); border-radius: 3px; padding: 1px 5px;">📍 HEUTE</span>' : ''}
+            ${isToday ? '<span class="status-badge" style="font-size: 9.5px; background: rgba(88,166,255,0.25); color: #79c0ff; border: 1px solid rgba(88,166,255,0.4); border-radius: 3px; padding: 1px 5px;">HEUTE</span>' : ''}
           </div>
           <div style="flex: 1; color: var(--text-dim); font-size: 11.5px;">
             Sonntag – Geplanter Ruhetag & Erholung
@@ -3521,7 +3521,7 @@ function renderRoadmapDaysList(days) {
           <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
             <span>0 Karten</span>
             <button type="button" class="btn-day-jump" onclick="event.stopPropagation(); handleSelectRoadmapDay('${d.date}')" style="font-size: 10px; padding: 0.15rem 0.45rem; background: rgba(88, 166, 255, 0.12); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; border-radius: 4px; cursor: pointer;" title="Diesen Tag im Tagesplan öffnen">
-              📅 Plan
+              Plan
             </button>
           </div>
         </div>
@@ -3538,11 +3538,11 @@ function renderRoadmapDaysList(days) {
     }).join(' + ');
 
     const isSwappedBadge = d.is_swapped
-      ? `<span style="font-size: 9.5px; color: #e3b341; background: rgba(227,179,65,0.15); border: 1px solid rgba(227,179,65,0.3); border-radius: 3px; padding: 1px 5px; margin-left: 0.35rem; display: inline-flex; align-items: center; gap: 2px;" title="Dieses Lernpaket wurde manuell von Tag ${d.swapped_with_day || d.original_day_number} hierher getauscht">🔄 Paket Tag ${d.swapped_with_day || d.original_day_number}</span>`
+      ? `<span style="font-size: 9.5px; color: #e3b341; background: rgba(227,179,65,0.15); border: 1px solid rgba(227,179,65,0.3); border-radius: 3px; padding: 1px 5px; margin-left: 0.35rem; display: inline-flex; align-items: center; gap: 2px;" title="Dieses Lernpaket wurde manuell von Tag ${d.swapped_with_day || d.original_day_number} hierher getauscht">Paket Tag ${d.swapped_with_day || d.original_day_number}</span>`
       : '';
 
     const todayBadge = isToday
-      ? `<span class="status-badge" style="font-size: 9.5px; font-weight: 700; background: rgba(88,166,255,0.25); color: #79c0ff; border: 1px solid rgba(88,166,255,0.4); border-radius: 3px; padding: 1px 5px; display: inline-flex; align-items: center; gap: 2px;">📍 HEUTE</span>`
+      ? `<span class="status-badge" style="font-size: 9.5px; font-weight: 700; background: rgba(88,166,255,0.25); color: #79c0ff; border: 1px solid rgba(88,166,255,0.4); border-radius: 3px; padding: 1px 5px; display: inline-flex; align-items: center; gap: 2px;">HEUTE</span>`
       : '';
 
     const todayStyle = isToday
@@ -3584,7 +3584,7 @@ function renderRoadmapDaysList(days) {
 
         <div style="display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
           <button type="button" class="btn-day-jump" onclick="event.stopPropagation(); handleSelectRoadmapDay('${d.date}')" style="font-size: 10px; padding: 0.15rem 0.45rem; background: rgba(88, 166, 255, 0.12); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; border-radius: 4px; cursor: pointer;" title="Diesen Tag im Tagesplan öffnen">
-            📅 Plan
+            Plan
           </button>
           <button type="button" class="btn-day-swap" onclick="event.stopPropagation(); openSwapDayModal('${d.date}', ${d.day_number})" title="Diesen Tag mit einem anderen Lerntag tauschen">
             ⇄ Tauschen
@@ -3692,7 +3692,7 @@ function initRoadmapDragAndDrop() {
       if (navigator.vibrate) {
         try { navigator.vibrate(35); } catch (_) {}
       }
-      showToast(`🎯 Tag ${row.dataset.dayNum} zum Verschieben aktiv – ziehe auf einen Zieltag`, 'info');
+      showToast(`Tag ${row.dataset.dayNum} zum Verschieben aktiv – ziehe auf einen Zieltag`, 'info');
     }, 320);
   }, { passive: true });
 
@@ -3887,7 +3887,7 @@ async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
 
   const badge1 = d1.difficulty_badge || `${cards2} Karten`;
   const badge2 = d2.difficulty_badge || `${cards1} Karten`;
-  showToast(`🔄 Tag ${num1} (${badge1}) mit Tag ${num2} (${badge2}) getauscht! 24h-Vorlesungen am Vortag synchronisiert.`, 'success');
+  showToast(`Tag ${num1} (${badge1}) mit Tag ${num2} (${badge2}) getauscht! 24h-Vorlesungen am Vortag synchronisiert.`, 'success');
 
   // Persist to backend database
   try {
@@ -3906,7 +3906,7 @@ async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
     }
   } catch (err) {
     console.error('Failed to persist day swap to server:', err);
-    showToast('⚠️ Hinweis: Tausch konnte nicht online gespeichert werden.', 'warning');
+    showToast('Hinweis: Tausch konnte nicht online gespeichert werden.', 'warning');
   }
 }
 
@@ -3933,13 +3933,13 @@ async function resetCurriculumSwaps() {
         loadScienceRhythm(currentDate);
       }
 
-      showToast('✅ Alle Tage auf die originale didaktische Reihenfolge zurückgesetzt!', 'success');
+      showToast('Alle Tage auf die originale didaktische Reihenfolge zurückgesetzt!', 'success');
     } else {
-      showToast('⚠️ Fehler beim Zurücksetzen der Reihenfolge.', 'warning');
+      showToast('Fehler beim Zurücksetzen der Reihenfolge.', 'warning');
     }
   } catch (err) {
     console.error('Error resetting swaps:', err);
-    showToast('⚠️ Netzwerkfehler beim Zurücksetzen.', 'warning');
+    showToast('Netzwerkfehler beim Zurücksetzen.', 'warning');
   }
 }
 
@@ -3973,14 +3973,14 @@ async function openSwapDayModal(sourceDate, sourceDayNum) {
 
   const data = await ensureRoadmapDataLoaded();
   if (!data || !Array.isArray(data.schedule)) {
-    showToast('⚠️ Roadmap-Daten konnten nicht geladen werden.', 'warning');
+    showToast('Roadmap-Daten konnten nicht geladen werden.', 'warning');
     return;
   }
 
   const schedule = data.schedule;
   const sourceDay = schedule.find(d => d.date === sourceDate || d.day_number === sourceDayNum);
   if (!sourceDay || sourceDay.is_rest_day) {
-    showToast('⚠️ Ruhetage (Sonntage) können nicht getauscht werden.', 'info');
+    showToast('Ruhetage (Sonntage) können nicht getauscht werden.', 'info');
     return;
   }
 
@@ -4018,12 +4018,10 @@ async function openSwapDayModal(sourceDate, sourceDayNum) {
 
     if (lightDays.length > 0) {
       smartContainer.innerHTML = lightDays.map(d => {
-        const icon = d.difficulty_level === 'easy' ? '🟢' : (d.difficulty_level === 'medium' ? '🟡' : (d.difficulty_level === 'very_hard' ? '🔥' : '🔴'));
         const estMin = d.estimated_study_minutes || Math.round(d.target_cards * 0.9);
         const stars = d.yield_stars ? ` • ${d.yield_stars}` : '';
         return `
           <button type="button" class="smart-suggestion-pill ${d.difficulty_level || 'easy'}" onclick="selectSwapTargetDay('${d.date}')" title="${escapeHtml(d.difficulty_reason || d.current_module || '')}">
-            <span>${icon}</span>
             <strong>Tag ${d.day_number}</strong>
             <span>(${d.target_cards} Karten • ~${estMin}m${stars})</span>
           </button>
@@ -4039,10 +4037,9 @@ async function openSwapDayModal(sourceDate, sourceDayNum) {
   if (selectEl) {
     selectEl.innerHTML = activeDays.map(d => {
       const estMin = d.estimated_study_minutes || Math.round(d.target_cards * 0.9);
-      const diffIcon = d.difficulty_level === 'easy' ? '🟢' : (d.difficulty_level === 'medium' ? '🟡' : (d.difficulty_level === 'very_hard' ? '🔥' : '🔴'));
-      const isLighter = estMin < srcMinutes ? '🌱 ' : '';
+      const isLighter = estMin < srcMinutes ? '↓ ' : '';
       const yieldInfo = d.yield_stars ? ` • ${d.yield_stars} ${d.yield_label || ''}` : '';
-      return `<option value="${d.date}">Tag ${d.day_number}: ${d.day_of_week}, ${d.date} – ${isLighter}${d.target_cards} Karten (~${estMin}m • ${diffIcon} ${d.difficulty_label || ''}${yieldInfo}) – ${escapeHtml(d.current_module || '')}</option>`;
+      return `<option value="${d.date}">Tag ${d.day_number}: ${d.day_of_week}, ${d.date} – ${isLighter}${d.target_cards} Karten (~${estMin}m • ${d.difficulty_label || ''}${yieldInfo}) – ${escapeHtml(d.current_module || '')}</option>`;
     }).join('');
 
     // Pre-select Day 12 if available (or first lighter day)
@@ -4097,29 +4094,29 @@ function handleSwapTargetChanged(targetDate) {
   if (timeDiffMin > 0) {
     savingHighlight = `
       <div style="margin-top: 0.45rem; padding: 0.45rem 0.65rem; background: rgba(46,160,67,0.15); border: 1px solid rgba(46,160,67,0.35); border-radius: 6px; color: #7ee787; font-size: 11.5px; font-weight: 600;">
-        💡 Entlastung am ${src.day_of_week}: neu ~${tgtMin} Min. statt ~${srcMin} Min. (-${timeDiffMin} Min. / -${Math.round(timeDiffMin / 60 * 10) / 10}h Zeitersparnis!)
+        Entlastung am ${src.day_of_week}: neu ~${tgtMin} Min. statt ~${srcMin} Min. (-${timeDiffMin} Min. / -${Math.round(timeDiffMin / 60 * 10) / 10}h Zeitersparnis!)
       </div>
     `;
   } else if (timeDiffMin < 0) {
     savingHighlight = `
       <div style="margin-top: 0.45rem; padding: 0.45rem 0.65rem; background: rgba(240,136,62,0.12); border: 1px solid rgba(240,136,62,0.3); border-radius: 6px; color: #f0883e; font-size: 11.5px; font-weight: 500;">
-        ⚠️ Hinweis: Am ${src.day_of_week} erhöht sich der Lernaufwand um ~${Math.abs(timeDiffMin)} Minuten.
+        Hinweis: Am ${src.day_of_week} erhöht sich der Lernaufwand um ~${Math.abs(timeDiffMin)} Minuten.
       </div>
     `;
   }
 
   previewText.innerHTML = `
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
-      <span>📅 <strong>${src.day_of_week}, ${src.date} (Tag ${src.day_number})</strong>:</span>
+      <span><strong>${src.day_of_week}, ${src.date} (Tag ${src.day_number})</strong>:</span>
       <span style="color: #7ee787; font-weight: 700;">neu ${tgt.target_cards} Karten <span style="font-size: 11px; font-weight: 400; color: #a5d6ff;">(~${tgtMin}m • ${tgt.difficulty_label || ''}${tgt.yield_stars ? ' • ' + tgt.yield_stars : ''})</span></span>
     </div>
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
-      <span>📅 <strong>${tgt.day_of_week}, ${tgt.date} (Tag ${tgt.day_number})</strong>:</span>
+      <span><strong>${tgt.day_of_week}, ${tgt.date} (Tag ${tgt.day_number})</strong>:</span>
       <span style="color: #58a6ff; font-weight: 700;">neu ${src.target_cards} Karten <span style="font-size: 11px; font-weight: 400; color: #a5d6ff;">(~${srcMin}m • ${src.difficulty_label || ''}${src.yield_stars ? ' • ' + src.yield_stars : ''})</span></span>
     </div>
     ${savingHighlight}
     <div style="font-size: 11px; color: #79c0ff; margin-top: 0.45rem; line-height: 1.45; background: rgba(56,139,253,0.08); padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid rgba(56,139,253,0.25);">
-      🎧 <strong>24h-Vorlesungs-Sync am Vortag:</strong>
+      <strong>24h-Vorlesungs-Sync am Vortag:</strong>
       <div style="margin-top: 3px;">• Am Vortag (${srcPrev ? srcPrev.day_of_week + ', ' + srcPrev.date : 'Vortag'}) zeigt der Nachmittag neu die Vorlesung zu <em>${escapeHtml(tgtFirstTitle)}</em>!</div>
       ${tgtPrev ? `<div style="margin-top: 2px;">• Am ${tgtPrev.day_of_week}, ${tgtPrev.date} wird entsprechend <em>${escapeHtml(srcFirstTitle)}</em> vorbereitet.</div>` : ''}
     </div>
@@ -4243,7 +4240,7 @@ async function handleToggleSlotDone(slotKey, cards, title) {
   const newCount = Math.max(0, current + delta);
   
   const msg = willBeDone
-    ? `🎉 ${cards} Karten für "${title}" als erledigt markiert! (${newCount} geschafft)`
+    ? `${cards} Karten für "${title}" als erledigt markiert! (${newCount} geschafft)`
     : `↩️ "${title}" wieder als offen markiert.`;
   await savePacingProgress(newCount, msg);
 
@@ -4340,7 +4337,7 @@ async function syncAnkiDesktopNow(showFeedback = true) {
   if (typeof loadCurriculumToday === 'function') await loadCurriculumToday(false);
   if (typeof loadExamPacing === 'function') await loadExamPacing();
   if (typeof loadWorkloadForecast === 'function') await loadWorkloadForecast(false);
-  if (btn) btn.textContent = '🔄 Aktualisieren';
+  if (btn) btn.textContent = 'Aktualisieren';
 }
 
 function renderAnkiDesktopWidget(data) {
@@ -4404,7 +4401,7 @@ function renderAnkiDesktopWidget(data) {
     } else {
       tomListEl.innerHTML = topics.map(t => `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.35rem 0.5rem; background: rgba(255,255,255,0.03); border-radius: 4px; border: 1px solid rgba(255,255,255,0.05);">
-          <span style="color: #e6edf3; font-weight: 500;">📖 ${escapeHtml(t.deck)}</span>
+          <span style="color: #e6edf3; font-weight: 500;">${escapeHtml(t.deck)}</span>
           <span style="color: #d2a8ff; font-weight: 700; background: rgba(210,168,255,0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">${t.count} Karten</span>
         </div>
       `).join('');
@@ -4414,7 +4411,7 @@ function renderAnkiDesktopWidget(data) {
   // 4. Update Advice Bar
   const adviceEl = document.getElementById('pacingAdviceText');
   if (adviceEl && todayCnt > 0) {
-    adviceEl.textContent = `🎉 In Anki gemeistert: ${todayCnt} Karten (${mins} Min.) • Morgen stehen ${tomCnt} Karten zur Repetition an.`;
+    adviceEl.textContent = `In Anki gemeistert: ${todayCnt} Karten (${mins} Min.) • Morgen stehen ${tomCnt} Karten zur Repetition an.`;
   }
 }
 
@@ -4502,7 +4499,7 @@ async function loadBacklogTriage(maxCapacity) {
     let html = '';
     if (maxCapacity && deferredToShow.length > 0) {
       html += `<div style="font-size: 11px; font-weight: 600; color: #ff7b72; margin-bottom: 0.25rem;">
-        🔥 Priorisierte Themen (Summe: ${data.budget_accumulated_cards || 0} Karten von ${maxCapacity} Budget):
+        Priorisierte Themen (Summe: ${data.budget_accumulated_cards || 0} Karten von ${maxCapacity} Budget):
       </div>`;
     }
 
@@ -4516,32 +4513,32 @@ async function loadBacklogTriage(maxCapacity) {
             <strong style="color: #e6edf3; font-size: 12.5px;">${escapeHtml(t.deck_name)}</strong>
           </div>
           <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(t.anki_filter_query)}', this)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #c9d1d9; border-radius: 4px; font-size: 10px; padding: 0.2rem 0.45rem; cursor: pointer;">
-            📋 Anki-Filter kopieren
+            Anki-Filter kopieren
           </button>
         </div>
 
         <div style="display: flex; gap: 1rem; font-size: 11px; color: var(--text-muted); flex-wrap: wrap;">
-          <span>📦 <strong>${t.due_today} heute</strong> / <strong>${t.due_tomorrow} morgen</strong> fällig</span>
-          <span>⚠️ Fehlerquote: <strong style="color: ${t.fail_rate_pct > 30 ? '#ff7b72' : '#e6edf3'};">${t.fail_rate_pct}%</strong></span>
+          <span><strong>${t.due_today} heute</strong> / <strong>${t.due_tomorrow} morgen</strong> fällig</span>
+          <span>Fehlerquote: <strong style="color: ${t.fail_rate_pct > 30 ? '#ff7b72' : '#e6edf3'};">${t.fail_rate_pct}%</strong></span>
           <span>⏱️ Zuletzt vor <strong>${t.days_since_last_review} Tagen</strong></span>
-          <span>🧠 Stabilität: <strong>${t.avg_ease_pct}%</strong></span>
-          <span>⚡ Dringlichkeits-Score: <strong style="color: ${t.color};">${t.urgency_score}/100</strong></span>
+          <span>Stabilität: <strong>${t.avg_ease_pct}%</strong></span>
+          <span>Dringlichkeits-Score: <strong style="color: ${t.color};">${t.urgency_score}/100</strong></span>
         </div>
 
         <div style="font-size: 11px; color: ${t.color}; font-weight: 500;">
-          💡 ${escapeHtml(t.action_recommendation)}
+          ${escapeHtml(t.action_recommendation)}
         </div>
       </div>
     `).join('');
 
     if (maxCapacity && deferredToShow.length > 0) {
       html += `<div style="font-size: 11px; font-weight: 600; color: #3fb950; margin-top: 0.75rem; margin-bottom: 0.25rem;">
-        💤 Auf morgen verschiebbar (Geringes Vergessensrisiko):
+        Auf morgen verschiebbar (Geringes Vergessensrisiko):
       </div>`;
       html += deferredToShow.map(t => `
         <div style="padding: 0.45rem 0.65rem; background: rgba(63,185,80,0.03); border-radius: 6px; border: 1px dashed rgba(63,185,80,0.3); display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
-          <span style="color: #8b949e;">📖 ${escapeHtml(t.deck_name)} (${t.due_tomorrow} Karten fällig)</span>
-          <span style="color: #3fb950; font-weight: 600;">✅ Kann warten (Stabilität ${t.avg_ease_pct}%)</span>
+          <span style="color: #8b949e;">${escapeHtml(t.deck_name)} (${t.due_tomorrow} Karten fällig)</span>
+          <span style="color: #3fb950; font-weight: 600;">Kann warten (Stabilität ${t.avg_ease_pct}%)</span>
         </div>
       `).join('');
     }
@@ -4560,7 +4557,7 @@ function copyTriageQueryToClipboard() {
   navigator.clipboard.writeText(query).then(() => {
     if (btn) {
       const orig = btn.innerHTML;
-      btn.innerHTML = '<span>✅</span> <span>Kopiert!</span>';
+      btn.innerHTML = '<span>Kopiert!</span>';
       btn.style.background = '#2ea043';
       setTimeout(() => {
         btn.innerHTML = orig;
@@ -4579,7 +4576,7 @@ function copyAnkiQuery(encodedQuery, btn) {
   const query = decodeURIComponent(encodedQuery);
   navigator.clipboard.writeText(query).then(() => {
     const origText = btn.textContent;
-    btn.textContent = '✅ Kopiert!';
+    btn.textContent = 'Kopiert!';
     btn.style.color = '#3fb950';
     setTimeout(() => {
       btn.textContent = origText;
@@ -4687,7 +4684,7 @@ function selectForecastDay(dayIdx) {
       d.style.display = 'block';
       d.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: #3fb950; font-weight: 600;">📅 ${day.formatted_date}: Keine Repetitionen fällig</span>
+          <span style="color: #3fb950; font-weight: 600;">${day.formatted_date}: Keine Repetitionen fällig</span>
           <button type="button" onclick="closeForecastDrawers()" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
         </div>
       `;
@@ -4697,7 +4694,7 @@ function selectForecastDay(dayIdx) {
 
   let breakdownHtml = day.deck_breakdown.map(d => `
     <div style="display: flex; justify-content: space-between; color: #c9d1d9; padding: 2px 0;">
-      <span>📖 ${escapeHtml(d.deck_name)}</span>
+      <span>${escapeHtml(d.deck_name)}</span>
       <strong style="color: #58a6ff;">${d.count} Karten</strong>
     </div>
   `).join('');
@@ -4706,7 +4703,7 @@ function selectForecastDay(dayIdx) {
     d.style.display = 'block';
     d.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; margin-bottom: 4px;">
-        <span style="font-weight: 600; color: ${day.level_color};">📅 ${day.formatted_date}: ${day.total_due} Karten fällig (${day.workload_level})</span>
+        <span style="font-weight: 600; color: ${day.level_color};">${day.formatted_date}: ${day.total_due} Karten fällig (${day.workload_level})</span>
         <button type="button" onclick="closeForecastDrawers()" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;">✕</button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px; max-height: 120px; overflow-y: auto;">
@@ -4804,7 +4801,7 @@ async function createTemporaryStruggleDeck() {
     const res = await fetch('/api/v1/schedule/anki/create-temp-deck', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deck_name: '⚡ Problem-Karten Heute', tag_name: '⚡_Heute_Problemkarten', limit: 15 })
+      body: JSON.stringify({ deck_name: 'Problem-Karten Heute', tag_name: '⚡_Heute_Problemkarten', limit: 15 })
     });
     const data = await res.json();
     if (data.success) {
@@ -4816,9 +4813,9 @@ async function createTemporaryStruggleDeck() {
         : "1. Drücke in Anki Taste 'F' (Gefilterten Stapel erstellen).\n2. Filter: tag:⚡_Heute_Problemkarten";
 
       alert(
-        `✅ ${data.message || 'Problemkarten in Anki vorbereitet!'}\n\n` +
-        `🎯 ANKI GEFILTERTES DECK (Taste F):\n${instr}\n\n` +
-        `🛡️ 100% SICHER FÜR DEINE DECKS:\n` +
+        `${data.message || 'Problemkarten in Anki vorbereitet!'}\n\n` +
+        `ANKI GEFILTERTES DECK (Taste F):\n${instr}\n\n` +
+        `100% SICHER FÜR DEINE DECKS:\n` +
         `Gefilterte Decks sind temporär. Sobald du das Deck heute Abend löschst, wandern alle Karten automatisch und unberührt in ihre Original-Heimatstapel zurück!`
       );
     } else {
@@ -4856,7 +4853,7 @@ async function openStruggleSlidesQuick(path, page) {
     const res = await fetch(`/api/v1/schedule/slides/open?path=${encodeURIComponent(path)}&page=${page || 1}`);
     const data = await res.json();
     if (data.success) {
-      showToast(`📄 Folie geöffnet: ${data.message}`);
+      showToast(`Folie geöffnet: ${data.message}`);
     } else {
       showToast(`Hinweis: ${data.message || 'Konnte Folie nicht automatisch öffnen.'}`);
     }
@@ -5024,7 +5021,7 @@ async function loadScienceRhythm(targetDate) {
     if (ankiBadge) {
       if (data.used_anki_start && data.anki_first_review_time) {
         ankiBadge.style.display = 'inline-block';
-        ankiBadge.textContent = `⚡ Anki: ${data.anki_first_review_time} Uhr`;
+        ankiBadge.textContent = `Anki: ${data.anki_first_review_time} Uhr`;
         ankiBadge.title = `Startzeit wurde automatisch von deiner ersten Anki-Wiederholung (${data.anki_first_review_time} Uhr) übernommen`;
         if (timeInput) {
           timeInput.value = data.start_time;
@@ -5105,7 +5102,7 @@ function promptRhythmBlockAction(dateStr, blockId) {
   const subEl = document.getElementById('rhythmActionModalSubtitle');
 
   if (titleEl) titleEl.textContent = block.title || 'Schritt';
-  if (iconEl) iconEl.textContent = block.icon || '⏱️';
+  if (iconEl) iconEl.textContent = block.icon || '';
   if (infoEl) infoEl.textContent = `Geplante Zeit: ${block.start_time || ''} – ${block.end_time || ''} (${block.duration_minutes || 0} Minuten)`;
   if (subEl) subEl.textContent = `Plan für ${formatGermanDate(dateStr)} • Schritt im Zeitorchester anpassen`;
 
@@ -5211,7 +5208,7 @@ async function executeDeleteRhythmBlock() {
   // 3. Reload science rhythm for source date
   await loadScienceRhythm(sourceDate);
 
-  showToast('🗑️ Schritt aus dem heutigen Plan gelöscht. Feierabend rückt nach vorne!');
+  showToast('Schritt aus dem heutigen Plan gelöscht. Feierabend rückt nach vorne!');
 }
 
 async function restoreRhythmBlocks(dateStr) {
@@ -5235,7 +5232,7 @@ async function restoreRhythmBlocks(dateStr) {
   }
 
   await loadScienceRhythm(dateStr);
-  showToast('🔄 Stundenplan erfolgreich auf Ursprungszustand zurückgesetzt.');
+  showToast('Stundenplan erfolgreich auf Ursprungszustand zurückgesetzt.');
 }
 
 function recalculateRhythmTimes(data) {
@@ -5293,7 +5290,7 @@ function recalculateRhythmTimes(data) {
     freeBlock.start_time = feierabendTime;
     freeBlock.end_time = '22:00';
     freeBlock.duration_minutes = Math.max(60, (22 * 60) - curM);
-    freeBlock.title = `🎉 Feierabend ab ${feierabendTime} & Sport am Abend`;
+    freeBlock.title = `Feierabend ab ${feierabendTime} & Sport am Abend`;
   }
 }
 
@@ -5333,7 +5330,7 @@ function moveRhythmBlock(dateStr, blockId, delta) {
   saveRhythmReorderToBackend(dateStr, orderIds);
 
   renderScienceRhythm(state.currentScienceRhythmData);
-  showToast('🔄 Stundenplan angepasst: Neuer Ablauf & Zeiten aktualisiert');
+  showToast('Stundenplan angepasst: Neuer Ablauf & Zeiten aktualisiert');
 }
 
 function handleQuickMoveRhythmBlock(dateStr, blockId, delta, event) {
@@ -5363,7 +5360,7 @@ function reorderRhythmBlockTo(dateStr, sourceBlockId, targetBlockId) {
   saveRhythmReorderToBackend(dateStr, orderIds);
 
   renderScienceRhythm(state.currentScienceRhythmData);
-  showToast('🔄 Stundenplan angepasst: Neuer Ablauf & Zeiten aktualisiert');
+  showToast('Stundenplan angepasst: Neuer Ablauf & Zeiten aktualisiert');
 }
 
 let _desktopRhythmDragSource = null;
@@ -5593,7 +5590,7 @@ function handlePromptBlockDuration(dateStr, blockId, currentMinutes, event) {
   if (val === null) return;
   const num = parseInt(val.trim(), 10);
   if (isNaN(num) || num < 5 || num > 360) {
-    showToast('⚠️ Bitte eine gültige Minutenzahl zwischen 5 und 360 eingeben.');
+    showToast('Bitte eine gültige Minutenzahl zwischen 5 und 360 eingeben.');
     return;
   }
   const diff = num - currentMinutes;
@@ -5772,7 +5769,7 @@ function renderScienceRhythm(data) {
         <span><strong>${doneCount} von ${data.blocks.length} Abschnitten</strong> erledigt &bull; Geplante Arbeitszeit: <strong>${Math.round((data.total_study_minutes || 0) / 60)}h ${(data.total_study_minutes || 0) % 60}m</strong> (ohne Puffer)</span>
         ${hasAdjustments ? `
           <button type="button" onclick="restoreRhythmBlocks('${data.date}')" class="btn-secondary" style="font-size: 10.5px; padding: 0.15rem 0.55rem; height: auto; border-color: rgba(56, 139, 253, 0.4); color: #79c0ff; cursor: pointer;" title="Stellt alle gelöschten, verschobenen oder umgestellten Schritte dieses Tages wieder her">
-            🔄 Plan wiederherstellen
+            Plan wiederherstellen
           </button>
         ` : ''}
       </div>
@@ -5787,7 +5784,7 @@ function renderScienceRhythm(data) {
     tomorrowAlertHtml = `
       <div style="background: linear-gradient(135deg, rgba(163, 113, 247, 0.15), rgba(138, 56, 245, 0.08)); border: 1.5px solid rgba(163, 113, 247, 0.4); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
         <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1;">
-          <span style="font-size: 22px; flex-shrink: 0;">🏛️</span>
+          
           <div>
             <div style="font-weight: 700; font-size: 13px; color: #d2a8ff; letter-spacing: 0.2px;">
               WICHTIGER HINWEIS: MORGEN PRÄSENZPFLICHT VOR ORT!
@@ -5874,8 +5871,8 @@ function renderScienceRhythm(data) {
                 </strong>
                 ${isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(245, 159, 0, 0.2); color: #f59f00; border: 1px solid rgba(245, 159, 0, 0.45);">⏩ Von gestern verschoben</span>` : ''}
                 ${b.badge && !isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
-                ${isMandatory && b.location ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 600; background: rgba(163, 113, 247, 0.15); color: #d2a8ff; border: 1px solid rgba(163, 113, 247, 0.35); display: inline-flex; align-items: center; gap: 3px;">📍 ${escapeHtml(b.location)}</span>` : ''}
-                ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">🔴 JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
+                ${isMandatory && b.location ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 600; background: rgba(163, 113, 247, 0.15); color: #d2a8ff; border: 1px solid rgba(163, 113, 247, 0.35); display: inline-flex; align-items: center; gap: 3px;">${escapeHtml(b.location)}</span>` : ''}
+                ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
               </div>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
                 ${escapeHtml(b.subtitle || '')}
@@ -5887,7 +5884,7 @@ function renderScienceRhythm(data) {
           <div style="display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;">
             ${b.id !== 'evening_free' ? `
               <button type="button" onclick="promptRhythmBlockAction('${data.date}', '${b.id}')" title="Schritt entfernen oder auf morgen verschieben" style="background: transparent; border: 1px solid transparent; color: var(--text-dim); font-size: 13px; cursor: pointer; padding: 0.2rem 0.35rem; border-radius: 4px; transition: all 0.15s ease;" onmouseenter="this.style.color='#ff7b72'; this.style.borderColor='rgba(248,81,73,0.3)'; this.style.background='rgba(248,81,73,0.1)';" onmouseleave="this.style.color='var(--text-dim)'; this.style.borderColor='transparent'; this.style.background='transparent';">
-                🗑️
+                &times;
               </button>
             ` : ''}
             <div onclick="toggleRhythmBlockDone('${data.date}', '${b.id}')" style="cursor: pointer; flex-shrink: 0; width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid ${isCompleted ? '#3fb950' : 'rgba(255,255,255,0.25)'}; background: ${isCompleted ? '#238636' : 'rgba(255,255,255,0.03)'}; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; transition: all 0.15s ease;" title="${isCompleted ? 'Als offen markieren' : 'Als erledigt markieren'}">
@@ -5899,8 +5896,8 @@ function renderScienceRhythm(data) {
         <!-- Detail Strip for Mandatory Attendance Events -->
         ${isMandatory && b.description ? `
           <div style="margin-top: 0.3rem; padding: 0.35rem 0.65rem; border-radius: 4px; background: rgba(163, 113, 247, 0.08); border-left: 2px solid #a371f7; font-size: 11px; color: #e2d9f3; line-height: 1.4;">
-            🏛️ <strong>Offizielle Kurs-Information:</strong> ${escapeHtml(b.description.split('\n')[0])}
-            ${b.location ? `<div style="margin-top: 0.15rem; color: #bca4ea; font-size: 10.5px;">📍 Kursort: ${escapeHtml(b.location)}</div>` : ''}
+            <strong>Offizielle Kurs-Information:</strong> ${escapeHtml(b.description.split('\n')[0])}
+            ${b.location ? `<div style="margin-top: 0.15rem; color: #bca4ea; font-size: 10.5px;">Kursort: ${escapeHtml(b.location)}</div>` : ''}
           </div>
         ` : ''}
 
@@ -5908,20 +5905,20 @@ function renderScienceRhythm(data) {
         ${b.id === 'block_new_cards' && b.topic_slots && b.topic_slots.length > 0 ? `
           <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
             <span style="font-size: 11px; font-weight: 700; color: #d2a8ff; display: inline-flex; align-items: center; gap: 4px;">
-              ☀️ Vormittags-Karten:
+              Vormittags-Karten:
             </span>
             ${b.topic_slots.map(s => `
               <span style="font-size: 11px; padding: 0.18rem 0.55rem; background: rgba(210, 168, 255, 0.12); border: 1px solid rgba(210, 168, 255, 0.3); color: #d2a8ff; border-radius: 4px; font-weight: 600;">
-                ⚡ <strong>${s.cards_to_learn}×</strong> ${escapeHtml(s.clean_title || s.short_title)}${s.tomorrow_remaining_cards ? ` <span style="font-size: 9.5px; opacity: 0.75; color: #79c0ff;">(+${s.tomorrow_remaining_cards} morgen)</span>` : ''}
+                <strong>${s.cards_to_learn}×</strong> ${escapeHtml(s.clean_title || s.short_title)}${s.tomorrow_remaining_cards ? ` <span style="font-size: 9.5px; opacity: 0.75; color: #79c0ff;">(+${s.tomorrow_remaining_cards} morgen)</span>` : ''}
               </span>
             `).join('')}
             <span style="font-size: 11px; padding: 0.18rem 0.55rem; background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.3); color: #58a6ff; border-radius: 4px; font-weight: 700;">
-              🎯 Exakt ${b.target_cards || 101} Karten HEUTE
+              Exakt ${b.target_cards || 101} Karten HEUTE
             </span>
           </div>
           <div style="margin-top: 0.35rem; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
             <span style="font-size: 11px; font-weight: 700; color: #7ee787; display: inline-flex; align-items: center; gap: 4px;">
-              🎬 Vorlesung &amp; Folien für HEUTE:
+              Vorlesung &amp; Folien für HEUTE:
             </span>
             ${b.topic_slots.map(s => {
               const vidPath = (s.preferred_video_file || s.local_podcast_file_path || s.podcast_folder_name || s.local_podcast_folder_path || '').replace(/\\/g, '/');
@@ -5929,12 +5926,12 @@ function renderScienceRhythm(data) {
               return `
                 ${vidPath ? `
                   <button type="button" class="btn-folder-chip" onclick="handleOpenLocalFolder('${escapeHtml(vidPath)}', 'Vorlesung (${escapeHtml(s.clean_title || s.short_title)})', false)" style="font-size: 10.5px; padding: 2px 7px; color: #7ee787; border: 1px solid rgba(46, 160, 67, 0.4); border-radius: 4px; background: rgba(46, 160, 67, 0.12); cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 600;" title="Öffnet das passende Vorlesungsvideo zu diesem Kartendeck im Datei-Explorer">
-                    📂 ${escapeHtml(s.clean_title || s.short_title)}
+                    ${escapeHtml(s.clean_title || s.short_title)}
                   </button>
                 ` : ''}
                 ${slideRel ? `
                   <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent(slideRel)}" target="_blank" rel="noopener" style="font-size: 10.5px; padding: 2px 7px; color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.4); border-radius: 4px; background: rgba(88, 166, 255, 0.12); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; font-weight: 600;" title="Öffnet die Folien-PDF zu diesem Thema">
-                    📄 ${escapeHtml(s.matched_slide_filename || 'Folien')}
+                    ${escapeHtml(s.matched_slide_filename || 'Folien')}
                   </a>
                 ` : ''}
               `;
@@ -5946,26 +5943,26 @@ function renderScienceRhythm(data) {
         ${(b.id === 'block_afternoon_flex' || b.id === 'block_podcasts' || isPostponed || b.focus_type === 'postponed_catchup') && (b.vam_url || b.podcast_folder_name || b.slide_filename || b.slide_rel_path || b.local_podcast_folder_path || b.local_slide_file_path || b.preferred_video_file) ? `
           <div style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
             <span style="font-size: 11px; font-weight: 700; color: ${isPostponed ? '#f59f00' : (b.id === 'block_podcasts' ? '#7ee787' : (b.is_completed ? '#3fb950' : '#79c0ff'))}; display: inline-flex; align-items: center; gap: 4px;">
-              ${isPostponed ? '⏩ Nachhol-Vorlesung:' : (b.id === 'block_podcasts' ? '📖 Vorlesungs-Check HEUTE:' : (b.is_completed ? '✅ Absolvierte Vorlesung:' : '🌅 Vorlesung für MORGEN:'))}
+              ${isPostponed ? 'Nachhol-Vorlesung:' : (b.id === 'block_podcasts' ? 'Vorlesungs-Check HEUTE:' : (b.is_completed ? 'Absolvierte Vorlesung:' : 'Vorlesung für MORGEN:'))}
             </span>
             ${(b.podcast_folder_name || b.local_podcast_folder_path || b.preferred_video_file || b.local_podcast_file_path) ? `
               <button type="button" class="btn-primary" onclick="handleOpenLocalFolder('${escapeHtml((b.preferred_video_file || b.local_podcast_file_path || b.podcast_folder_name || b.local_podcast_folder_path || '').replace(/\\/g, '/'))}', 'Vorlesungs-Datei', false)" style="font-size: 11px; padding: 0.32rem 0.75rem; background: #238636; border: 1px solid #2ea043; color: #fff; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;" title="Öffnet sofort deinen Windows Datei-Explorer mit dem Vorlesungsvideo vorausgewählt!">
-                📂 Im Datei-Explorer öffnen
+                Im Datei-Explorer öffnen
               </button>
             ` : ''}
             ${(b.slide_rel_path || b.slide_filename || b.local_slide_file_path) ? `
               <a href="/api/v1/schedule/slides/view?path=${encodeURIComponent((b.slide_rel_path || b.slide_filename || b.local_slide_file_path || '').replace(/\\/g, '/'))}" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(35, 134, 54, 0.15); color: #7ee787; border: 1px solid rgba(35, 134, 54, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600; text-decoration: none;" title="Öffnet die Folien-PDF direkt im Browser">
-                📄 Folien öffnen
+                Folien öffnen
               </a>
             ` : ''}
             <button type="button" onclick="consultAdvisorForLecture('${escapeHtml(b.tomorrow_lecture_title || b.title || '')}', '${escapeHtml(b.slide_filename || '')}')" class="btn-secondary" style="font-size: 11px; padding: 0.32rem 0.65rem; background: rgba(88, 166, 255, 0.15); color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.4); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Öffnet die Vorlesungs- und Folien-Empfehlung im Vorlesungsberater">
-              💡 Vorlesungsberater
+              Vorlesungsberater
             </button>
             <button type="button" onclick="handleStopMedia()" class="btn-secondary" style="font-size: 9.5px; padding: 0.2rem 0.45rem; background: rgba(218, 54, 51, 0.12); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.35); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-weight: 500;" title="Stoppt sofort alle im Hintergrund laufenden Audio- oder Videoplayer (VLC)">
               ⏹️ Ton beenden
             </button>
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
-              ${isPostponed ? '🧠 Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `🎯 Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}
+              ${isPostponed ? 'Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}
             </span>
           </div>
         ` : ''}
@@ -5976,13 +5973,13 @@ function renderScienceRhythm(data) {
             <!-- The 2 Dominant Action Buttons -->
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
               <button type="button" onclick="createTemporaryStruggleDeck()" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.75rem; background: #238636; border-color: #2ea043; display: flex; align-items: center; gap: 0.35rem; color: #fff; font-weight: 700; border-radius: 5px; cursor: pointer;" title="Erstellt ein gefiltertes Problemkarten-Deck in Anki (beim Löschen bleiben alle Originaldecks unberührt)">
-                <span>⚡</span> Temporäres Deck in Anki erstellen
+                Temporäres Deck in Anki erstellen
               </button>
               <button type="button" onclick="openStruggleSlidesQuick('${escapeHtml(b.top_struggles?.[0]?.slide_info?.slide_pdf || 'Vorlesungen im Themenblock Blut und Immunsystem/Tuzlak_Adaptives und angeborenes Immunsystem.pdf')}', ${b.top_struggles?.[0]?.slide_info?.page_hint || 1})" class="btn-secondary" style="font-size: 11px; padding: 0.35rem 0.75rem; border-color: #58a6ff; color: #58a6ff; display: flex; align-items: center; gap: 0.35rem; font-weight: 600; border-radius: 5px; cursor: pointer;" title="Öffnet bei Zeitdruck sofort die relevante Folie mit Dozentengrafik">
-                <span>📄</span> Relevante Folien öffnen (Schnell-Fokus)
+                Relevante Folien öffnen (Schnell-Fokus)
               </button>
               <button type="button" onclick="cleanupTemporaryStruggleDeck()" class="btn-secondary" style="font-size: 10px; padding: 0.3rem 0.5rem; color: var(--text-muted); border-color: rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer;" title="Entfernt das temporäre Tag nach Abschluss des Tages">
-                <span>🧹</span> Tag bereinigen
+                Tag bereinigen
               </button>
               ${(b.total_struggles || 0) > 0 ? `
                 <button type="button" id="btnToggleStruggles" onclick="toggleStrugglesExpanded()" class="btn-secondary" style="font-size: 10.5px; padding: 0.3rem 0.6rem; color: var(--text-muted); border-color: rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer;">
@@ -5995,7 +5992,7 @@ function renderScienceRhythm(data) {
             ${b.top_struggles && b.top_struggles.length > 0 ? `
               <div id="lapseStruggleCardsList" style="display: ${state.strugglesExpanded ? 'flex' : 'none'}; flex-direction: column; gap: 0.4rem; margin-top: 0.65rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem;">
                 <div style="font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; align-items: center;">
-                  <span>🧠 <strong>Wissenschaftliche Struggle-Analyse:</strong> Erkannte Kognitions-Engpässe &amp; synaptische Anker</span>
+                  <span><strong>Wissenschaftliche Struggle-Analyse:</strong> Erkannte Kognitions-Engpässe &amp; synaptische Anker</span>
                   <span style="font-size: 10px; color: #8b949e;">Score: Latenz + Lapses + Ease</span>
                 </div>
                 ${b.top_struggles.map((c) => `
@@ -6012,7 +6009,7 @@ function renderScienceRhythm(data) {
                       </div>
                       ${c.slide_info && c.slide_info.has_slide_link ? `
                         <button type="button" onclick="openStruggleSlidesQuick('${escapeHtml(c.slide_info.slide_pdf)}', ${c.slide_info.page_hint})" class="btn-secondary" style="font-size: 9.5px; padding: 0.1rem 0.4rem; height: auto; border-color: rgba(56, 139, 253, 0.3); color: #79c0ff; cursor: pointer;">
-                          📄 ${escapeHtml(c.slide_info.estimated_slides)}
+                          ${escapeHtml(c.slide_info.estimated_slides)}
                         </button>
                       ` : ''}
                     </div>
@@ -6023,7 +6020,7 @@ function renderScienceRhythm(data) {
                       ↳ ${escapeHtml(c.answer)}
                     </div>
                     <div style="margin-top: 0.35rem; font-size: 11px; background: rgba(255, 255, 255, 0.03); border-left: 2px solid #58a6ff; padding: 0.25rem 0.5rem; border-radius: 0 4px 4px 0;">
-                      <span style="color: #79c0ff; font-weight: 600;">💡 Imprägnierungs-Tipp:</span>
+                      <span style="color: #79c0ff; font-weight: 600;">Imprägnierungs-Tipp:</span>
                       <span style="color: var(--text-muted);">${escapeHtml(c.diagnosis?.anchor_tip || '')}</span>
                     </div>
                   </div>
@@ -6049,9 +6046,9 @@ function renderScienceRhythm(data) {
   const indicatorEl = document.getElementById('scienceRhythmCurrentIndicator');
   if (indicatorEl) {
     if (activeBlockTitle) {
-      indicatorEl.innerHTML = `<span style="color: #79c0ff;">🔴 JETZT AKTIV:</span> ${escapeHtml(activeBlockTitle)} (${activeMinsLeft}m)`;
+      indicatorEl.innerHTML = `<span style="color: #79c0ff;">JETZT AKTIV:</span> ${escapeHtml(activeBlockTitle)} (${activeMinsLeft}m)`;
     } else if (isToday && nowMinutes >= 17 * 60 + 30) {
-      indicatorEl.innerHTML = `🎉 Feierabend & Sport am Abend!`;
+      indicatorEl.innerHTML = `Feierabend & Sport am Abend!`;
     } else {
       indicatorEl.textContent = `Lernstart: ${data.start_time || '08:30'} Uhr`;
     }
@@ -6340,7 +6337,7 @@ function renderAdvisorHero(lect) {
   if (!lect) {
     container.innerHTML = `
       <div class="advisor-decision-card" style="text-align: center; padding: 2rem;">
-        <span style="font-size: 32px;">🔍</span>
+        
         <h3 style="color: var(--text-muted); margin-top: 0.5rem;">Keine Vorlesung gefunden</h3>
         <p style="font-size: 12px; color: var(--text-dim);">Versuche einen anderen Begriff (z. B. Hämoglobin, Manatschal, Magen, EKG, Vitamine, Sauerstoff).</p>
       </div>
@@ -6381,14 +6378,14 @@ function renderAdvisorHero(lect) {
       <div class="advisor-top-matches-bar">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span style="font-size: 11.5px; font-weight: 700; color: #58a6ff; display: flex; align-items: center; gap: 0.35rem;">
-            <span>📚</span> Passende Vorlesungen (${state.advisorData.top_matches.length} Treffer):
+            Passende Vorlesungen (${state.advisorData.top_matches.length} Treffer):
           </span>
           <span style="font-size: 11px; color: var(--text-dim);">Klicke zum Umschalten</span>
         </div>
         <div class="advisor-top-matches-pills">
           ${state.advisorData.top_matches.map((m, idx) => {
             const isActive = lect && lect.id === m.id;
-            const recShort = m.recommendation.toLowerCase().includes('skip') ? '🛑 Skip' : m.recommendation;
+            const recShort = m.recommendation.toLowerCase().includes('skip') ? 'Skip' : m.recommendation;
             return `
               <button type="button" class="advisor-match-pill ${isActive ? 'active' : ''}" onclick="selectAdvisorLecture('${m.id}')" title="${escapeHtml(m.title)}">
                 <span>${idx + 1}.</span>
@@ -6420,7 +6417,7 @@ function renderAdvisorHero(lect) {
     tsHeroHtml = `
       <div class="advisor-ts-hero-box" style="border-color: rgba(248, 81, 73, 0.35); background: rgba(248, 81, 73, 0.05);">
         <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
-          <span style="font-size: 26px;">⚡</span>
+          
           <div>
             <div style="font-size: 13px; font-weight: 700; color: #f85149; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
               <span>100% SKIP-EMPFEHLUNG: 0 Minuten Vorlesung nötig!</span>
@@ -6441,7 +6438,7 @@ function renderAdvisorHero(lect) {
           </div>
         </div>
         <div class="advisor-ts-savings-badge" style="background: rgba(35, 134, 54, 0.2); border-color: #3fb950; color: #3fb950;" title="Volle Vorlesungszeit gespart!">
-          <span>⚡</span>
+          
           <span>+${ts.saved_minutes} Min gespart!</span>
         </div>
       </div>
@@ -6450,7 +6447,7 @@ function renderAdvisorHero(lect) {
     tsHeroHtml = `
       <div class="advisor-ts-hero-box" style="border-color: rgba(210, 153, 34, 0.45); background: rgba(210, 153, 34, 0.06);">
         <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 250px;">
-          <span style="font-size: 26px;">💡</span>
+          
           <div>
             <div style="font-size: 13px; font-weight: 700; color: #d29922; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
               <span>Optionaler Micro-Deep-Dive:</span>
@@ -6463,7 +6460,7 @@ function renderAdvisorHero(lect) {
           </div>
         </div>
         <div class="advisor-ts-savings-badge" title="Ersparnis gegenüber der Gesamtvorlesung">
-          <span>⚡</span>
+          
           <span>+${ts.saved_minutes} Min gespart!</span>
         </div>
       </div>
@@ -6484,7 +6481,7 @@ function renderAdvisorHero(lect) {
           </div>
         </div>
         <div class="advisor-ts-savings-badge" title="Ersparnis gegenüber der 90-minütigen Gesamtvorlesung">
-          <span>⚡</span>
+          
           <span>${ts.saved_minutes > 0 ? `+${ts.saved_minutes} Min gespart!` : `${ts.video_minutes_effective} Min Fokus`}</span>
         </div>
       </div>
@@ -6499,7 +6496,7 @@ function renderAdvisorHero(lect) {
       <div class="advisor-chapters-container">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem; flex-wrap: wrap; gap: 0.35rem;">
           <strong style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 0.35rem;">
-            <span>📋</span> Kapitel- &amp; Timestamp-Aufschlüsselung (${lect.total_anki_cards || 200} Anki-Karten):
+            Kapitel- &amp; Timestamp-Aufschlüsselung (${lect.total_anki_cards || 200} Anki-Karten):
           </strong>
           <span style="font-size: 11px; color: var(--text-dim);">Exakte Timecodes aus Podcast-Aufzeichnung</span>
         </div>
@@ -6517,7 +6514,7 @@ function renderAdvisorHero(lect) {
                     ${escapeHtml(chap.title)}
                   </div>
                   <div style="font-size: 11px; color: var(--text-dim); margin-top: 0.15rem;">
-                    📄 ${escapeHtml(chap.slide_range || '')} • 🃏 <strong>${chap.cards_count} Karten</strong> (Bereich: ${chap.cards_range || ''})
+                    ${escapeHtml(chap.slide_range || '')} • <strong>${chap.cards_count} Karten</strong> (Bereich: ${chap.cards_range || ''})
                   </div>
                   <div style="display: flex; gap: 0.25rem; flex-wrap: wrap; margin-top: 0.35rem;">
                     ${(chap.topics || []).map(t => `<span class="advisor-topic-tag">${escapeHtml(t)}</span>`).join('')}
@@ -6526,7 +6523,7 @@ function renderAdvisorHero(lect) {
               </div>
               <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
                 <span style="font-size: 11px; font-weight: 600; color: ${isNeeded ? '#56d364' : 'var(--text-dim)'}; background: ${isNeeded ? 'rgba(63, 185, 80, 0.12)' : 'rgba(255,255,255,0.05)'}; padding: 0.2rem 0.5rem; border-radius: 4px;">
-                  ${escapeHtml(chap.coverage_label || (isNeeded ? '🟢 Ansehen' : '⚪ Überspringen'))}
+                  ${escapeHtml(chap.coverage_label || (isNeeded ? 'Ansehen' : 'Überspringen'))}
                 </span>
                 <span style="font-size: 10.5px; color: var(--text-dim);">Dauer: ${chap.duration_min} Min</span>
               </div>
@@ -6544,7 +6541,7 @@ function renderAdvisorHero(lect) {
       <div class="advisor-anki-facts-box" style="margin-top: 0.75rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.35rem;">
           <strong style="color: ${isSkip ? '#ff7b72' : '#58a6ff'}; font-size: 13px; display: flex; align-items: center; gap: 0.4rem;">
-            <span>${isSkip ? '🚨' : '💡'}</span>
+            
             ${isSkip ? 'Pure-Anki Prioritäten (Exakt diese 3 Kernfakten lernen):' : 'Zentrale Fokus-Konzepte der Vorlesung:'}
           </strong>
           <span style="font-size: 11px; color: var(--text-dim);">Grounded in UZH-Folien</span>
@@ -6555,7 +6552,7 @@ function renderAdvisorHero(lect) {
               <span style="font-weight: 700; color: ${isSkip ? '#ff7b72' : '#58a6ff'}; font-size: 13px; min-width: 20px;">${idx + 1}.</span>
               <div style="flex: 1; font-size: 12px; color: var(--text-main); line-height: 1.5;">${escapeHtml(fact)}</div>
               <button type="button" class="btn-copy-fact" onclick="copyAnkiFactText('${encodeURIComponent(fact)}', this)" title="Fakt für Anki kopieren">
-                📋 Kopieren
+                Kopieren
               </button>
             </div>
           `).join('')}
@@ -6568,10 +6565,10 @@ function renderAdvisorHero(lect) {
   if (lect.has_local_podcast) {
     mediaHtml = `
       <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 11.5px; color: var(--text-muted); background: var(--bg-base); padding: 0.6rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle);">
-        <span style="color: #3fb950; font-weight: 600;">🎬 Lokaler Podcast verfügbar:</span>
-        <span>📽️ Folien: <strong>${escapeHtml(lect.folien_filename || 'Folien.mp4')}</strong></span>
+        <span style="color: #3fb950; font-weight: 600;">Lokaler Podcast verfügbar:</span>
+        <span>Folien: <strong>${escapeHtml(lect.folien_filename || 'Folien.mp4')}</strong></span>
         <span>•</span>
-        <span>👨‍🏫 Dozent: <strong>${escapeHtml(lect.prof_filename || 'Prof.mp4')}</strong></span>
+        <span>Dozent: <strong>${escapeHtml(lect.prof_filename || 'Prof.mp4')}</strong></span>
       </div>
     `;
   }
@@ -6580,7 +6577,7 @@ function renderAdvisorHero(lect) {
   if (lect.slide_pdf) {
     slideLinkHtml = `
       <div style="margin-top: 0.35rem; font-size: 11.5px; color: var(--text-dim);">
-        📄 Kurs-Folie: <span style="color: var(--accent-blue); font-family: monospace;">${escapeHtml(lect.slide_pdf)}</span>
+        Kurs-Folie: <span style="color: var(--accent-blue); font-family: monospace;">${escapeHtml(lect.slide_pdf)}</span>
       </div>
     `;
   }
@@ -6593,7 +6590,7 @@ function renderAdvisorHero(lect) {
         <div style="flex: 1; min-width: 260px;">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
             <span style="font-size: 11px; background: var(--bg-surface-active); color: var(--text-muted); padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 600;">
-              📅 ${lect.date}
+              ${lect.date}
             </span>
             <span style="font-size: 11.5px; color: var(--text-dim); font-weight: 500;">
               ${escapeHtml(lect.module)}
@@ -6603,14 +6600,14 @@ function renderAdvisorHero(lect) {
             ${escapeHtml(lect.title)}
           </h2>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.25rem;">
-            👨‍🏫 ${escapeHtml(lect.lecturer || 'UZH Dozierende')}
+            ${escapeHtml(lect.lecturer || 'UZH Dozierende')}
           </div>
           ${slideLinkHtml}
         </div>
 
         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;">
           <div class="advisor-speed-banner" style="background: ${bannerBg}; border: 1px solid ${bannerBorder}; color: ${bannerText};">
-            <span>${isSkip ? '🛑' : (isAudio ? '🎧' : '⚡')}</span>
+            
             <span>${escapeHtml(lect.badge_label || lect.recommendation)}</span>
           </div>
           <span style="font-size: 11px; color: var(--text-dim);">
@@ -6623,28 +6620,28 @@ function renderAdvisorHero(lect) {
 
       <div class="advisor-metrics-grid">
         <div class="advisor-metric-box">
-          <div class="advisor-metric-label">📊 Prüfungsrelevanz</div>
+          <div class="advisor-metric-label">Prüfungsrelevanz</div>
           <div class="advisor-metric-val" style="color: ${lect.exam_yield === 'High-Yield' ? '#f85149' : (lect.exam_yield === 'Med-Yield' ? '#d29922' : '#8b949e')};">
             ${escapeHtml(lect.exam_yield)}
           </div>
         </div>
 
         <div class="advisor-metric-box">
-          <div class="advisor-metric-label">👁️ Visuelle Abhängigkeit</div>
+          <div class="advisor-metric-label">Visuelle Abhängigkeit</div>
           <div class="advisor-metric-val" style="color: ${lect.visual_dependency === 'Hoch' ? '#58a6ff' : '#3fb950'};">
             ${escapeHtml(lect.visual_dependency)} ${lect.visual_dependency === 'Hoch' ? '(Bildschirm zwingend)' : '(Audio möglich)'}
           </div>
         </div>
 
         <div class="advisor-metric-box">
-          <div class="advisor-metric-label">🗣️ Dozenten-Tempo (gemessen)</div>
+          <div class="advisor-metric-label">Dozenten-Tempo (gemessen)</div>
           <div class="advisor-metric-val">
             ${escapeHtml(lect.lecturer_tempo)} <span style="font-size: 11px; font-weight: normal; color: var(--text-dim);">(${Math.round(lect.silence_ratio * 100)}% Pause)</span>
           </div>
         </div>
 
         <div class="advisor-metric-box">
-          <div class="advisor-metric-label">💡 Lern-Strategie</div>
+          <div class="advisor-metric-label">Lern-Strategie</div>
           <div class="advisor-metric-val" style="color: ${bannerText};">
             ${isSkip ? '100% Anki' : (isAudio ? 'Audio-Podcast' : 'Aktiv Mitdenken')}
           </div>
@@ -6653,7 +6650,7 @@ function renderAdvisorHero(lect) {
 
       <div class="advisor-reason-box">
         <strong style="color: #58a6ff; display: block; margin-bottom: 0.25rem;">
-          🧠 Kognitive Begründung &amp; Zeitersparnis (Cognitive Load Theory):
+          Kognitive Begründung &amp; Zeitersparnis (Cognitive Load Theory):
         </strong>
         ${escapeHtml(lect.tradeoff_reason)}
       </div>
@@ -6701,7 +6698,7 @@ function renderAdvisorCatalog(lectures) {
             <strong style="color: var(--text-main); font-size: 13px;">${escapeHtml(l.title)}</strong>
             ${tsSnippet}
             <div style="font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis;">
-              ${escapeHtml(l.module)} • ${escapeHtml(l.lecturer || '')} • 🃏 ${l.total_anki_cards || 200} Karten
+              ${escapeHtml(l.module)} • ${escapeHtml(l.lecturer || '')} • ${l.total_anki_cards || 200} Karten
             </div>
           </div>
         </div>
@@ -6818,7 +6815,7 @@ async function renderPageRoadmap() {
             <span class="status-badge" style="font-size: 10px; background: rgba(88,166,255,0.15); color: #58a6ff;">${m.total_cards} Karten</span>
           </div>
           <div style="font-size: 11px; color: var(--text-muted); margin-top: 0.35rem;">
-            📅 ${m.start_date} bis ${m.end_date} (${m.active_days} Lerntage)
+            ${m.start_date} bis ${m.end_date} (${m.active_days} Lerntage)
           </div>
           <div style="margin-top: 0.5rem; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;">
             <div style="height: 100%; width: ${m.progress_pct || 0}%; background: var(--status-done);"></div>

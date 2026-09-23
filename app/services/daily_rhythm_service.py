@@ -58,7 +58,7 @@ def tag_event_mandatory_status(event: CalendarEvent) -> CalendarEvent:
     """Tags a CalendarEvent with mandatory status, badge, and prominent violet color if applicable."""
     if is_mandatory_practical(event.title, event.description or ""):
         event.is_mandatory = True
-        event.badge_label = "🏛️ OBLIGATORISCH (Präsenzpflicht)"
+        event.badge_label = "OBLIGATORISCH (Präsenzpflicht)"
         event.badge_color = "#a371f7"  # Distinct bright violet for mandatory practicals
         event.recommendation = "attend"
         event.recommendation_reason = (
@@ -258,7 +258,7 @@ def generate_daily_science_rhythm(
         "title": reps_title,
         "subtitle": reps_subtitle,
         "focus_type": "active_recall",
-        "icon": "🧠",
+        "icon": "",
         "color": "#58a6ff",
         "badge": reps_badge,
         "description": reps_desc,
@@ -276,7 +276,7 @@ def generate_daily_science_rhythm(
         "title": "Pause 1: Diffuse Mode (Kein Bildschirm!)",
         "subtitle": "Synaptische Konsolidierung & Hydratation",
         "focus_type": "pause",
-        "icon": "☕",
+        "icon": "",
         "color": "#3fb950",
         "badge": "Pause (15m)",
         "description": "Zwingende Bildschirmpause: Aufstehen, Wasser trinken, Fenster öffnen. Keine Social Media!",
@@ -292,7 +292,7 @@ def generate_daily_science_rhythm(
         "title": f"Block 2: {new_cards_target} Neue Karten HEUTE (Deep Encoding)",
         "subtitle": f"{slot_summary} • Vormittags-Fokus",
         "focus_type": "deep_encoding",
-        "icon": "🔥",
+        "icon": "",
         "color": "#d2a8ff",
         "badge": f"Deep Encoding ({dur_new}m)",
         "description": f"Absolutes Dopamin- und Konzentrationsfenster: Exakt {new_cards_target} neue Karten für HEUTE hochkonzentriert einprägen ({slot_summary}). Vorlesung wurde bereits gestern Nachmittag geprimed!",
@@ -311,7 +311,7 @@ def generate_daily_science_rhythm(
         "title": "Pause 2: Gehirn-Reset",
         "subtitle": "Erfrischung & Bewegung",
         "focus_type": "pause",
-        "icon": "🧘",
+        "icon": "",
         "color": "#3fb950",
         "badge": "Pause (15m)",
         "description": "Frische Luft, Dehnen, Durchatmen vor dem nächsten Arbeitsblock.",
@@ -330,7 +330,7 @@ def generate_daily_science_rhythm(
             "title": "Block 3: Transfer & Vormittags-Abschluss",
             "subtitle": b3_sub,
             "focus_type": "concept_stream",
-            "icon": "📖",
+            "icon": "",
             "color": "#79c0ff",
             "badge": f"Transfer ({dur_lec}m)",
             "description": "Kurzer Abgleich mit den Vorlesungsfolien oder Puffer für letzte offene Karten des Vormittags vor der Mittagspause.",
@@ -354,7 +354,7 @@ def generate_daily_science_rhythm(
         "title": f"Mittagspause & Erholung ({dur_lunch} Min.)",
         "subtitle": "Proteinreiche Mahlzeit & Kognitiver Abstand",
         "focus_type": "meal_rest",
-        "icon": "🥗",
+        "icon": "",
         "color": "#8b949e",
         "badge": lunch_badge,
         "description": "Proteinreiche Mahlzeit (verhindert Glukosesturz), frische Luft und vollständiger kognitiver Abstand.",
@@ -420,10 +420,10 @@ def generate_daily_science_rhythm(
         if tomorrow_mandatory:
             first_m = tomorrow_mandatory[0]
             m_time = first_m.start_time.strftime("%H:%M")
-            tom_m_warning = f" • ⚠️ Morgen {m_time} Uhr: 🏛️ {first_m.title} (Präsenzpflicht!)"
+            tom_m_warning = f" • Morgen {m_time} Uhr: {first_m.title} (Präsenzpflicht!)"
 
         title_text = f"Nachmittag: Vorlesung für MORGEN sichten – {tom_title}"
-        subtitle_text = f"👨‍🏫 {tom_lec} • Bereitet {tom_cards} Anki-Karten für morgen vor{tom_m_warning}"
+        subtitle_text = f"{tom_lec} • Bereitet {tom_cards} Anki-Karten für morgen vor{tom_m_warning}"
         desc_text = f"Auditive Vorentlastung für morgen: Vorlesung '{tom_title}'{' (' + tom_date + ')' if tom_date else ''} auf {tom_speed}x sichten{' (' + tom_timecode + ')' if tom_timecode else ''}. Bereitet die morgigen {tom_cards} neuen Karten vor ({tom_topics}). Das Gehirn baut im Schlaf das Schema auf!"
         if tomorrow_mandatory:
             desc_text += f" Wichtig: Morgen ab {tomorrow_mandatory[0].start_time.strftime('%H:%M')} Uhr findet das obligatorische '{tomorrow_mandatory[0].title}' vor Ort statt."
@@ -434,7 +434,7 @@ def generate_daily_science_rhythm(
             "title": title_text,
             "subtitle": subtitle_text,
             "focus_type": "afternoon_flex",
-            "icon": "🎧",
+            "icon": "",
             "color": "#388bfd",
             "badge": f"24h-Pipeline ({dur_afternoon}m)",
             "description": desc_text,
@@ -478,10 +478,10 @@ def generate_daily_science_rhythm(
                 "start_time": _minutes_to_time(cur_m),
                 "end_time": _minutes_to_time(ev_start_m),
                 "duration_minutes": gap_dur,
-                "title": f"🚶 Puffer, Vorbereitung & Wegzeit ({loc_label})",
+                "title": f"Puffer, Vorbereitung & Wegzeit ({loc_label})",
                 "subtitle": f"Kognitive Erholung & Transfer zum Kursort • {dur_label}",
                 "focus_type": "pause",
-                "icon": "🚶",
+                "icon": "",
                 "color": "#3fb950",
                 "badge": f"Puffer ({dur_label})",
                 "description": f"Freie Zeit für Erholung, Snack, Durchatmen und rechtzeitigen Transfer zum Kursort ({m_ev.location or 'UZH'}).",
@@ -499,12 +499,12 @@ def generate_daily_science_rhythm(
             "start_time": ev_start_str,
             "end_time": ev_end_str,
             "duration_minutes": dur,
-            "title": f"🏛️ {m_ev.title}",
+            "title": f"{m_ev.title}",
             "subtitle": f"UZH Vor-Ort Präsenzpflicht{loc_text}",
             "focus_type": "mandatory_in_person",
-            "icon": "🏛️",
+            "icon": "",
             "color": "#a371f7",
-            "badge": "🏛️ OBLIGATORISCH (Präsenzpflicht)",
+            "badge": "OBLIGATORISCH (Präsenzpflicht)",
             "description": desc_full,
             "is_break": False,
             "is_mandatory": True,
@@ -537,7 +537,7 @@ def generate_daily_science_rhythm(
         "title": "Tagesabschluss: Mini Lapse-Review",
         "subtitle": lapse_subtitle,
         "focus_type": "lapse_cleanup",
-        "icon": "🔁",
+        "icon": "",
         "color": "#db6d28",
         "badge": f"Lapse-Filter ({dur_lapse}m)",
         "description": "Wissenschaftlich fundierter 15–30 Min. Abschluss: Gezieltes Durchklicken der Problemkarten des Tages schützt vor dem 'Vergessen über Nacht' (Ebbinghaus-Konsolidierung). Bei Zeitdruck direkt die 2 relevanten Dozentenfolien öffnen!",
@@ -560,10 +560,10 @@ def generate_daily_science_rhythm(
         "start_time": feierabend_time,
         "end_time": "22:00",
         "duration_minutes": dur_evening,
-        "title": f"🎉 Feierabend ab {feierabend_time} & Sport am Abend",
+        "title": f"Feierabend ab {feierabend_time} & Sport am Abend",
         "subtitle": "Kognitive Regeneration & BDNF-Ausschüttung",
         "focus_type": "evening_free",
-        "icon": "🏃",
+        "icon": "",
         "color": "#238636",
         "badge": "Sport & Freizeit",
         "description": "Keine Lernzeiten mehr! Sport am Abend schüttet BDNF aus, puffert den Elvanse-Rebound ab und verankert das Gelernte in der Nacht.",
@@ -619,7 +619,7 @@ def generate_daily_science_rhythm(
         if free_block:
             free_block["start_time"] = feierabend_time
             free_block["duration_minutes"] = max(60, (22 * 60) - c_m)
-            free_block["title"] = f"🎉 Feierabend ab {feierabend_time} & Sport am Abend"
+            free_block["title"] = f"Feierabend ab {feierabend_time} & Sport am Abend"
 
         blocks = ordered_blocks
         total_study_mins = calc_study

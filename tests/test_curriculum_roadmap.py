@@ -297,7 +297,7 @@ def test_calculate_card_cognitive_metrics():
     assert 25 <= short_m["seconds_per_card"] <= 45
     assert short_m["estimated_study_minutes"] <= 45
     assert short_m["difficulty_level"] == "easy"
-    assert "🟢" in short_m["difficulty_label"]
+    assert "Leicht" in short_m["difficulty_label"]
 
     # Case 2: Standard concept deck (300 chars, medium yield)
     standard_m = calculate_card_cognitive_metrics(
@@ -323,7 +323,7 @@ def test_calculate_card_cognitive_metrics():
     assert heavy_m["seconds_per_card"] >= 75
     assert heavy_m["estimated_study_minutes"] >= 75
     assert heavy_m["difficulty_level"] in ("hard", "very_hard")
-    assert any(icon in heavy_m["difficulty_label"] for icon in ("🔴", "🔥"))
+    assert any(w in heavy_m["difficulty_label"] for w in ("Schwer", "Intensiv", "Sehr anspruchsvoll", "Marathon"))
 
 
 def test_roadmap_days_have_cognitive_metrics():
@@ -336,7 +336,7 @@ def test_roadmap_days_have_cognitive_metrics():
             assert d.get("estimated_study_minutes") == 0
             assert d.get("difficulty_level") == "rest"
             assert d.get("exam_yield") == "rest"
-            assert "☕" in d.get("exam_yield_badge", "")
+            assert any(w in d.get("exam_yield_badge", "") for w in ("Regeneration", "Ruhetag", "Pause"))
         else:
             assert d.get("estimated_study_minutes", 0) > 0
             assert d.get("difficulty_level") in ("easy", "medium", "hard", "very_hard")

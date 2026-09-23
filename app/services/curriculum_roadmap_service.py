@@ -125,29 +125,29 @@ def classify_topic_difficulty_and_yield(deck_name: str, clean_title: str, module
     # 1. Intrinsic Topic Difficulty (Inhaltliche Tiefe des Themas)
     if any(k in haystack for k in TOPIC_VERY_HARD_KEYWORDS):
         diff = "hard"
-        diff_label = "🔴 Anspruchsvoll (Regelkreis/Mechanismus)"
+        diff_label = "Anspruchsvoll (Regelkreis/Mechanismus)"
         diff_mult = 1.35
     elif any(k in haystack for k in TOPIC_EASY_KEYWORDS):
         diff = "easy"
-        diff_label = "🟢 Deskriptiv (Fakten/Anatomie)"
+        diff_label = "Deskriptiv (Fakten/Anatomie)"
         diff_mult = 0.75
     else:
         diff = "medium"
-        diff_label = "🟡 Standard (Konzepte/Klinik)"
+        diff_label = "Standard (Konzepte/Klinik)"
         diff_mult = 1.00
 
     # 2. Exam Yield / Wichtigkeit (Prüfungsrelevanz für UZH / USMLE)
     if any(k in haystack for k in HIGH_YIELD_EXAM_KEYWORDS):
         ey = "high_yield"
-        stars = "⭐⭐⭐"
+        stars = "High-Yield"
         ey_label = "Prüfungs-Kern (High-Yield)"
     elif any(k in haystack for k in LOW_YIELD_EXAM_KEYWORDS):
         ey = "low_yield"
-        stars = "⭐"
+        stars = "Low-Yield"
         ey_label = "Basiswissen (Low-Yield)"
     else:
         ey = "medium_yield"
-        stars = "⭐⭐"
+        stars = "Medium-Yield"
         ey_label = "Wichtig (Medium-Yield)"
 
     return {
@@ -157,7 +157,7 @@ def classify_topic_difficulty_and_yield(deck_name: str, clean_title: str, module
         "exam_yield": ey,
         "yield_stars": stars,
         "yield_label": ey_label,
-        "yield_badge": f"{stars} {ey_label}",
+        "yield_badge": ey_label,
     }
 
 
@@ -170,15 +170,15 @@ def classify_topic_didactics(deck_name: str, clean_title: str, module_name: str)
             "is_cycle_topic": True,
             "recommended_mode": "stream_1_0",
             "speed_factor": 1.0,
-            "badge_label": "🟠 1.0x Voller Fokus (Prüfungs-Kern)",
-            "didactic_reason": "⚠️ Kausale Regelkreise & Funktionskurven (USMLE/UZH Prüfungsfokus). Auf 1.0x streamen und aktiv mitdenken!",
+            "badge_label": "1.0x Voller Fokus (Prüfungs-Kern)",
+            "didactic_reason": "Kausale Regelkreise & Funktionskurven (USMLE/UZH Prüfungsfokus). Auf 1.0x streamen und aktiv mitdenken!",
         }
     elif any(k in combined for k in PURE_FACT_KEYWORDS):
         return {
             "is_cycle_topic": False,
             "recommended_mode": "skipped",
             "speed_factor": 0.0,
-            "badge_label": "🔴 Vorlesung skippen (100% Anki)",
+            "badge_label": "Vorlesung skippen (100% Anki)",
             "didactic_reason": "Reines Faktenwissen / Nomenklatur / Histologie. Vorlesung skippen (spart 90 Min) und direkt in Anki lernen!",
         }
     else:
@@ -186,7 +186,7 @@ def classify_topic_didactics(deck_name: str, clean_title: str, module_name: str)
             "is_cycle_topic": False,
             "recommended_mode": "stream_1_2",
             "speed_factor": 1.2,
-            "badge_label": "🟡 1.2x Standard-Stream (+25m gespart)",
+            "badge_label": "1.2x Standard-Stream (+25m gespart)",
             "didactic_reason": "Deskriptiver Überblick & Dozentenschwerpunkte. Auf 1.2x im Standard-Stream mitnehmen!",
         }
 
@@ -223,19 +223,19 @@ def calculate_card_cognitive_metrics(
     # Classification
     if study_minutes < 45 or seconds_per_card <= 35:
         level = "easy"
-        label = "🟢 Leicht"
+        label = "Leicht"
         reason = f"Kurze Fakten/Nomenklatur (~{seconds_per_card}s/Neukarte) • Geringe kognitive Ermüdung."
     elif study_minutes <= 75:
         level = "medium"
-        label = "🟡 Mittel"
+        label = "Mittel"
         reason = f"Standard-Physiologie (~{seconds_per_card}s/Neukarte) • Gut machbare Concept-Session."
     elif study_minutes <= 110:
         level = "hard"
-        label = "🔴 Intensiv"
+        label = "Intensiv"
         reason = f"Anspruchsvolle Mechanismen & Kaskaden (~{seconds_per_card}s/Neukarte) • Hohe Konzentration erforderlich."
     else:
         level = "very_hard"
-        label = "🔥 Marathon"
+        label = "Marathon"
         reason = f"Sehr umfangreiches, komplexes Stoffgebiet (~{seconds_per_card}s/Neukarte) • Plane Pausen ein!"
 
     return {
@@ -1143,11 +1143,11 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "total_curriculum_cards": total_curriculum_cards,
                 "curriculum_progress_pct": round((cumulative_cards / max(1, total_curriculum_cards)) * 100, 1),
                 "current_module": "Regeneration & Erholung",
-                "summary": "🏖️ Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!",
+                "summary": "Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!",
                 "exam_date": TARGET_EXAM_DATE.strftime("%Y-%m-%d"),
                 "days_until_exam": days_until,
                 "revision_buffer_days": 15,
-                "synergy_headline": "🏖️ Ruhetag – Mentale Erholung & kognitive Konsolidierung",
+                "synergy_headline": "Ruhetag – Mentale Erholung & kognitive Konsolidierung",
                 "recommended_study_sequence": [
                     "1. Spaziergang oder Sport an der frischen Luft",
                     "2. Schlaf & Regeneration zur Festigung der synaptischen Plastizität",
@@ -1156,13 +1156,13 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "estimated_study_minutes": 0,
                 "avg_seconds_per_card": 0.0,
                 "difficulty_level": "rest",
-                "difficulty_label": "☕ Ruhetag",
-                "difficulty_badge": "☕ Ruhetag",
+                "difficulty_label": "Ruhetag",
+                "difficulty_badge": "Ruhetag",
                 "difficulty_reason": "Geplanter Ruhetag zur kognitiven Erholung.",
                 "exam_yield": "rest",
-                "yield_stars": "☕",
+                "yield_stars": "-",
                 "yield_label": "Regeneration",
-                "exam_yield_badge": "☕ Regeneration",
+                "exam_yield_badge": "Regeneration",
             })
             cur_date += timedelta(days=1)
             continue
@@ -1372,66 +1372,66 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
 
         if day_est_min < 55:
             day_diff_level = "easy"
-            day_diff_label = "🟢 Leicht"
+            day_diff_label = "Leicht"
             day_diff_reason = f"Kurze Fakten/Übersicht (~{day_avg_sec}s/Neukarte) • Geringe kognitive Belastung."
         elif day_est_min <= 85:
             day_diff_level = "medium"
-            day_diff_label = "🟡 Mittel"
+            day_diff_label = "Mittel"
             day_diff_reason = f"Ausgewogene Standard-Physiologie (~{day_avg_sec}s/Neukarte) • Solide Session."
         elif day_est_min <= 125:
             day_diff_level = "hard"
-            day_diff_label = "🔴 Intensiv"
+            day_diff_label = "Intensiv"
             day_diff_reason = f"Anspruchsvolle Mechanismen & Kaskaden (~{day_avg_sec}s/Neukarte) • Hohe Konzentration erforderlich."
         else:
             day_diff_level = "very_hard"
-            day_diff_label = "🔥 Marathon"
+            day_diff_label = "Marathon"
             day_diff_reason = f"Sehr umfangreiches, komplexes Stoffgebiet (~{day_avg_sec}s/Neukarte) • Unbedingt Pausen einplanen!"
 
         day_diff_badge = f"{day_diff_label} (~{day_est_min} Min.)"
 
         if any(s.get("exam_yield") == "high_yield" for s in day_slots):
             day_yield = "high_yield"
-            day_yield_stars = "⭐⭐⭐"
+            day_yield_stars = "High-Yield"
             day_yield_label = "Prüfungs-Kern (High-Yield)"
         elif any(s.get("exam_yield") == "medium_yield" for s in day_slots):
             day_yield = "medium_yield"
-            day_yield_stars = "⭐⭐"
+            day_yield_stars = "Medium-Yield"
             day_yield_label = "Wichtig (Medium-Yield)"
         else:
             day_yield = "low_yield"
-            day_yield_stars = "⭐"
+            day_yield_stars = "Low-Yield"
             day_yield_label = "Basiswissen (Low-Yield)"
 
-        day_yield_badge = f"{day_yield_stars} {day_yield_label}"
+        day_yield_badge = day_yield_label
 
         first_slot = day_slots[0]
         primary_title = first_slot.get("clean_title") or first_slot["short_title"]
         primary_lecturer = first_slot.get("lecturer") or "Dozent"
 
         if first_slot.get("video_time_saved_min"):
-            synergy_headline = f"🎯 Fokus: {primary_title} ({primary_lecturer}) – Vorlesungs-Priming spart {first_slot['video_time_saved_min']} Minuten!"
+            synergy_headline = f"Fokus: {primary_title} ({primary_lecturer}) – Vorlesungs-Priming spart {first_slot['video_time_saved_min']} Minuten"
         else:
-            synergy_headline = f"🎯 Fokus: {primary_title} ({primary_lecturer}) – Didaktische Concept Session"
+            synergy_headline = f"Fokus: {primary_title} ({primary_lecturer}) – Didaktische Concept Session"
 
         study_sequence = []
         if first_slot.get("video_start_time") and first_slot.get("video_end_time"):
             study_sequence.append(
-                f"1. 🎧 Vorlesungs-Priming: {primary_lecturer} von {first_slot['video_start_time']} bis {first_slot['video_end_time']} im {first_slot['speed_factor']}x Stream sichten"
+                f"1. Vorlesungs-Priming: {primary_lecturer} von {first_slot['video_start_time']} bis {first_slot['video_end_time']} im {first_slot['speed_factor']}x Stream sichten"
             )
         else:
             study_sequence.append(
-                f"1. 🎧 Vorlesung im {first_slot['speed_factor']}x Standard-Stream sichten für den roten Faden"
+                f"1. Vorlesung im {first_slot['speed_factor']}x Standard-Stream sichten für den roten Faden"
             )
         study_sequence.append(
-            f"2. 📇 Aktives Enkodieren: {day_total_cards} neue Karten im Deck '{primary_title}' ohne kognitive Reibung durcharbeiten"
+            f"2. Aktives Enkodieren: {day_total_cards} neue Karten im Deck '{primary_title}' durcharbeiten"
         )
         if first_slot.get("cross_links") and len(first_slot["cross_links"]) > 0:
             study_sequence.append(
-                f"3. 🔗 Quervernetzung: {first_slot['cross_links'][0]}"
+                f"3. Quervernetzung: {first_slot['cross_links'][0]}"
             )
         else:
             study_sequence.append(
-                f"3. 🔗 Quervernetzung: Klinische Integration und Pathophysiologie vertiefen"
+                f"3. Quervernetzung: Klinische Integration und Pathophysiologie vertiefen"
             )
 
         days_until = (TARGET_EXAM_DATE - cur_date).days
@@ -1553,13 +1553,13 @@ def generate_curriculum_roadmap(
                         "estimated_study_minutes": d.get("estimated_study_minutes", 45),
                         "avg_seconds_per_card": d.get("avg_seconds_per_card", 28.0),
                         "difficulty_level": d.get("difficulty_level", "medium"),
-                        "difficulty_label": d.get("difficulty_label", "🟡 Mittel"),
-                        "difficulty_badge": d.get("difficulty_badge", "🟡 Mittel"),
+                        "difficulty_label": d.get("difficulty_label", "Mittel"),
+                        "difficulty_badge": d.get("difficulty_badge", "Mittel"),
                         "difficulty_reason": d.get("difficulty_reason", ""),
                         "exam_yield": d.get("exam_yield", "medium_yield"),
-                        "yield_stars": d.get("yield_stars", "⭐⭐"),
+                        "yield_stars": d.get("yield_stars", ""),
                         "yield_label": d.get("yield_label", "Wichtig"),
-                        "exam_yield_badge": d.get("exam_yield_badge", "⭐⭐ Wichtig"),
+                        "exam_yield_badge": d.get("exam_yield_badge", "Wichtig"),
                     }
 
             for d in schedule_days:
@@ -1578,13 +1578,13 @@ def generate_curriculum_roadmap(
                         d["estimated_study_minutes"] = pkg.get("estimated_study_minutes", 45)
                         d["avg_seconds_per_card"] = pkg.get("avg_seconds_per_card", 28.0)
                         d["difficulty_level"] = pkg.get("difficulty_level", "medium")
-                        d["difficulty_label"] = pkg.get("difficulty_label", "🟡 Mittel")
-                        d["difficulty_badge"] = pkg.get("difficulty_badge", "🟡 Mittel")
+                        d["difficulty_label"] = pkg.get("difficulty_label", "Mittel")
+                        d["difficulty_badge"] = pkg.get("difficulty_badge", "Mittel")
                         d["difficulty_reason"] = pkg.get("difficulty_reason", "")
                         d["exam_yield"] = pkg.get("exam_yield", "medium_yield")
-                        d["yield_stars"] = pkg.get("yield_stars", "⭐⭐")
+                        d["yield_stars"] = pkg.get("yield_stars", "")
                         d["yield_label"] = pkg.get("yield_label", "Wichtig")
-                        d["exam_yield_badge"] = pkg.get("exam_yield_badge", "⭐⭐ Wichtig")
+                        d["exam_yield_badge"] = pkg.get("exam_yield_badge", "Wichtig")
                         if assigned_num != d.get("day_number"):
                             d["is_swapped"] = True
                             d["swapped_with_day"] = assigned_num
@@ -1879,22 +1879,22 @@ def _sync_active_day_assignment(
             "is_cycle_topic": primary_tom.get("is_cycle_topic", False),
             "estimated_study_minutes": tomorrow_day.get("estimated_study_minutes", 45),
             "difficulty_level": tomorrow_day.get("difficulty_level", "medium"),
-            "difficulty_label": tomorrow_day.get("difficulty_label", "🟡 Mittel"),
-            "difficulty_badge": tomorrow_day.get("difficulty_badge", "🟡 Mittel"),
+            "difficulty_label": tomorrow_day.get("difficulty_label", "Mittel"),
+            "difficulty_badge": tomorrow_day.get("difficulty_badge", "Mittel"),
             "difficulty_reason": tomorrow_day.get("difficulty_reason", ""),
             "exam_yield": tomorrow_day.get("exam_yield", "medium_yield"),
-            "yield_stars": tomorrow_day.get("yield_stars", "⭐⭐"),
+            "yield_stars": tomorrow_day.get("yield_stars", ""),
             "yield_label": tomorrow_day.get("yield_label", "Wichtig"),
-            "exam_yield_badge": tomorrow_day.get("exam_yield_badge", "⭐⭐ Wichtig"),
+            "exam_yield_badge": tomorrow_day.get("exam_yield_badge", "Wichtig"),
         }
 
     day["tomorrow_preview"] = tomorrow_preview
     if tomorrow_preview:
-        day["synergy_headline"] = f"☀️ Vormittag: {adj_target} Anki-Karten heute ({clean_topics}) • 🌅 Nachmittag: Vorlesung für MORGEN sichten"
+        day["synergy_headline"] = f"Vormittag: {adj_target} Anki-Karten heute ({clean_topics}) • Nachmittag: Vorlesung für MORGEN sichten"
         day["recommended_study_sequence"] = [
-            f"1. 📇 Vormittags-Enkodieren: {adj_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
-            f"2. 🎧 Nachmittags-Priming für MORGEN: {tomorrow_preview['primary_lecture_title']} auf {tomorrow_preview['primary_speed_factor']}x sichten ({tomorrow_preview['primary_lecturer']})",
-            f"3. 🔗 Quervernetzung: {new_slots[0].get('cross_links', ['Klinische Integration vertiefen'])[0] if new_slots and new_slots[0].get('cross_links') else 'Klinische Integration vertiefen'}"
+            f"1. Vormittags-Enkodieren: {adj_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
+            f"2. Nachmittags-Priming für MORGEN: {tomorrow_preview['primary_lecture_title']} auf {tomorrow_preview['primary_speed_factor']}x sichten ({tomorrow_preview['primary_lecturer']})",
+            f"3. Quervernetzung: {new_slots[0].get('cross_links', ['Klinische Integration vertiefen'])[0] if new_slots and new_slots[0].get('cross_links') else 'Klinische Integration vertiefen'}"
         ]
 
     # Recalculate cumulative cards & progress percentages across all active days
@@ -1994,7 +1994,7 @@ def get_daily_curriculum_assignment(
         "total_curriculum_cards": roadmap["total_cards"],
         "curriculum_progress_pct": 100.0,
         "current_module": "Revisionsphase & Probeprüfungen",
-        "summary": f"🎉 Sämtliche 9'633 Stoffkarten wurden absolviert! Aktuell im Revisionspuffer ({days_until_exam} Tage bis zur Prüfung). Fokus auf Schwachstellen und Altklausuren.",
+        "summary": f"Sämtliche 9'633 Stoffkarten wurden absolviert! Aktuell im Revisionspuffer ({days_until_exam} Tage bis zur Prüfung). Fokus auf Schwachstellen und Altklausuren.",
         "exam_date": roadmap["exam_date"],
         "days_until_exam": max(0, days_until_exam),
         "revision_buffer_days": roadmap["revision_buffer_days"],
@@ -2046,7 +2046,7 @@ def get_daily_curriculum_assignment(
         "total_curriculum_cards": roadmap["total_cards"],
         "curriculum_progress_pct": 100.0,
         "current_module": "Revisionsphase & Probeprüfungen",
-        "summary": f"🎉 Sämtliche 9'633 Stoffkarten wurden absolviert! Aktuell im Revisionspuffer ({days_until_exam} Tage bis zur Prüfung). Fokus auf Schwachstellen und Altklausuren.",
+        "summary": f"Sämtliche 9'633 Stoffkarten wurden absolviert! Aktuell im Revisionspuffer ({days_until_exam} Tage bis zur Prüfung). Fokus auf Schwachstellen und Altklausuren.",
         "exam_date": roadmap["exam_date"],
         "days_until_exam": max(0, days_until_exam),
         "revision_buffer_days": roadmap["revision_buffer_days"],

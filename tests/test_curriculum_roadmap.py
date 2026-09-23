@@ -129,6 +129,28 @@ def test_api_curriculum_roadmap():
     assert len(data["schedule"]) > 90
 
 
+def test_parity_between_roadmap_and_today():
+    """Verify that /curriculum/roadmap and /curriculum/today return identical targets, slots, and summary for today."""
+    today_str = date.today().isoformat()
+    res_today = client.get(f"/api/v1/schedule/curriculum/today?target_date={today_str}")
+    assert res_today.status_code == 200
+    today_data = res_today.json()
+
+    res_roadmap = client.get(f"/api/v1/schedule/curriculum/roadmap?target_date={today_str}")
+    assert res_roadmap.status_code == 200
+    roadmap_data = res_roadmap.json()
+
+    matching_day = next((d for d in roadmap_data["schedule"] if d["date"] == today_str), None)
+    assert matching_day is not None
+    assert matching_day["target_cards"] == today_data["target_cards"]
+    assert matching_day["adjusted_target_cards"] == today_data["adjusted_target_cards"]
+    assert matching_day["summary"] == today_data["summary"]
+    assert len(matching_day["topic_slots"]) == len(today_data["topic_slots"])
+    for s_rm, s_td in zip(matching_day["topic_slots"], today_data["topic_slots"]):
+        assert s_rm["clean_title"] == s_td["clean_title"]
+        assert s_rm["cards_to_learn"] == s_td["cards_to_learn"]
+
+
 def test_clean_topic_display():
     """Verify raw Anki hierarchy strings are cleanly converted to titles, lecturer, and breadcrumbs."""
     from app.services.curriculum_roadmap_service import clean_topic_display
@@ -213,6 +235,9 @@ def test_assignment_adapts_to_surplus(monkeypatch):
 
 def test_curriculum_swap_days_endpoint_and_assignment():
     """Verify swapping learning packages between Saturday (Day 6) and Day 12 (54 cards)."""
+    # 0. Ensure clean state
+    client.post("/api/v1/schedule/curriculum/reset-swaps")
+
     # 1. Baseline check via roadmap
     res_base = client.get("/api/v1/schedule/curriculum/roadmap")
     assert res_base.status_code == 200
@@ -253,5 +278,111 @@ def test_curriculum_swap_days_endpoint_and_assignment():
     sched_restored = res_restored.json()["schedule"]
     d6_restored = next(d for d in sched_restored if d.get("day_number") == 6)
     assert d6_restored.get("is_swapped") is not True
+
+
+def test_calculate_card_cognitive_metrics():
+    """Verify realistic cognitive load calculations for medical students: fact decks take ~35-45s while complex essay/cycle topics take 80-120s+."""
+    from app.services.curriculum_roadmap_service import calculate_card_cognitive_metrics
+
+    # Case 1: Short fact deck (e.g. 137 chars, simple facts)
+    short_m = calculate_card_cognitive_metrics(
+        card_count=60,
+        avg_card_chars=137.6,
+        is_cycle_topic=False,
+        recommended_mode="skipped",
+        topic_difficulty_mult=0.75,
+        exam_yield="low_yield",
+    )
+    assert 25 <= short_m["seconds_per_card"] <= 45
+    assert short_m["estimated_study_minutes"] <= 45
+    assert short_m["difficulty_level"] == "easy"
+    assert "🟢" in short_m["difficulty_label"]
+
+    # Case 2: Standard concept deck (300 chars, medium yield)
+    standard_m = calculate_card_cognitive_metrics(
+        card_count=70,
+        avg_card_chars=300.0,
+        is_cycle_topic=False,
+        recommended_mode="stream_1_2",
+        topic_difficulty_mult=1.0,
+        exam_yield="medium_yield",
+    )
+    assert 45 <= standard_m["seconds_per_card"] <= 70
+    assert 50 <= standard_m["estimated_study_minutes"] <= 85
+
+    # Case 3: Dense physiological essay deck (e.g. 793 chars, high yield, cycle topic)
+    heavy_m = calculate_card_cognitive_metrics(
+        card_count=60,
+        avg_card_chars=793.0,
+        is_cycle_topic=True,
+        recommended_mode="stream_1_0",
+        topic_difficulty_mult=1.35,
+        exam_yield="high_yield",
+    )
+    assert heavy_m["seconds_per_card"] >= 75
+    assert heavy_m["estimated_study_minutes"] >= 75
+    assert heavy_m["difficulty_level"] in ("hard", "very_hard")
+    assert any(icon in heavy_m["difficulty_label"] for icon in ("🔴", "🔥"))
+
+
+def test_roadmap_days_have_cognitive_metrics():
+    """Verify that every active day in the roadmap contains cognitive duration, difficulty badges, and exam yield."""
+    roadmap = generate_curriculum_roadmap()
+    schedule = roadmap["schedule"]
+
+    for d in schedule:
+        if d.get("is_rest_day"):
+            assert d.get("estimated_study_minutes") == 0
+            assert d.get("difficulty_level") == "rest"
+            assert d.get("exam_yield") == "rest"
+            assert "☕" in d.get("exam_yield_badge", "")
+        else:
+            assert d.get("estimated_study_minutes", 0) > 0
+            assert d.get("difficulty_level") in ("easy", "medium", "hard", "very_hard")
+            assert d.get("difficulty_badge") is not None
+            assert d.get("exam_yield") in ("high_yield", "medium_yield", "low_yield")
+            assert d.get("exam_yield_badge") is not None
+            assert len(d.get("topic_slots", [])) >= 1
+            for slot in d["topic_slots"]:
+                assert "avg_card_chars" in slot
+                assert "seconds_per_card" in slot
+                assert "estimated_study_minutes" in slot
+                assert "exam_yield" in slot
+                assert "yield_stars" in slot
+
+
+def test_swap_updates_previous_day_tomorrow_preview():
+    """Verify that swapping Day 6 and Day 12 automatically updates the 24h-priming on Day 5 and Day 11."""
+    from app.db.repository import swap_curriculum_days, reset_curriculum_schedule_overrides
+
+    reset_curriculum_schedule_overrides()
+
+    # 1. Check Friday before swap (previews Day 6: Zelluläre Immunität)
+    fri_before = get_daily_curriculum_assignment(date(2026, 9, 18))
+    assert fri_before["tomorrow_preview"] is not None
+    assert "Zellul" in fri_before["tomorrow_preview"]["primary_lecture_title"]
+    assert fri_before["tomorrow_preview"]["target_cards"] == 97
+
+    # 2. Swap Day 6 (2026-09-19) with Day 12 (2026-09-26, EKG / Kurtcuoglu)
+    swap_curriculum_days("2026-09-19", "2026-09-26", 6, 12)
+
+    # 3. Check Friday after swap: tomorrow_preview MUST now prime Day 12's lecture (EKG / Kurtcuoglu)!
+    fri_after = get_daily_curriculum_assignment(date(2026, 9, 18))
+    assert fri_after["tomorrow_preview"] is not None
+    assert "EKG" in fri_after["tomorrow_preview"]["primary_lecture_title"]
+    assert fri_after["tomorrow_preview"]["target_cards"] == 54
+    assert fri_after["tomorrow_preview"]["difficulty_level"] in ("easy", "medium")
+    assert "exam_yield" in fri_after["tomorrow_preview"]
+    assert fri_after["tomorrow_preview"]["exam_yield_badge"] is not None
+
+    # 4. Check Day 11 (Friday of next week, 2026-09-25): MUST now prime Day 6's lecture (Zelluläre Immunität)!
+    day11_after = get_daily_curriculum_assignment(date(2026, 9, 25))
+    assert day11_after["tomorrow_preview"] is not None
+    assert "Zellul" in day11_after["tomorrow_preview"]["primary_lecture_title"]
+    assert day11_after["tomorrow_preview"]["target_cards"] == 97
+
+    # 5. Clean up
+    reset_curriculum_schedule_overrides()
+
 
 

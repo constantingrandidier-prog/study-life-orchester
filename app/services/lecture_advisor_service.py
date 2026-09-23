@@ -2434,6 +2434,140 @@ def fuzzy_match_token(token: str, candidate_words: List[str], threshold: float =
     return best_ratio if best_ratio >= threshold else 0.0
 
 
+def _normalize_med(text: str) -> str:
+    """Normalizes German medical terminology, umlauts, and spelling variations."""
+    if not text:
+        return ""
+    t = text.lower().strip()
+    t = t.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss")
+    t = re.sub(r'poiese', 'poese', t)
+    t = re.sub(r'zyt([a-z]*)', r'cyt\1', t)
+    t = re.sub(r'aemie', 'ämie', t)
+    return t
+
+EXPLICIT_DECK_MAPPINGS = {
+    # 1. Blut & Immunsystem
+    "erythropoiese": "2025-09-19_TB_Blut_-_Immunsystem",
+    "myelopoiese": "2025-09-19_TB_Blut_-_Immunsystem",
+    "myelopoese": "2025-09-19_TB_Blut_-_Immunsystem",
+    "leukozyten i": "2025-09-19_TB_Blut_-_Immunsystem",
+    "leukozyten": "2025-09-19_TB_Blut_-_Immunsystem",
+    "granulozyten": "2025-09-19_TB_Blut_-_Immunsystem",
+    "phasen der immunantwort": "8_CM_Komplementsystem",
+    "zelluläre immunität": "8_CM_Komplementsystem",
+    "zellulaere immunitaet": "8_CM_Komplementsystem",
+    "komplementsystem": "8_CM_Komplementsystem",
+    "komplement": "8_CM_Komplementsystem",
+    "c3b": "8_CM_Komplementsystem",
+    "membranangriffskomplex": "8_CM_Komplementsystem",
+    "angeborene und erworbene": "2025-09-25_TB_Blut_-_Immunsystem",
+    "rekombination adaptiver": "2025-09-25_TB_Blut_-_Immunsystem",
+    "zellentstehung und reifung": "2025-09-25_TB_Blut_-_Immunsystem",
+    "monoklonale antikörper": "2025-09-25_TB_Blut_-_Immunsystem",
+    "monoklonale antikoerper": "2025-09-25_TB_Blut_-_Immunsystem",
+    "immuntoleranz": "2025-09-25_TB_Blut_-_Immunsystem",
+    "t-zellen": "2025-09-25_TB_Blut_-_Immunsystem",
+    "blutgruppen": "2025-09-25_TB_Blut_-_Immunsystem",
+    "rhesus": "2025-09-25_TB_Blut_-_Immunsystem",
+    "autoimmunität und entzündung": "2025-09-26_TB_Blut_-_Immunsystem",
+    "autoimmunitaet": "2025-09-26_TB_Blut_-_Immunsystem",
+    "thrombozyten, wundheilung": "2025-09-26_TB_Blut_-_Immunsystem",
+    "thrombozyten": "2025-09-26_TB_Blut_-_Immunsystem",
+    "blutgerinnung": "2025-09-26_TB_Blut_-_Immunsystem",
+    "hämostase": "2025-09-26_TB_Blut_-_Immunsystem",
+    "haemostase": "2025-09-26_TB_Blut_-_Immunsystem",
+    "blut und blutplasma": "2025-09-18_TB_Blut_-_Immunsystem",
+    "erythrozyten / wenger": "2025-09-18_TB_Blut_-_Immunsystem",
+    "hämoglobin": "2025-09-18_TB_Blut_-_Immunsystem",
+    "haemoglobin": "2025-09-18_TB_Blut_-_Immunsystem",
+    "myoglobin": "2025-09-18_TB_Blut_-_Immunsystem",
+    "bohr-effekt": "2025-09-18_TB_Blut_-_Immunsystem",
+    "2,3-bpg": "2025-09-18_TB_Blut_-_Immunsystem",
+    "thymus und lymphatisches": "2025-09-22_TB_Blut_-_Immunsystem",
+    "lymphatisches system": "2025-09-22_TB_Blut_-_Immunsystem",
+    "co2-transport": "2025-09-22_TB_Blut_-_Immunsystem",
+    "säure-basen": "2025-09-22_TB_Blut_-_Immunsystem",
+    "saeure-basen": "2025-09-22_TB_Blut_-_Immunsystem",
+    # 2. Herz & Kreislauf
+    "ekg": "2025-10-08_TB_Herz_-_Kreislauf",
+    "vektorkardiographie": "2025-10-08_TB_Herz_-_Kreislauf",
+    "erregungsleitungssystem": "2025-10-06_TB_Herz_-_Kreislauf",
+    "erregungsleitung": "2025-10-06_TB_Herz_-_Kreislauf",
+    "erregungsbildung": "2025-10-06_TB_Herz_-_Kreislauf",
+    "sinusknoten": "2025-10-06_TB_Herz_-_Kreislauf",
+    "av-knoten": "2025-10-06_TB_Herz_-_Kreislauf",
+    "niederdrucksysteme": "2025-10-10_TB_Herz_-_Kreislauf",
+    "hochdrucksystem": "2025-10-10_TB_Herz_-_Kreislauf",
+    "organkreisläufe": "2025-10-10_TB_Herz_-_Kreislauf",
+    "organkreislaeufe": "2025-10-10_TB_Herz_-_Kreislauf",
+    "gefässwiderstand": "2025-10-10_TB_Herz_-_Kreislauf",
+    "windkessel": "2025-10-10_TB_Herz_-_Kreislauf",
+    "hagen-poiseuille": "2025-10-10_TB_Herz_-_Kreislauf",
+    "herzstruktur": "2025-10-02_TB_Herz_-Kreislauf",
+    "mediastinum und perikard": "2025-10-02_TB_Herz_-Kreislauf",
+    "herzwand": "2025-10-02_TB_Herz_-Kreislauf",
+    "barorezeptor": "2025-10-13_TB_Herz_-_Kreislauf",
+    "barorezeptorreflex": "2025-10-13_TB_Herz_-_Kreislauf",
+    "kreislaufregulation": "2025-10-13_TB_Herz_-_Kreislauf",
+    "mikrozirkulation": "2025-10-15_TB_Herz_-_Kreislauf",
+    "koronardurchblutung": "2025-10-16_TB_Herz_-_Kreislauf",
+    "herzphasen": "2025-10-09_TB_Herz_-_Kreislauf",
+    "druck-volumen": "2025-10-09_TB_Herz_-_Kreislauf",
+    "aortenbogen": "2025-10-03_TB_Herz_-Kreislauf",
+    "fetaler kreislauf": "2025-10-03_TB_Herz_-Kreislauf",
+    # 3. Atmung
+    "atemmechanik": "2025-10-20_TB_Atmung",
+    "pleura": "2025-10-20_TB_Atmung",
+    "atemmuskulatur": "2025-10-20_TB_Atmung",
+    "spirometrie": "2025-10-22_TB_Atmung",
+    "lungenvolumina": "2025-10-22_TB_Atmung",
+    "alveoläre ventilation": "2025-10-22_TB_Atmung",
+    "compliance": "2025-10-20_TB_Atmung",
+    "surfactant": "2025-10-17_TB_Atmung",
+    "respirationstrakt": "2025-10-17_TB_Atmung",
+    "gasaustausch": "2025-10-24_TB_Atmung",
+    "diffusionskapazität": "2025-10-24_TB_Atmung",
+    "atemregulation": "2025-10-29_TB_Atmung",
+    # 4. Verdauung
+    "bauchfell": "2025-11-14_TB_Verdauung",
+    "peritoneal": "2025-11-14_TB_Verdauung",
+    "oesophagus": "2025-11-14_TB_Verdauung",
+    "magensekretion": "2025-11-19_TB_Verdauung",
+    "magenmotilität": "2025-11-19_TB_Verdauung",
+    "magenfüllung": "2025-11-19_TB_Verdauung",
+    "gastrin": "2025-11-19_TB_Verdauung",
+    "exokrine pankreas": "2025-11-21_TB_Verdauung",
+    "gallenproduktion": "2025-11-21_TB_Verdauung",
+    "dünndarmfunktion": "2025-11-24_TB_Verdauung",
+    "dünndarm": "2025-11-20_TB_Verdauung",
+    "dickdarm": "2025-11-20_TB_Verdauung",
+    "dickdarmfunktion": "2025-11-20_TB_Verdauung",
+    "kauen, schmecken": "2025-11-13_TB_Verdauung",
+    "schlucken": "2025-11-13_TB_Verdauung",
+    "mundhöhle": "2025-11-13_TB_Verdauung",
+    "glykolyse": "2025-11-26_TB_Verdauung",
+    "harnstoffzyklus": "2025-11-27_TB_Verdauung",
+    "biotransformation": "2025-11-28_TB_Verdauung",
+    "bilirubin": "2025-11-28_TB_Verdauung",
+    "vitamine": "2025-11-12_TB_Verdauung",
+    "mikronährstoffe": "2025-11-12_TB_Verdauung",
+    # 5. Endokrinologie
+    "rezeptorklassen": "2025-12-01_TB_Endokrinologie",
+    "insulin": "2025-12-04_TB_Endokrinologie",
+    "glukagon": "2025-12-04_TB_Endokrinologie",
+    "hunger und sättigung": "2025-12-05_TB_Endokrinologie",
+    "muskelarbeit": "2025-12-05_TB_Endokrinologie",
+    "hypophys": "2025-12-10_TB_Endokrinologie",
+    "nebennieren": "2025-12-15_TB_Endokrinologie",
+    "schilddrüse": "2025-12-17_TB_Endokrinologie",
+    "schilddruese": "2025-12-17_TB_Endokrinologie",
+    "calcium": "2025-12-18_TB_Endokrinologie",
+    "phosphat": "2025-12-18_TB_Endokrinologie",
+    "parathormon": "2025-12-18_TB_Endokrinologie",
+    "calcitriol": "2025-12-18_TB_Endokrinologie",
+}
+
+
 def search_lecture_advisor(
     query: str,
     filter_mode: Optional[str] = None,
@@ -2443,20 +2577,25 @@ def search_lecture_advisor(
     """Intelligent search engine matching user topic queries against all 38 UZH lectures.
     
     Features:
-    - Fuzzy tolerance for lecturer names (e.g. 'manataschal' -> 'Manatschal').
-    - Handles module shortcuts (e.g. 'TB Blut' -> '1. Blut & Immunsystem').
-    - Strips noisy stopwords ('von', 'im', 'der').
+    - Dedicated Anki deck matching from official UZH curriculum decks.
+    - Medical term normalization (poiese/poese, zyt/cyt, umlauts).
+    - Fuzzy tolerance for lecturer names.
     - Dynamically computes timestamp intervals and saved study minutes for target_cards.
-    - Returns top_matches (list of relevant lectures) and detailed chapter breakdowns.
     """
     all_lectures = get_all_advisor_lectures()
     q_raw = (query or "").strip().lower()
     target_cards_val = int(target_cards) if target_cards and str(target_cards).isdigit() else 100
 
-    # 1. Clean query & extract tokens
-    tokens = [t for t in re.split(r"[\s\-_,;:/]+", q_raw) if t and t not in STOPWORDS]
+    # 1. Clean query & strip noisy prefixes like '2. sj - 1', 'tb blut/immunsystem'
+    clean_q = re.sub(r'2\.\s*sj\s*[-–]\s*1\s*::?', '', q_raw, flags=re.I)
+    clean_q = re.sub(r'2\.\s*sj\s*::?', '', clean_q, flags=re.I)
+    clean_q = clean_q.strip()
 
-    # 2. Check if query matches a known lecturer (surnames fuzzy >= 0.78, firstnames exact)
+    q_norm = _normalize_med(clean_q)
+    tokens = [t for t in re.split(r"[\s\-_,;:/⚫\(\)]+", q_raw) if t and t not in STOPWORDS]
+    norm_tokens = [_normalize_med(t) for t in tokens if len(t) > 2]
+
+    # 2. Check if query matches a known lecturer
     matched_lecturer_key = None
     for l_key, l_data in LECTURER_CATALOG.items():
         for tok in tokens:
@@ -2478,6 +2617,18 @@ def search_lecture_advisor(
                 break
         if matched_module_val:
             break
+
+    # 4. Check explicit deck mappings (exact phrase in query or exact keyword)
+    explicit_lecture_ids = {}
+    for map_key, lec_id in EXPLICIT_DECK_MAPPINGS.items():
+        norm_map = _normalize_med(map_key)
+        # Check if full phrase is present in query
+        if norm_map in q_norm or map_key in q_raw:
+            weight = 500 + len(map_key) * 10
+            explicit_lecture_ids[lec_id] = max(explicit_lecture_ids.get(lec_id, 0), weight)
+        elif " " not in map_key and any(nt == norm_map for nt in norm_tokens):
+            weight = 400
+            explicit_lecture_ids[lec_id] = max(explicit_lecture_ids.get(lec_id, 0), weight)
 
     filtered = []
     for l in all_lectures:
@@ -2505,16 +2656,28 @@ def search_lecture_advisor(
         if not q_raw:
             score = 10
         else:
+            lec_id = l["id"]
             title_l = l["title"].lower()
+            title_norm = _normalize_med(title_l)
             mod_l = l["module"].lower()
             lect_l = l.get("lecturer", "").lower()
             keywords = [k.lower() for k in l.get("keywords", [])]
+            keywords_norm = [_normalize_med(k) for k in keywords]
             decks = [d.lower() for d in l.get("associated_decks", [])]
+            decks_norm = [_normalize_med(d) for d in decks]
             facts = [f.lower() for f in l.get("anki_facts", [])]
-            chapter_titles = [c["title"].lower() for c in l.get("chapters", [])]
-            chapter_topics = [t.lower() for c in l.get("chapters", []) for t in c.get("topics", [])]
+            facts_norm = [_normalize_med(f) for f in facts]
+            chapters = l.get("chapters", [])
+            chapter_titles = [c["title"].lower() for c in chapters]
+            chapter_topics = [t.lower() for c in chapters for t in c.get("topics", [])]
+            chapter_summaries = [c.get("summary", "").lower() for c in chapters]
+            all_chapter_text = _normalize_med(" ".join(chapter_titles + chapter_topics + chapter_summaries))
 
-            # A. Lecturer Match (Highest Priority)
+            # A. Explicit Deck Mapping Bonus (Highest Priority)
+            if lec_id in explicit_lecture_ids:
+                score += explicit_lecture_ids[lec_id]
+
+            # B. Lecturer Match
             if matched_lecturer_key:
                 l_aliases = LECTURER_CATALOG[matched_lecturer_key]["surnames"] + LECTURER_CATALOG[matched_lecturer_key]["firstnames"]
                 for alias in l_aliases:
@@ -2522,54 +2685,56 @@ def search_lecture_advisor(
                         score += 160
                         break
 
-            # B. Module Match
+            # C. Module Match (only adds modest points to avoid diluting specific topics)
             if matched_module_val and matched_module_val.lower() in mod_l:
-                score += 80
+                score += 30
 
-            # C. Exact query in title or slide filename
-            if q_raw in title_l:
-                score += 120
+            # D. Exact whole query in title, decks, or slide filename
+            if q_norm and (q_norm in title_norm or q_raw in title_l):
+                score += 250
+            if any(q_raw in d or q_norm in dn for d, dn in zip(decks, decks_norm)):
+                score += 350
+            if any(q_norm in ct for ct in [_normalize_med(t) for t in chapter_titles]):
+                score += 220
+            if any(q_norm in ctop for ctop in [_normalize_med(t) for t in chapter_topics]):
+                score += 200
+
             slide_pdf_l = (l.get("slide_pdf") or "").lower()
             folien_fn_l = (l.get("folien_filename") or "").lower()
             if q_raw and (q_raw in slide_pdf_l or q_raw in folien_fn_l):
                 score += 250
 
-            # D. Token-based matching
-            for tok in tokens:
-                # Direct in title
-                if tok in title_l:
-                    score += 50
-                # Fuzzy in title words
+            # E. Token-based matching
+            for tok, ntok in zip(tokens, norm_tokens):
+                # In title
+                if tok in title_l or ntok in title_norm:
+                    score += 60
                 elif fuzzy_match_token(tok, title_l.split(), threshold=0.75) > 0.0:
-                    score += 35
+                    score += 40
 
                 # In lecturer
                 if tok in lect_l:
-                    score += 40
+                    score += 45
 
                 # In decks
-                if any(tok in d for d in decks):
-                    score += 35
+                if any(tok in d or ntok in dn for d, dn in zip(decks, decks_norm)):
+                    score += 50
 
-                # In chapter titles / topics
-                if any(tok in ct for ct in chapter_titles):
-                    score += 45
+                # In chapter titles / topics / summaries
+                if any(tok in ct for ct in chapter_titles) or ntok in all_chapter_text:
+                    score += 50
                 if any(tok in ctop for ctop in chapter_topics):
-                    score += 40
+                    score += 50
 
                 # In keywords
-                if any(tok in k for k in keywords):
-                    score += 30
+                if any(tok in k or ntok in kn for k, kn in zip(keywords, keywords_norm)):
+                    score += 40
                 elif fuzzy_match_token(tok, keywords, threshold=0.75) > 0.0:
-                    score += 25
+                    score += 30
 
                 # In facts
-                if any(tok in f for f in facts):
-                    score += 20
-
-                # In module
-                if tok in mod_l:
-                    score += 25
+                if any(tok in f or ntok in fn for f, fn in zip(facts, facts_norm)):
+                    score += 30
 
         if score > 0:
             item_copy = dict(l)
@@ -2585,7 +2750,7 @@ def search_lecture_advisor(
             elif "skip" in rec_str.lower():
                 speed = 1.0
 
-            # Attach personalized timestamp budget with strict skip & ROI rules
+            # Attach personalized timestamp budget
             item_copy["timestamp_guidance"] = calculate_timestamp_budget(
                 chapters=l.get("chapters", []),
                 target_cards=target_cards_val,

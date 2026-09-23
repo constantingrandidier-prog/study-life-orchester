@@ -1072,9 +1072,11 @@ def get_curriculum_today_endpoint(
     summary="Get full didactic semester roadmap (9,633 cards, 6 modules, 97 days)",
     description="Returns the complete semester study sequence across all 111 decks and 6 medical modules with exam revision buffer.",
 )
-def get_curriculum_roadmap_endpoint() -> CurriculumRoadmapResponse:
+def get_curriculum_roadmap_endpoint(
+    target_date: Optional[date] = Query(None, description="Date to sync active day with daily plan (YYYY-MM-DD). Defaults to current semester day."),
+) -> CurriculumRoadmapResponse:
     """Retrieve the full semester roadmap across all 6 modules and 9,633 Anki cards."""
-    res = generate_curriculum_roadmap()
+    res = generate_curriculum_roadmap(target_date=target_date)
     return CurriculumRoadmapResponse(**res)
 
 
@@ -1258,7 +1260,10 @@ def get_daily_rhythm_endpoint(
 
     from app.services.anki_desktop_sync import read_live_anki_desktop_state
     anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
-    due_today = anki_st.get("due_today_count", 100) or 100
+    due_val = anki_st.get("due_today_count")
+    if due_val is None:
+        due_val = anki_st.get("due_reviews_count")
+    due_today = int(due_val) if due_val is not None else 100
     
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     curr_assign = get_daily_curriculum_assignment(t_date)

@@ -1465,11 +1465,15 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
     return _CACHED_ROADMAP
 
 
-def generate_curriculum_roadmap() -> Dict[str, Any]:
+def generate_curriculum_roadmap(
+    target_date: Optional[date] = None,
+    sync_active_day: bool = True,
+    user_id: str = "student",
+) -> Dict[str, Any]:
     """Generate the semester roadmap for 2. Studienjahr, dynamically applying user day swaps & schedule overrides."""
     base_data = _get_canonical_roadmap()
     roadmap = {k: v for k, v in base_data.items() if k != "schedule"}
-    schedule_days = [dict(d) for d in base_data["schedule"]]
+    schedule_days = [dict(d, topic_slots=[dict(s) for s in d.get("topic_slots", [])]) for d in base_data["schedule"]]
 
     try:
         from app.db.repository import get_curriculum_schedule_overrides
@@ -1540,6 +1544,16 @@ def generate_curriculum_roadmap() -> Dict[str, Any]:
                     d["curriculum_progress_pct"] = round((running_cum / max(1, total_curriculum_cards)) * 100, 1)
     except Exception as e:
         print("Curriculum override apply error:", e)
+
+    # Synchronize the active target day with dynamic daily allocation
+    if sync_active_day:
+        active_dt = target_date or date.today()
+        _sync_active_day_assignment(
+            schedule_days=schedule_days,
+            active_date=active_dt,
+            total_cards=base_data.get("total_cards", 8729),
+            user_id=user_id,
+        )
 
     roadmap["schedule"] = schedule_days
     return roadmap
@@ -1658,177 +1672,285 @@ def get_actual_curriculum_cards_learned() -> int:
     return 155
 
 
+def _sync_active_day_assignment(
+    schedule_days: List[Dict[str, Any]],
+    active_date: date,
+    total_cards: int,
+    user_id: str = "student",
+) -> None:
+    """Synchronize the active day's card quota, topic slots, cognitive metrics, and tomorrow preview in schedule_days with real Anki state."""
+    active_str = active_date.strftime("%Y-%m-%d")
+    actual_learned = get_actual_curriculum_cards_learned()
+
+    active_idx = next((i for i, d in enumerate(schedule_days) if d.get("date") == active_str), None)
+    if active_idx is None:
+        return
+
+    day = schedule_days[active_idx]
+    planned_cum = day.get("cumulative_cards_learned", actual_learned)
+
+    if day.get("is_rest_day"):
+        day["base_quota"] = DAILY_CARD_QUOTA
+        day["adjusted_target_cards"] = 0
+        day["target_cards"] = 0
+        day["quota_adjustment_reason"] = "Sonntag – Geplanter Ruhetag zur Erholung."
+        day["surplus_deduction"] = 0
+        day["deficit_distributed"] = 0
+        day["actual_cards_learned"] = actual_learned
+        day["planned_cumulative_cards"] = planned_cum
+        day["cumulative_cards_learned"] = actual_learned
+        day["curriculum_progress_pct"] = round((actual_learned / max(1, total_cards)) * 100, 1)
+        if not day.get("summary") or "Ruhetag" not in day["summary"]:
+            day["summary"] = "Sonntag – Geplanter Ruhetag zur Erholung."
+        return
+
+    if day.get("day_number") == 1:
+        adj_target = day["target_cards"]
+        dyn = {
+            "base_quota": day["target_cards"],
+            "adjusted_target_cards": day["target_cards"],
+            "quota_adjustment_reason": "Tag 1 – Semesterstart & Orientierung.",
+            "surplus_deduction": 0,
+            "deficit_distributed": 0,
+        }
+    else:
+        base_q = day["target_cards"] if user_id != "student" else DAILY_CARD_QUOTA
+        dyn = calculate_dynamic_daily_quota(active_date, user_id=user_id, base_quota=base_q)
+        adj_target = dyn["adjusted_target_cards"]
+        if day.get("is_swapped"):
+            orig_num = day.get("swapped_with_day", day.get("original_day_number"))
+            dyn["quota_adjustment_reason"] = f"Lernpaket von Tag {orig_num} vorgezogen: {dyn['quota_adjustment_reason']}"
+
+    day["base_quota"] = dyn["base_quota"]
+    day["target_cards"] = adj_target
+    day["adjusted_target_cards"] = adj_target
+    day["quota_adjustment_reason"] = dyn["quota_adjustment_reason"]
+    day["surplus_deduction"] = dyn["surplus_deduction"]
+    day["deficit_distributed"] = dyn["deficit_distributed"]
+    day["actual_cards_learned"] = actual_learned
+    day["planned_cumulative_cards"] = planned_cum
+    day["cumulative_cards_learned"] = actual_learned
+    day["curriculum_progress_pct"] = round((actual_learned / max(1, total_cards)) * 100, 1)
+
+    orig_slots = day.get("topic_slots", [])
+    if day.get("day_number") == 1 or user_id != "student":
+        new_slots = []
+        remaining_quota = adj_target
+        for slot in orig_slots:
+            if remaining_quota <= 0:
+                break
+            take = min(slot["cards_to_learn"], remaining_quota)
+            new_slot = dict(slot)
+            new_slot["cards_to_learn"] = take
+            new_slots.append(new_slot)
+            remaining_quota -= take
+    else:
+        new_slots = []
+        remaining_quota = adj_target
+        for idx, slot in enumerate(orig_slots):
+            if remaining_quota <= 0:
+                break
+            orig_cards = slot["cards_to_learn"]
+            take = min(orig_cards, remaining_quota)
+            new_slot = dict(slot)
+            new_slot["cards_to_learn"] = take
+            rem_tom = max(0, orig_cards - take)
+            new_slot["tomorrow_remaining_cards"] = rem_tom
+            new_slots.append(new_slot)
+            remaining_quota -= take
+
+        # If remaining quota > 0, borrow from next active day
+        if remaining_quota > 0:
+            next_active_day = next((d for d in schedule_days if d["date"] > day["date"] and not d.get("is_rest_day")), None)
+            if next_active_day and next_active_day.get("topic_slots"):
+                tom_slot = next_active_day["topic_slots"][0]
+                borrow_cards = min(remaining_quota, tom_slot.get("cards_to_learn", remaining_quota))
+                borrow_slot = dict(tom_slot)
+                borrow_slot["cards_to_learn"] = borrow_cards
+                borrow_title = borrow_slot.get("clean_title") or borrow_slot.get("short_title", "Nächstes Thema")
+                borrow_slot["clean_title"] = f"{borrow_title} (Rückstandsausgleich)"
+                rem_tom_cards = max(0, tom_slot.get("cards_to_learn", 0) - borrow_cards)
+                borrow_slot["tomorrow_remaining_cards"] = rem_tom_cards
+                new_slots.append(borrow_slot)
+                remaining_quota -= borrow_cards
+
+        # Fallback if remaining quota still > 0
+        if remaining_quota > 0 and len(new_slots) > 0:
+            new_slots[0]["cards_to_learn"] += remaining_quota
+
+    day["topic_slots"] = new_slots
+    clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
+    day["summary"] = f"Tag {day['day_number']}/97: {adj_target} neue Karten ({clean_topics}). {dyn['quota_adjustment_reason']}"
+
+    # Recalculate cognitive metrics for active day
+    total_new_cards = sum(s.get("cards_to_learn", 0) for s in new_slots)
+    if total_new_cards > 0:
+        primary_s = new_slots[0]
+        cog = calculate_card_cognitive_metrics(
+            card_count=total_new_cards,
+            avg_card_chars=primary_s.get("avg_card_chars", 320.0),
+            is_cycle_topic=primary_s.get("is_cycle_topic", False),
+            recommended_mode=primary_s.get("recommended_mode", "stream_1_2"),
+            topic_difficulty_mult=primary_s.get("topic_difficulty_mult", 1.0),
+            exam_yield=primary_s.get("exam_yield", "medium_yield"),
+        )
+        day["estimated_study_minutes"] = cog["estimated_study_minutes"]
+        day["avg_seconds_per_card"] = float(cog["seconds_per_card"])
+        day["difficulty_level"] = cog["difficulty_level"]
+        day["difficulty_label"] = cog["difficulty_label"]
+        day["difficulty_badge"] = cog["difficulty_badge"]
+        day["difficulty_reason"] = cog["difficulty_reason"]
+
+    # Compute tomorrow preview for 24h-pipeline
+    next_date = active_date + timedelta(days=1)
+    if next_date.weekday() == 6:  # Skip Sunday
+        next_date += timedelta(days=1)
+
+    tomorrow_day = next((d for d in schedule_days if d["date"] == next_date.strftime("%Y-%m-%d")), None)
+    tomorrow_preview = None
+    if tomorrow_day and not tomorrow_day.get("is_rest_day"):
+        tom_slots = tomorrow_day.get("topic_slots", [])
+        primary_tom = tom_slots[0] if tom_slots else {}
+
+        leftover_note = []
+        for s in new_slots:
+            if s.get("tomorrow_remaining_cards", 0) > 0:
+                leftover_note.append(f"{s['tomorrow_remaining_cards']}× {s.get('clean_title') or s['short_title']} (Abschluss)")
+
+        tom_slot_names = [f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in tom_slots]
+        all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{adj_target} Karten"
+
+        tom_lec_title = primary_tom.get("display_title_with_date") or primary_tom.get("clean_title") or primary_tom.get("short_title") or "Morgige Vorlesung"
+        tomorrow_preview = {
+            "date": next_date.strftime("%Y-%m-%d"),
+            "day_of_week": GERMAN_WEEKDAYS.get(next_date.weekday(), "Morgen"),
+            "target_cards": tomorrow_day.get("target_cards", adj_target),
+            "topics_summary": all_tom_topics,
+            "primary_lecture_title": tom_lec_title,
+            "primary_lecture_date": primary_tom.get("lecture_date_formatted"),
+            "primary_lecturer": primary_tom.get("lecturer") or "Dozententeam",
+            "primary_speed_factor": primary_tom.get("speed_factor", 1.2),
+            "primary_timecode_guidance": primary_tom.get("timecode_guidance"),
+            "lecture_url": primary_tom.get("vam_url") or "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
+            "podcast_folder_name": primary_tom.get("podcast_folder_name"),
+            "local_podcast_folder_path": primary_tom.get("local_podcast_folder_path"),
+            "local_podcast_file_path": primary_tom.get("local_podcast_file_path"),
+            "preferred_video_file": primary_tom.get("preferred_video_file"),
+            "slide_filename": primary_tom.get("matched_slide_filename"),
+            "slide_rel_path": primary_tom.get("slide_relative_path"),
+            "local_slide_file_path": primary_tom.get("local_slide_file_path"),
+            "is_cycle_topic": primary_tom.get("is_cycle_topic", False),
+            "estimated_study_minutes": tomorrow_day.get("estimated_study_minutes", 45),
+            "difficulty_level": tomorrow_day.get("difficulty_level", "medium"),
+            "difficulty_label": tomorrow_day.get("difficulty_label", "🟡 Mittel"),
+            "difficulty_badge": tomorrow_day.get("difficulty_badge", "🟡 Mittel"),
+            "difficulty_reason": tomorrow_day.get("difficulty_reason", ""),
+            "exam_yield": tomorrow_day.get("exam_yield", "medium_yield"),
+            "yield_stars": tomorrow_day.get("yield_stars", "⭐⭐"),
+            "yield_label": tomorrow_day.get("yield_label", "Wichtig"),
+            "exam_yield_badge": tomorrow_day.get("exam_yield_badge", "⭐⭐ Wichtig"),
+        }
+
+    day["tomorrow_preview"] = tomorrow_preview
+    if tomorrow_preview:
+        day["synergy_headline"] = f"☀️ Vormittag: {adj_target} Anki-Karten heute ({clean_topics}) • 🌅 Nachmittag: Vorlesung für MORGEN sichten"
+        day["recommended_study_sequence"] = [
+            f"1. 📇 Vormittags-Enkodieren: {adj_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
+            f"2. 🎧 Nachmittags-Priming für MORGEN: {tomorrow_preview['primary_lecture_title']} auf {tomorrow_preview['primary_speed_factor']}x sichten ({tomorrow_preview['primary_lecturer']})",
+            f"3. 🔗 Quervernetzung: {new_slots[0].get('cross_links', ['Klinische Integration vertiefen'])[0] if new_slots and new_slots[0].get('cross_links') else 'Klinische Integration vertiefen'}"
+        ]
+
+    # Recalculate cumulative cards & progress percentages across all active days
+    initial_baseline = 185
+    if schedule_days:
+        first_d = schedule_days[0]
+        initial_baseline = first_d.get("cumulative_cards_learned", 185) - first_d.get("target_cards", 0)
+    running_cum = initial_baseline
+    for d in schedule_days:
+        if not d.get("is_rest_day"):
+            running_cum += d.get("target_cards", 0)
+            d["cumulative_cards_learned"] = running_cum
+            d["curriculum_progress_pct"] = round((running_cum / max(1, total_cards)) * 100, 1)
+
+
 def get_daily_curriculum_assignment(
     target_date: Optional[date] = None,
     user_id: str = "student",
 ) -> Dict[str, Any]:
     """Retrieve the daily study assignment for the specified date with dynamic quota adjustments."""
-    roadmap = generate_curriculum_roadmap()
-    schedule = roadmap["schedule"]
-    actual_learned = get_actual_curriculum_cards_learned()
-
     if target_date is None:
-        target_date = SEMESTER_START_DATE
+        today_dt = date.today()
+        if SEMESTER_START_DATE <= today_dt <= TARGET_EXAM_DATE:
+            target_date = today_dt
+        else:
+            target_date = SEMESTER_START_DATE
 
     target_str = target_date.strftime("%Y-%m-%d")
+
+    # If before semester start
+    if target_date < SEMESTER_START_DATE:
+        roadmap = generate_curriculum_roadmap(target_date=target_date, sync_active_day=False, user_id=user_id)
+        days_until_start = (SEMESTER_START_DATE - target_date).days
+        return {
+            "date": target_str,
+            "day_of_week": GERMAN_WEEKDAYS[target_date.weekday()],
+            "day_number": None,
+            "total_active_days": roadmap["total_active_days"],
+            "is_rest_day": True,
+            "target_cards": 0,
+            "base_quota": DAILY_CARD_QUOTA,
+            "adjusted_target_cards": 0,
+            "quota_adjustment_reason": "Vor dem Semester",
+            "surplus_deduction": 0,
+            "deficit_distributed": 0,
+            "topic_slots": [],
+            "cumulative_cards_learned": 0,
+            "actual_cards_learned": get_actual_curriculum_cards_learned(),
+            "planned_cumulative_cards": 0,
+            "total_curriculum_cards": roadmap["total_cards"],
+            "curriculum_progress_pct": 0.0,
+            "current_module": "Vor dem Semester",
+            "summary": f"Das Semester beginnt am 14.09.2026 (in {days_until_start} Tagen). Bereite dich mental vor!",
+            "exam_date": roadmap["exam_date"],
+            "days_until_exam": (TARGET_EXAM_DATE - target_date).days,
+            "revision_buffer_days": roadmap["revision_buffer_days"],
+        }
+
+    roadmap = generate_curriculum_roadmap(target_date=target_date, sync_active_day=True, user_id=user_id)
+    schedule = roadmap["schedule"]
 
     # Look up in pre-computed schedule
     for day in schedule:
         if day["date"] == target_str:
-            planned_cum = day.get("cumulative_cards_learned", actual_learned)
-            if day["is_rest_day"]:
-                return {
-                    **day,
-                    "base_quota": DAILY_CARD_QUOTA,
-                    "adjusted_target_cards": 0,
-                    "quota_adjustment_reason": "Sonntag – Geplanter Ruhetag zur Erholung.",
-                    "surplus_deduction": 0,
-                    "deficit_distributed": 0,
-                    "actual_cards_learned": actual_learned,
-                    "planned_cumulative_cards": planned_cum,
-                    "cumulative_cards_learned": actual_learned,
-                    "curriculum_progress_pct": round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1),
-                }
+            return day
 
-            if day.get("day_number") == 1:
-                adj_target = day["target_cards"]
-                dyn = {
-                    "base_quota": day["target_cards"],
-                    "adjusted_target_cards": day["target_cards"],
-                    "quota_adjustment_reason": "Tag 1 – Semesterstart & Orientierung.",
-                    "surplus_deduction": 0,
-                    "deficit_distributed": 0,
-                }
-            else:
-                base_q = day["target_cards"] if user_id != "student" else DAILY_CARD_QUOTA
-                dyn = calculate_dynamic_daily_quota(target_date, user_id=user_id, base_quota=base_q)
-                adj_target = dyn["adjusted_target_cards"]
-                if day.get("is_swapped"):
-                    orig_num = day.get('swapped_with_day', day.get('original_day_number'))
-                    dyn["quota_adjustment_reason"] = f"Lernpaket von Tag {orig_num} vorgezogen: {dyn['quota_adjustment_reason']}"
-
-            day_copy = dict(day)
-            day_copy["base_quota"] = dyn["base_quota"]
-            day_copy["target_cards"] = adj_target
-            day_copy["adjusted_target_cards"] = adj_target
-            day_copy["quota_adjustment_reason"] = dyn["quota_adjustment_reason"]
-            day_copy["surplus_deduction"] = dyn["surplus_deduction"]
-            day_copy["deficit_distributed"] = dyn["deficit_distributed"]
-            day_copy["actual_cards_learned"] = actual_learned
-            day_copy["planned_cumulative_cards"] = planned_cum
-            day_copy["cumulative_cards_learned"] = actual_learned
-            day_copy["curriculum_progress_pct"] = round((actual_learned / max(1, roadmap["total_cards"])) * 100, 1)
-
-            orig_slots = day["topic_slots"]
-            if day.get("day_number") == 1 or user_id != "student":
-                # Day 1 or test users do not borrow across days
-                new_slots = []
-                remaining_quota = adj_target
-                for slot in orig_slots:
-                    if remaining_quota <= 0:
-                        break
-                    take = min(slot["cards_to_learn"], remaining_quota)
-                    new_slot = dict(slot)
-                    new_slot["cards_to_learn"] = take
-                    new_slots.append(new_slot)
-                    remaining_quota -= take
-            else:
-                new_slots = []
-                remaining_quota = adj_target
-
-                for idx, slot in enumerate(orig_slots):
-                    if remaining_quota <= 0:
-                        break
-                    orig_cards = slot["cards_to_learn"]
-                    take = min(orig_cards, remaining_quota)
-                    new_slot = dict(slot)
-                    new_slot["cards_to_learn"] = take
-                    rem_tom = max(0, orig_cards - take)
-                    new_slot["tomorrow_remaining_cards"] = rem_tom
-                    new_slots.append(new_slot)
-                    remaining_quota -= take
-
-                # If remaining quota > 0 (e.g. deck has 76 cards but target is 91), borrow from next active day
-                if remaining_quota > 0:
-                    next_active_day = next((d for d in schedule if d["date"] > day["date"] and not d.get("is_rest_day")), None)
-                    if next_active_day and next_active_day.get("topic_slots"):
-                        tom_slot = next_active_day["topic_slots"][0]
-                        borrow_cards = min(remaining_quota, tom_slot.get("cards_to_learn", remaining_quota))
-                        borrow_slot = dict(tom_slot)
-                        borrow_slot["cards_to_learn"] = borrow_cards
-                        borrow_title = borrow_slot.get("clean_title") or borrow_slot.get("short_title", "Nächstes Thema")
-                        borrow_slot["clean_title"] = f"{borrow_title} (Rückstandsausgleich)"
-                        borrow_slot["tomorrow_remaining_cards"] = max(0, tom_slot.get("cards_to_learn", 0) - borrow_cards)
-                        new_slots.append(borrow_slot)
-                        remaining_quota -= borrow_cards
-
-                # Fallback: if still remaining quota, expand first slot
-                if remaining_quota > 0 and len(new_slots) > 0:
-                    new_slots[0]["cards_to_learn"] += remaining_quota
-
-            day_copy["topic_slots"] = new_slots
-            clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
-            day_copy["summary"] = f"Tag {day['day_number']}/97: {adj_target} neue Karten ({clean_topics}). {dyn['quota_adjustment_reason']}"
-
-            # Compute tomorrow preview for 24h-pipeline
-            next_date = target_date + timedelta(days=1)
-            if next_date.weekday() == 6:  # Skip Sunday
-                next_date += timedelta(days=1)
-
-            tomorrow_day = next((d for d in schedule if d["date"] == next_date.strftime("%Y-%m-%d")), None)
-            tomorrow_preview = None
-            if tomorrow_day and not tomorrow_day.get("is_rest_day"):
-                tom_slots = tomorrow_day.get("topic_slots", [])
-                primary_tom = tom_slots[0] if tom_slots else {}
-
-                leftover_note = []
-                for s in new_slots:
-                    if s.get("tomorrow_remaining_cards", 0) > 0:
-                        leftover_note.append(f"{s['tomorrow_remaining_cards']}× {s.get('clean_title') or s['short_title']} (Abschluss)")
-
-                tom_slot_names = [f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in tom_slots]
-                all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{adj_target} Karten"
-
-                tom_lec_title = primary_tom.get("display_title_with_date") or primary_tom.get("clean_title") or primary_tom.get("short_title") or "Morgige Vorlesung"
-                tomorrow_preview = {
-                    "date": next_date.strftime("%Y-%m-%d"),
-                    "day_of_week": GERMAN_WEEKDAYS.get(next_date.weekday(), "Morgen"),
-                    "target_cards": tomorrow_day.get("target_cards", adj_target),
-                    "topics_summary": all_tom_topics,
-                    "primary_lecture_title": tom_lec_title,
-                    "primary_lecture_date": primary_tom.get("lecture_date_formatted"),
-                    "primary_lecturer": primary_tom.get("lecturer") or "Dozententeam",
-                    "primary_speed_factor": primary_tom.get("speed_factor", 1.2),
-                    "primary_timecode_guidance": primary_tom.get("timecode_guidance"),
-                    "lecture_url": primary_tom.get("vam_url") or "https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983",
-                    "podcast_folder_name": primary_tom.get("podcast_folder_name"),
-                    "local_podcast_folder_path": primary_tom.get("local_podcast_folder_path"),
-                    "local_podcast_file_path": primary_tom.get("local_podcast_file_path"),
-                    "preferred_video_file": primary_tom.get("preferred_video_file"),
-                    "slide_filename": primary_tom.get("matched_slide_filename"),
-                    "slide_rel_path": primary_tom.get("slide_relative_path"),
-                    "local_slide_file_path": primary_tom.get("local_slide_file_path"),
-                    "is_cycle_topic": primary_tom.get("is_cycle_topic", False),
-                    "estimated_study_minutes": tomorrow_day.get("estimated_study_minutes", 45),
-                    "difficulty_level": tomorrow_day.get("difficulty_level", "medium"),
-                    "difficulty_label": tomorrow_day.get("difficulty_label", "🟡 Mittel"),
-                    "difficulty_badge": tomorrow_day.get("difficulty_badge", "🟡 Mittel"),
-                    "difficulty_reason": tomorrow_day.get("difficulty_reason", ""),
-                    "exam_yield": tomorrow_day.get("exam_yield", "medium_yield"),
-                    "yield_stars": tomorrow_day.get("yield_stars", "⭐⭐"),
-                    "yield_label": tomorrow_day.get("yield_label", "Wichtig"),
-                    "exam_yield_badge": tomorrow_day.get("exam_yield_badge", "⭐⭐ Wichtig"),
-                }
-
-            day_copy["tomorrow_preview"] = tomorrow_preview
-            if tomorrow_preview:
-                day_copy["synergy_headline"] = f"☀️ Vormittag: {adj_target} Anki-Karten heute ({clean_topics}) • 🌅 Nachmittag: Vorlesung für MORGEN sichten"
-                day_copy["recommended_study_sequence"] = [
-                    f"1. 📇 Vormittags-Enkodieren: {adj_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
-                    f"2. 🎧 Nachmittags-Priming für MORGEN: {tomorrow_preview['primary_lecture_title']} auf {tomorrow_preview['primary_speed_factor']}x sichten ({tomorrow_preview['primary_lecturer']})",
-                    f"3. 🔗 Quervernetzung: {new_slots[0].get('cross_links', ['Klinische Integration vertiefen'])[0] if new_slots and new_slots[0].get('cross_links') else 'Klinische Integration vertiefen'}"
-                ]
-            return day_copy
+    # If after curriculum completion (Revision buffer period)
+    days_until_exam = (TARGET_EXAM_DATE - target_date).days
+    actual_learned = get_actual_curriculum_cards_learned()
+    return {
+        "date": target_str,
+        "day_of_week": GERMAN_WEEKDAYS[target_date.weekday()],
+        "day_number": None,
+        "total_active_days": roadmap["total_active_days"],
+        "is_rest_day": False,
+        "target_cards": 0,
+        "base_quota": DAILY_CARD_QUOTA,
+        "adjusted_target_cards": 0,
+        "quota_adjustment_reason": "Revisionsphase",
+        "surplus_deduction": 0,
+        "deficit_distributed": 0,
+        "topic_slots": [],
+        "cumulative_cards_learned": roadmap["total_cards"],
+        "actual_cards_learned": actual_learned,
+        "planned_cumulative_cards": roadmap["total_cards"],
+        "total_curriculum_cards": roadmap["total_cards"],
+        "curriculum_progress_pct": 100.0,
+        "current_module": "Revisionsphase & Probeprüfungen",
+        "summary": f"🎉 Sämtliche 9'633 Stoffkarten wurden absolviert! Aktuell im Revisionspuffer ({days_until_exam} Tage bis zur Prüfung). Fokus auf Schwachstellen und Altklausuren.",
+        "exam_date": roadmap["exam_date"],
+        "days_until_exam": max(0, days_until_exam),
+        "revision_buffer_days": roadmap["revision_buffer_days"],
+    }
 
     # If before semester start
     if target_date < SEMESTER_START_DATE:

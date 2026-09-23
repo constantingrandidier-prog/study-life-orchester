@@ -3375,19 +3375,38 @@ async function handleOpenSlidePdf(relPath, localFilePath) {
 
 let _cachedRoadmapData = null;
 
+function handleSelectRoadmapDay(dateStr) {
+  if (!dateStr) return;
+  state.targetDate = dateStr;
+  if (dom.targetDateInput) dom.targetDateInput.value = dateStr;
+  try {
+    localStorage.setItem('sl_selected_date', dateStr);
+  } catch (e) {}
+  updateWeekdayDisplays();
+  loadSchedule();
+  loadExamPacing();
+  loadStatsComparison();
+  loadAnkiWeaknesses();
+  loadCurriculumToday();
+  loadAnkiDesktopStatus();
+  loadScienceRhythm(dateStr);
+  closeCurriculumRoadmapModal();
+  switchAppPage('page-today');
+  showToast(`📅 Tagesplan für ${dateStr} geladen`);
+}
+
 async function openCurriculumRoadmapModal() {
   const modal = document.getElementById('curriculumRoadmapModal');
   if (modal) modal.style.display = 'flex';
 
-  if (!_cachedRoadmapData) {
-    try {
-      const res = await fetch(`${API_BASE}/curriculum/roadmap`);
-      if (res.ok) {
-        _cachedRoadmapData = await res.json();
-      }
-    } catch (err) {
-      console.debug('Error loading roadmap:', err);
+  try {
+    const targetParam = state.targetDate ? `?target_date=${state.targetDate}` : '';
+    const res = await fetch(`${API_BASE}/curriculum/roadmap${targetParam}`);
+    if (res.ok) {
+      _cachedRoadmapData = await res.json();
     }
+  } catch (err) {
+    console.debug('Error loading roadmap:', err);
   }
 
   if (_cachedRoadmapData) {
@@ -3437,41 +3456,66 @@ function renderRoadmapDaysList(days) {
   const daysList = document.getElementById('roadmapDaysList');
   if (!daysList) return;
 
+  const now = new Date();
+  const realTodayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const activeDayStr = state.targetDate || realTodayIso;
+
   daysList.innerHTML = days.map(d => {
+    const isToday = (d.date === realTodayIso);
+    const isCurrentActive = (d.date === activeDayStr);
+    const todayHighlightClass = isToday ? 'roadmap-today-highlight' : '';
+
     if (d.is_rest_day) {
       return `
-        <div class="roadmap-day-row rest-day" data-date="${d.date}" data-day-num="${d.day_number || ''}" data-is-rest="true">
+        <div class="roadmap-day-row rest-day ${todayHighlightClass}" data-date="${d.date}" data-day-num="${d.day_number || ''}" data-is-rest="true" onclick="handleSelectRoadmapDay('${d.date}')" style="cursor: pointer; ${isToday ? 'border-left: 4px solid #58a6ff; background: rgba(88, 166, 255, 0.08);' : ''}">
           <div class="roadmap-day-date">
             <span>🏖️</span>
             <span>${d.date} (${d.day_of_week || 'So'})</span>
+            ${isToday ? '<span class="status-badge" style="font-size: 9.5px; background: rgba(88,166,255,0.25); color: #79c0ff; border: 1px solid rgba(88,166,255,0.4); border-radius: 3px; padding: 1px 5px;">📍 HEUTE</span>' : ''}
           </div>
           <div style="flex: 1; color: var(--text-dim); font-size: 11.5px;">
             Sonntag – Geplanter Ruhetag & Erholung
           </div>
-          <div style="font-size: 11px; color: var(--text-muted);">
-            0 Karten
+          <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+            <span>0 Karten</span>
+            <button type="button" class="btn-day-jump" onclick="event.stopPropagation(); handleSelectRoadmapDay('${d.date}')" style="font-size: 10px; padding: 0.15rem 0.45rem; background: rgba(88, 166, 255, 0.12); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; border-radius: 4px; cursor: pointer;" title="Diesen Tag im Tagesplan öffnen">
+              📅 Plan
+            </button>
           </div>
         </div>
       `;
     }
 
-    const slotsText = (d.topic_slots || []).map(s => {
+    const slotsText = (d.topic_slots || []).map((s, sIdx) => {
+      const sKey = `${d.date}_${s.deck_name || sIdx}`;
+      const isDone = Boolean(state.slotCompletions && state.slotCompletions[sKey]);
+      const checkIcon = isDone ? `<span style="color: #3fb950; font-weight: 700; margin-right: 2px;" title="Im Tagesplan als erledigt markiert">✓ </span>` : '';
+      const strikethrough = isDone ? 'text-decoration: line-through; opacity: 0.75;' : '';
       const lec = s.lecturer ? ` <span style="font-size: 10px; color: #79c0ff;">(${escapeHtml(s.lecturer)})</span>` : '';
-      return `<strong>${s.cards_to_learn}×</strong> ${escapeHtml(s.clean_title || s.short_title)}${lec}`;
+      return `<span style="${strikethrough}">${checkIcon}<strong>${s.cards_to_learn}×</strong> ${escapeHtml(s.clean_title || s.short_title)}${lec}</span>`;
     }).join(' + ');
 
     const isSwappedBadge = d.is_swapped
       ? `<span style="font-size: 9.5px; color: #e3b341; background: rgba(227,179,65,0.15); border: 1px solid rgba(227,179,65,0.3); border-radius: 3px; padding: 1px 5px; margin-left: 0.35rem; display: inline-flex; align-items: center; gap: 2px;" title="Dieses Lernpaket wurde manuell von Tag ${d.swapped_with_day || d.original_day_number} hierher getauscht">🔄 Paket Tag ${d.swapped_with_day || d.original_day_number}</span>`
       : '';
 
+    const todayBadge = isToday
+      ? `<span class="status-badge" style="font-size: 9.5px; font-weight: 700; background: rgba(88,166,255,0.25); color: #79c0ff; border: 1px solid rgba(88,166,255,0.4); border-radius: 3px; padding: 1px 5px; display: inline-flex; align-items: center; gap: 2px;">📍 HEUTE</span>`
+      : '';
+
+    const todayStyle = isToday
+      ? 'border-left: 4px solid #58a6ff; background: rgba(88, 166, 255, 0.08); box-shadow: inset 0 0 12px rgba(88, 166, 255, 0.06);'
+      : '';
+
     return `
-      <div class="roadmap-day-row draggable-active ${d.is_swapped ? 'swapped-row' : ''}"
+      <div class="roadmap-day-row draggable-active ${d.is_swapped ? 'swapped-row' : ''} ${todayHighlightClass}"
            id="roadmapRow-${d.date}"
            data-date="${d.date}"
            data-day-num="${d.day_number}"
            data-cards="${d.target_cards}"
            draggable="true"
-           title="Lange gedrückt halten oder ziehen zum Tauschen mit einem anderen Tag">
+           style="${todayStyle}"
+           title="Klicken für Tagesplan • Lange gedrückt halten zum Tauschen">
         
         <!-- Drag Handle & Schnell-Tausch Tasten -->
         <div style="display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0;">
@@ -3482,20 +3526,24 @@ function renderRoadmapDaysList(days) {
           </div>
         </div>
 
-        <div class="roadmap-day-date">
+        <div class="roadmap-day-date" onclick="handleSelectRoadmapDay('${d.date}')" style="cursor: pointer;">
           <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem;">
             <span style="color: #58a6ff; font-weight: 600;">Tag ${d.day_number}</span>
+            ${todayBadge}
             ${isSwappedBadge}
           </div>
           <span style="font-weight: 400; color: var(--text-dim); font-size: 11px;">${d.date} (${d.day_of_week || ''})</span>
         </div>
 
-        <div style="flex: 1; font-size: 12px; color: var(--text-main); min-width: 180px;">
+        <div style="flex: 1; font-size: 12px; color: var(--text-main); min-width: 180px; cursor: pointer;" onclick="handleSelectRoadmapDay('${d.date}')">
           <span style="color: var(--text-muted); font-size: 10.5px; display: block;">${escapeHtml(d.current_module)}</span>
           ${slotsText}
         </div>
 
         <div style="display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
+          <button type="button" class="btn-day-jump" onclick="event.stopPropagation(); handleSelectRoadmapDay('${d.date}')" style="font-size: 10px; padding: 0.15rem 0.45rem; background: rgba(88, 166, 255, 0.12); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; border-radius: 4px; cursor: pointer;" title="Diesen Tag im Tagesplan öffnen">
+            📅 Plan
+          </button>
           <button type="button" class="btn-day-swap" onclick="event.stopPropagation(); openSwapDayModal('${d.date}', ${d.day_number})" title="Diesen Tag mit einem anderen Lerntag tauschen">
             ⇄ Tauschen
           </button>
@@ -3865,7 +3913,8 @@ async function ensureRoadmapDataLoaded() {
     return _cachedRoadmapData;
   }
   try {
-    const res = await fetch(`${API_BASE}/curriculum/roadmap`);
+    const targetParam = state.targetDate ? `?target_date=${state.targetDate}` : '';
+    const res = await fetch(`${API_BASE}/curriculum/roadmap${targetParam}`);
     if (res.ok) {
       _cachedRoadmapData = await res.json();
       return _cachedRoadmapData;
@@ -6686,10 +6735,12 @@ async function renderPageRoadmap() {
   if (!grid || !list) return;
 
   try {
-    const res = await fetch(`${API_BASE}/curriculum/roadmap`);
+    const targetParam = state.targetDate ? `?target_date=${state.targetDate}` : '';
+    const res = await fetch(`${API_BASE}/curriculum/roadmap${targetParam}`);
     if (!res.ok) return;
     const data = await res.json();
     state.roadmapData = data;
+    _cachedRoadmapData = data;
 
     if (data.modules) {
       grid.innerHTML = data.modules.map(m => `

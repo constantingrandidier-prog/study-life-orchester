@@ -218,7 +218,7 @@ function stepDate(delta) {
   try {
     localStorage.setItem('sl_selected_date', nextIso);
   } catch (e) {}
-  // Reset daily rhythm start time to normal 08:30 on date switch
+  state.customStartTimeDate = null;
   state.rhythmStartTime = '08:30';
   const timeInput = document.getElementById('rhythmStartTimeInput');
   if (timeInput) timeInput.value = '08:30';
@@ -243,9 +243,10 @@ function goToToday() {
   if (localStorage.getItem('sl_rhythm_start') === '11:49') {
     localStorage.removeItem('sl_rhythm_start');
   }
-  state.rhythmStartTime = localStorage.getItem('sl_rhythm_start') || '08:30';
+  state.customStartTimeDate = null;
+  state.rhythmStartTime = '08:30';
   const timeInput = document.getElementById('rhythmStartTimeInput');
-  if (timeInput) timeInput.value = state.rhythmStartTime;
+  if (timeInput) timeInput.value = '08:30';
   updateWeekdayDisplays();
   loadSchedule();
   loadExamPacing();
@@ -441,6 +442,10 @@ function setupEventListeners() {
       const val = e.target.value;
       if (!val || val === state.targetDate) return;
       state.targetDate = val;
+      state.customStartTimeDate = null;
+      state.rhythmStartTime = '08:30';
+      const timeInput = document.getElementById('rhythmStartTimeInput');
+      if (timeInput) timeInput.value = '08:30';
       try {
         localStorage.setItem('sl_selected_date', val);
       } catch (err) {}
@@ -448,6 +453,7 @@ function setupEventListeners() {
       loadSchedule();
       loadExamPacing();
       loadCurriculumToday();
+      loadScienceRhythm(val);
     };
     dom.targetDateInput.addEventListener('change', handleDateSelect);
     dom.targetDateInput.addEventListener('input', handleDateSelect);
@@ -4749,8 +4755,8 @@ function setRhythmStartNow() {
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
   const timeStr = `${hh}:${mm}`;
+  state.customStartTimeDate = state.targetDate;
   state.rhythmStartTime = timeStr;
-  localStorage.setItem('sl_rhythm_start', timeStr);
   const input = document.getElementById('rhythmStartTimeInput');
   if (input) input.value = timeStr;
   updateFeierabendBadgeInstantly();
@@ -4770,8 +4776,8 @@ function setRhythmLunch(mins) {
 function handleRhythmConfigChange() {
   const input = document.getElementById('rhythmStartTimeInput');
   if (input && input.value) {
+    state.customStartTimeDate = state.targetDate;
     state.rhythmStartTime = input.value;
-    localStorage.setItem('sl_rhythm_start', input.value);
   }
   const check = document.getElementById('rhythmIncludeLectureCheck');
   if (check) {
@@ -4889,12 +4895,12 @@ async function loadScienceRhythm(targetDate) {
   if (!container) return;
 
   const dateStr = targetDate || state.targetDate || '';
-  const startTime = state.rhythmStartTime || '08:30';
+  const startTime = (state.customStartTimeDate === dateStr && state.rhythmStartTime) ? state.rhythmStartTime : '08:30';
   const lunchDur = state.rhythmLunch || 75;
   const incLec = state.rhythmIncludeLecture !== false;
 
   const timeInput = document.getElementById('rhythmStartTimeInput');
-  if (timeInput && timeInput.value !== startTime) timeInput.value = startTime;
+  if (timeInput && timeInput.value !== startTime && !state.customStartTimeDate) timeInput.value = startTime;
   
   const lecCheck = document.getElementById('rhythmIncludeLectureCheck');
   if (lecCheck && lecCheck.checked !== incLec) lecCheck.checked = incLec;
@@ -5008,14 +5014,18 @@ async function loadScienceRhythm(targetDate) {
     if (ankiBadge) {
       if (data.used_anki_start && data.anki_first_review_time) {
         ankiBadge.style.display = 'inline-block';
-        ankiBadge.textContent = `⚡ Anki: ${data.anki_first_review_time}`;
+        ankiBadge.textContent = `⚡ Anki: ${data.anki_first_review_time} Uhr`;
         ankiBadge.title = `Startzeit wurde automatisch von deiner ersten Anki-Wiederholung (${data.anki_first_review_time} Uhr) übernommen`;
-        if (timeInput && (!localStorage.getItem('sl_rhythm_start') || localStorage.getItem('sl_rhythm_start') === '08:30')) {
+        if (timeInput) {
           timeInput.value = data.start_time;
           state.rhythmStartTime = data.start_time;
         }
       } else {
         ankiBadge.style.display = 'none';
+        if (timeInput && !state.customStartTimeDate) {
+          timeInput.value = data.start_time || '08:30';
+          state.rhythmStartTime = data.start_time || '08:30';
+        }
       }
     }
 

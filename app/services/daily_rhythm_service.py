@@ -175,18 +175,23 @@ def generate_daily_science_rhythm(
     rep_gross_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
     new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0))
 
-    # Standard normal start of the study day is 08:30
+    now = datetime.now()
+    is_today_date = (t_date == now.date())
+    now_minutes = now.hour * 60 + now.minute if is_today_date else 0
+
+    # Standard 08:30 is a temporary baseline placeholder until actual Anki reviews begin.
+    # If reviews already started in Anki for this date, automatically adopt the real start time.
     used_anki_start = False
-    effective_start_str = start_time_str or "08:30"
+    if t_date <= now.date() and anki_first_review_time and (start_time_str in (None, "", "08:30") or start_time_str == anki_first_review_time):
+        effective_start_str = anki_first_review_time
+        used_anki_start = True
+    else:
+        effective_start_str = start_time_str or "08:30"
 
     cur_m = _parse_time_to_minutes(effective_start_str)
     blocks: List[Dict[str, Any]] = []
     total_study_mins = 0
     total_pause_mins = 0
-
-    now = datetime.now()
-    is_today_date = (t_date == now.date())
-    now_minutes = now.hour * 60 + now.minute if is_today_date else 0
 
     def add_block_if_active(b_dict: Dict[str, Any]) -> bool:
         nonlocal cur_m, total_study_mins, total_pause_mins

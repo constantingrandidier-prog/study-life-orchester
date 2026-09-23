@@ -31,9 +31,19 @@ def test_future_days_have_full_repetition_time_scheduled():
     assert b0["start_time"] == "08:30"
 
 def test_api_daily_rhythm_includes_anki_start_fields():
-    """Verify that the daily-rhythm endpoint includes anki_first_review_time and start_time."""
+    """Verify that today auto-adopts Anki start time, while tomorrow keeps 08:30 placeholder."""
     resp = client.get("/api/v1/schedule/daily-rhythm?target_date=2026-09-23")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["start_time"] == "08:30"
     assert "anki_first_review_time" in data
+    # Today had reviews at 13:25, so start_time should be 13:25
+    if data.get("anki_first_review_time"):
+        assert data["start_time"] == data["anki_first_review_time"]
+        assert data["used_anki_start"] is True
+
+    # Tomorrow has no reviews yet, so it defaults to the 08:30 temporary placeholder
+    resp_tom = client.get("/api/v1/schedule/daily-rhythm?target_date=2026-09-24")
+    assert resp_tom.status_code == 200
+    data_tom = resp_tom.json()
+    assert data_tom["start_time"] == "08:30"
+    assert data_tom["used_anki_start"] is False

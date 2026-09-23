@@ -305,6 +305,15 @@ function init() {
   }
   switchAppPage(initialPage);
   loadAdvisorData();
+
+  // Auto-refresh today's rhythm every 5 minutes so the plan catches up to current time
+  setInterval(() => {
+    const now = new Date();
+    const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    if (state.targetDate === todayIso && typeof loadScienceRhythm === 'function') {
+      loadScienceRhythm(todayIso);
+    }
+  }, 5 * 60 * 1000);
 }
 
 // Tab Switching

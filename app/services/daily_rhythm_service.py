@@ -168,13 +168,20 @@ def generate_daily_science_rhythm(
         tomorrow_data = {}
 
     # Time estimates based on gross study time
-    rep_gross_mins = max(30, round((cards_due_today * 36.0) / 60.0))
-    new_gross_mins = max(45, round((new_cards_target * 63.0) / 60.0))
+    # 50s per review card (realistic, was 36s which was too optimistic)
+    SECS_PER_REVIEW = 50.0
+    SECS_PER_NEW = 63.0
+    rep_gross_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
+    new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0))
 
     cur_m = _parse_time_to_minutes(start_time_str)
     blocks: List[Dict[str, Any]] = []
     total_study_mins = 0
     total_pause_mins = 0
+
+    now = datetime.now()
+    is_today_date = (t_date == now.date())
+    now_minutes = now.hour * 60 + now.minute if is_today_date else 0
 
     def add_block_if_active(b_dict: Dict[str, Any]) -> bool:
         nonlocal cur_m, total_study_mins, total_pause_mins
@@ -191,9 +198,17 @@ def generate_daily_science_rhythm(
                 pass
         if bid and bid in custom_blocks:
             b_dict.update(custom_blocks[bid])
-        if bid and (bid in completed_set or b_dict.get("is_completed")):
+        is_done = bid and (bid in completed_set or b_dict.get("is_completed"))
+        if is_done:
             b_dict["is_completed"] = True
+
         dur = b_dict.get("duration_minutes", 30)
+
+        # DYNAMIC TIME ADJUSTMENT: if today, incomplete, and current time has passed
+        # the scheduled end of this block, shift start to current time (plan catches up live)
+        if is_today_date and not is_done and not b_dict.get("is_break") and now_minutes > cur_m:
+            cur_m = now_minutes
+
         s_time = _minutes_to_time(cur_m)
         e_time = _minutes_to_time(cur_m + dur)
         b_dict["start_time"] = s_time
@@ -207,22 +222,14 @@ def generate_daily_science_rhythm(
         return True
 
     # 1. Block 1: Morning Reps (dynamisch an tatsächliche Anki-Last angepasst)
-    now = datetime.now()
-    is_today_date = (t_date == now.date())
 
     if is_today_date:
-        # Dynamisch: 36s pro Karte, gerundet auf 15-Minuten-Raster (mindestens 30m, maximal 180m)
-        calc_reps_mins = max(30, min(180, round((cards_due_today * 36.0) / 60.0)))
+        # Dynamisch: 50s pro Karte, gerundet auf 15-Minuten-Raster (mindestens 30m, maximal 240m)
+        calc_reps_mins = max(30, min(240, round((cards_due_today * SECS_PER_REVIEW) / 60.0)))
         dur_reps = int(round(calc_reps_mins / 15.0) * 15)
-        # Prüfen, ob der Tag heute ist und ob Repetitionen überzogen wurden
-        now_minutes = now.hour * 60 + now.minute
-        if cards_due_today > 0 and now_minutes > cur_m:
-            needed_from_now = max(15, round((cards_due_today * 36.0) / 60.0))
-            needed_from_now = int(round(needed_from_now / 15.0) * 15)
-            dur_reps = (now_minutes - cur_m) + needed_from_now
     else:
-        calc_reps_mins = 60
-        dur_reps = 60
+        calc_reps_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
+        dur_reps = int(round(calc_reps_mins / 15.0) * 15)
 
     reps_title = f"Block 1: Morgen-Repetitionen ({cards_due_today} Karten)" if cards_due_today > 0 else "Block 1: Morgen-Repetitionen (Erledigt)"
     add_block_if_active({

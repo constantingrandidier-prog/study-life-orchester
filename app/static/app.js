@@ -2163,6 +2163,7 @@ function handleModalBackdropClick(event) {
   if (event.target.id === 'ankiDeckTreeModal') closeAnkiDeckTreeModal();
   if (event.target.id === 'curriculumRoadmapModal' && window.closeCurriculumRoadmapModal) window.closeCurriculumRoadmapModal();
   if (event.target.id === 'rhythmBlockActionModal' && window.closeRhythmBlockActionModal) window.closeRhythmBlockActionModal();
+  if (event.target.id === 'rhythmAddPauseModal' && window.closeAddPauseModal) window.closeAddPauseModal();
 }
 window.handleModalBackdropClick = handleModalBackdropClick;
 
@@ -4642,6 +4643,41 @@ async function loadScienceRhythm(targetDate) {
       recalculateRhythmTimes(data);
     }
 
+    // Check if client has local split blocks for this date
+    const splitKey = `sl_rhythm_split_${dateStr}`;
+    const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
+    if (data.split_blocks && typeof data.split_blocks === 'object') {
+      for (const [k, v] of Object.entries(data.split_blocks)) {
+        if (!localSplit[k]) localSplit[k] = v;
+      }
+    }
+    for (const [parentId, splitData] of Object.entries(localSplit)) {
+      const idx = data.blocks.findIndex(b => b.id === parentId);
+      if (idx >= 0 && splitData && Array.isArray(splitData.sub_blocks)) {
+        data.blocks.splice(idx, 1, ...splitData.sub_blocks);
+      }
+    }
+
+    // Check if client has local inserted blocks for this date
+    const insertKey = `sl_rhythm_inserted_${dateStr}`;
+    const localInserted = JSON.parse(localStorage.getItem(insertKey) || '[]');
+    if (Array.isArray(data.inserted_blocks)) {
+      data.inserted_blocks.forEach(ib => {
+        if (!localInserted.some(x => x.id === ib.id)) localInserted.push(ib);
+      });
+    }
+    if (localInserted.length > 0 && Array.isArray(data.blocks)) {
+      localInserted.forEach(ib => {
+        if (!data.blocks.some(b => b.id === ib.id)) {
+          const insertIdx = data.blocks[data.blocks.length - 1]?.id === 'evening_free'
+            ? data.blocks.length - 1
+            : data.blocks.length;
+          data.blocks.splice(insertIdx, 0, ib);
+        }
+      });
+      recalculateRhythmTimes(data);
+    }
+
     // Update Feierabend badge
     const feierabendEl = document.getElementById('rhythmFeierabendBadge');
     if (feierabendEl && data.feierabend_time) {
@@ -4865,9 +4901,13 @@ async function restoreRhythmBlocks(dateStr) {
   const removedKey = `sl_rhythm_removed_${dateStr}`;
   const orderKey = `sl_rhythm_order_${dateStr}`;
   const durationsKey = `sl_rhythm_durations_${dateStr}`;
+  const splitKey = `sl_rhythm_split_${dateStr}`;
+  const insertKey = `sl_rhythm_inserted_${dateStr}`;
   localStorage.removeItem(removedKey);
   localStorage.removeItem(orderKey);
   localStorage.removeItem(durationsKey);
+  localStorage.removeItem(splitKey);
+  localStorage.removeItem(insertKey);
 
   try {
     await fetch('/api/v1/schedule/rhythm-action/restore', {
@@ -4884,6 +4924,440 @@ async function restoreRhythmBlocks(dateStr) {
   await loadScienceRhythm(dateStr);
   showToast('Stundenplan erfolgreich auf Ursprungszustand zurückgesetzt.');
 }
+
+let _selectedNowPauseMinutes = 15;
+
+function openAddPauseModal() {
+  const modal = document.getElementById('rhythmAddPauseModal');
+  if (!modal) return;
+
+  const data = state.currentScienceRhythmData;
+  const splitSelect = document.getElementById('splitBlockSelect');
+  const insertSelect = document.getElementById('customPauseInsertAfterSelect');
+
+  if (splitSelect) {
+    splitSelect.innerHTML = '';
+    const eligibleBlocks = (data?.blocks || []).filter(b => !b.is_break && b.id !== 'evening_free' && (b.duration_minutes || 0) >= 50 && !b.parent_id);
+    if (eligibleBlocks.length === 0) {
+      splitSelect.innerHTML = '<option value="">Keine langen Lernblöcke vorhanden</option>';
+    } else {
+      eligibleBlocks.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.title} (${b.duration_minutes} Min.)`;
+        splitSelect.appendChild(opt);
+      });
+    }
+  }
+
+  if (insertSelect) {
+    insertSelect.innerHTML = '<option value="__start__">Ganz am Anfang (Start des Tages)</option>';
+    (data?.blocks || []).forEach(b => {
+      if (b.id !== 'evening_free') {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `Nach: ${b.title} (${b.start_time}–${b.end_time})`;
+        insertSelect.appendChild(opt);
+      }
+    });
+  }
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAddPauseModal() {
+  const modal = document.getElementById('rhythmAddPauseModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function selectNowPauseDur(mins, btn) {
+  _selectedNowPauseMinutes = mins;
+  const label = document.getElementById('nowPauseDurLabel');
+  if (label) label.textContent = mins;
+  document.querySelectorAll('.now-pause-pill').forEach(p => {
+    p.classList.remove('active-pill');
+    p.style.borderColor = '';
+    p.style.background = '';
+    p.style.color = '';
+    p.style.fontWeight = '';
+  });
+  if (btn) {
+    btn.classList.add('active-pill');
+    btn.style.borderColor = '#3fb950';
+    btn.style.background = 'rgba(63, 185, 80, 0.2)';
+    btn.style.color = '#7ee787';
+    btn.style.fontWeight = '700';
+  }
+}
+
+async function executeNowPause() {
+  const data = state.currentScienceRhythmData;
+  if (!data || !Array.isArray(data.blocks)) {
+    closeAddPauseModal();
+    return;
+  }
+  const dateStr = data.date;
+  const pauseMinutes = _selectedNowPauseMinutes || 15;
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  // Find if a study block is active right now
+  let activeBlockIdx = -1;
+  let activeBlock = null;
+  for (let i = 0; i < data.blocks.length; i++) {
+    const b = data.blocks[i];
+    if (b && b.start_time && b.end_time) {
+      const [sh, sm] = b.start_time.split(':').map(Number);
+      const [eh, em] = b.end_time.split(':').map(Number);
+      const sM = (sh || 0) * 60 + (sm || 0);
+      const eM = (eh || 0) * 60 + (em || 0);
+      if (nowMinutes >= sM && nowMinutes < eM) {
+        activeBlockIdx = i;
+        activeBlock = b;
+        break;
+      }
+    }
+  }
+
+  const pauseBlockId = `pause_now_${Date.now()}`;
+  const pauseBlock = {
+    id: pauseBlockId,
+    duration_minutes: pauseMinutes,
+    title: 'Pause: Kognitive Erholung',
+    subtitle: 'Aktive Pause • Bildschirmpause & Synaptische Konsolidierung',
+    focus_type: 'pause',
+    icon: '☕',
+    color: '#3fb950',
+    badge: `Pause (${pauseMinutes}m)`,
+    description: 'Zwingende Pause zum Durchatmen, Wasser trinken und Gehirn entlasten.',
+    is_break: true,
+    is_mandatory: false,
+  };
+
+  if (activeBlock && !activeBlock.is_break && activeBlock.id !== 'evening_free') {
+    // We are inside an active study block! Split into (1) elapsed part and (2) remaining part
+    const [sh, sm] = activeBlock.start_time.split(':').map(Number);
+    const startM = (sh || 0) * 60 + (sm || 0);
+    const elapsed = Math.max(5, nowMinutes - startM);
+    const remaining = Math.max(5, (activeBlock.duration_minutes || 45) - elapsed);
+
+    const part1 = {
+      ...activeBlock,
+      id: `${activeBlock.id}_part1`,
+      duration_minutes: elapsed,
+      title: `${activeBlock.title} (Teil 1 - vor Pause)`,
+      subtitle: `${elapsed} Min. absolviert`,
+      badge: `Teil 1 (${elapsed}m)`,
+      is_completed: true,
+      parent_id: activeBlock.id,
+    };
+
+    const part2 = {
+      ...activeBlock,
+      id: `${activeBlock.id}_part2`,
+      duration_minutes: remaining,
+      title: `${activeBlock.title} (Fortsetzung nach Pause)`,
+      subtitle: `Noch ${remaining} Min. zu absolvieren`,
+      badge: `Rest (${remaining}m)`,
+      is_completed: false,
+      parent_id: activeBlock.id,
+    };
+
+    // Replace the active block with part1, pauseBlock, part2
+    data.blocks.splice(activeBlockIdx, 1, part1, pauseBlock, part2);
+
+    // Save split to localStorage and backend
+    const splitKey = `sl_rhythm_split_${dateStr}`;
+    const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
+    localSplit[activeBlock.id] = { sub_blocks: [part1, pauseBlock, part2] };
+    localStorage.setItem(splitKey, JSON.stringify(localSplit));
+
+    try {
+      await fetch('/api/v1/schedule/rhythm-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_date: dateStr,
+          action: 'split',
+          block_id: activeBlock.id,
+          block_payload: { sub_blocks: [part1, pauseBlock, part2] },
+        }),
+      });
+    } catch (e) {
+      console.warn('Backend split action save failed:', e);
+    }
+  } else {
+    // Insert pause at the current upcoming position
+    let insertIdx = data.blocks.findIndex(b => {
+      if (!b.start_time) return false;
+      const [sh, sm] = b.start_time.split(':').map(Number);
+      return ((sh || 0) * 60 + (sm || 0)) > nowMinutes && b.id !== 'evening_free';
+    });
+    if (insertIdx < 0) insertIdx = Math.max(0, data.blocks.length - 1);
+    data.blocks.splice(insertIdx, 0, pauseBlock);
+
+    // Save inserted block to localStorage and backend
+    const insertKey = `sl_rhythm_inserted_${dateStr}`;
+    const localInserted = JSON.parse(localStorage.getItem(insertKey) || '[]');
+    localInserted.push(pauseBlock);
+    localStorage.setItem(insertKey, JSON.stringify(localInserted));
+
+    try {
+      await fetch('/api/v1/schedule/rhythm-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_date: dateStr,
+          action: 'insert',
+          block_id: pauseBlockId,
+          block_payload: pauseBlock,
+        }),
+      });
+    } catch (e) {
+      console.warn('Backend insert pause save failed:', e);
+    }
+  }
+
+  // Save new custom order
+  const orderIds = data.blocks.map(b => b.id);
+  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
+  saveRhythmReorderToBackend(dateStr, orderIds);
+
+  recalculateRhythmTimes(data);
+  renderScienceRhythm(data);
+  closeAddPauseModal();
+
+  showToast(`☕ ${pauseMinutes} Min. Pause eingetragen! Restlicher Plan wurde nach hinten verschoben.`);
+}
+
+async function splitBlockIntoIntervals(dateStr, blockId, intervalMode) {
+  const data = state.currentScienceRhythmData;
+  if (!data || !Array.isArray(data.blocks)) return;
+  const idx = data.blocks.findIndex(b => b.id === blockId);
+  if (idx < 0) return;
+  const block = data.blocks[idx];
+
+  const totalMins = block.duration_minutes || 60;
+  let studyChunk = 50;
+  let pauseChunk = 10;
+  if (intervalMode === '55_15') { studyChunk = 55; pauseChunk = 15; }
+  else if (intervalMode === '60_15') { studyChunk = 60; pauseChunk = 15; }
+  else if (intervalMode === '45_15') { studyChunk = 45; pauseChunk = 15; }
+
+  // Determine how many study chunks we need
+  const subBlocks = [];
+  let remainingStudy = totalMins;
+  let partNumber = 1;
+
+  while (remainingStudy > 0) {
+    const currentChunk = Math.min(studyChunk, remainingStudy);
+    remainingStudy -= currentChunk;
+
+    subBlocks.push({
+      ...block,
+      id: `${blockId}_p${partNumber}`,
+      original_id: blockId,
+      parent_id: blockId,
+      duration_minutes: currentChunk,
+      title: `${block.title} (Teil ${partNumber})`,
+      subtitle: `${currentChunk} Min. Fokus-Intervall`,
+      badge: `${block.badge || 'Lernen'} (${currentChunk}m)`,
+      is_sub_block: true,
+      is_completed: false,
+    });
+
+    if (remainingStudy > 0) {
+      subBlocks.push({
+        id: `${blockId}_brk${partNumber}`,
+        original_id: blockId,
+        parent_id: blockId,
+        duration_minutes: pauseChunk,
+        title: `Pause (nach Teil ${partNumber})`,
+        subtitle: `${pauseChunk} Min. kognitiver Reset & Hydratation`,
+        focus_type: 'pause',
+        icon: '☕',
+        color: '#3fb950',
+        badge: `Pause (${pauseChunk}m)`,
+        description: 'Aufstehen, Wasser trinken, Augen entspannen.',
+        is_break: true,
+        is_sub_block: true,
+        is_mandatory: false,
+      });
+    }
+    partNumber++;
+  }
+
+  // Replace block with subBlocks
+  data.blocks.splice(idx, 1, ...subBlocks);
+
+  // Save split to localStorage and backend
+  const splitKey = `sl_rhythm_split_${dateStr}`;
+  const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
+  localSplit[blockId] = { sub_blocks: subBlocks };
+  localStorage.setItem(splitKey, JSON.stringify(localSplit));
+
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+        action: 'split',
+        block_id: blockId,
+        block_payload: { sub_blocks: subBlocks },
+      }),
+    });
+  } catch (e) {
+    console.warn('Backend split action save failed:', e);
+  }
+
+  // Save new custom order
+  const orderIds = data.blocks.map(b => b.id);
+  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
+  saveRhythmReorderToBackend(dateStr, orderIds);
+
+  recalculateRhythmTimes(data);
+  renderScienceRhythm(data);
+  closeAddPauseModal();
+
+  showToast(`⏱️ ${block.title} erfolgreich in ${subBlocks.filter(b => !b.is_break).length} Etappen mit Pausen aufgeteilt!`);
+}
+
+function executeSplitBlock() {
+  const select = document.getElementById('splitBlockSelect');
+  const modeSelect = document.getElementById('splitIntervalMode');
+  if (!select || !select.value) {
+    showToast('Bitte einen zu teilenden Block auswählen.');
+    return;
+  }
+  const data = state.currentScienceRhythmData;
+  if (!data) return;
+  splitBlockIntoIntervals(data.date, select.value, modeSelect?.value || '50_10');
+}
+
+function handleQuickSplitBlock(dateStr, blockId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  splitBlockIntoIntervals(dateStr, blockId, '50_10');
+}
+
+async function handleMergeSplitBlock(dateStr, parentId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  // Delete split record in localStorage and backend
+  const splitKey = `sl_rhythm_split_${dateStr}`;
+  const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
+  delete localSplit[parentId];
+  localStorage.setItem(splitKey, JSON.stringify(localSplit));
+
+  try {
+    await fetch('/api/v1/schedule/rhythm-action/restore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+        block_id: parentId,
+      }),
+    });
+  } catch (e) {
+    console.warn('Backend restore split failed:', e);
+  }
+
+  // Also remove custom order so original block structure is reloaded cleanly
+  const orderKey = `sl_rhythm_order_${dateStr}`;
+  localStorage.removeItem(orderKey);
+
+  await loadScienceRhythm(dateStr);
+  showToast('↩️ Block wieder zum Originalzustand zusammengeführt.');
+}
+
+async function executeAddCustomPause() {
+  const data = state.currentScienceRhythmData;
+  if (!data || !Array.isArray(data.blocks)) {
+    closeAddPauseModal();
+    return;
+  }
+  const dateStr = data.date;
+  const titleInput = document.getElementById('customPauseTitleInput');
+  const minsInput = document.getElementById('customPauseMinutesInput');
+  const posSelect = document.getElementById('customPauseInsertAfterSelect');
+
+  const title = (titleInput?.value || 'Pause: Kognitive Erholung').trim();
+  const mins = parseInt(minsInput?.value || '15', 10) || 15;
+  const posId = posSelect?.value || '';
+
+  const pauseId = `pause_custom_${Date.now()}`;
+  const pauseBlock = {
+    id: pauseId,
+    duration_minutes: mins,
+    title: title,
+    subtitle: `${mins} Min. Erholungspause`,
+    focus_type: 'pause',
+    icon: '☕',
+    color: '#3fb950',
+    badge: `Pause (${mins}m)`,
+    description: 'Geplante Bildschirmpause zur Regeneration.',
+    is_break: true,
+    is_mandatory: false,
+  };
+
+  let insertIdx = data.blocks.length - 1;
+  if (posId === '__start__') {
+    insertIdx = 0;
+  } else if (posId) {
+    const foundIdx = data.blocks.findIndex(b => b.id === posId);
+    if (foundIdx >= 0) insertIdx = foundIdx + 1;
+  }
+
+  data.blocks.splice(insertIdx, 0, pauseBlock);
+
+  // Save inserted block to localStorage and backend
+  const insertKey = `sl_rhythm_inserted_${dateStr}`;
+  const localInserted = JSON.parse(localStorage.getItem(insertKey) || '[]');
+  localInserted.push(pauseBlock);
+  localStorage.setItem(insertKey, JSON.stringify(localInserted));
+
+  try {
+    await fetch('/api/v1/schedule/rhythm-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_date: dateStr,
+        action: 'insert',
+        block_id: pauseId,
+        block_payload: pauseBlock,
+      }),
+    });
+  } catch (e) {
+    console.warn('Backend insert pause save failed:', e);
+  }
+
+  const orderIds = data.blocks.map(b => b.id);
+  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
+  saveRhythmReorderToBackend(dateStr, orderIds);
+
+  recalculateRhythmTimes(data);
+  renderScienceRhythm(data);
+  closeAddPauseModal();
+
+  showToast(`+ Pause '${title}' (${mins} Min.) im Plan eingefügt.`);
+}
+
+window.openAddPauseModal = openAddPauseModal;
+window.closeAddPauseModal = closeAddPauseModal;
+window.selectNowPauseDur = selectNowPauseDur;
+window.executeNowPause = executeNowPause;
+window.splitBlockIntoIntervals = splitBlockIntoIntervals;
+window.executeSplitBlock = executeSplitBlock;
+window.handleQuickSplitBlock = handleQuickSplitBlock;
+window.handleMergeSplitBlock = handleMergeSplitBlock;
+window.executeAddCustomPause = executeAddCustomPause;
 
 function recalculateRhythmTimes(data) {
   if (!data || !Array.isArray(data.blocks)) return;
@@ -5504,10 +5978,20 @@ function renderScienceRhythm(data) {
             <div class="rhythm-card-times" style="font-family: monospace; font-size: 12px; font-weight: 700; color: #f0f6fc;">
               ${b.start_time} <span style="font-weight: 400; color: var(--text-dim);">–</span> ${b.end_time}
             </div>
-            <div style="display: flex; align-items: center; gap: 3px; margin-top: 3px;">
+            <div style="display: flex; align-items: center; gap: 3px; margin-top: 3px; flex-wrap: wrap;">
               ${isDraggable ? `<button type="button" class="btn-duration-nudge" onclick="handleNudgeBlockDuration('${data.date}', '${b.id}', -15, event)" title="15 Min. kürzen">–15</button>` : ''}
               <span class="duration-badge-pill rhythm-card-duration-text" onclick="handlePromptBlockDuration('${data.date}', '${b.id}', ${b.duration_minutes}, event)" title="Klicken zum manuellen Einstellen der Minuten">${b.duration_minutes}m</span>
               ${isDraggable ? `<button type="button" class="btn-duration-nudge btn-duration-plus" onclick="handleNudgeBlockDuration('${data.date}', '${b.id}', 15, event)" title="15 Min. verlängern">+15</button>` : ''}
+              ${!b.is_break && (b.duration_minutes || 0) >= 60 && !b.parent_id && !b.is_mandatory ? `
+                <button type="button" class="btn-duration-nudge" onclick="handleQuickSplitBlock('${data.date}', '${b.id}', event)" title="In ~50m Etappen mit 10m Pausen unterteilen" style="width: auto; padding: 0 5px; font-size: 9.5px; color: #79c0ff; border-color: rgba(56, 139, 253, 0.4);">
+                  ☕ 1h-Pausen
+                </button>
+              ` : ''}
+              ${b.parent_id ? `
+                <button type="button" class="btn-duration-nudge" onclick="handleMergeSplitBlock('${data.date}', '${b.parent_id}', event)" title="Etappen wieder zu einem Block zusammenführen" style="width: auto; padding: 0 5px; font-size: 9.5px; color: #e3b341; border-color: rgba(227, 179, 65, 0.4);">
+                  ↩️ Zusammenführen
+                </button>
+              ` : ''}
             </div>
           </div>
 

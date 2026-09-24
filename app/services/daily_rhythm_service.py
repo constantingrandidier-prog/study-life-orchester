@@ -95,12 +95,15 @@ def generate_daily_science_rhythm(
     postponed_blocks: Optional[List[Dict[str, Any]]] = None,
     custom_block_order: Optional[List[str]] = None,
     anki_first_review_time: Optional[str] = None,
+    inserted_blocks: Optional[List[Dict[str, Any]]] = None,
+    split_blocks: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Generates the scientific ultradian study schedule with precise time arithmetic.
     Fully customizable: start time, lunch break duration, lecture inclusion/skip.
     Integrates today's struggle cards, morning Anki focus, and afternoon lecture priming for tomorrow.
     Supports dynamic block deletion and intelligent scheduling of postponed tasks from previous days.
+    Supports inserting custom breaks and splitting long marathon study blocks into 1h intervals.
     """
     t_date = target_date or date.today()
     date_iso = t_date.isoformat()
@@ -136,6 +139,10 @@ def generate_daily_science_rhythm(
     custom_durations = {}
     completed_set = set()
     custom_blocks = {}
+    if inserted_blocks is None:
+        inserted_blocks = []
+    if split_blocks is None:
+        split_blocks = {}
     try:
         from app.db.repository import get_rhythm_actions_for_date
         db_actions = get_rhythm_actions_for_date(date_iso)
@@ -148,6 +155,10 @@ def generate_daily_science_rhythm(
         if not custom_block_order:
             custom_block_order = db_actions.get("custom_order", [])
         custom_durations = db_actions.get("custom_durations", {})
+        if not inserted_blocks:
+            inserted_blocks = list(db_actions.get("inserted_blocks", []))
+        if not split_blocks:
+            split_blocks = dict(db_actions.get("split_blocks", {}))
     except Exception:
         pass
 
@@ -214,6 +225,16 @@ def generate_daily_science_rhythm(
         bid = b_dict.get("id")
         if bid and bid in removed_set:
             return False
+
+        if bid and split_blocks and bid in split_blocks:
+            split_info = split_blocks[bid]
+            sub_list = split_info.get("sub_blocks", []) if isinstance(split_info, dict) else split_info
+            if sub_list:
+                for sub in sub_list:
+                    sub_copy = dict(sub)
+                    add_block_if_active(sub_copy)
+                return True
+
         if bid and custom_durations and bid in custom_durations:
             try:
                 b_dict["duration_minutes"] = int(custom_durations[bid])
@@ -568,6 +589,13 @@ def generate_daily_science_rhythm(
     total_study_mins += dur_lapse
     cur_m += dur_lapse
 
+    # 10b. Inserted Custom Blocks (e.g. ad-hoc pauses inserted via "+ Pause" or "Pause jetzt machen")
+    if inserted_blocks:
+        for ins in inserted_blocks:
+            ins_id = ins.get("id")
+            if ins_id and not any(b.get("id") == ins_id for b in blocks):
+                add_block_if_active(dict(ins))
+
     # 11. Feierabend & Evening Free (starts exactly at the end of scheduled work)
     feierabend_time = _minutes_to_time(cur_m)
     dur_evening = max(60, (22 * 60) - cur_m)
@@ -670,6 +698,8 @@ def generate_daily_science_rhythm(
         "postponed_blocks_count": len(active_postponed),
         "custom_order": custom_block_order or [],
         "custom_durations": custom_durations,
+        "inserted_blocks": inserted_blocks or [],
+        "split_blocks": split_blocks or {},
         "blocks": blocks,
         "mandatory_events": [
             {

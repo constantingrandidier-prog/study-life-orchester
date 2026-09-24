@@ -4705,6 +4705,23 @@ async function loadScienceRhythm(targetDate) {
       recalculateRhythmTimes(data);
     }
 
+    // Check if client or server has block interruptions for this date
+    const interKey = `sl_rhythm_interruptions_${dateStr}`;
+    const localInter = JSON.parse(localStorage.getItem(interKey) || '{}');
+    if (data.interrupted_blocks && typeof data.interrupted_blocks === 'object') {
+      for (const [k, v] of Object.entries(data.interrupted_blocks)) {
+        if (!localInter[k]) localInter[k] = v;
+      }
+    }
+    if (Object.keys(localInter).length > 0 && Array.isArray(data.blocks)) {
+      data.blocks.forEach(b => {
+        if (b && b.id && localInter[b.id]) {
+          b.interruptions = localInter[b.id];
+        }
+      });
+      recalculateRhythmTimes(data);
+    }
+
     // Update Feierabend badge
     const feierabendEl = document.getElementById('rhythmFeierabendBadge');
     if (feierabendEl && data.feierabend_time) {
@@ -4750,6 +4767,7 @@ async function loadScienceRhythm(targetDate) {
     }
 
     renderScienceRhythm(data);
+    updateLivePauseBanner();
   } catch (err) {
     console.warn('Daily science rhythm fetch failed:', err);
   }
@@ -4952,41 +4970,19 @@ async function restoreRhythmBlocks(dateStr) {
   showToast('Stundenplan erfolgreich auf Ursprungszustand zurückgesetzt.');
 }
 
-let _selectedNowPauseMinutes = 15;
+let _selectedManualPauseMinutes = 15;
 
 function openAddPauseModal() {
   const modal = document.getElementById('rhythmAddPauseModal');
   if (!modal) return;
 
-  const data = state.currentScienceRhythmData;
-  const splitSelect = document.getElementById('splitBlockSelect');
-  const insertSelect = document.getElementById('customPauseInsertAfterSelect');
-
-  if (splitSelect) {
-    splitSelect.innerHTML = '';
-    const eligibleBlocks = (data?.blocks || []).filter(b => !b.is_break && b.id !== 'evening_free' && (b.duration_minutes || 0) >= 50 && !b.parent_id);
-    if (eligibleBlocks.length === 0) {
-      splitSelect.innerHTML = '<option value="">Keine langen Lernblöcke vorhanden</option>';
-    } else {
-      eligibleBlocks.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b.id;
-        opt.textContent = `${b.title} (${b.duration_minutes} Min.)`;
-        splitSelect.appendChild(opt);
-      });
-    }
-  }
-
-  if (insertSelect) {
-    insertSelect.innerHTML = '<option value="__start__">Ganz am Anfang (Start des Tages)</option>';
-    (data?.blocks || []).forEach(b => {
-      if (b.id !== 'evening_free') {
-        const opt = document.createElement('option');
-        opt.value = b.id;
-        opt.textContent = `Nach: ${b.title} (${b.start_time}–${b.end_time})`;
-        insertSelect.appendChild(opt);
-      }
-    });
+  // Set default manual pause start time to current HH:MM
+  const timeInput = document.getElementById('manualPauseTimeInput');
+  if (timeInput) {
+    const now = new Date();
+    const curH = String(now.getHours()).padStart(2, '0');
+    const curM = String(now.getMinutes()).padStart(2, '0');
+    timeInput.value = `${curH}:${curM}`;
   }
 
   modal.style.display = 'flex';
@@ -4999,11 +4995,11 @@ function closeAddPauseModal() {
   document.body.style.overflow = '';
 }
 
-function selectNowPauseDur(mins, btn) {
-  _selectedNowPauseMinutes = mins;
-  const label = document.getElementById('nowPauseDurLabel');
-  if (label) label.textContent = mins;
-  document.querySelectorAll('.now-pause-pill').forEach(p => {
+function selectManualPauseDur(mins, btn) {
+  _selectedManualPauseMinutes = mins;
+  const minsInput = document.getElementById('manualPauseMinutesInput');
+  if (minsInput) minsInput.value = mins;
+  document.querySelectorAll('.manual-pause-pill').forEach(p => {
     p.classList.remove('active-pill');
     p.style.borderColor = '';
     p.style.background = '';
@@ -5019,113 +5015,201 @@ function selectNowPauseDur(mins, btn) {
   }
 }
 
-async function executeNowPause() {
-  const data = state.currentScienceRhythmData;
-  if (!data || !Array.isArray(data.blocks)) {
-    closeAddPauseModal();
+function startLivePause() {
+  closeAddPauseModal();
+  const now = new Date();
+  const curH = String(now.getHours()).padStart(2, '0');
+  const curM = String(now.getMinutes()).padStart(2, '0');
+  const dateStr = state.currentScienceRhythmData?.date || state.targetDate || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+  const activePause = {
+    startTime: Date.now(),
+    startFormatted: `${curH}:${curM}`,
+    date: dateStr,
+  };
+  localStorage.setItem('sl_active_live_pause', JSON.stringify(activePause));
+  updateLivePauseBanner();
+  renderScienceRhythm(state.currentScienceRhythmData);
+
+  showToast('☕ Pause gestartet! Dein aktueller Lernblock ist pausiert. Klicke auf "Fertig Pause", wenn du weiterlernen möchtest.');
+}
+
+async function stopLivePause() {
+  const raw = localStorage.getItem('sl_active_live_pause');
+  if (!raw) {
+    updateLivePauseBanner();
     return;
   }
-  const dateStr = data.date;
-  const pauseMinutes = _selectedNowPauseMinutes || 15;
-  const now = new Date();
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  let activePause = null;
+  try {
+    activePause = JSON.parse(raw);
+  } catch (e) {
+    localStorage.removeItem('sl_active_live_pause');
+    updateLivePauseBanner();
+    return;
+  }
 
-  // Find if a study block is active right now
-  let activeBlockIdx = -1;
-  let activeBlock = null;
-  for (let i = 0; i < data.blocks.length; i++) {
-    const b = data.blocks[i];
-    if (b && b.start_time && b.end_time) {
-      const [sh, sm] = b.start_time.split(':').map(Number);
-      const [eh, em] = b.end_time.split(':').map(Number);
-      const sM = (sh || 0) * 60 + (sm || 0);
-      const eM = (eh || 0) * 60 + (em || 0);
-      if (nowMinutes >= sM && nowMinutes < eM) {
-        activeBlockIdx = i;
-        activeBlock = b;
+  const elapsedMs = Date.now() - (activePause.startTime || Date.now());
+  const elapsedMinutes = Math.max(1, Math.round(elapsedMs / 60000));
+  localStorage.removeItem('sl_active_live_pause');
+  updateLivePauseBanner();
+
+  await applyPauseInterruption(activePause.date, activePause.startFormatted, elapsedMinutes, 'Spontane Pause');
+  showToast(`☕ Pause beendet (${elapsedMinutes} Min.)! Lernblock unterbrochen und Feierabend aktualisiert.`);
+}
+
+async function executeManualPause() {
+  const timeInput = document.getElementById('manualPauseTimeInput');
+  const minsInput = document.getElementById('manualPauseMinutesInput');
+  const now = new Date();
+  const defaultTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const startTime = (timeInput?.value || defaultTime).trim();
+  const duration = parseInt(minsInput?.value || '15', 10) || 15;
+  const dateStr = state.currentScienceRhythmData?.date || state.targetDate || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+  closeAddPauseModal();
+  await applyPauseInterruption(dateStr, startTime, duration, 'Pause');
+  showToast(`☕ Pause von ${startTime} (${duration} Min.) eingetragen! Lernblock unterbrochen und Feierabend aktualisiert.`);
+}
+
+function updateLivePauseBanner() {
+  const banner = document.getElementById('activePauseBanner');
+  const sinceEl = document.getElementById('activePauseSince');
+  const durEl = document.getElementById('activePauseDuration');
+  const pauseBtn = document.getElementById('btnRhythmAddPause');
+  const pauseBtnLabel = document.getElementById('btnRhythmAddPauseLabel');
+
+  const raw = localStorage.getItem('sl_active_live_pause');
+  if (!raw) {
+    if (banner) banner.style.display = 'none';
+    if (pauseBtn) {
+      pauseBtn.style.borderColor = 'rgba(63, 185, 80, 0.45)';
+      pauseBtn.style.background = 'rgba(46, 160, 67, 0.12)';
+      pauseBtn.style.color = '#7ee787';
+      pauseBtn.onclick = openAddPauseModal;
+    }
+    if (pauseBtnLabel) pauseBtnLabel.textContent = '+ Pause eintragen';
+    return;
+  }
+
+  let activePause;
+  try {
+    activePause = JSON.parse(raw);
+  } catch (e) {
+    localStorage.removeItem('sl_active_live_pause');
+    if (banner) banner.style.display = 'none';
+    return;
+  }
+
+  const elapsedMs = Date.now() - (activePause.startTime || Date.now());
+  const elapsedMinutes = Math.max(1, Math.round(elapsedMs / 60000));
+
+  if (banner) {
+    banner.style.display = 'flex';
+  }
+  if (sinceEl) sinceEl.textContent = activePause.startFormatted || '--:--';
+  if (durEl) durEl.textContent = elapsedMinutes;
+
+  if (pauseBtn) {
+    pauseBtn.style.borderColor = '#3fb950';
+    pauseBtn.style.background = 'rgba(46, 160, 67, 0.35)';
+    pauseBtn.style.color = '#fff';
+    pauseBtn.onclick = stopLivePause;
+  }
+  if (pauseBtnLabel) pauseBtnLabel.textContent = `☕ Pause läuft (${elapsedMinutes}m) – Beenden`;
+}
+
+// Background ticker for live pause
+if (!window._livePauseInterval) {
+  window._livePauseInterval = setInterval(() => {
+    updateLivePauseBanner();
+  }, 10000);
+}
+
+async function applyPauseInterruption(dateStr, startTimeStr, durationMinutes, title) {
+  const data = state.currentScienceRhythmData;
+  if (!data || !Array.isArray(data.blocks)) return;
+
+  const [sh, sm] = startTimeStr.split(':').map(Number);
+  const pauseStartM = (sh || 0) * 60 + (sm || 0);
+
+  // Find if an active study block covers this pause time
+  let matchedBlock = null;
+  for (const b of data.blocks) {
+    if (b && !b.is_break && b.id !== 'evening_free' && b.start_time && b.end_time) {
+      const [bsh, bsm] = b.start_time.split(':').map(Number);
+      const [beh, bem] = b.end_time.split(':').map(Number);
+      const bStartM = (bsh || 0) * 60 + (bsm || 0);
+      const bEndM = (beh || 0) * 60 + (bem || 0);
+      if (pauseStartM >= bStartM && pauseStartM < bEndM) {
+        matchedBlock = b;
         break;
       }
     }
   }
 
-  const pauseBlockId = `pause_now_${Date.now()}`;
-  const pauseBlock = {
-    id: pauseBlockId,
-    duration_minutes: pauseMinutes,
-    title: 'Pause: Kognitive Erholung',
-    subtitle: 'Aktive Pause • Bildschirmpause & Synaptische Konsolidierung',
-    focus_type: 'pause',
-    icon: '☕',
-    color: '#3fb950',
-    badge: `Pause (${pauseMinutes}m)`,
-    description: 'Zwingende Pause zum Durchatmen, Wasser trinken und Gehirn entlasten.',
-    is_break: true,
-    is_mandatory: false,
-  };
-
-  if (activeBlock && !activeBlock.is_break && activeBlock.id !== 'evening_free') {
-    // We are inside an active study block! Split into (1) elapsed part and (2) remaining part
-    const [sh, sm] = activeBlock.start_time.split(':').map(Number);
-    const startM = (sh || 0) * 60 + (sm || 0);
-    const elapsed = Math.max(5, nowMinutes - startM);
-    const remaining = Math.max(5, (activeBlock.duration_minutes || 45) - elapsed);
-
-    const part1 = {
-      ...activeBlock,
-      id: `${activeBlock.id}_part1`,
-      duration_minutes: elapsed,
-      title: `${activeBlock.title} (Teil 1 - vor Pause)`,
-      subtitle: `${elapsed} Min. absolviert`,
-      badge: `Teil 1 (${elapsed}m)`,
-      is_completed: true,
-      parent_id: activeBlock.id,
+  if (matchedBlock) {
+    // Unterbreche den bestehenden Block OHNE ihn zu ersetzen!
+    if (!Array.isArray(matchedBlock.interruptions)) {
+      matchedBlock.interruptions = [];
+    }
+    const interObj = {
+      id: `pause_${Date.now()}`,
+      start_time: startTimeStr,
+      duration_minutes: durationMinutes,
+      title: title || 'Pause',
     };
+    matchedBlock.interruptions.push(interObj);
 
-    const part2 = {
-      ...activeBlock,
-      id: `${activeBlock.id}_part2`,
-      duration_minutes: remaining,
-      title: `${activeBlock.title} (Fortsetzung nach Pause)`,
-      subtitle: `Noch ${remaining} Min. zu absolvieren`,
-      badge: `Rest (${remaining}m)`,
-      is_completed: false,
-      parent_id: activeBlock.id,
-    };
+    // Save interruptions to localStorage
+    const interKey = `sl_rhythm_interruptions_${dateStr}`;
+    const localInter = JSON.parse(localStorage.getItem(interKey) || '{}');
+    localInter[matchedBlock.id] = matchedBlock.interruptions;
+    localStorage.setItem(interKey, JSON.stringify(localInter));
 
-    // Replace the active block with part1, pauseBlock, part2
-    data.blocks.splice(activeBlockIdx, 1, part1, pauseBlock, part2);
-
-    // Save split to localStorage and backend
-    const splitKey = `sl_rhythm_split_${dateStr}`;
-    const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
-    localSplit[activeBlock.id] = { sub_blocks: [part1, pauseBlock, part2] };
-    localStorage.setItem(splitKey, JSON.stringify(localSplit));
-
+    // Save action to backend
     try {
       await fetch('/api/v1/schedule/rhythm-action', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           source_date: dateStr,
-          action: 'split',
-          block_id: activeBlock.id,
-          block_payload: { sub_blocks: [part1, pauseBlock, part2] },
+          action: 'interrupt',
+          block_id: matchedBlock.id,
+          block_payload: { interruptions: matchedBlock.interruptions },
         }),
       });
     } catch (e) {
-      console.warn('Backend split action save failed:', e);
+      console.warn('Backend interrupt action save failed:', e);
     }
   } else {
-    // Insert pause at the current upcoming position
+    // Standalone Pause Block einfügen
+    const pauseBlockId = `pause_custom_${Date.now()}`;
+    const pauseBlock = {
+      id: pauseBlockId,
+      duration_minutes: durationMinutes,
+      start_time: startTimeStr,
+      title: title || 'Pause: Kognitive Erholung',
+      subtitle: `${durationMinutes} Min. Pause`,
+      focus_type: 'pause',
+      icon: '☕',
+      color: '#3fb950',
+      badge: `Pause (${durationMinutes}m)`,
+      description: 'Erholungspause zur kognitiven Regeneration.',
+      is_break: true,
+      is_mandatory: false,
+    };
+
+    // Find chronological insertion point
     let insertIdx = data.blocks.findIndex(b => {
       if (!b.start_time) return false;
-      const [sh, sm] = b.start_time.split(':').map(Number);
-      return ((sh || 0) * 60 + (sm || 0)) > nowMinutes && b.id !== 'evening_free';
+      const [bsh, bsm] = b.start_time.split(':').map(Number);
+      return ((bsh || 0) * 60 + (bsm || 0)) > pauseStartM && b.id !== 'evening_free';
     });
     if (insertIdx < 0) insertIdx = Math.max(0, data.blocks.length - 1);
     data.blocks.splice(insertIdx, 0, pauseBlock);
 
-    // Save inserted block to localStorage and backend
+    // Save inserted block to localStorage & backend
     const insertKey = `sl_rhythm_inserted_${dateStr}`;
     const localInserted = JSON.parse(localStorage.getItem(insertKey) || '[]');
     localInserted.push(pauseBlock);
@@ -5143,241 +5227,91 @@ async function executeNowPause() {
         }),
       });
     } catch (e) {
-      console.warn('Backend insert pause save failed:', e);
+      console.warn('Backend insert pause failed:', e);
     }
-  }
 
-  // Save new custom order
-  const orderIds = data.blocks.map(b => b.id);
-  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
-  saveRhythmReorderToBackend(dateStr, orderIds);
+    const orderIds = data.blocks.map(b => b.id);
+    localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
+    saveRhythmReorderToBackend(dateStr, orderIds);
+  }
 
   recalculateRhythmTimes(data);
   renderScienceRhythm(data);
-  closeAddPauseModal();
-
-  showToast(`☕ ${pauseMinutes} Min. Pause eingetragen! Restlicher Plan wurde nach hinten verschoben.`);
 }
 
-async function splitBlockIntoIntervals(dateStr, blockId, intervalMode) {
+async function removePauseInterruption(dateStr, blockId, interruptionIdx, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
   const data = state.currentScienceRhythmData;
   if (!data || !Array.isArray(data.blocks)) return;
-  const idx = data.blocks.findIndex(b => b.id === blockId);
-  if (idx < 0) return;
-  const block = data.blocks[idx];
 
-  const totalMins = block.duration_minutes || 60;
-  let studyChunk = 50;
-  let pauseChunk = 10;
-  if (intervalMode === '55_15') { studyChunk = 55; pauseChunk = 15; }
-  else if (intervalMode === '60_15') { studyChunk = 60; pauseChunk = 15; }
-  else if (intervalMode === '45_15') { studyChunk = 45; pauseChunk = 15; }
+  const block = data.blocks.find(b => b.id === blockId);
+  if (!block || !Array.isArray(block.interruptions)) return;
 
-  // Determine how many study chunks we need
-  const subBlocks = [];
-  let remainingStudy = totalMins;
-  let partNumber = 1;
+  block.interruptions.splice(interruptionIdx, 1);
 
-  while (remainingStudy > 0) {
-    const currentChunk = Math.min(studyChunk, remainingStudy);
-    remainingStudy -= currentChunk;
+  // Update localStorage
+  const interKey = `sl_rhythm_interruptions_${dateStr}`;
+  const localInter = JSON.parse(localStorage.getItem(interKey) || '{}');
+  if (block.interruptions.length === 0) {
+    delete localInter[blockId];
+  } else {
+    localInter[blockId] = block.interruptions;
+  }
+  localStorage.setItem(interKey, JSON.stringify(localInter));
 
-    subBlocks.push({
-      ...block,
-      id: `${blockId}_p${partNumber}`,
-      original_id: blockId,
-      parent_id: blockId,
-      duration_minutes: currentChunk,
-      title: `${block.title} (Teil ${partNumber})`,
-      subtitle: `${currentChunk} Min. Fokus-Intervall`,
-      badge: `${block.badge || 'Lernen'} (${currentChunk}m)`,
-      is_sub_block: true,
-      is_completed: false,
-    });
-
-    if (remainingStudy > 0) {
-      subBlocks.push({
-        id: `${blockId}_brk${partNumber}`,
-        original_id: blockId,
-        parent_id: blockId,
-        duration_minutes: pauseChunk,
-        title: `Pause (nach Teil ${partNumber})`,
-        subtitle: `${pauseChunk} Min. kognitiver Reset & Hydratation`,
-        focus_type: 'pause',
-        icon: '☕',
-        color: '#3fb950',
-        badge: `Pause (${pauseChunk}m)`,
-        description: 'Aufstehen, Wasser trinken, Augen entspannen.',
-        is_break: true,
-        is_sub_block: true,
-        is_mandatory: false,
+  // Sync to backend
+  try {
+    if (block.interruptions.length === 0) {
+      await fetch('/api/v1/schedule/rhythm-action/restore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_date: dateStr,
+          block_id: blockId,
+        }),
+      });
+    } else {
+      await fetch('/api/v1/schedule/rhythm-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_date: dateStr,
+          action: 'interrupt',
+          block_id: blockId,
+          block_payload: { interruptions: block.interruptions },
+        }),
       });
     }
-    partNumber++;
-  }
-
-  // Replace block with subBlocks
-  data.blocks.splice(idx, 1, ...subBlocks);
-
-  // Save split to localStorage and backend
-  const splitKey = `sl_rhythm_split_${dateStr}`;
-  const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
-  localSplit[blockId] = { sub_blocks: subBlocks };
-  localStorage.setItem(splitKey, JSON.stringify(localSplit));
-
-  try {
-    await fetch('/api/v1/schedule/rhythm-action', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source_date: dateStr,
-        action: 'split',
-        block_id: blockId,
-        block_payload: { sub_blocks: subBlocks },
-      }),
-    });
   } catch (e) {
-    console.warn('Backend split action save failed:', e);
+    console.warn('Backend remove interruption failed:', e);
   }
-
-  // Save new custom order
-  const orderIds = data.blocks.map(b => b.id);
-  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
-  saveRhythmReorderToBackend(dateStr, orderIds);
 
   recalculateRhythmTimes(data);
   renderScienceRhythm(data);
-  closeAddPauseModal();
-
-  showToast(`⏱️ ${block.title} erfolgreich in ${subBlocks.filter(b => !b.is_break).length} Etappen mit Pausen aufgeteilt!`);
+  showToast('Pause entfernt und Zeitplan wieder angepasst.');
 }
 
-function executeSplitBlock() {
-  const select = document.getElementById('splitBlockSelect');
-  const modeSelect = document.getElementById('splitIntervalMode');
-  if (!select || !select.value) {
-    showToast('Bitte einen zu teilenden Block auswählen.');
-    return;
-  }
-  const data = state.currentScienceRhythmData;
-  if (!data) return;
-  splitBlockIntoIntervals(data.date, select.value, modeSelect?.value || '50_10');
-}
-
-function handleQuickSplitBlock(dateStr, blockId, event) {
-  if (event) {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-  splitBlockIntoIntervals(dateStr, blockId, '50_10');
-}
-
-async function handleMergeSplitBlock(dateStr, parentId, event) {
-  if (event) {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-  // Delete split record in localStorage and backend
-  const splitKey = `sl_rhythm_split_${dateStr}`;
-  const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
-  delete localSplit[parentId];
-  localStorage.setItem(splitKey, JSON.stringify(localSplit));
-
-  try {
-    await fetch('/api/v1/schedule/rhythm-action/restore', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source_date: dateStr,
-        block_id: parentId,
-      }),
-    });
-  } catch (e) {
-    console.warn('Backend restore split failed:', e);
-  }
-
-  // Also remove custom order so original block structure is reloaded cleanly
-  const orderKey = `sl_rhythm_order_${dateStr}`;
-  localStorage.removeItem(orderKey);
-
-  await loadScienceRhythm(dateStr);
-  showToast('↩️ Block wieder zum Originalzustand zusammengeführt.');
-}
-
-async function executeAddCustomPause() {
-  const data = state.currentScienceRhythmData;
-  if (!data || !Array.isArray(data.blocks)) {
-    closeAddPauseModal();
-    return;
-  }
-  const dateStr = data.date;
-  const titleInput = document.getElementById('customPauseTitleInput');
-  const minsInput = document.getElementById('customPauseMinutesInput');
-  const posSelect = document.getElementById('customPauseInsertAfterSelect');
-
-  const title = (titleInput?.value || 'Pause: Kognitive Erholung').trim();
-  const mins = parseInt(minsInput?.value || '15', 10) || 15;
-  const posId = posSelect?.value || '';
-
-  const pauseId = `pause_custom_${Date.now()}`;
-  const pauseBlock = {
-    id: pauseId,
-    duration_minutes: mins,
-    title: title,
-    subtitle: `${mins} Min. Erholungspause`,
-    focus_type: 'pause',
-    icon: '☕',
-    color: '#3fb950',
-    badge: `Pause (${mins}m)`,
-    description: 'Geplante Bildschirmpause zur Regeneration.',
-    is_break: true,
-    is_mandatory: false,
-  };
-
-  let insertIdx = data.blocks.length - 1;
-  if (posId === '__start__') {
-    insertIdx = 0;
-  } else if (posId) {
-    const foundIdx = data.blocks.findIndex(b => b.id === posId);
-    if (foundIdx >= 0) insertIdx = foundIdx + 1;
-  }
-
-  data.blocks.splice(insertIdx, 0, pauseBlock);
-
-  // Save inserted block to localStorage and backend
-  const insertKey = `sl_rhythm_inserted_${dateStr}`;
-  const localInserted = JSON.parse(localStorage.getItem(insertKey) || '[]');
-  localInserted.push(pauseBlock);
-  localStorage.setItem(insertKey, JSON.stringify(localInserted));
-
-  try {
-    await fetch('/api/v1/schedule/rhythm-action', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source_date: dateStr,
-        action: 'insert',
-        block_id: pauseId,
-        block_payload: pauseBlock,
-      }),
-    });
-  } catch (e) {
-    console.warn('Backend insert pause save failed:', e);
-  }
-
-  const orderIds = data.blocks.map(b => b.id);
-  localStorage.setItem(`sl_rhythm_order_${dateStr}`, JSON.stringify(orderIds));
-  saveRhythmReorderToBackend(dateStr, orderIds);
-
-  recalculateRhythmTimes(data);
-  renderScienceRhythm(data);
-  closeAddPauseModal();
-
-  showToast(`+ Pause '${title}' (${mins} Min.) im Plan eingefügt.`);
-}
+// Legacy shims for backwards compatibility
+function selectNowPauseDur(mins, btn) { selectManualPauseDur(mins, btn); }
+async function executeNowPause() { startLivePause(); }
+async function splitBlockIntoIntervals() {}
+function executeSplitBlock() {}
+function handleQuickSplitBlock() {}
+async function handleMergeSplitBlock() {}
+async function executeAddCustomPause() { executeManualPause(); }
 
 window.openAddPauseModal = openAddPauseModal;
 window.closeAddPauseModal = closeAddPauseModal;
+window.selectManualPauseDur = selectManualPauseDur;
+window.startLivePause = startLivePause;
+window.stopLivePause = stopLivePause;
+window.executeManualPause = executeManualPause;
+window.updateLivePauseBanner = updateLivePauseBanner;
+window.applyPauseInterruption = applyPauseInterruption;
+window.removePauseInterruption = removePauseInterruption;
 window.selectNowPauseDur = selectNowPauseDur;
 window.executeNowPause = executeNowPause;
 window.splitBlockIntoIntervals = splitBlockIntoIntervals;
@@ -5407,9 +5341,12 @@ function recalculateRhythmTimes(data) {
       totalStudyM += (b.duration_minutes || (mEndM - mStartM));
     } else {
       const dur = b.duration_minutes || 45;
+      const interPause = (Array.isArray(b.interruptions) ? b.interruptions : []).reduce((sum, item) => sum + (item.duration_minutes || 0), 0);
+      const totalSpan = dur + interPause;
+
       const startH = String(Math.floor(curM / 60)).padStart(2, '0');
       const startMin = String(curM % 60).padStart(2, '0');
-      curM += dur;
+      curM += totalSpan;
       const endH = String(Math.floor(curM / 60)).padStart(2, '0');
       const endMin = String(curM % 60).padStart(2, '0');
 
@@ -5417,9 +5354,10 @@ function recalculateRhythmTimes(data) {
       b.end_time = `${endH}:${endMin}`;
 
       if (b.is_break) {
-        totalPauseM += dur;
+        totalPauseM += totalSpan;
       } else {
         totalStudyM += dur;
+        totalPauseM += interPause;
       }
     }
   });
@@ -6009,16 +5947,6 @@ function renderScienceRhythm(data) {
               ${isDraggable ? `<button type="button" class="btn-duration-nudge" onclick="handleNudgeBlockDuration('${data.date}', '${b.id}', -15, event)" title="15 Min. kürzen">–15</button>` : ''}
               <span class="duration-badge-pill rhythm-card-duration-text" onclick="handlePromptBlockDuration('${data.date}', '${b.id}', ${b.duration_minutes}, event)" title="Klicken zum manuellen Einstellen der Minuten">${b.duration_minutes}m</span>
               ${isDraggable ? `<button type="button" class="btn-duration-nudge btn-duration-plus" onclick="handleNudgeBlockDuration('${data.date}', '${b.id}', 15, event)" title="15 Min. verlängern">+15</button>` : ''}
-              ${!b.is_break && (b.duration_minutes || 0) >= 60 && !b.parent_id && !b.is_mandatory ? `
-                <button type="button" class="btn-duration-nudge" onclick="handleQuickSplitBlock('${data.date}', '${b.id}', event)" title="In ~50m Etappen mit 10m Pausen unterteilen" style="width: auto; padding: 0 5px; font-size: 9.5px; color: #79c0ff; border-color: rgba(56, 139, 253, 0.4);">
-                  ☕ 1h-Pausen
-                </button>
-              ` : ''}
-              ${b.parent_id ? `
-                <button type="button" class="btn-duration-nudge" onclick="handleMergeSplitBlock('${data.date}', '${b.parent_id}', event)" title="Etappen wieder zu einem Block zusammenführen" style="width: auto; padding: 0 5px; font-size: 9.5px; color: #e3b341; border-color: rgba(227, 179, 65, 0.4);">
-                  ↩️ Zusammenführen
-                </button>
-              ` : ''}
             </div>
           </div>
 
@@ -6033,7 +5961,7 @@ function renderScienceRhythm(data) {
                 ${isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(245, 159, 0, 0.2); color: #f59f00; border: 1px solid rgba(245, 159, 0, 0.45);">⏩ Von gestern verschoben</span>` : ''}
                 ${b.badge && !isPostponed ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 4px; font-weight: 600; background: ${b.color}20; color: ${b.color}; border: 1px solid ${b.color}35;">${escapeHtml(b.badge)}</span>` : ''}
                 ${isMandatory && b.location ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 600; background: rgba(163, 113, 247, 0.15); color: #d2a8ff; border: 1px solid rgba(163, 113, 247, 0.35); display: inline-flex; align-items: center; gap: 3px;">${escapeHtml(b.location)}</span>` : ''}
-                ${isCurrent ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">JETZT AKTIV (${activeMinsLeft}m)</span>` : ''}
+                ${isCurrent ? (localStorage.getItem('sl_active_live_pause') ? `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(63, 185, 80, 0.25); color: #7ee787; border: 1px solid rgba(63, 185, 80, 0.5);">☕ JETZT PAUSIERT</span>` : `<span style="font-size: 9.5px; padding: 0.08rem 0.45rem; border-radius: 4px; font-weight: 700; background: rgba(56, 139, 253, 0.2); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.45);">JETZT AKTIV (${activeMinsLeft}m)</span>`) : ''}
               </div>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
                 ${escapeHtml(b.subtitle || '')}
@@ -6053,6 +5981,20 @@ function renderScienceRhythm(data) {
             </div>
           </div>
         </div>
+
+        <!-- Interruptions / Pauses inside this block -->
+        ${Array.isArray(b.interruptions) && b.interruptions.length > 0 ? `
+          <div style="margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.25rem;">
+            ${b.interruptions.map((inter, idx) => `
+              <div style="background: rgba(63, 185, 80, 0.12); border: 1px dashed rgba(63, 185, 80, 0.45); border-radius: 6px; padding: 0.3rem 0.65rem; display: flex; align-items: center; justify-content: space-between; font-size: 11px;">
+                <span style="color: #7ee787; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+                  ☕ <strong>Unterbrechung:</strong> ${escapeHtml(inter.title || 'Pause')} (${inter.start_time || ''} • ${inter.duration_minutes} Min.)
+                </span>
+                <button type="button" onclick="removePauseInterruption('${data.date}', '${b.id}', ${idx}, event)" style="background: none; border: none; color: #ff7b72; font-size: 11px; cursor: pointer; padding: 0.1rem 0.3rem; border-radius: 4px;" title="Pause entfernen">&times; Entfernen</button>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
 
         <!-- Detail Strip for Mandatory Attendance Events -->
         ${isMandatory && b.description ? `

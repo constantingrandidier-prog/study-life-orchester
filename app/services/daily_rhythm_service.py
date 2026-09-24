@@ -143,6 +143,7 @@ def generate_daily_science_rhythm(
         inserted_blocks = []
     if split_blocks is None:
         split_blocks = {}
+    interrupted_blocks = {}
     try:
         from app.db.repository import get_rhythm_actions_for_date
         db_actions = get_rhythm_actions_for_date(date_iso)
@@ -159,6 +160,7 @@ def generate_daily_science_rhythm(
             inserted_blocks = list(db_actions.get("inserted_blocks", []))
         if not split_blocks:
             split_blocks = dict(db_actions.get("split_blocks", {}))
+        interrupted_blocks = dict(db_actions.get("interrupted_blocks", {}))
     except Exception:
         pass
 
@@ -672,13 +674,51 @@ def generate_daily_science_rhythm(
         # Sort all blocks chronologically by their start time
         blocks.sort(key=lambda b: _parse_time_to_minutes(b.get("start_time", "08:30")))
 
-    # Apply custom block overrides and completed status to all final blocks
+    # Apply interruptions, custom block overrides, and completed status to all final blocks
     for b in blocks:
         bid = b.get("id")
+        if bid and bid in interrupted_blocks:
+            b["interruptions"] = interrupted_blocks[bid]
         if bid and bid in custom_blocks:
             b.update(custom_blocks[bid])
         if bid and (bid in completed_set or b.get("is_completed")):
             b["is_completed"] = True
+
+    # If any blocks have interruptions, recalculate sequential timings and feierabend
+    has_any_interruptions = any(b.get("interruptions") for b in blocks)
+    if has_any_interruptions:
+        cur_calc_m = _parse_time_to_minutes(effective_start_str)
+        study_sum = 0
+        pause_sum = 0
+        for b in blocks:
+            if b.get("id") == "evening_free":
+                continue
+            if b.get("is_mandatory") and b.get("start_time") and b.get("end_time"):
+                m_start_m = _parse_time_to_minutes(b["start_time"])
+                m_end_m = _parse_time_to_minutes(b["end_time"])
+                cur_calc_m = max(cur_calc_m, m_end_m)
+                study_sum += b.get("duration_minutes", m_end_m - m_start_m)
+            else:
+                dur = b.get("duration_minutes", 45)
+                inter_p = sum(item.get("duration_minutes", 0) for item in b.get("interruptions", []))
+                tot_span = dur + inter_p
+                b["start_time"] = _minutes_to_time(cur_calc_m)
+                cur_calc_m += tot_span
+                b["end_time"] = _minutes_to_time(cur_calc_m)
+                if b.get("is_break"):
+                    pause_sum += tot_span
+                else:
+                    study_sum += dur
+                    pause_sum += inter_p
+
+        feierabend_time = _minutes_to_time(cur_calc_m)
+        free_block = next((b for b in blocks if b.get("id") == "evening_free"), None)
+        if free_block:
+            free_block["start_time"] = feierabend_time
+            free_block["duration_minutes"] = max(60, (22 * 60) - cur_calc_m)
+            free_block["title"] = f"Feierabend ab {feierabend_time} & Sport am Abend"
+        total_study_mins = study_sum
+        total_pause_mins = pause_sum
 
     return {
         "date": t_date.isoformat(),
@@ -700,6 +740,7 @@ def generate_daily_science_rhythm(
         "custom_durations": custom_durations,
         "inserted_blocks": inserted_blocks or [],
         "split_blocks": split_blocks or {},
+        "interrupted_blocks": interrupted_blocks or {},
         "blocks": blocks,
         "mandatory_events": [
             {

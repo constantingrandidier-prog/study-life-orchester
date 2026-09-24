@@ -134,3 +134,37 @@ def test_rhythm_actions_repo_and_api_split_and_insert():
     actions_after = get_rhythm_actions_for_date(test_date)
     assert "block_morning_reps" not in actions_after["split_blocks"]
     assert len(actions_after["inserted_blocks"]) == 0
+
+
+def test_rhythm_action_block_interruption_preserves_block_and_shifts_schedule():
+    test_date = "2027-06-04"
+
+    # Save an interruption for a study block
+    save_rhythm_action(
+        source_date=test_date,
+        block_id="block_morning_reps",
+        action="interrupt",
+        block_payload={"interruptions": [{"id": "pause_1", "start_time": "10:30", "duration_minutes": 15, "title": "Pause"}]},
+    )
+
+    actions = get_rhythm_actions_for_date(test_date)
+    assert "block_morning_reps" in actions["interrupted_blocks"]
+    assert actions["interrupted_blocks"]["block_morning_reps"][0]["duration_minutes"] == 15
+
+    # Check via daily rhythm endpoint
+    resp = client.get(f"/api/v1/schedule/daily-rhythm?target_date={test_date}&start_time=08:30")
+    assert resp.status_code == 200
+    data = resp.json()
+
+    # Block was NOT replaced - it still exists with original ID!
+    reps_block = next(b for b in data["blocks"] if b["id"] == "block_morning_reps")
+    assert reps_block is not None
+    assert "interruptions" in reps_block
+    assert len(reps_block["interruptions"]) == 1
+    assert reps_block["interruptions"][0]["duration_minutes"] == 15
+
+    # Clean up
+    restore_rhythm_action(test_date)
+    actions_after = get_rhythm_actions_for_date(test_date)
+    assert "block_morning_reps" not in actions_after.get("interrupted_blocks", {})
+

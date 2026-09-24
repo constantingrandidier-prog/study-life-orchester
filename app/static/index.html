@@ -623,6 +623,24 @@
         <span id="scienceRhythmProgressText">Lade Tagesrhythmus...</span>
       </div>
 
+      <!-- Live Active Pause Banner (Visible when live pause is running) -->
+      <div id="activePauseBanner" style="display: none; background: linear-gradient(135deg, rgba(63, 185, 80, 0.18), rgba(46, 160, 67, 0.1)); border: 1.5px solid #3fb950; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 0.85rem; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; box-shadow: 0 4px 14px rgba(46, 160, 67, 0.15);">
+        <div style="display: flex; align-items: center; gap: 0.7rem;">
+          <span style="font-size: 24px;">☕</span>
+          <div>
+            <div style="font-weight: 700; font-size: 13.5px; color: #7ee787;">
+              Pause läuft seit <span id="activePauseSince">--:--</span> Uhr (<span id="activePauseDuration">1</span> Min.)
+            </div>
+            <div style="font-size: 11.5px; color: #c9d1d9; margin-top: 2px;">
+              Dein Lernblock ist pausiert. Klicke auf den Button, sobald du fertig bist!
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="stopLivePause()" class="btn-primary" style="background: #238636; border: 1px solid #3fb950; color: #fff; font-size: 13px; font-weight: 700; padding: 0.5rem 1.1rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          ▶ Fertig Pause &amp; Weiterlernen
+        </button>
+      </div>
+
       <!-- Unified Master Schedule Blocks Container -->
       <div id="scienceRhythmBlocksContainer" style="display: flex; flex-direction: column; gap: 0.4rem;">
         <!-- Clean horizontal cards rendered via app.js -->
@@ -1574,9 +1592,9 @@
     </div>
   </div>
 
-  <!-- RHYTHM ADD PAUSE & SPLIT MODAL -->
+  <!-- RHYTHM ADD PAUSE MODAL (2 CLEAN OPTIONS) -->
   <div id="rhythmAddPauseModal" class="modal-backdrop" style="display: none;" onclick="handleModalBackdropClick(event)">
-    <div class="roadmap-modal-content" onclick="event.stopPropagation()" style="max-width: 560px; border-radius: 12px; border: 1px solid var(--border-subtle); background: var(--bg-surface-elevated, #161b22); box-shadow: 0 16px 36px rgba(0,0,0,0.6); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="roadmap-modal-content" onclick="event.stopPropagation()" style="max-width: 480px; border-radius: 12px; border: 1px solid var(--border-subtle); background: var(--bg-surface-elevated, #161b22); box-shadow: 0 16px 36px rgba(0,0,0,0.6); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;">
       
       <!-- Header -->
       <div style="padding: 1.1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; background: rgba(255, 255, 255, 0.02); flex-shrink: 0;">
@@ -1585,9 +1603,9 @@
             ☕
           </div>
           <div>
-            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-main);">Pause eintragen &amp; Blöcke strukturieren</h3>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.3;">
-              Jetzt pausieren oder lange Lernblöcke (z.B. 3h Repetitionen) in 1h-Etappen mit Pausen aufteilen
+            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-main);">Pause einlegen</h3>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              Wähle eine der 2 Optionen: Jetzt pausieren oder manuell eintragen
             </div>
           </div>
         </div>
@@ -1597,98 +1615,53 @@
       <!-- Scrollable Content -->
       <div style="padding: 1.1rem 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;">
 
-        <!-- Section 1: Hero - JETZT PAUSE MACHEN -->
-        <div style="border-radius: 10px; border: 1.5px solid rgba(63, 185, 80, 0.4); background: rgba(46, 160, 67, 0.08); padding: 1rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.45rem;">
-              <span style="font-size: 14px;">☕</span>
-              <strong style="font-size: 13.5px; color: #7ee787;">Jetzt sofort Pause machen</strong>
-            </div>
-            <span style="font-size: 10px; font-weight: 700; background: rgba(63, 185, 80, 0.2); color: #7ee787; border: 1px solid rgba(63, 185, 80, 0.4); padding: 0.1rem 0.45rem; border-radius: 4px;">
-              Live-Einschub
-            </span>
+        <!-- Option 1: JETZT PAUSE MACHEN -->
+        <div style="border-radius: 10px; border: 1.5px solid rgba(63, 185, 80, 0.45); background: rgba(46, 160, 67, 0.08); padding: 1.1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <strong style="font-size: 14px; color: #7ee787;">1. Jetzt Pause machen</strong>
+            <span style="font-size: 10px; font-weight: 700; background: rgba(63, 185, 80, 0.2); color: #7ee787; border: 1px solid rgba(63, 185, 80, 0.4); padding: 0.15rem 0.45rem; border-radius: 4px;">Live</span>
           </div>
-          <div style="font-size: 11.5px; color: #c9d1d9; line-height: 1.45; margin-bottom: 0.75rem;">
-            Pausiert deinen aktuellen Lernblock ab sofort. Die verbleibende Arbeitszeit wird nach der Pause nahtlos fortgesetzt und der Feierabend rückt entsprechend nach hinten.
+          <div style="font-size: 11.5px; color: #c9d1d9; line-height: 1.45; margin-bottom: 0.85rem;">
+            Pausiert deinen aktuellen Lernblock ab sofort. Wenn du zurückkommst, klickst du einfach auf <strong>"Fertig Pause"</strong>. Dein Lernblock bleibt dabei vollkommen erhalten und wird lediglich unterbrochen!
           </div>
-          <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
-            <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Dauer:</span>
-            <button type="button" class="now-pause-pill btn-secondary" data-dur="10" onclick="selectNowPauseDur(10, this)" style="font-size: 11px; padding: 0.2rem 0.55rem; height: auto;">10m</button>
-            <button type="button" class="now-pause-pill btn-secondary active-pill" data-dur="15" onclick="selectNowPauseDur(15, this)" style="font-size: 11px; padding: 0.2rem 0.55rem; height: auto; border-color: #3fb950; background: rgba(63, 185, 80, 0.2); color: #7ee787; font-weight: 700;">15m (Empfohlen)</button>
-            <button type="button" class="now-pause-pill btn-secondary" data-dur="20" onclick="selectNowPauseDur(20, this)" style="font-size: 11px; padding: 0.2rem 0.55rem; height: auto;">20m</button>
-            <button type="button" class="now-pause-pill btn-secondary" data-dur="30" onclick="selectNowPauseDur(30, this)" style="font-size: 11px; padding: 0.2rem 0.55rem; height: auto;">30m</button>
-            <button type="button" class="now-pause-pill btn-secondary" data-dur="45" onclick="selectNowPauseDur(45, this)" style="font-size: 11px; padding: 0.2rem 0.55rem; height: auto;">45m</button>
-          </div>
-          <button type="button" onclick="executeNowPause()" class="btn-primary" style="width: 100%; justify-content: center; font-size: 12px; padding: 0.5rem 1rem; background: #238636; border-color: #2ea043; color: #fff; font-weight: 700; border-radius: 6px; cursor: pointer;">
-            ▶ Pause jetzt starten (<span id="nowPauseDurLabel">15</span> Min.)
+          <button type="button" onclick="startLivePause()" class="btn-primary" style="width: 100%; justify-content: center; font-size: 13px; padding: 0.55rem 1rem; background: #238636; border-color: #2ea043; color: #fff; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            ▶ Jetzt Pause starten
           </button>
         </div>
 
-        <!-- Section 2: LANGEN BLOCK IN 1H-INTERVALLE TEILEN -->
-        <div style="border-radius: 10px; border: 1px solid rgba(88, 166, 255, 0.3); background: rgba(56, 139, 253, 0.05); padding: 1rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.45rem;">
-              <span style="font-size: 14px;">⏱️</span>
-              <strong style="font-size: 13px; color: #79c0ff;">Langen Block in 1h-Etappen mit Pausen teilen</strong>
-            </div>
-            <span style="font-size: 10px; font-weight: 700; background: rgba(56, 139, 253, 0.15); color: #79c0ff; border: 1px solid rgba(56, 139, 253, 0.35); padding: 0.1rem 0.45rem; border-radius: 4px;">
-              Ultradian / Pomodoro
-            </span>
+        <!-- Option 2: SELBER PAUSE EINTRAGEN -->
+        <div style="border-radius: 10px; border: 1px solid var(--border-subtle); background: rgba(255, 255, 255, 0.02); padding: 1.1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <strong style="font-size: 14px; color: var(--text-main);">2. Selber Pause eintragen</strong>
+            <span style="font-size: 10px; font-weight: 600; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 0.15rem 0.45rem; border-radius: 4px;">Manuell</span>
           </div>
-          <div style="font-size: 11.5px; color: #c9d1d9; line-height: 1.45; margin-bottom: 0.75rem;">
-            Geht ein Block z.B. 3 Stunden? Unterteile ihn in verdauliche ~50–60 Min Lerneinheiten mit je 10–15 Min Pause, um die Konzentrationsfähigkeit hochzuhalten.
+          <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.45; margin-bottom: 0.85rem;">
+            Gib Startzeit und Dauer manuell ein. Fällt die Zeit in einen Lernblock, wird dieser nahtlos unterbrochen ohne ihn zu ersetzen oder zu teilen.
           </div>
           
-          <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.75rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
             <div>
-              <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Zu teilender Block:</label>
-              <select id="splitBlockSelect" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.4rem 0.6rem; font-size: 12px;">
-                <!-- Populated dynamically via JS -->
-              </select>
-            </div>
-            <div>
-              <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Pausen-Intervall:</label>
-              <select id="splitIntervalMode" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.4rem 0.6rem; font-size: 12px;">
-                <option value="50_10" selected>Alle 50 Min. Lernen &bull; 10 Min. Pause (Wissenschaftlicher Standard)</option>
-                <option value="55_15">Alle 55 Min. Lernen &bull; 15 Min. Pause</option>
-                <option value="60_15">Alle 60 Min. Lernen &bull; 15 Min. Pause</option>
-                <option value="45_15">Alle 45 Min. Lernen &bull; 15 Min. Pause (Sanfter Modus)</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="button" onclick="executeSplitBlock()" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 12px; padding: 0.45rem 1rem; border-color: rgba(56, 139, 253, 0.4); color: #79c0ff; font-weight: 700; border-radius: 6px; cursor: pointer;">
-            ✂️ Ausgewählten Block in Etappen mit Pausen aufteilen
-          </button>
-        </div>
-
-        <!-- Section 3: BENUTZERDEFINIERTE PAUSE EINFÜGEN -->
-        <div style="border-radius: 10px; border: 1px solid var(--border-subtle); background: rgba(255, 255, 255, 0.02); padding: 1rem;">
-          <div style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.5rem;">
-            <span style="font-size: 14px;">➕</span>
-            <strong style="font-size: 13px; color: var(--text-main);">Freie Pause hinzufügen</strong>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.6rem; margin-bottom: 0.6rem;">
-            <div>
-              <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Titel / Aktivität:</label>
-              <input type="text" id="customPauseTitleInput" value="Pause: Kognitive Erholung" placeholder="z.B. Spaziergang, Power-Nap, Kaffee" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.35rem 0.55rem; font-size: 12px;">
+              <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Startzeit (Uhrzeit):</label>
+              <input type="time" id="manualPauseTimeInput" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.4rem 0.55rem; font-size: 13px; font-family: monospace;">
             </div>
             <div>
               <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Dauer (Minuten):</label>
-              <input type="number" id="customPauseMinutesInput" value="15" min="5" max="180" step="5" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.35rem 0.55rem; font-size: 12px; font-family: monospace;">
+              <input type="number" id="manualPauseMinutesInput" value="15" min="1" max="180" step="5" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.4rem 0.55rem; font-size: 13px; font-family: monospace;">
             </div>
           </div>
 
-          <div style="margin-bottom: 0.75rem;">
-            <label style="font-size: 11px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Einfügen nach:</label>
-            <select id="customPauseInsertAfterSelect" style="width: 100%; background: #0d1117; border: 1px solid var(--border-subtle); color: #f0f6fc; border-radius: 6px; padding: 0.4rem 0.6rem; font-size: 12px;">
-              <!-- Populated dynamically via JS -->
-            </select>
+          <!-- Quick Duration Pills -->
+          <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+            <span style="font-size: 10.5px; color: var(--text-muted);">Schnellwahl:</span>
+            <button type="button" class="btn-secondary manual-pause-pill" onclick="selectManualPauseDur(10, this)" style="font-size: 10.5px; padding: 0.15rem 0.45rem; height: auto;">10m</button>
+            <button type="button" class="btn-secondary manual-pause-pill active-pill" onclick="selectManualPauseDur(15, this)" style="font-size: 10.5px; padding: 0.15rem 0.45rem; height: auto; border-color: #3fb950; background: rgba(63, 185, 80, 0.2); color: #7ee787; font-weight: 700;">15m</button>
+            <button type="button" class="btn-secondary manual-pause-pill" onclick="selectManualPauseDur(20, this)" style="font-size: 10.5px; padding: 0.15rem 0.45rem; height: auto;">20m</button>
+            <button type="button" class="btn-secondary manual-pause-pill" onclick="selectManualPauseDur(30, this)" style="font-size: 10.5px; padding: 0.15rem 0.45rem; height: auto;">30m</button>
+            <button type="button" class="btn-secondary manual-pause-pill" onclick="selectManualPauseDur(45, this)" style="font-size: 10.5px; padding: 0.15rem 0.45rem; height: auto;">45m</button>
           </div>
 
-          <button type="button" onclick="executeAddCustomPause()" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 12px; padding: 0.45rem 1rem; border-color: var(--border-subtle); color: var(--text-main); font-weight: 600; border-radius: 6px; cursor: pointer;">
-            + Pause im Tagesplan einfügen
+          <button type="button" onclick="executeManualPause()" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 12px; padding: 0.5rem 1rem; border-color: rgba(56, 139, 253, 0.4); color: #79c0ff; font-weight: 700; border-radius: 6px; cursor: pointer;">
+            + Pause eintragen
           </button>
         </div>
 

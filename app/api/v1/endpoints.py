@@ -1489,111 +1489,37 @@ def _resolve_uzh_file_or_folder(path: Optional[str]) -> Optional[Path]:
     return None
 
 
+_LAST_LAUNCHED_PATH = ""
+_LAST_LAUNCHED_TIME = 0.0
+
+
 def _launch_desktop_explorer(target_path_or_folder: Path):
-    """Launches Windows Explorer directly onto the user's interactive desktop (WinSta0\\Default) and brings it to front."""
+    """Safely opens or selects a file or directory in Windows Explorer when explicitly requested by the user."""
+    global _LAST_LAUNCHED_PATH, _LAST_LAUNCHED_TIME
     import os
     import subprocess
-    import ctypes
-    from ctypes import wintypes
     import time
 
     if os.name != "nt":
         return
 
-    # Terminate any rogue headless VLC instances
-    try:
-        subprocess.run("taskkill /F /IM vlc.exe /T 2>nul", shell=True)
-    except Exception:
-        pass
+    # Never spawn real desktop GUI windows during automated test runs
+    if os.environ.get("PYTEST_CURRENT_TEST"):
+        return
 
     target_str = str(target_path_or_folder).replace("/", "\\")
-    is_file = target_path_or_folder.is_file()
+    now = time.time()
+    # Debounce duplicate calls within 3 seconds to avoid opening multiple duplicate windows
+    if target_str == _LAST_LAUNCHED_PATH and (now - _LAST_LAUNCHED_TIME) < 3.0:
+        return
+    _LAST_LAUNCHED_PATH = target_str
+    _LAST_LAUNCHED_TIME = now
 
-    if is_file:
-        cmd = f'explorer.exe /select,"{target_str}"'
-    else:
-        cmd = f'explorer.exe "{target_str}"'
-
-    launched = False
     try:
-        class STARTUPINFO(ctypes.Structure):
-            _fields_ = [
-                ('cb', wintypes.DWORD),
-                ('lpReserved', wintypes.LPWSTR),
-                ('lpDesktop', wintypes.LPWSTR),
-                ('lpTitle', wintypes.LPWSTR),
-                ('dwX', wintypes.DWORD),
-                ('dwY', wintypes.DWORD),
-                ('dwXSize', wintypes.DWORD),
-                ('dwYSize', wintypes.DWORD),
-                ('dwXCountChars', wintypes.DWORD),
-                ('dwYCountChars', wintypes.DWORD),
-                ('dwFillAttribute', wintypes.DWORD),
-                ('dwFlags', wintypes.DWORD),
-                ('wShowWindow', wintypes.WORD),
-                ('cbReserved2', wintypes.WORD),
-                ('lpReserved2', ctypes.c_void_p),
-                ('hStdInput', wintypes.HANDLE),
-                ('hStdOutput', wintypes.HANDLE),
-                ('hStdError', wintypes.HANDLE),
-            ]
-
-        class PROCESS_INFORMATION(ctypes.Structure):
-            _fields_ = [
-                ('hProcess', wintypes.HANDLE),
-                ('hThread', wintypes.HANDLE),
-                ('dwProcessId', wintypes.DWORD),
-                ('dwThreadId', wintypes.DWORD),
-            ]
-
-        si = STARTUPINFO()
-        si.cb = ctypes.sizeof(STARTUPINFO)
-        si.lpDesktop = 'WinSta0\\Default'
-        pi = PROCESS_INFORMATION()
-
-        res = ctypes.windll.kernel32.CreateProcessW(
-            None, cmd, None, None, False, 0, None, None, ctypes.byref(si), ctypes.byref(pi)
-        )
-        if res:
-            ctypes.windll.kernel32.CloseHandle(pi.hProcess)
-            ctypes.windll.kernel32.CloseHandle(pi.hThread)
-            launched = True
-    except Exception:
-        pass
-
-    if not launched:
-        if is_file:
-            explorer_args = f'/select,\\"{target_str}\\"'
+        if target_path_or_folder.is_file():
+            subprocess.Popen(f'explorer.exe /select,"{target_str}"', shell=True)
         else:
-            explorer_args = f'\\"{target_str}\\"'
-        task_cmd = f'explorer.exe {explorer_args}'
-        create_cmd = f'schtasks /create /tn "StudyLifeOpen" /tr "{task_cmd}" /sc once /st 23:59 /f'
-        subprocess.run(create_cmd, shell=True, capture_output=True)
-        subprocess.run('schtasks /run /tn "StudyLifeOpen"', shell=True, capture_output=True)
-
-    try:
-        user32 = ctypes.windll.user32
-        h_desk = user32.OpenDesktopW("Default", 0, False, 0x01FF)
-        if h_desk:
-            user32.SetThreadDesktop(h_desk)
-            user32.AllowSetForegroundWindow(-1)
-            time.sleep(0.3)
-            
-            def _enum_cb(hwnd, lparam):
-                if user32.IsWindowVisible(hwnd):
-                    length = user32.GetWindowTextLengthW(hwnd)
-                    if length > 0:
-                        buff = ctypes.create_unicode_buffer(length + 1)
-                        user32.GetWindowTextW(hwnd, buff, length + 1)
-                        title = buff.value
-                        if "Datei-Explorer" in title or "Explorer" in title or target_path_or_folder.name in title:
-                            user32.ShowWindow(hwnd, 9)  # SW_RESTORE
-                            user32.SetForegroundWindow(hwnd)
-                            user32.BringWindowToTop(hwnd)
-                return True
-
-            WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
-            user32.EnumWindows(WNDENUMPROC(_enum_cb), 0)
+            subprocess.Popen(f'explorer.exe "{target_str}"', shell=True)
     except Exception:
         pass
 
@@ -1667,15 +1593,6 @@ def view_slide_endpoint(
     import time
     found = _resolve_uzh_file_or_folder(path)
     if not found or not found.exists() or not found.is_file():
-        # Cloud / Render fallback: queue desktop action to open file in Windows Explorer on laptop
-        action_obj = {
-            "id": f"act_{int(time.time() * 1000)}",
-            "action": "open_explorer",
-            "path": path,
-            "direct_open": False,
-            "timestamp": time.time(),
-        }
-        _PENDING_SYSTEM_COMMANDS.append(action_obj)
         clean_title = Path(path.replace("/", "\\")).name
         return HTMLResponse(
             f"""<!DOCTYPE html>
@@ -1683,7 +1600,7 @@ def view_slide_endpoint(
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Folie im Datei-Explorer geöffnet</title>
+<title>Folie lokal auf deinem Laptop</title>
 <style>
 body {{
   background: #0d1117;
@@ -1707,7 +1624,7 @@ body {{
   text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }}
-h2 {{ color: #7ee787; margin-top: 0; font-size: 1.35rem; }}
+h2 {{ color: #58a6ff; margin-top: 0; font-size: 1.35rem; }}
 p {{ color: #8b949e; line-height: 1.6; font-size: 0.95rem; }}
 .path-box {{
   background: rgba(255,255,255,0.05);
@@ -1725,9 +1642,9 @@ p {{ color: #8b949e; line-height: 1.6; font-size: 0.95rem; }}
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(46, 160, 67, 0.15);
-  color: #7ee787;
-  border: 1px solid rgba(46, 160, 67, 0.4);
+  background: rgba(88, 166, 255, 0.15);
+  color: #58a6ff;
+  border: 1px solid rgba(88, 166, 255, 0.4);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -1752,11 +1669,11 @@ p {{ color: #8b949e; line-height: 1.6; font-size: 0.95rem; }}
 </head>
 <body>
 <div class="card">
-  <div class="status-pill">💻 Befehl an Laptop übertragen</div>
-  <h2>📂 Folie wird im Datei-Explorer geöffnet!</h2>
-  <p>Da deine Vorlesungsunterlagen auf deinem Laptop gespeichert sind, hat der Orchestrator gerade deinen <strong>Windows Datei-Explorer</strong> aufgerufen und die Folie markiert:</p>
+  <div class="status-pill">💻 Lokale Datei</div>
+  <h2>📄 Folie auf Laptop vorhanden</h2>
+  <p>Diese Folien-PDF liegt auf deinem Laptop in den UZH-Vorlesungsunterlagen:</p>
   <div class="path-box">📄 {clean_title}</div>
-  <p style="font-size: 12.5px; color: #8b949e;">Du findest die Folie jetzt direkt vor dir in deinem Explorer-Fenster.</p>
+  <p style="font-size: 12.5px; color: #8b949e;">Öffne die Unterlagen direkt auf deinem Laptop über die App oder den Explorer.</p>
   <button onclick="window.close()" class="btn">Fenster schliessen</button>
 </div>
 </body>

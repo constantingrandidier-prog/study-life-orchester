@@ -327,14 +327,26 @@ function init() {
   switchAppPage(initialPage);
   loadAdvisorData();
 
-  // Auto-refresh today's rhythm every 5 minutes so the plan catches up to current time
+  // Auto-refresh today's rhythm every 60 seconds so the plan catches up live
   setInterval(() => {
     const now = new Date();
     const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     if (state.targetDate === todayIso && typeof loadScienceRhythm === 'function') {
       loadScienceRhythm(todayIso);
     }
-  }, 5 * 60 * 1000);
+  }, 60 * 1000);
+
+  // Instantly refresh when user switches back to browser tab from Anki
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      const now = new Date();
+      const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      if (typeof loadAnkiDesktopStatus === 'function') loadAnkiDesktopStatus();
+      if (state.targetDate === todayIso && typeof loadScienceRhythm === 'function') {
+        loadScienceRhythm(todayIso);
+      }
+    }
+  });
 }
 
 // Tab Switching
@@ -4373,7 +4385,17 @@ function setRhythmStartNow() {
   state.rhythmStartTime = timeStr;
   const input = document.getElementById('rhythmStartTimeInput');
   if (input) input.value = timeStr;
+  const autoBtn = document.getElementById('btnRhythmStartAuto');
+  if (autoBtn) autoBtn.style.display = 'inline-block';
   updateFeierabendBadgeInstantly();
+  loadScienceRhythm();
+}
+
+function resetRhythmStartAuto() {
+  state.customStartTimeDate = null;
+  state.rhythmStartTime = null;
+  const autoBtn = document.getElementById('btnRhythmStartAuto');
+  if (autoBtn) autoBtn.style.display = 'none';
   loadScienceRhythm();
 }
 
@@ -4387,11 +4409,13 @@ function setRhythmLunch(mins) {
   loadScienceRhythm();
 }
 
-function handleRhythmConfigChange() {
+function handleRhythmConfigChange(e) {
   const input = document.getElementById('rhythmStartTimeInput');
   if (input && input.value) {
     state.customStartTimeDate = state.targetDate;
     state.rhythmStartTime = input.value;
+    const autoBtn = document.getElementById('btnRhythmStartAuto');
+    if (autoBtn) autoBtn.style.display = 'inline-block';
   }
   const check = document.getElementById('rhythmIncludeLectureCheck');
   if (check) {
@@ -4509,12 +4533,13 @@ async function loadScienceRhythm(targetDate) {
   if (!container) return;
 
   const dateStr = targetDate || state.targetDate || '';
-  const startTime = (state.customStartTimeDate === dateStr && state.rhythmStartTime) ? state.rhythmStartTime : '08:30';
+  const isCustomTime = Boolean(state.customStartTimeDate === dateStr && state.rhythmStartTime);
+  const startQuery = isCustomTime ? `&start_time=${encodeURIComponent(state.rhythmStartTime)}` : '';
   const lunchDur = state.rhythmLunch || 75;
   const incLec = state.rhythmIncludeLecture !== false;
 
   const timeInput = document.getElementById('rhythmStartTimeInput');
-  if (timeInput && timeInput.value !== startTime && !state.customStartTimeDate) timeInput.value = startTime;
+  if (timeInput && isCustomTime) timeInput.value = state.rhythmStartTime;
   
   const lecCheck = document.getElementById('rhythmIncludeLectureCheck');
   if (lecCheck && lecCheck.checked !== incLec) lecCheck.checked = incLec;
@@ -4532,7 +4557,7 @@ async function loadScienceRhythm(targetDate) {
   const orderQuery = localOrder.length ? `&custom_order=${encodeURIComponent(localOrder.join(','))}` : '';
 
   try {
-    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}&start_time=${encodeURIComponent(startTime)}&lunch_duration=${lunchDur}&include_lecture=${incLec}${remQuery}${orderQuery}`);
+    const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}${startQuery}&lunch_duration=${lunchDur}&include_lecture=${incLec}${remQuery}${orderQuery}`);
     if (!res.ok) return;
     const data = await res.json();
     
@@ -4625,18 +4650,36 @@ async function loadScienceRhythm(targetDate) {
 
     // Update Anki Auto-Start badge and input
     const ankiBadge = document.getElementById('rhythmAnkiStartBadge');
+    const autoBtn = document.getElementById('btnRhythmStartAuto');
+    if (autoBtn) {
+      autoBtn.style.display = (isCustomTime && !data.used_anki_start) ? 'inline-block' : 'none';
+    }
     if (ankiBadge) {
       if (data.used_anki_start && data.anki_first_review_time) {
         ankiBadge.style.display = 'inline-block';
-        ankiBadge.textContent = `Anki: ${data.anki_first_review_time} Uhr`;
+        ankiBadge.style.background = 'rgba(46, 160, 67, 0.15)';
+        ankiBadge.style.color = '#7ee787';
+        ankiBadge.style.border = '1px solid rgba(46, 160, 67, 0.4)';
+        ankiBadge.textContent = `🟢 Anki: ${data.anki_first_review_time} Uhr`;
         ankiBadge.title = `Startzeit wurde automatisch von deiner ersten Anki-Wiederholung (${data.anki_first_review_time} Uhr) übernommen`;
         if (timeInput) {
           timeInput.value = data.start_time;
           state.rhythmStartTime = data.start_time;
         }
+      } else if (data.is_live_catching_up) {
+        ankiBadge.style.display = 'inline-block';
+        ankiBadge.style.background = 'rgba(210, 153, 34, 0.15)';
+        ankiBadge.style.color = '#e3b341';
+        ankiBadge.style.border = '1px solid rgba(210, 153, 34, 0.4)';
+        ankiBadge.textContent = `⏳ Live: ${data.start_time}`;
+        ankiBadge.title = `8:30 war ein temporärer Platzhalter. Da du heute in Anki noch nicht gestartet hast, beginnt dein Plan jetzt live um ${data.start_time} Uhr. Sobald du in Anki lernst, wird die exakte Startzeit automatisch übernommen!`;
+        if (timeInput && !isCustomTime) {
+          timeInput.value = data.start_time;
+          state.rhythmStartTime = data.start_time;
+        }
       } else {
         ankiBadge.style.display = 'none';
-        if (timeInput && !state.customStartTimeDate) {
+        if (timeInput && !isCustomTime) {
           timeInput.value = data.start_time || '08:30';
           state.rhythmStartTime = data.start_time || '08:30';
         }
@@ -4844,7 +4887,7 @@ async function restoreRhythmBlocks(dateStr) {
 
 function recalculateRhythmTimes(data) {
   if (!data || !Array.isArray(data.blocks)) return;
-  const startTimeStr = data.start_time || state.rhythmStartTime || '08:30';
+  const startTimeStr = (data && data.start_time) ? data.start_time : (state.rhythmStartTime || '08:30');
   const [sh, sm] = startTimeStr.split(':').map(Number);
   let curM = (sh || 8) * 60 + (sm || 30);
   let totalStudyM = 0;
@@ -5696,6 +5739,7 @@ window.toggleRhythmBlockDone = toggleRhythmBlockDone;
 window.toggleConfigDrawer = toggleConfigDrawer;
 window.handleConfigDrawerBackdrop = handleConfigDrawerBackdrop;
 window.setRhythmStartNow = setRhythmStartNow;
+window.resetRhythmStartAuto = resetRhythmStartAuto;
 window.setRhythmLunch = setRhythmLunch;
 window.handleRhythmConfigChange = handleRhythmConfigChange;
 window.createTemporaryStruggleDeck = createTemporaryStruggleDeck;

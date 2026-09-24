@@ -608,6 +608,8 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
         custom_blocks = {}
         custom_order = []
         custom_durations = {}
+        inserted_blocks = []
+        split_blocks = {}
         for row in rows:
             act = row["action"]
             bid = row["block_id"]
@@ -623,6 +625,19 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
             elif act in ("custom", "update") and row["block_payload"]:
                 try:
                     custom_blocks[bid] = json.loads(row["block_payload"])
+                except Exception:
+                    pass
+            elif act in ("insert", "add_block", "custom_pause") and row["block_payload"]:
+                try:
+                    p = json.loads(row["block_payload"])
+                    p["id"] = bid
+                    inserted_blocks.append(p)
+                except Exception:
+                    pass
+            elif act == "split" and row["block_payload"]:
+                try:
+                    split_data = json.loads(row["block_payload"])
+                    split_blocks[bid] = split_data
                 except Exception:
                     pass
             elif act == "reorder" and row["block_payload"]:
@@ -664,6 +679,8 @@ def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> D
         "postponed_blocks": postponed,
         "custom_order": custom_order,
         "custom_durations": custom_durations,
+        "inserted_blocks": inserted_blocks,
+        "split_blocks": split_blocks,
     }
 
 

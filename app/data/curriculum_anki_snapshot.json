@@ -278,12 +278,12 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 0,
+    "new_cards": 28,
     "mastered_cards": 104,
     "learning_cards": 0,
     "avg_card_chars": 434.8,
-    "is_completed": true,
-    "is_in_progress": false
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222990,
@@ -817,7 +817,7 @@
     "deck_id": 1789378223040,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
     "card_count": 120,
-    "new_cards": 112,
+    "new_cards": 113,
     "mastered_cards": 7,
     "learning_cards": 7,
     "avg_card_chars": 260.8,

@@ -127,13 +127,23 @@ def auth_logout():
     response.delete_cookie("sl_session")
     return response
 
+import time
+APP_BOOT_TIMESTAMP = str(int(time.time()))
+
+def no_cache_file_response(path):
+    resp = FileResponse(path)
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
+
 # ---------------------------------------------------------------------------
 # Login page
 # ---------------------------------------------------------------------------
 @app.get("/login", tags=["Auth"])
 def login_page():
     """Serve the login HTML page."""
-    return FileResponse(STATIC_DIR / "login.html")
+    return no_cache_file_response(STATIC_DIR / "login.html")
 
 # ---------------------------------------------------------------------------
 # Include API v1 routes
@@ -151,7 +161,7 @@ def root(request: Request):
     accept = request.headers.get("accept", "")
     index_file = STATIC_DIR / "index.html"
     if "text/html" in accept:
-        return FileResponse(index_file)
+        return no_cache_file_response(index_file)
     return {
         "status": "online",
         "app": settings.app_name,
@@ -165,7 +175,18 @@ def root(request: Request):
 def app_view():
     """Direct URL to open the Web UI in any browser."""
     index_file = STATIC_DIR / "index.html"
-    return FileResponse(index_file)
+    return no_cache_file_response(index_file)
+
+
+@app.get("/api/v1/system/version", tags=["System"])
+def get_system_version():
+    """Returns app version, commit, and server boot timestamp for automatic browser reload."""
+    commit = os.environ.get("RENDER_GIT_COMMIT", "") or APP_BOOT_TIMESTAMP
+    return {
+        "version": settings.app_version,
+        "commit": commit,
+        "boot_timestamp": APP_BOOT_TIMESTAMP,
+    }
 
 
 @app.get("/health", tags=["Health"])

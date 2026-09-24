@@ -327,6 +327,31 @@ function init() {
   switchAppPage(initialPage);
   loadAdvisorData();
 
+  let _currentAppServerId = null;
+  async function checkServerVersionAndAutoUpdate() {
+    try {
+      const res = await fetch('/api/v1/system/version', { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      const serverId = data.commit || data.boot_timestamp;
+      if (!serverId) return;
+
+      if (_currentAppServerId === null) {
+        _currentAppServerId = serverId;
+      } else if (_currentAppServerId !== serverId) {
+        console.log('App update detected on server! Reloading with latest version...');
+        _currentAppServerId = serverId;
+        if (typeof showToast === 'function') {
+          showToast('✨ Neue App-Version bereitgestellt! Aktualisiere...', 2500);
+        }
+        setTimeout(() => {
+          window.location.reload();
+        }, 1200);
+      }
+    } catch (e) {}
+  }
+  checkServerVersionAndAutoUpdate();
+
   // Auto-refresh today's rhythm every 60 seconds so the plan catches up live
   setInterval(() => {
     const now = new Date();
@@ -334,6 +359,7 @@ function init() {
     if (state.targetDate === todayIso && typeof loadScienceRhythm === 'function') {
       loadScienceRhythm(todayIso);
     }
+    checkServerVersionAndAutoUpdate();
   }, 60 * 1000);
 
   // Instantly refresh when user switches back to browser tab from Anki
@@ -345,6 +371,7 @@ function init() {
       if (state.targetDate === todayIso && typeof loadScienceRhythm === 'function') {
         loadScienceRhythm(todayIso);
       }
+      checkServerVersionAndAutoUpdate();
     }
   });
 }

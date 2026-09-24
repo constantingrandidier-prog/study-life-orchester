@@ -191,6 +191,7 @@ def generate_daily_science_rhythm(
 
     now = datetime.now()
     is_today_date = (t_date == now.date())
+    now_minutes = now.hour * 60 + now.minute if is_today_date else 0
 
     # Automatic Anki & Start-Time Determination:
     # 1. If user explicitly provided a manual start time (is_manual_start=True), strictly respect user input!

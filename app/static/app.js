@@ -934,291 +934,11 @@ function toggleTaskCompletion(taskId) {
 }
 window.toggleTaskCompletion = toggleTaskCompletion;
 
-// Render Unified Workstation Timeline
+// Render Unified Workstation Timeline (Legacy compatibility stub)
 function renderTimeline() {
-  if (!dom.timelineContainer) return;
-  dom.timelineContainer.innerHTML = '';
-
-  const allBlocks = [];
-
-  // 1. Fixed Lectures
-  state.fixedEvents.forEach((ev, idx) => {
-    const s = ev.start_time || ev.start;
-    const e = ev.end_time || ev.end;
-    const id = getTaskId('lecture', ev.title, s);
-    const sDate = new Date(s);
-    const eDate = new Date(e);
-    const durationMin = Math.max(15, Math.round((eDate - sDate) / 60000)) || 45;
-
-    const isMandatory = (ev.is_mandatory === true) || 
-      /praktikum|untersuchungskurs|pr[aä]parier|visite|testat|klinisch|blockkurs|skills lab|tutorat|tutorium|pol|absenz|anwesenheitspflicht|pr[aä]senzpflicht|obligatorisch/i.test(ev.title || '') ||
-      /Veranstaltungsformat:\s*(Tutorat|Praktikum|Klinischer\s*Kurs|POL)/i.test(ev.description || '') ||
-      /Bei Absenzen/i.test(ev.description || '');
-
-    allBlocks.push({
-      id: id,
-      eventId: ev.id,
-      eventIndex: idx,
-      type: 'lecture',
-      typeClass: isMandatory ? 'type-mandatory-practical' : 'type-lecture',
-      isTask: true,
-      isMandatory: isMandatory,
-      title: ev.title,
-      start: s,
-      end: e,
-      durationMinutes: durationMin,
-      desc: ev.location ? `Ort: ${ev.location}` : (ev.description || (isMandatory ? 'Offizielles Pflicht-Praktikum (Präsenz vor Ort)' : 'Reguläre Lehrveranstaltung')),
-      tag: isMandatory ? 'Praktikum' : 'Vorlesung',
-      badgeClass: isMandatory ? 'badge-mandatory' : 'badge-lecture',
-      completed: !!state.taskCompletions[id],
-      recommendation: isMandatory ? 'attend' : (ev.recommendation || 'stream'),
-      recommendation_reason: isMandatory ? 'Offizielles Praktikum / Testatkurs an der UZH. Hier gilt Anwesenheitspflicht vor Ort!' : (ev.recommendation_reason || ''),
-      badge_label: isMandatory ? 'OBLIGATORISCH (Präsenzpflicht)' : (ev.badge_label || ''),
-      badge_color: isMandatory ? '#a371f7' : (ev.badge_color || ''),
-      consumption_mode: isMandatory ? 'live' : (ev.consumption_mode || 'live_1_0'),
-      speed_factor: isMandatory ? 1.0 : (ev.speed_factor || 1.0),
-      time_saved_minutes: ev.time_saved_minutes || 0,
-      matched_slide_filename: ev.matched_slide_filename || null,
-      slide_coverage_pct: ev.slide_coverage_pct !== undefined ? ev.slide_coverage_pct : null,
-    });
-  });
-
-  // 2. Manual Activities
-  state.manualActivities.forEach((act, idx) => {
-    const id = getTaskId('activity', act.title, act.start_time);
-    allBlocks.push({
-      id: id,
-      type: 'activity',
-      typeClass: 'type-activity',
-      isTask: true,
-      title: act.title,
-      start: act.start_time,
-      end: act.end_time,
-      desc: act.notes || `Kategorie: ${act.category.toUpperCase()}`,
-      tag: 'Aktivität',
-      badgeClass: 'badge-activity',
-      completed: !!state.taskCompletions[id],
-    });
-  });
-
-  // 3. Orchestrated Anki Study Sessions
-  state.studySessions.forEach((study, sIdx) => {
-    const id = getTaskId('study', study.topic_name, study.start_time);
-    const completed = !!state.taskCompletions[id] || !!study.completed;
-    allBlocks.push({
-      id: id,
-      type: 'study-session',
-      typeClass: 'type-study',
-      sessionIndex: sIdx,
-      isTask: true,
-      title: `Anki-Lernziel: ${study.topic_name}`,
-      start: study.start_time,
-      end: study.end_time,
-      cluster: study.cluster_name || 'Grundlagen',
-      desc: `${study.cards_to_review} Karten • ~${study.duration_minutes} Min (${study.reason || 'Wiederholung'})`,
-      tag: 'Lernblock',
-      badgeClass: 'badge-study',
-      completed: completed,
-    });
-  });
-
-  // 4. Remaining Free Slots (Not counted as completion tasks, but visible in 'all' and 'pending')
-  state.freeSlots.forEach(slot => {
-    const s = slot.start_time || slot.start;
-    const e = slot.end_time || slot.end;
-    allBlocks.push({
-      id: `free_${s}`,
-      type: 'free-slot',
-      typeClass: 'type-free',
-      isTask: false,
-      title: `Freies Zeitfenster (${slot.duration_minutes} Min)`,
-      start: s,
-      end: e,
-      desc: slot.duration_minutes >= 30 ? 'Puffer für Vertiefung, Vorbereitung oder Pause.' : 'Kurzes Regenerationsfenster.',
-      tag: 'Frei',
-      badgeClass: 'badge-free',
-      duration: slot.duration_minutes,
-      completed: false,
-    });
-  });
-
-  // Sort strictly chronologically
-  allBlocks.sort((a, b) => new Date(a.start) - new Date(b.start));
-
-  // Compute Task Metrics & KPI Progress
-  updateTaskProgress(allBlocks);
-
-  // Apply Filter: 'all' | 'pending' | 'completed'
-  const filteredBlocks = allBlocks.filter(block => {
-    if (state.currentFilter === 'pending') {
-      if (block.isTask) return !block.completed;
-      return true; // Show free slots in pending/planning mode
-    }
-    if (state.currentFilter === 'completed') {
-      return block.isTask && block.completed;
-    }
-    return true; // 'all'
-  });
-
-  if (filteredBlocks.length === 0) {
-    let emptyMsg = 'Keine Einträge für diesen Filter gefunden.';
-    if (state.currentFilter === 'pending') {
-      emptyMsg = 'Hervorragend! Alle Aufgaben für heute sind abgeschlossen.';
-    } else if (state.currentFilter === 'completed') {
-      emptyMsg = 'Noch keine Aufgaben als erledigt markiert. Klicke auf die Checkbox einer Aufgabe.';
-    }
-    dom.timelineContainer.innerHTML = `
-      <div style="text-align: center; color: var(--text-dim); padding: 3rem 1rem; font-size: 12px; background: var(--bg-base); border-radius: var(--radius-sm); border: 1px dashed var(--border-subtle);">
-        ${emptyMsg}
-      </div>
-    `;
-    return;
+  if (dom.timelineContainer) {
+    dom.timelineContainer.innerHTML = '';
   }
-
-  // Render cards
-  filteredBlocks.forEach(block => {
-    const sTime = formatTime(block.start);
-    const eTime = formatTime(block.end);
-
-    const card = document.createElement('div');
-    const compClass = block.completed ? 'completed' : '';
-    const isMandatory = block.isMandatory || block.typeClass === 'type-mandatory-practical';
-    const mandatoryClass = isMandatory ? 'mandatory-practical' : '';
-    card.className = `task-card ${block.typeClass} ${compClass} ${mandatoryClass}`;
-    if (isMandatory) {
-      card.style.borderLeft = '4px solid #a371f7';
-      card.style.background = 'rgba(163, 113, 247, 0.08)';
-    } else if (block.type === 'lecture') {
-      card.style.borderLeft = '3px solid rgba(88, 166, 255, 0.7)';
-      card.style.background = 'rgba(56, 139, 253, 0.05)';
-      card.style.borderColor = 'rgba(56, 139, 253, 0.18)';
-    }
-
-    // Lecture ROI advice snippet
-    let lectureRoiSnippet = '';
-    if (block.type === 'lecture' && state.efficiencyData && state.efficiencyData.modules) {
-      const matchMod = state.efficiencyData.modules.find(m => {
-        const mName = (m.module_name || '').toLowerCase();
-        const bTitle = (block.title || '').toLowerCase();
-        const mShort = mName.split(':')[0].trim().toLowerCase();
-        const bShort = bTitle.replace('lecture:', '').replace('vorlesung:', '').trim().toLowerCase();
-        return bTitle.includes(mShort) || mName.includes(bShort) || bShort.includes(mShort);
-      });
-      if (matchMod) {
-        if (matchMod.speedup_ratio >= 1.6 || matchMod.retention_delta_percent >= 15.0) {
-          lectureRoiSnippet = `<span class="status-badge badge-done" style="font-size: 10px;">Besuch empfohlen (${matchMod.speedup_ratio}x Tempo)</span>`;
-        } else if (matchMod.speedup_ratio <= 1.2 && matchMod.retention_delta_percent <= 5.0) {
-          lectureRoiSnippet = `<span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 10px;">Selbststudium spart ~90m</span>`;
-        } else {
-          lectureRoiSnippet = `<span class="status-badge" style="background: rgba(210, 153, 34, 0.1); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); font-size: 10px;">Hybrid (${matchMod.speedup_ratio}x)</span>`;
-        }
-      }
-    }
-
-    // Checkbox HTML
-    let checkboxHtml = '';
-    if (block.isTask) {
-      checkboxHtml = `
-        <div class="task-checkbox-wrap" onclick="toggleTaskCompletion('${block.id}')" title="${block.completed ? 'Als offen markieren' : 'Als erledigt markieren'}">
-          <div class="custom-checkbox ${block.completed ? 'checked' : ''}"></div>
-        </div>
-      `;
-    } else {
-      checkboxHtml = `
-        <div class="task-checkbox-wrap" style="cursor: default; opacity: 0.3;">
-          <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--status-free); margin-left: 4px;"></div>
-        </div>
-      `;
-    }
-
-    // Phase 2: Lecture Value Recommendation & Speed Simulator Control Box
-    let lectureDecisionHtml = '';
-    if (block.type === 'lecture') {
-      const rec = block.recommendation || 'stream';
-      let ampelBadgeClass = 'ampel-stream';
-      let ampelIcon = '';
-      let ampelLabel = 'Streamen (1.0x / 1.2x / 1.4x)';
-
-      if (rec === 'attend') {
-        ampelBadgeClass = 'ampel-attend';
-        ampelIcon = '';
-        ampelLabel = 'Präsenz / Live besuchen';
-      } else if (rec === 'skip') {
-        ampelBadgeClass = 'ampel-skip';
-        ampelIcon = '';
-        ampelLabel = 'Skip & Anki bevorzugen';
-      }
-
-      const activeMode = block.consumption_mode || 'live_1_0';
-      const timeSaved = block.time_saved_minutes || 0;
-
-      const modes = [
-        { key: 'live_1_0', label: '1.0x' },
-        { key: 'stream_1_2', label: '1.2x' },
-        { key: 'stream_1_4', label: '1.4x' },
-        { key: 'slides_only', label: 'Folien' },
-        { key: 'skipped', label: 'Skip' },
-      ];
-
-      const speedButtonsHtml = modes.map(m => {
-        const isActive = activeMode === m.key ? 'active' : '';
-        const evIdParam = block.eventId !== undefined && block.eventId !== null ? block.eventId : 'null';
-        return `<button type="button" class="btn-speed-pill ${isActive}" onclick="handleSetLectureMode(${evIdParam}, '${m.key}', ${block.durationMinutes}, ${block.eventIndex})" title="Vorlesungsmodus: ${m.label}">${m.label}</button>`;
-      }).join('');
-
-      lectureDecisionHtml = `
-        <div class="task-lecture-decision">
-          <div class="ampel-header-row">
-            <span class="ampel-badge ${ampelBadgeClass}">
-              ${block.badge_label || (ampelIcon + ' Empfehlung: ' + ampelLabel)}
-            </span>
-            ${timeSaved > 0 ? `<span class="time-saved-badge">${timeSaved} Min eingespart</span>` : ''}
-          </div>
-          ${block.matched_slide_filename ? `
-            <div style="margin-top: 0.35rem; display: flex; align-items: center; gap: 0.4rem; font-size: 11px;">
-              <span class="slide-file-badge" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 500;">
-                Folie: ${block.matched_slide_filename} ${block.slide_coverage_pct !== null ? `<strong>(${block.slide_coverage_pct}% Deckung)</strong>` : ''}
-              </span>
-            </div>
-          ` : ''}
-          ${block.recommendation_reason ? `<div class="ampel-reason">${block.recommendation_reason}</div>` : ''}
-          <div class="speed-pill-group">
-            <span class="speed-pill-label">Modus:</span>
-            ${speedButtonsHtml}
-            <a href="https://lms.uzh.ch/auth/RepositoryEntry/666697737/CourseNode/76022446801983" target="_blank" class="btn-vam-action" title="Vorlesungsaufzeichnungen im VAM-Archiv öffnen">VAM-Archiv</a>
-            <a href="https://lms.uzh.ch/url/RepositoryEntry/666697737" target="_blank" class="btn-vam-action" title="Kursunterlagen & Skripte auf OpenOLAT öffnen">Skripte</a>
-          </div>
-        </div>
-      `;
-    }
-
-    card.innerHTML = `
-      ${checkboxHtml}
-      <div class="task-body">
-        <div class="task-meta-row">
-          <span class="task-time">${sTime} — ${eTime}</span>
-          <div style="display: flex; gap: 0.4rem; align-items: center;">
-            ${lectureRoiSnippet}
-            <span class="status-badge ${block.completed ? 'badge-done' : block.badgeClass}">
-              ${block.completed ? 'Erledigt' : block.tag}
-            </span>
-          </div>
-        </div>
-        <div class="task-title">${block.title}</div>
-        <div class="task-desc">${block.desc}</div>
-        ${lectureDecisionHtml}
-        ${block.type === 'free-slot' && block.duration >= 25 ? `
-          <div class="task-actions">
-            <button class="btn-secondary" style="font-size: 11px; padding: 0.2rem 0.5rem;" onclick="prefillActivity('${sTime}', '${eTime}')">
-              + Aktivität in dieser Lücke planen
-            </button>
-          </div>
-        ` : ''}
-      </div>
-    `;
-
-    dom.timelineContainer.appendChild(card);
-  });
 }
 
 // Update Top KPI Counters & Daily Progress Bar
@@ -1266,95 +986,10 @@ function updateMetrics(summary) {
 }
 
 function updateStudyGoalTracker() {
-  if (!dom.studyGoalTracker) return;
-  if (state.studySessions.length === 0) {
-    dom.studyGoalTracker.style.display = 'none';
-    return;
-  }
-
-  dom.studyGoalTracker.style.display = 'block';
-  const completedCount = state.studySessions.filter(s => {
-    const id = getTaskId('study', s.topic_name, s.start_time);
-    return !!state.taskCompletions[id] || !!s.completed;
-  }).length;
-  const totalCount = state.studySessions.length;
-
-  if (dom.studyGoalCount) {
-    dom.studyGoalCount.textContent = `${completedCount} von ${totalCount} Lerneinheiten erledigt`;
-  }
-
-  const clusterCounts = {};
-  state.studySessions.forEach(s => {
-    const c = s.cluster_name || 'Allgemeines Fachwissen';
-    clusterCounts[c] = (clusterCounts[c] || 0) + 1;
-  });
-  const dominantCluster = Object.keys(clusterCounts).sort((a, b) => clusterCounts[b] - clusterCounts[a])[0];
-  if (dom.studyClusterSummary) {
-    dom.studyClusterSummary.innerHTML = `Stoff-Fokus: <strong>${dominantCluster}</strong>`;
-  }
+  if (dom.studyGoalTracker) dom.studyGoalTracker.style.display = 'none';
 }
 
-async function handleTriggerRollover() {
-  const uncompleted = state.studySessions.filter(s => {
-    const id = getTaskId('study', s.topic_name, s.start_time);
-    return !state.taskCompletions[id] && !s.completed;
-  });
-
-  if (uncompleted.length === 0) {
-    showToast('Alle geplanten Lerneinheiten für heute sind bereits abgeschlossen.');
-    return;
-  }
-
-  showToast('Verteile offene Lernziele auf Folgetage um...');
-
-  try {
-    const uncompletedTopics = uncompleted.map(s => ({
-      name: s.topic_name,
-      cluster_name: s.cluster_name || 'Allgemeines Fachwissen',
-      card_count: s.cards_to_review,
-      estimated_minutes: s.duration_minutes,
-    }));
-
-    const res = await fetch(`${API_BASE}/anki/rollover`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        target_date: state.targetDate,
-        uncompleted_topics: uncompletedTopics,
-        days_ahead: 3,
-      }),
-    });
-    if (!res.ok) throw new Error('Umverteilung fehlgeschlagen');
-    const data = await res.json();
-
-    if (dom.rolloverPlanBox) {
-      dom.rolloverPlanBox.style.display = 'block';
-      if (dom.rolloverAdviceText) {
-        dom.rolloverAdviceText.innerHTML = `<strong>${data.message}</strong><br>${data.advice}`;
-      }
-      if (dom.rolloverScheduleList) {
-        dom.rolloverScheduleList.innerHTML = '';
-        data.redistribution.forEach(item => {
-          const row = document.createElement('div');
-          row.style.cssText = 'background: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-size: 11px;';
-          row.innerHTML = `
-            <div>
-              <span style="font-weight: 600; color: var(--status-activity);">Tag +${item.day_offset} (${item.target_date}):</span>
-              <span style="color: var(--text-main); margin-left: 0.4rem;">${item.topic_name}</span>
-              <span style="font-size: 10px; color: var(--text-dim); margin-left: 0.3rem;">[${item.cluster_name}]</span>
-            </div>
-            <div style="font-weight: 600; color: var(--text-muted);">+${item.cards_count} Karten (~${item.estimated_minutes} Min)</div>
-          `;
-          dom.rolloverScheduleList.appendChild(row);
-        });
-      }
-    }
-
-    showToast('Offene Karten erfolgreich auf Folgetage umverteilt');
-  } catch (err) {
-    showToast('Fehler bei Umverteilung: ' + err.message);
-  }
-}
+async function handleTriggerRollover() {}
 
 // Helpers
 function formatTime(isoString) {
@@ -4250,37 +3885,9 @@ async function handleToggleSlotDone(slotKey, cards, title) {
   try {
     const cached = localStorage.getItem(cacheKey);
     if (cached) renderCurriculumToday(JSON.parse(cached));
-    else renderCurriculumToday(DAY1_FALLBACK_ASSIGNMENT);
-  } catch (e) {}
-}
-
-// Mobile responsive view switcher
-function switchMobileView(view) {
-  const btns = document.querySelectorAll('.mobile-view-btn');
-  btns.forEach(b => {
-    if (b.getAttribute('data-view') === view) {
-      b.classList.add('active');
-    } else {
-      b.classList.remove('active');
-    }
-  });
-
-  const missionSec = document.getElementById('executiveMissionSection');
-  const timelineSec = document.querySelector('.timeline-panel');
-  const controlSec = document.querySelector('.control-panel');
-
-  if (view === 'mission') {
-    if (missionSec) missionSec.style.display = 'block';
-    if (timelineSec) timelineSec.style.display = 'none';
-    if (controlSec) controlSec.style.display = 'none';
-  } else if (view === 'schedule') {
-    if (missionSec) missionSec.style.display = 'none';
-    if (timelineSec) timelineSec.style.display = 'block';
-    if (controlSec) controlSec.style.display = 'none';
-  } else if (view === 'stats') {
-    if (missionSec) missionSec.style.display = 'none';
-    if (timelineSec) timelineSec.style.display = 'none';
-    if (controlSec) controlSec.style.display = 'block';
+    else loadCurriculumToday(false);
+  } catch (e) {
+    loadCurriculumToday(false);
   }
 }
 
@@ -6143,15 +5750,7 @@ function switchAppPage(pageId) {
   if (!pageId) return;
   if (!pageId.startsWith('page-')) pageId = 'page-' + pageId;
 
-  const navBtns = document.querySelectorAll('.nav-tab-btn, .bottom-nav-item, .side-menu-item');
-  navBtns.forEach(btn => {
-    if (btn.getAttribute('data-page') === pageId) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-
+  const targetPage = document.getElementById(pageId);
   const pages = document.querySelectorAll('.app-page');
   pages.forEach(p => {
     if (p.id === pageId) {
@@ -6161,8 +5760,18 @@ function switchAppPage(pageId) {
     }
   });
 
+  const navBtns = document.querySelectorAll('.nav-tab-btn, .bottom-nav-item, .side-menu-item');
+  navBtns.forEach(btn => {
+    if (btn.getAttribute('data-page') === pageId) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
   try {
     localStorage.setItem('sl_active_page', pageId);
+    localStorage.setItem('study_current_page', pageId);
     const hash = pageId.replace('page-', '');
     if (window.location.hash !== '#' + hash) {
       history.replaceState(null, '', '#' + hash);
@@ -6172,18 +5781,26 @@ function switchAppPage(pageId) {
   // Page-specific lazy activations
   if (pageId === 'page-advisor') {
     if (!state.advisorData) {
-      loadAdvisorData();
+      loadAdvisorData('');
     }
   } else if (pageId === 'page-roadmap') {
     renderPageRoadmap();
   } else if (pageId === 'page-analytics') {
     renderPageAnalytics();
+  } else if (pageId === 'page-setup') {
+    const origInput = document.getElementById('calendarUrlInput');
+    const pageInput = document.getElementById('pageCalendarUrlInput');
+    if (origInput && pageInput && origInput.value) {
+      pageInput.value = origInput.value;
+    }
   }
+
+  // Smooth scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function switchMobileView(view) {
-  if (view === 'mission') switchAppPage('page-today');
-  else if (view === 'schedule') switchAppPage('page-today');
+  if (view === 'mission' || view === 'schedule') switchAppPage('page-today');
   else if (view === 'stats') switchAppPage('page-analytics');
 }
 
@@ -6889,68 +6506,8 @@ async function handleAddManualActivityFromPage() {
 }
 
 // ============================================================================
-// MULTI-PAGE VIEW ROUTER & HAMBURGER SIDE-MENU CONTROLLER
+// HAMBURGER SIDE-MENU CONTROLLER
 // ============================================================================
-
-function switchAppPage(pageId) {
-  if (!pageId) return;
-
-  // 1. Hide all pages and reveal the active one
-  const pages = document.querySelectorAll('.app-page');
-  pages.forEach(p => {
-    p.classList.remove('active');
-  });
-
-  const targetPage = document.getElementById(pageId);
-  if (targetPage) {
-    targetPage.classList.add('active');
-  }
-
-  // 2. Update active states on top segmented control
-  const navBtns = document.querySelectorAll('.nav-tab-btn');
-  navBtns.forEach(btn => {
-    if (btn.getAttribute('data-page') === pageId) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-
-  // 3. Update active states in slide-over side menu
-  const sideItems = document.querySelectorAll('.side-menu-item');
-  sideItems.forEach(item => {
-    if (item.getAttribute('data-page') === pageId) {
-      item.classList.add('active');
-    } else {
-      item.classList.remove('active');
-    }
-  });
-
-  // 4. Save state locally
-  try {
-    localStorage.setItem('study_current_page', pageId);
-  } catch (e) {}
-
-  // 5. Trigger page-specific data loaders
-  if (pageId === 'page-advisor') {
-    if (!state.advisorData) {
-      loadAdvisorData('');
-    }
-  } else if (pageId === 'page-roadmap') {
-    renderPageRoadmap();
-  } else if (pageId === 'page-analytics') {
-    renderPageAnalytics();
-  } else if (pageId === 'page-setup') {
-    const origInput = document.getElementById('calendarUrlInput');
-    const pageInput = document.getElementById('pageCalendarUrlInput');
-    if (origInput && pageInput && origInput.value) {
-      pageInput.value = origInput.value;
-    }
-  }
-
-  // 6. Smooth scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
 function toggleSideMenu(isOpen) {
   const backdrop = document.getElementById('sideMenuBackdrop');

@@ -7,15 +7,31 @@ from app.services.daily_rhythm_service import generate_daily_science_rhythm
 client = TestClient(app)
 
 def test_daily_science_rhythm_defaults_to_830():
-    """Verify that the normal standard start time is 08:30 even if anki_first_review_time is provided."""
+    """Verify that future dates ignore anki_first_review_time and use start_time_str."""
     sched = generate_daily_science_rhythm(
         target_date=date(2027, 5, 1),
         start_time_str="08:30",
         anki_first_review_time="07:45"
     )
+    # For a future date, anki_first_review_time is NOT used (only today/past are auto-adopted)
     assert sched["start_time"] == "08:30"
     assert sched["anki_first_review_time"] == "07:45"
+    assert sched["used_anki_start"] is False
     assert sched["blocks"][0]["start_time"] == "08:30"
+
+def test_manual_start_overrides_anki_auto():
+    """Verify that is_manual_start=True forces the given start_time even when Anki reviews exist."""
+    from datetime import date, timedelta
+    # Use yesterday (past date that has reviews) – but supply manual override
+    yesterday = date.today() - timedelta(days=1)
+    sched = generate_daily_science_rhythm(
+        target_date=yesterday,
+        start_time_str="09:00",
+        anki_first_review_time="08:44",
+        is_manual_start=True,
+    )
+    assert sched["start_time"] == "09:00", f"Expected 09:00 but got {sched['start_time']}"
+    assert sched["used_anki_start"] is False
 
 def test_future_days_have_full_repetition_time_scheduled():
     """Verify that future days allocate full repetition time and are NOT marked completed."""

@@ -1240,6 +1240,7 @@ class RhythmRestoreRequest(BaseModel):
 def get_daily_rhythm_endpoint(
     target_date: Optional[str] = Query(None, description="Target date YYYY-MM-DD"),
     start_time: str = Query("08:30", description="Start time HH:MM"),
+    is_manual_start: bool = Query(False, description="If True, start_time is a user-defined override (not auto-Anki)"),
     lunch_duration: int = Query(75, description="Lunch break duration in minutes (30, 45, 60, 75)"),
     include_lecture: bool = Query(True, description="Whether to include lecture/podcast blocks"),
     removed_blocks: Optional[str] = Query(None, description="Comma-separated block IDs to omit"),
@@ -1285,6 +1286,7 @@ def get_daily_rhythm_endpoint(
         removed_block_ids=rem_list,
         custom_block_order=order_list,
         anki_first_review_time=anki_first_rev,
+        is_manual_start=is_manual_start,
     )
 
 

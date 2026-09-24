@@ -236,8 +236,8 @@
     "card_count": 123,
     "new_cards": 0,
     "mastered_cards": 123,
-    "learning_cards": 0,
-    "avg_card_chars": 236.6,
+    "learning_cards": 9,
+    "avg_card_chars": 238.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,10 +278,10 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 28,
+    "new_cards": 10,
     "mastered_cards": 104,
     "learning_cards": 0,
-    "avg_card_chars": 434.8,
+    "avg_card_chars": 435.0,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 262.9,
+    "avg_card_chars": 264.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -369,7 +369,7 @@
     "new_cards": 0,
     "mastered_cards": 35,
     "learning_cards": 0,
-    "avg_card_chars": 306.5,
+    "avg_card_chars": 314.6,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -600,7 +600,7 @@
     "new_cards": 0,
     "mastered_cards": 72,
     "learning_cards": 0,
-    "avg_card_chars": 592.5,
+    "avg_card_chars": 593.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -817,9 +817,9 @@
     "deck_id": 1789378223040,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
     "card_count": 120,
-    "new_cards": 113,
+    "new_cards": 112,
     "mastered_cards": 7,
-    "learning_cards": 7,
+    "learning_cards": 0,
     "avg_card_chars": 260.8,
     "is_completed": false,
     "is_in_progress": true

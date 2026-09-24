@@ -97,6 +97,7 @@ def generate_daily_science_rhythm(
     anki_first_review_time: Optional[str] = None,
     inserted_blocks: Optional[List[Dict[str, Any]]] = None,
     split_blocks: Optional[Dict[str, Any]] = None,
+    is_manual_start: bool = False,
 ) -> Dict[str, Any]:
     """
     Generates the scientific ultradian study schedule with precise time arithmetic.
@@ -190,32 +191,26 @@ def generate_daily_science_rhythm(
 
     now = datetime.now()
     is_today_date = (t_date == now.date())
-    now_minutes = now.hour * 60 + now.minute if is_today_date else 0
 
-    # Automatic Anki & Live Start-Time Logic:
-    # 1. If reviews exist for this day (today or past), ALWAYS adopt the real Anki first review time!
-    # 2. If it's today and no Anki reviews yet:
-    #    - If current time is after 08:30 (temporary placeholder), dynamically catch up live to NOW
-    #      so the schedule reflects reality instead of pretending the user started hours ago!
-    #    - If current time is before 08:30, keep the 08:30 planned baseline.
-    # 3. For future days or when explicitly customized without Anki reviews, use start_time_str.
+    # Automatic Anki & Start-Time Determination:
+    # 1. If user explicitly provided a manual start time (is_manual_start=True), strictly respect user input!
+    # 2. If real Anki reviews exist for this date (today or past), automatically adopt the exact time of the first Anki review!
+    # 3. Otherwise, use the planned start time (start_time_str or default "08:30").
+    # NOTE: Never dynamically shift the schedule forward minute-by-minute to `now` without user initiation.
     used_anki_start = False
-    is_live_catching_up = False
 
-    if t_date <= now.date() and anki_first_review_time:
+    if is_manual_start and start_time_str:
+        effective_start_str = start_time_str
+        used_anki_start = False
+    elif t_date <= now.date() and anki_first_review_time:
         effective_start_str = anki_first_review_time
         used_anki_start = True
-    elif is_today_date:
-        baseline_m = _parse_time_to_minutes(start_time_str or "08:30")
-        if start_time_str and start_time_str != "08:30" and now_minutes <= baseline_m:
-            effective_start_str = start_time_str
-        elif now_minutes > baseline_m:
-            effective_start_str = _minutes_to_time(now_minutes)
-            is_live_catching_up = True
-        else:
-            effective_start_str = start_time_str or "08:30"
+    elif start_time_str:
+        effective_start_str = start_time_str
+        used_anki_start = False
     else:
-        effective_start_str = start_time_str or "08:30"
+        effective_start_str = "08:30"
+        used_anki_start = False
 
     cur_m = _parse_time_to_minutes(effective_start_str)
     blocks: List[Dict[str, Any]] = []
@@ -726,7 +721,7 @@ def generate_daily_science_rhythm(
         "configured_start_time": start_time_str,
         "anki_first_review_time": anki_first_review_time,
         "used_anki_start": used_anki_start,
-        "is_live_catching_up": is_live_catching_up,
+        "is_live_catching_up": False,
         "lunch_duration_minutes": dur_lunch,
         "include_lecture": include_lecture,
         "feierabend_time": feierabend_time,

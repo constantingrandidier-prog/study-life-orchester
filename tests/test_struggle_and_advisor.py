@@ -207,7 +207,7 @@ def test_lecture_date_and_slide_paths_in_curriculum_assignment():
     """Verify that Day 10 slots include recording dates in title, local folder paths, and slide mappings."""
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     from datetime import date
-    day = get_daily_curriculum_assignment(date(2026, 9, 24))
+    day = get_daily_curriculum_assignment(date(2026, 9, 23))
     slots = day["topic_slots"]
     assert len(slots) >= 2
 

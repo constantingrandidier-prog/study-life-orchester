@@ -20,7 +20,9 @@ from app.services.lecture_advisor_service import search_lecture_advisor
 # Semester milestone constants
 SEMESTER_START_DATE = date(2026, 9, 14)  # Monday
 TARGET_EXAM_DATE = date(2027, 1, 19)     # Tuesday
-DAILY_CARD_QUOTA = 90
+DAILY_CARD_QUOTA = 95
+CHRISTMAS_BREAK_START = date(2026, 12, 24)
+CHRISTMAS_BREAK_END = date(2027, 1, 3)
 
 # Didactic medical module progression for 2. Studienjahr
 DIDACTIC_MODULES = [
@@ -1115,9 +1117,9 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             "active_days": 0,
         }
 
-    TARGET_MIN = 75
-    TARGET_MAX = 95
-    TARGET_OPT = 85
+    TARGET_MIN = 85
+    TARGET_MAX = 105
+    TARGET_OPT = 95
 
     while deck_idx < len(deck_queue):
         # Skip fully exhausted decks in simulation
@@ -1126,29 +1128,38 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             continue
 
         is_sunday = (cur_date.weekday() == 6)
+        is_xmas = (CHRISTMAS_BREAK_START <= cur_date <= CHRISTMAS_BREAK_END)
         date_str = cur_date.strftime("%Y-%m-%d")
         day_name = GERMAN_WEEKDAYS[cur_date.weekday()]
 
-        if is_sunday:
+        if is_sunday or is_xmas:
             days_until = (TARGET_EXAM_DATE - cur_date).days
+            reason = "Weihnachts- & Neujahrspause – Geplante Festtage & Erholung!" if is_xmas else "Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!"
+            headline = "Weihnachtspause – Erholung & Zeit mit Familie" if is_xmas else "Ruhetag – Mentale Erholung & kognitive Konsolidierung"
+            mod_title = "Weihnachts- & Neujahrspause" if is_xmas else "Regeneration & Erholung"
+            badge_title = "Weihnachtsferien" if is_xmas else "Ruhetag"
             schedule_days.append({
                 "date": date_str,
                 "day_of_week": day_name,
                 "day_number": None,
-                "total_active_days": 104,
+                "total_active_days": 90,
                 "is_rest_day": True,
                 "target_cards": 0,
                 "topic_slots": [],
                 "cumulative_cards_learned": cumulative_cards,
                 "total_curriculum_cards": total_curriculum_cards,
                 "curriculum_progress_pct": round((cumulative_cards / max(1, total_curriculum_cards)) * 100, 1),
-                "current_module": "Regeneration & Erholung",
-                "summary": "Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!",
+                "current_module": mod_title,
+                "summary": reason,
                 "exam_date": TARGET_EXAM_DATE.strftime("%Y-%m-%d"),
                 "days_until_exam": days_until,
-                "revision_buffer_days": 15,
-                "synergy_headline": "Ruhetag – Mentale Erholung & kognitive Konsolidierung",
+                "revision_buffer_days": 14,
+                "synergy_headline": headline,
                 "recommended_study_sequence": [
+                    "1. Zeit mit Familie & Freunden verbringen",
+                    "2. Schlaf & Regeneration zur Festigung des Gelernten",
+                    "3. Optional: Kurze Wiederholung fälliger Review-Karten bei Bedarf"
+                ] if is_xmas else [
                     "1. Spaziergang oder Sport an der frischen Luft",
                     "2. Schlaf & Regeneration zur Festigung der synaptischen Plastizität",
                     "3. Optional: Kurze Wiederholung fälliger Review-Karten bei Bedarf"
@@ -1156,9 +1167,9 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "estimated_study_minutes": 0,
                 "avg_seconds_per_card": 0.0,
                 "difficulty_level": "rest",
-                "difficulty_label": "Ruhetag",
-                "difficulty_badge": "Ruhetag",
-                "difficulty_reason": "Geplanter Ruhetag zur kognitiven Erholung.",
+                "difficulty_label": badge_title,
+                "difficulty_badge": badge_title,
+                "difficulty_reason": reason,
                 "exam_yield": "rest",
                 "yield_stars": "-",
                 "yield_label": "Regeneration",

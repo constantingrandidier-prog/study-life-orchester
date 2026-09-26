@@ -66,6 +66,9 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             'today_time_minutes': 0.0,
             'today_lapses_count': 0,
             'today_new_count': 0,
+            'new_cards_count': 0,
+            'new_cards_opened_count': 0,
+            'new_cards_in_learning_count': 0,
             'today_review_count': 0,
             'today_relearn_count': 0,
             'today_deck_breakdown': {},
@@ -129,31 +132,56 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     effective_study_mins = max(today_time_mins, today_session_time_mins)
 
     # Unique cards breakdown:
-    # type = 0: new card (first learn) -> THIS counts towards the new cards pacing goal!
-    # type in (1, 2): repetition / review / relearn
-    unique_new_cids = set(r[1] for r in revs_rows if r[7] == 0)
-    unique_rep_cids = set(r[1] for r in revs_rows if r[7] in (1, 2))
+    # A new card is "wirklich gelernt" (graduated) when it only comes back tomorrow or later,
+    # i.e. its last review on this day has interval >= 1 day (or card queue = 2 with ivl >= 1).
+    # Cards still in intra-day learning steps (ivl < 1, e.g. -600s) are in the learning queue for today.
+    card_has_learn = set()
+    card_latest_ivl = {}
+    cid_to_did = {}
+    unique_rep_cids = set()
 
-    new_cards_count = len(unique_new_cids)
+    for r in revs_rows:
+        cid = r[1]
+        did = r[2]
+        ivl = r[4]
+        rtype = r[7]
+        if cid not in cid_to_did:
+            cid_to_did[cid] = did
+        if rtype == 0:
+            card_has_learn.add(cid)
+            if cid not in card_latest_ivl:
+                # revs_rows is sorted ORDER BY r.id DESC, so first occurrence is latest review of the day
+                card_latest_ivl[cid] = ivl
+        elif rtype in (1, 2):
+            unique_rep_cids.add(cid)
+
+    # Graduated = latest review achieved interval >= 1 day (due tomorrow or later)
+    graduated_new_cids = set(cid for cid in card_has_learn if card_latest_ivl.get(cid, 0) >= 1)
+    learning_new_cids = card_has_learn - graduated_new_cids
+    unique_rep_cids = unique_rep_cids - card_has_learn
+
+    new_cards_count = len(graduated_new_cids)
+    new_cards_opened_count = len(card_has_learn)
+    new_cards_in_learning_count = len(learning_new_cids)
     repetition_cards_count = len(unique_rep_cids)
 
-    # Breakdown by deck for new cards
+    # Breakdown by deck for graduated new cards (wirklich gelernt)
     new_by_deck = {}
-    seen_new = set()
-    for r in revs_rows:
-        if r[7] == 0 and r[1] not in seen_new:
-            seen_new.add(r[1])
-            dname = decks.get(r[2], 'Unbekanntes Deck')
-            new_by_deck[dname] = new_by_deck.get(dname, 0) + 1
+    for cid in graduated_new_cids:
+        dname = decks.get(cid_to_did.get(cid), 'Unbekanntes Deck')
+        new_by_deck[dname] = new_by_deck.get(dname, 0) + 1
+
+    # Breakdown by deck for all opened new cards (including learning phase)
+    new_opened_by_deck = {}
+    for cid in card_has_learn:
+        dname = decks.get(cid_to_did.get(cid), 'Unbekanntes Deck')
+        new_opened_by_deck[dname] = new_opened_by_deck.get(dname, 0) + 1
 
     # Breakdown by deck for repetition cards
     rep_by_deck = {}
-    seen_rep = set()
-    for r in revs_rows:
-        if r[7] in (1, 2) and r[1] not in seen_rep:
-            seen_rep.add(r[1])
-            dname = decks.get(r[2], 'Unbekanntes Deck')
-            rep_by_deck[dname] = rep_by_deck.get(dname, 0) + 1
+    for cid in unique_rep_cids:
+        dname = decks.get(cid_to_did.get(cid), 'Unbekanntes Deck')
+        rep_by_deck[dname] = rep_by_deck.get(dname, 0) + 1
 
     today_breakdown = {}
     recent_sample = []
@@ -209,8 +237,12 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     today_4am_ms = int(today_4am_dt.timestamp() * 1000)
     yesterday_4am_ms = today_4am_ms - (86400 * 1000)
 
-    y_new_rows = cur.execute('SELECT DISTINCT cid FROM revlog WHERE id >= ? AND id < ? AND type = 0', (yesterday_4am_ms, today_4am_ms)).fetchall()
-    yesterday_new_cards = len(y_new_rows)
+    y_new_rows = cur.execute('SELECT id, cid, ivl, type FROM revlog WHERE id >= ? AND id < ? AND type = 0 ORDER BY id ASC', (yesterday_4am_ms, today_4am_ms)).fetchall()
+    y_cards = {}
+    for _, y_cid, y_ivl, _ in y_new_rows:
+        y_cards[y_cid] = y_ivl
+    yesterday_new_cards = sum(1 for cid, last_ivl in y_cards.items() if last_ivl >= 1)
+    yesterday_opened_new_cards = len(y_cards)
     y_rep_rows = cur.execute('SELECT DISTINCT cid FROM revlog WHERE id >= ? AND id < ? AND type IN (1, 2)', (yesterday_4am_ms, today_4am_ms)).fetchall()
     yesterday_rep_cards = len(y_rep_rows)
     y_rows = cur.execute('SELECT count(*), sum(time)/1000/60 FROM revlog WHERE id >= ? AND id < ?', (yesterday_4am_ms, today_4am_ms)).fetchone()
@@ -274,8 +306,10 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'collection_path': str(target_path),
         'first_review_time': first_review_time,
         'last_review_time': last_review_time,
-        'today_reviewed_count': new_cards_count,  # Primary number for "In Anki erledigt" is NEW cards
+        'today_reviewed_count': new_cards_count,  # Primary number for "In Anki erledigt" is graduated NEW cards
         'new_cards_count': new_cards_count,
+        'new_cards_opened_count': new_cards_opened_count,
+        'new_cards_in_learning_count': new_cards_in_learning_count,
         'repetition_cards_count': repetition_cards_count,
         'total_reviews_count': total_reviews_count,
         'today_time_minutes': today_time_mins,
@@ -286,9 +320,11 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         'today_review_count': repetition_cards_count,
         'today_deck_breakdown': today_breakdown,
         'new_by_deck': new_by_deck,
+        'new_opened_by_deck': new_opened_by_deck,
         'rep_by_deck': rep_by_deck,
         'yesterday_reviewed_count': yesterday_new_cards,
         'yesterday_new_cards_count': yesterday_new_cards,
+        'yesterday_new_opened_count': yesterday_opened_new_cards,
         'yesterday_repetition_cards_count': yesterday_rep_cards,
         'yesterday_total_reviews_count': yesterday_total_reviews,
         'yesterday_time_minutes': yesterday_time_mins,
@@ -316,7 +352,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
                 cards_completed=new_cards_count,
                 minutes_spent=int(round(effective_study_mins)),
                 source='anki_desktop_auto',
-                notes=f'Auto-Sync Anki Desktop ({new_cards_count} neue Karten, {repetition_cards_count} Repetitionen, {effective_study_mins}m Session, {today_time_mins}m Fokuszeit)',
+                notes=f'Auto-Sync Anki Desktop ({new_cards_count} neue Karten gemeistert [erst morgen wieder], {new_cards_opened_count} aufgemacht, {repetition_cards_count} Repetitionen, {effective_study_mins}m Session, {today_time_mins}m Fokuszeit)',
                 user_id='student',
             )
         except Exception:

@@ -115,10 +115,12 @@ def sync_now():
         print("Weakness sync error:", e, flush=True)
 
     revs = state.get("today_reviewed_count", 0)
+    opened = state.get("new_cards_opened_count", revs)
+    learning = state.get("new_cards_in_learning_count", 0)
     reps = state.get("repetition_cards_count", 0)
     due_today = state.get("due_today_count", 0)
     due_tom = state.get("due_tomorrow_count", 0)
-    log_msg(f"[SYNC-OK] Render synced: {due_today} Faellig heute, {revs} Neu gelernt, {reps} Wiederholungen, {due_tom} morgen faellig.")
+    log_msg(f"[SYNC-OK] Render synced: {due_today} Faellig heute, {revs} Neu gemeistert ({learning} in Lernphase, {opened} aufgemacht), {reps} Wiederholungen, {due_tom} morgen faellig.")
 
 def log_msg(msg: str):
     now_str = time.strftime("%Y-%m-%d %H:%M:%S")

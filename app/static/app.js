@@ -1765,8 +1765,11 @@ function updateMissionKpiStrip() {
   }
   if (splitNewSub) {
     const remNew = Math.max(0, baseNew - newDone);
+    const inLrn = desktop ? (desktop.new_cards_in_learning_count || 0) : 0;
     if (remNew === 0 && baseNew > 0) {
       splitNewSub.innerHTML = `<span style="color: #3fb950; font-weight: 600;">Tagesziel erreicht!</span>`;
+    } else if (inLrn > 0) {
+      splitNewSub.textContent = `noch ${remNew} offen (${inLrn} in Lernphase)`;
     } else {
       splitNewSub.textContent = `noch ${remNew} offen`;
     }
@@ -4069,6 +4072,8 @@ function renderAnkiDesktopWidget(data) {
 
   // 4. Update Advice Bar
   const adviceEl = document.getElementById('pacingAdviceText');
+  const todayCnt = (data.new_cards_count !== undefined) ? data.new_cards_count : (data.today_reviewed_count || 0);
+  const mins = Math.round(data.effective_study_minutes || data.today_session_time_minutes || data.today_time_minutes || 0);
   if (adviceEl && todayCnt > 0) {
     adviceEl.textContent = `In Anki gemeistert: ${todayCnt} Karten (${mins} Min.) • Morgen stehen ${tomCnt} Karten zur Repetition an.`;
   }

@@ -21,8 +21,6 @@ from app.services.lecture_advisor_service import search_lecture_advisor
 SEMESTER_START_DATE = date(2026, 9, 14)  # Monday
 TARGET_EXAM_DATE = date(2027, 1, 19)     # Tuesday
 DAILY_CARD_QUOTA = 95
-CHRISTMAS_BREAK_START = date(2026, 12, 24)
-CHRISTMAS_BREAK_END = date(2027, 1, 3)
 
 # Didactic medical module progression for 2. Studienjahr
 DIDACTIC_MODULES = [
@@ -1128,16 +1126,15 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             continue
 
         is_sunday = (cur_date.weekday() == 6)
-        is_xmas = (CHRISTMAS_BREAK_START <= cur_date <= CHRISTMAS_BREAK_END)
         date_str = cur_date.strftime("%Y-%m-%d")
         day_name = GERMAN_WEEKDAYS[cur_date.weekday()]
 
-        if is_sunday or is_xmas:
+        if is_sunday:
             days_until = (TARGET_EXAM_DATE - cur_date).days
-            reason = "Weihnachts- & Neujahrspause – Geplante Festtage & Erholung!" if is_xmas else "Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!"
-            headline = "Weihnachtspause – Erholung & Zeit mit Familie" if is_xmas else "Ruhetag – Mentale Erholung & kognitive Konsolidierung"
-            mod_title = "Weihnachts- & Neujahrspause" if is_xmas else "Regeneration & Erholung"
-            badge_title = "Weihnachtsferien" if is_xmas else "Ruhetag"
+            reason = "Ruhetag – Sonntag dient der kognitiven Konsolidierung und Regeneration!"
+            headline = "Ruhetag – Mentale Erholung & kognitive Konsolidierung"
+            mod_title = "Regeneration & Erholung"
+            badge_title = "Ruhetag"
             schedule_days.append({
                 "date": date_str,
                 "day_of_week": day_name,
@@ -1156,10 +1153,6 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "revision_buffer_days": 14,
                 "synergy_headline": headline,
                 "recommended_study_sequence": [
-                    "1. Zeit mit Familie & Freunden verbringen",
-                    "2. Schlaf & Regeneration zur Festigung des Gelernten",
-                    "3. Optional: Kurze Wiederholung fälliger Review-Karten bei Bedarf"
-                ] if is_xmas else [
                     "1. Spaziergang oder Sport an der frischen Luft",
                     "2. Schlaf & Regeneration zur Festigung der synaptischen Plastizität",
                     "3. Optional: Kurze Wiederholung fälliger Review-Karten bei Bedarf"

@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 264.7,
+    "avg_card_chars": 265.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -596,11 +596,11 @@
   {
     "deck_id": 1789378223020,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
-    "card_count": 72,
+    "card_count": 73,
     "new_cards": 0,
-    "mastered_cards": 72,
+    "mastered_cards": 73,
     "learning_cards": 0,
-    "avg_card_chars": 593.2,
+    "avg_card_chars": 593.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -817,10 +817,10 @@
     "deck_id": 1789378223040,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
     "card_count": 120,
-    "new_cards": 5,
+    "new_cards": 4,
     "mastered_cards": 115,
     "learning_cards": 0,
-    "avg_card_chars": 269.9,
+    "avg_card_chars": 270.0,
     "is_completed": false,
     "is_in_progress": true
   },

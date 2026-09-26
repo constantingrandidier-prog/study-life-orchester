@@ -6,6 +6,24 @@ import ssl
 import urllib.request
 from pathlib import Path
 
+# Redirect stdout and stderr for pythonw.exe (windowless mode on Windows)
+_log_p = Path(__file__).resolve().parent / "anki_sync.log"
+try:
+    if sys.stdout is None:
+        sys.stdout = open(_log_p, "a", encoding="utf-8", buffering=1)
+    else:
+        sys.stdout.write("")
+except Exception:
+    sys.stdout = open(_log_p, "a", encoding="utf-8", buffering=1)
+
+try:
+    if sys.stderr is None:
+        sys.stderr = sys.stdout
+    else:
+        sys.stderr.write("")
+except Exception:
+    sys.stderr = sys.stdout
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.services.anki_desktop_sync import read_live_anki_desktop_state, find_local_anki_collection
 from app.services.anki_backlog_triage import calculate_backlog_triage
@@ -100,26 +118,69 @@ def sync_now():
     reps = state.get("repetition_cards_count", 0)
     due_today = state.get("due_today_count", 0)
     due_tom = state.get("due_tomorrow_count", 0)
-    now_str = time.strftime("%H:%M:%S")
-    print(
-        f"[{now_str}] [SYNC-OK] Render synced: {due_today} Faellig heute, {revs} Neu gelernt, {reps} Wiederholungen, {due_tom} morgen faellig.",
-        flush=True,
-    )
+    log_msg(f"[SYNC-OK] Render synced: {due_today} Faellig heute, {revs} Neu gelernt, {reps} Wiederholungen, {due_tom} morgen faellig.")
+
+def log_msg(msg: str):
+    now_str = time.strftime("%Y-%m-%d %H:%M:%S")
+    line = f"[{now_str}] {msg}\n"
+    try:
+        if sys.stdout and hasattr(sys.stdout, "write"):
+            sys.stdout.write(line)
+            sys.stdout.flush()
+    except Exception:
+        pass
+    try:
+        with open(_log_p, "a", encoding="utf-8") as f:
+            f.write(line)
+    except Exception:
+        pass
+
+
+_INSTANCE_LOCK = None
+
+def acquire_single_instance_lock():
+    """Ensure only one instance of anki_sync_agent runs concurrently."""
+    global _INSTANCE_LOCK
+    lock_path = Path(__file__).resolve().parent / ".anki_sync.lock"
+    try:
+        import msvcrt
+        f = open(lock_path, "a+")
+        try:
+            msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+            _INSTANCE_LOCK = f
+            return f
+        except (IOError, OSError):
+            return None
+    except Exception:
+        return None
 
 
 if __name__ == "__main__":
     if "--once" in sys.argv:
         sync_now()
     else:
+        lock = acquire_single_instance_lock()
+        if lock is None:
+            # Another instance is already running silently in background
+            sys.exit(0)
+
         col = find_local_anki_collection()
         last_mtime = 0
         last_periodic = 0
-        print("[START] Anki Live Sync Agent running (Silent background data sync)...", flush=True)
-        sync_now()
+        log_msg("[START] Anki Live Sync Agent running (Silent background data sync)...")
+        try:
+            sync_now()
+            last_periodic = time.time()
+        except Exception:
+            pass
+
         while True:
             try:
                 now = time.time()
                 file_changed = False
+                if not col or not col.exists():
+                    col = find_local_anki_collection()
+
                 if col and col.exists():
                     m = col.stat().st_mtime
                     if m != last_mtime:
@@ -131,6 +192,6 @@ if __name__ == "__main__":
                     sync_now()
                     last_periodic = now
             except Exception as exc:
-                print(f"Sync loop error: {exc}", flush=True)
+                print(f"Sync loop note: {exc}", flush=True)
             time.sleep(2)
 

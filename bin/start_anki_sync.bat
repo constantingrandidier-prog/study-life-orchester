@@ -1,5 +1,4 @@
 @echo off
-title Anki Desktop Auto-Sync Agent
-echo Starting Anki Desktop Auto-Sync for Study-Life Orchestrator...
-python bin\anki_sync_agent.py
-pause
+cd /d "%~dp0\.."
+start "" "%~dp0..\.venv\Scripts\pythonw.exe" "%~dp0anki_sync_agent.py"
+exit

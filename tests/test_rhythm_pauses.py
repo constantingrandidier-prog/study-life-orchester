@@ -168,3 +168,50 @@ def test_rhythm_action_block_interruption_preserves_block_and_shifts_schedule():
     actions_after = get_rhythm_actions_for_date(test_date)
     assert "block_morning_reps" not in actions_after.get("interrupted_blocks", {})
 
+
+def test_smart_lunch_placement_in_window():
+    # Constantin's real case: Start 08:44, Reps 210-240m (due 425)
+    # Lunch must start in 12:30-13:30 window, NEVER at 16:30!
+    res = generate_daily_science_rhythm(
+        target_date=date(2027, 6, 5),
+        cards_due_today=425,
+        new_cards_target=100,
+        start_time_str="08:44",
+        lunch_duration_mins=60,
+        include_lecture=True,
+        is_manual_start=True,
+    )
+
+    lunch = next(b for b in res["blocks"] if b["id"] == "pause_lunch")
+    assert lunch is not None
+    sh, sm = map(int, lunch["start_time"].split(":"))
+    lunch_start_m = sh * 60 + sm
+    # Must start between 12:25 and 13:35
+    assert (12 * 60 + 25) <= lunch_start_m <= (13 * 60 + 35)
+
+
+def test_smart_lunch_splits_block_when_spanning_across_lunch():
+    # Long block spanning across lunch window (e.g. Start 10:00, 240m Reps -> 10:00 to 14:00)
+    # Block 1 must be split into part 1, lunch, and part 2
+    res = generate_daily_science_rhythm(
+        target_date=date(2027, 6, 6),
+        cards_due_today=300,
+        new_cards_target=100,
+        start_time_str="10:00",
+        lunch_duration_mins=60,
+        include_lecture=True,
+        is_manual_start=True,
+    )
+
+    block_ids = [b["id"] for b in res["blocks"]]
+    assert "block_morning_reps_part1" in block_ids
+    assert "pause_lunch" in block_ids
+    assert "block_morning_reps_part2" in block_ids
+
+    idx_p1 = block_ids.index("block_morning_reps_part1")
+    idx_lunch = block_ids.index("pause_lunch")
+    idx_p2 = block_ids.index("block_morning_reps_part2")
+
+    assert idx_p1 < idx_lunch < idx_p2
+
+

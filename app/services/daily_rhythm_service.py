@@ -243,7 +243,7 @@ def generate_daily_science_rhythm(
                 pass
         if bid and bid in custom_blocks:
             b_dict.update(custom_blocks[bid])
-        is_done = bid and (bid in completed_set or b_dict.get("is_completed"))
+        is_done = bid and (bid in completed_set or b_dict.get("parent_id") in completed_set or b_dict.get("is_completed"))
         if is_done:
             b_dict["is_completed"] = True
 
@@ -282,7 +282,7 @@ def generate_daily_science_rhythm(
     reps_badge = f"Active Recall ({dur_reps}m)"
     reps_desc = f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten. Plan passt sich automatisch an deinen Lernfortschritt an."
 
-    add_block_if_active({
+    reps_block = {
         "id": "block_morning_reps",
         "duration_minutes": dur_reps,
         "title": reps_title,
@@ -296,11 +296,11 @@ def generate_daily_science_rhythm(
         "is_mandatory": False,
         "is_completed": is_reps_completed,
         "cards_due": cards_due_today,
-    })
+    }
 
     # 2. Pause 1
     dur_p1 = 15
-    add_block_if_active({
+    p1_block = {
         "id": "pause_1",
         "duration_minutes": dur_p1,
         "title": "Pause 1: Diffuse Mode (Kein Bildschirm!)",
@@ -312,11 +312,11 @@ def generate_daily_science_rhythm(
         "description": "Zwingende Bildschirmpause: Aufstehen, Wasser trinken, Fenster öffnen. Keine Social Media!",
         "is_break": True,
         "is_mandatory": False,
-    })
+    }
 
     # 3. Block 2: Deep Encoding New Cards (Curriculum Today)
     dur_new = 105
-    add_block_if_active({
+    new_block = {
         "id": "block_new_cards",
         "duration_minutes": dur_new,
         "title": f"Block 2: {new_cards_target} Neue Karten HEUTE (Deep Encoding)",
@@ -331,11 +331,11 @@ def generate_daily_science_rhythm(
         "target_cards": new_cards_target,
         "topic_slots": today_slots,
         "today_summary": slot_summary,
-    })
+    }
 
     # 4. Pause 2
     dur_p2 = 15
-    add_block_if_active({
+    p2_block = {
         "id": "pause_2",
         "duration_minutes": dur_p2,
         "title": "Pause 2: Gehirn-Reset",
@@ -347,14 +347,15 @@ def generate_daily_science_rhythm(
         "description": "Frische Luft, Dehnen, Durchatmen vor dem nächsten Arbeitsblock.",
         "is_break": True,
         "is_mandatory": False,
-    })
+    }
 
     # 5. Optional Block 3: Lecture / Concept Stream
+    lec_block = None
     if include_lecture:
         dur_lec = 60
         today_primary = today_slots[0] if today_slots else {}
         b3_sub = f"Skript-Abgleich ({today_primary.get('clean_title') or today_primary.get('short_title', 'Thema')}) / Offene Karten" if today_slots else "Skript-Abgleich / Offene Karten klären"
-        add_block_if_active({
+        lec_block = {
             "id": "block_podcasts",
             "duration_minutes": dur_lec,
             "title": "Block 3: Transfer & Vormittags-Abschluss",
@@ -373,12 +374,12 @@ def generate_daily_science_rhythm(
             "local_podcast_file_path": today_primary.get("local_podcast_file_path"),
             "local_podcast_folder_path": today_primary.get("local_podcast_folder_path"),
             "local_slide_file_path": today_primary.get("local_slide_file_path"),
-        })
+        }
 
     # 6. Lunch Break
     dur_lunch = max(20, min(120, lunch_duration_mins))
     lunch_badge = "Mensa (75m)" if dur_lunch >= 70 else (f"Express ({dur_lunch}m)" if dur_lunch <= 35 else f"Pause ({dur_lunch}m)")
-    add_block_if_active({
+    lunch_block = {
         "id": "pause_lunch",
         "duration_minutes": dur_lunch,
         "title": f"Mittagspause & Erholung ({dur_lunch} Min.)",
@@ -390,7 +391,123 @@ def generate_daily_science_rhythm(
         "description": "Proteinreiche Mahlzeit (verhindert Glukosesturz), frische Luft und vollständiger kognitiver Abstand.",
         "is_break": True,
         "is_mandatory": False,
-    })
+    }
+
+    # Intelligente, biologisch optimierte Mittagspausen-Platzierung:
+    # Nicht stur am Ende aller Vormittags-Blöcke (wodurch sie erst am späten Nachmittag stattfände),
+    # sondern slick im Zielfenster zwischen 12:30 und 13:30 Uhr eingetaktet!
+    # Kann bei Bedarf auch lange Blöcke sauber in Teil 1 (vor Mittag) und Teil 2 (nach Mittag) unterteilen.
+    morning_items = [
+        (reps_block, p1_block),
+        (new_block, p2_block),
+    ]
+    if lec_block:
+        morning_items.append((lec_block, None))
+
+    LUNCH_START_MIN = 12 * 60 + 30   # 12:30
+    LUNCH_START_MAX = 13 * 60 + 30   # 13:30
+    lunch_placed = False
+
+    for idx, (b, p_after) in enumerate(morning_items):
+        bid = b.get("id")
+        if bid and bid in removed_set:
+            continue
+
+        # Falls der Block manuell durch den Benutzer via split_blocks aufgeteilt wurde
+        if bid and split_blocks and bid in split_blocks:
+            add_block_if_active(b)
+            continue
+
+        b_dur = b.get("duration_minutes", 30)
+        if bid and custom_durations and bid in custom_durations:
+            try:
+                b_dur = int(custom_durations[bid])
+                b["duration_minutes"] = b_dur
+            except Exception:
+                pass
+
+        is_last_item = (idx == len(morning_items) - 1)
+
+        if lunch_placed:
+            add_block_if_active(b)
+            if p_after and (p_after.get("id") not in removed_set):
+                add_block_if_active(p_after)
+            continue
+
+        # Mittagspause noch nicht platziert:
+        b_end = cur_m + b_dur
+
+        # Option A: Die aktuelle Uhrzeit liegt bereits im/nach dem Mittagsfenster (>= 12:28)
+        if cur_m >= (12 * 60 + 28):
+            add_block_if_active(lunch_block)
+            lunch_placed = True
+            add_block_if_active(b)
+            if p_after and (p_after.get("id") not in removed_set):
+                add_block_if_active(p_after)
+            continue
+
+        # Option B: Dieser Block endet harmonisch im Mittagsfenster (12:25 - 13:30)
+        elif (12 * 60 + 25) <= b_end <= LUNCH_START_MAX:
+            add_block_if_active(b)
+            # Falls letzter Block vor Mittag und die anschliessende Pause noch vor 13:30 passt:
+            if is_last_item and p_after and (b_end + p_after.get("duration_minutes", 15) <= LUNCH_START_MAX) and (p_after.get("id") not in removed_set):
+                add_block_if_active(p_after)
+            add_block_if_active(lunch_block)
+            lunch_placed = True
+            continue
+
+        # Option C: Block startet vor 12:30 und würde über 13:30 hinausragen -> Unterteilung!
+        elif cur_m < LUNCH_START_MIN and b_end > LUNCH_START_MAX:
+            target_split = max(12 * 60 + 30, cur_m + 30)
+            target_split = min(13 * 60 + 15, target_split)
+            target_split = int(round(target_split / 15.0) * 15)
+            p1_dur = max(30, target_split - cur_m)
+            p2_dur = b_dur - p1_dur
+
+            if p2_dur < 25 and (target_split - 30 - cur_m) >= 30:
+                target_split -= 30
+                p1_dur = target_split - cur_m
+                p2_dur = b_dur - p1_dur
+
+            import re
+            # Teil 1 vor Mittagspause
+            part1_dict = dict(b)
+            part1_dict["id"] = f"{bid}_part1"
+            part1_dict["parent_id"] = bid
+            part1_dict["duration_minutes"] = p1_dur
+            part1_dict["title"] = f"{b.get('title', 'Lernblock')} (Teil 1, vor Mittagspause)"
+            if "badge" in part1_dict and isinstance(part1_dict["badge"], str):
+                part1_dict["badge"] = re.sub(r'\(\d+m\)', f'({p1_dur}m)', part1_dict["badge"])
+            add_block_if_active(part1_dict)
+
+            # Mittagspause
+            add_block_if_active(lunch_block)
+            lunch_placed = True
+
+            # Teil 2 nach Mittagspause
+            part2_dict = dict(b)
+            part2_dict["id"] = f"{bid}_part2"
+            part2_dict["parent_id"] = bid
+            part2_dict["duration_minutes"] = p2_dur
+            part2_dict["title"] = f"{b.get('title', 'Lernblock')} (Teil 2, nach Mittagspause)"
+            if "badge" in part2_dict and isinstance(part2_dict["badge"], str):
+                part2_dict["badge"] = re.sub(r'\(\d+m\)', f'({p2_dur}m)', part2_dict["badge"])
+            add_block_if_active(part2_dict)
+
+            if p_after and (p_after.get("id") not in removed_set):
+                add_block_if_active(p_after)
+            continue
+
+        # Option D: Block endet noch vor dem Mittagsfenster (< 12:25)
+        else:
+            add_block_if_active(b)
+            if p_after and (p_after.get("id") not in removed_set):
+                add_block_if_active(p_after)
+            continue
+
+    if not lunch_placed:
+        add_block_if_active(lunch_block)
+        lunch_placed = True
 
     # 7. Postponed Tasks Injection (Scientific Slot: 14:00 Post-Lunch Auditory Prime Window)
     for p in active_postponed:
@@ -614,6 +731,10 @@ def generate_daily_science_rhythm(
         for bid in custom_block_order:
             if bid in block_map:
                 ordered_blocks.append(block_map.pop(bid))
+            else:
+                sub_keys = [k for k, v in list(block_map.items()) if v.get("parent_id") == bid]
+                for sk in sub_keys:
+                    ordered_blocks.append(block_map.pop(sk))
         # Add any remaining blocks
         for b in block_map.values():
             ordered_blocks.append(b)

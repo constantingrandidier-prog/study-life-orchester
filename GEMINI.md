@@ -1,4 +1,4 @@
-﻿# Antigravity Agent Guidelines: Study-Life-Orchester
+# Antigravity Agent Guidelines: Study-Life-Orchester
 
 ## Autonome Ausführung (Vollautomatik)
 1. **Keine Zwischenfragen / Freigabestopps:**
@@ -8,5 +8,8 @@
 2. **Befehlsausführung und Tests:**
    - Führe alle notwendigen Terminal-Befehle, Tests (z.B. pytest), DB-Skripte und Verifizierungen selbstständig aus.
    - Analysiere Fehlermeldungen selbst und behebe sie direkt im Code ohne Unterbrechung.
-3. **Ergebnisbericht:**
-   - Fasse nach Abschluss der Arbeit kurz zusammen, was geändert, getestet und verifiziert wurde.
+3. **Automatisches Deployment (Immer direkt online stellen):**
+   - Sobald die Änderungen implementiert und alle Tests erfolgreich sind, führe IMMER automatisch `.venv\Scripts\python bin/push_to_github.py "<aussagekräftige Nachricht>"` aus.
+   - Der Benutzer soll NIEMALS extra nachfragen müssen („ist es online?“). Das Deployment auf GitHub und Render gehört fest zum Abschluss jeder Aufgabe!
+4. **Ergebnisbericht:**
+   - Fasse nach Abschluss der Arbeit kurz zusammen, was geändert, getestet und verifiziert wurde, inklusive Deployment-Bestätigung (Commit-SHA & Render-Trigger).

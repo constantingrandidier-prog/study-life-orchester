@@ -1711,7 +1711,10 @@ function updateMissionKpiStrip() {
   const pacing = currentPacingData;
 
   // 1. Box 1: Tagesziel (Neue Karten Soll)
-  const baseNew = pacing ? (pacing.is_rest_day ? 0 : pacing.daily_target_cards) : 101;
+  let baseNew = pacing ? (pacing.is_rest_day ? 0 : pacing.daily_target_cards) : 95;
+  if (state.currentCurriculumData && !state.currentCurriculumData.is_rest_day && state.currentCurriculumData.target_cards != null) {
+    baseNew = state.currentCurriculumData.target_cards;
+  }
   const targetEl = document.getElementById('pacingDailyTarget');
   if (targetEl) targetEl.textContent = baseNew;
   const newTargetEl = document.getElementById('pacingNewTargetVal');
@@ -1868,6 +1871,8 @@ function renderExamPacing(data) {
     if (data.is_rest_day) {
       targetSub.textContent = data.rest_day_reason || 'Eingeplanter Ruhetag';
     } else {
+      const totalCardsStr = (data.total_curriculum_cards || 8729).toLocaleString('de-CH');
+      const remCardsStr = (data.remaining_curriculum_cards || 0).toLocaleString('de-CH');
       if (data.cumulative_backlog > 0) {
         targetSub.textContent = `Basis ${data.base_daily_quota || 90} + ${data.backlog_spread_per_day || 1}/Tag (${data.cumulative_backlog} Karten Rückstand über ${data.learning_days_remaining} Lerntage verteilt)`;
       } else {
@@ -1895,8 +1900,9 @@ async function handleQuickAddCards(delta) {
 }
 
 async function handleMarkAllTargetDone() {
-  if (!currentPacingData) return;
-  const target = currentPacingData.daily_target_cards;
+  const target = (state.currentCurriculumData && state.currentCurriculumData.target_cards != null)
+    ? state.currentCurriculumData.target_cards
+    : (currentPacingData ? currentPacingData.daily_target_cards : 95);
   await savePacingProgress(target, `Tagesziel von ${target} Karten als erledigt markiert!`);
 }
 
@@ -2533,13 +2539,17 @@ async function loadCurriculumToday(forceRefresh = false) {
     if (cachedStr) {
       const cachedData = JSON.parse(cachedStr);
       if (cachedData && !cachedData.error && Array.isArray(cachedData.topic_slots) && cachedData.target_cards !== undefined) {
+        state.currentCurriculumData = cachedData;
         renderCurriculumToday(cachedData);
+        updateMissionKpiStrip();
         hadCachedRender = true;
       } else {
         localStorage.removeItem(cacheKey);
       }
     } else if (dateStr === '2026-09-14') {
+      state.currentCurriculumData = DAY1_FALLBACK_ASSIGNMENT;
       renderCurriculumToday(DAY1_FALLBACK_ASSIGNMENT);
+      updateMissionKpiStrip();
       hadCachedRender = true;
     }
   } catch (e) {
@@ -2566,10 +2576,12 @@ async function loadCurriculumToday(forceRefresh = false) {
 
     const data = await res.json();
     if (data && !data.error && Array.isArray(data.topic_slots) && data.target_cards !== undefined) {
+      state.currentCurriculumData = data;
       try {
         localStorage.setItem(cacheKey, JSON.stringify(data));
       } catch (e) {}
       renderCurriculumToday(data);
+      updateMissionKpiStrip();
       if (forceRefresh) showToast('Lernauftrag erfolgreich aktualisiert');
     }
   } catch (err) {
@@ -6028,7 +6040,7 @@ function renderScienceRhythm(data) {
               </span>
             `).join('')}
             <span style="font-size: 11px; padding: 0.18rem 0.55rem; background: rgba(56, 139, 253, 0.12); border: 1px solid rgba(56, 139, 253, 0.3); color: #58a6ff; border-radius: 4px; font-weight: 700;">
-              Exakt ${b.target_cards || 101} Karten HEUTE
+              Exakt ${b.target_cards || 95} Karten HEUTE
             </span>
           </div>
           <div style="margin-top: 0.35rem; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
@@ -6077,7 +6089,7 @@ function renderScienceRhythm(data) {
               ⏹️ Ton beenden
             </button>
             <span style="font-size: 10.5px; padding: 0.18rem 0.5rem; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); border-radius: 4px;">
-              ${isPostponed ? 'Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `Bereitet ${b.tomorrow_cards || 101} Anki-Karten für morgen vor`}
+              ${isPostponed ? 'Neuro-optimal eingetaktet: 14:00 Uhr nach der Mensa' : `Bereitet ${b.tomorrow_cards || 95} Anki-Karten für morgen vor`}
             </span>
           </div>
         ` : ''}

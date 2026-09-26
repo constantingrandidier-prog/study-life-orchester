@@ -1818,6 +1818,7 @@ def _sync_active_day_assignment(
         package_cards = sum(s["cards_to_learn"] for s in new_slots)
         day["target_cards"] = package_cards
         day["adjusted_target_cards"] = package_cards
+        adj_target = package_cards
 
     day["topic_slots"] = new_slots
     clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
@@ -1859,13 +1860,13 @@ def _sync_active_day_assignment(
                 leftover_note.append(f"{s['tomorrow_remaining_cards']}× {s.get('clean_title') or s['short_title']} (Abschluss)")
 
         tom_slot_names = [f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in tom_slots]
-        all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{adj_target} Karten"
+        all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{tomorrow_day.get('target_cards', day['target_cards'])} Karten"
 
         tom_lec_title = primary_tom.get("display_title_with_date") or primary_tom.get("clean_title") or primary_tom.get("short_title") or "Morgige Vorlesung"
         tomorrow_preview = {
             "date": next_date.strftime("%Y-%m-%d"),
             "day_of_week": GERMAN_WEEKDAYS.get(next_date.weekday(), "Morgen"),
-            "target_cards": tomorrow_day.get("target_cards", adj_target),
+            "target_cards": tomorrow_day.get("target_cards", day["target_cards"]),
             "topics_summary": all_tom_topics,
             "primary_lecture_title": tom_lec_title,
             "primary_lecture_date": primary_tom.get("lecture_date_formatted"),
@@ -1894,9 +1895,10 @@ def _sync_active_day_assignment(
 
     day["tomorrow_preview"] = tomorrow_preview
     if tomorrow_preview:
-        day["synergy_headline"] = f"Vormittag: {adj_target} Anki-Karten heute ({clean_topics}) • Nachmittag: Vorlesung für MORGEN sichten"
+        eff_target = day["target_cards"]
+        day["synergy_headline"] = f"Vormittag: {eff_target} Anki-Karten heute ({clean_topics}) • Nachmittag: Vorlesung für MORGEN sichten"
         day["recommended_study_sequence"] = [
-            f"1. Vormittags-Enkodieren: {adj_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
+            f"1. Vormittags-Enkodieren: {eff_target} neue Karten ({clean_topics}) im Elvanse-Peak ohne kognitive Reibung durcharbeiten",
             f"2. Nachmittags-Priming für MORGEN: {tomorrow_preview['primary_lecture_title']} auf {tomorrow_preview['primary_speed_factor']}x sichten ({tomorrow_preview['primary_lecturer']})",
             f"3. Quervernetzung: {new_slots[0].get('cross_links', ['Klinische Integration vertiefen'])[0] if new_slots and new_slots[0].get('cross_links') else 'Klinische Integration vertiefen'}"
         ]

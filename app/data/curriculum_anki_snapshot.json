@@ -226,7 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 50,
     "learning_cards": 0,
-    "avg_card_chars": 224.4,
+    "avg_card_chars": 224.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 240.6,
+    "avg_card_chars": 243.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,10 +278,10 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 25,
+    "new_cards": 4,
     "mastered_cards": 107,
     "learning_cards": 0,
-    "avg_card_chars": 435.0,
+    "avg_card_chars": 437.2,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -567,7 +567,7 @@
     "new_cards": 23,
     "mastered_cards": 39,
     "learning_cards": 0,
-    "avg_card_chars": 489.5,
+    "avg_card_chars": 492.4,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -578,7 +578,7 @@
     "new_cards": 0,
     "mastered_cards": 52,
     "learning_cards": 0,
-    "avg_card_chars": 435.1,
+    "avg_card_chars": 440.1,
     "is_completed": true,
     "is_in_progress": false
   },

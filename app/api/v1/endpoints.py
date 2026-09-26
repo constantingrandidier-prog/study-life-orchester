@@ -1269,7 +1269,7 @@ def get_daily_rhythm_endpoint(
     
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     curr_assign = get_daily_curriculum_assignment(t_date)
-    new_target = curr_assign.get("adjusted_target_cards", 101)
+    new_target = curr_assign.get("adjusted_target_cards", 95)
 
     rem_list = [b.strip() for b in removed_blocks.split(",") if b.strip()] if isinstance(removed_blocks, str) and removed_blocks else None
     order_list = [b.strip() for b in custom_order.split(",") if b.strip()] if isinstance(custom_order, str) and custom_order else None

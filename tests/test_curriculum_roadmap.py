@@ -384,4 +384,43 @@ def test_swap_updates_previous_day_tomorrow_preview():
     reset_curriculum_schedule_overrides()
 
 
+def test_daily_target_cards_cross_component_harmony():
+    """Verify that daily target cards match identically across exam pacing, curriculum assignment, synergy headline, and daily rhythm."""
+    from app.services.exam_pacing import calculate_exam_pacing
+    from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
+    from app.services.daily_rhythm_service import generate_daily_science_rhythm
+
+    test_dates = [
+        date(2026, 9, 14),
+        date(2026, 9, 15),
+        date(2026, 9, 16),
+        date(2026, 9, 17),
+    ]
+
+    for t_date in test_dates:
+        pacing = calculate_exam_pacing(target_date=t_date, user_id="student")
+        curr = get_daily_curriculum_assignment(target_date=t_date, user_id="student")
+        rhythm = generate_daily_science_rhythm(target_date=t_date)
+
+        p_target = pacing["daily_target_cards"]
+        c_target = curr["target_cards"]
+        c_adj = curr["adjusted_target_cards"]
+        slot_sum = sum(s["cards_to_learn"] for s in curr["topic_slots"])
+
+        new_block = next((b for b in rhythm["blocks"] if b["id"] == "block_new_cards"), None)
+        r_target = new_block["target_cards"] if new_block else None
+
+        # All four components must have the exact same target count
+        assert p_target == c_target, f"Pacing ({p_target}) != Curriculum ({c_target}) on {t_date}"
+        assert c_adj == c_target, f"Adjusted ({c_adj}) != Curriculum ({c_target}) on {t_date}"
+        assert slot_sum == c_target, f"Topic slots sum ({slot_sum}) != Curriculum ({c_target}) on {t_date}"
+        if r_target is not None:
+            assert r_target == c_target, f"Rhythm Block 2 ({r_target}) != Curriculum ({c_target}) on {t_date}"
+
+        # Synergy headline must reflect the exact card count
+        synergy = curr.get("synergy_headline") or ""
+        assert f"{c_target} Anki" in synergy or f"{c_target} neue" in synergy or f"{c_target} Karten" in synergy
+
+
+
 

@@ -86,7 +86,7 @@ def generate_daily_science_rhythm(
     target_date: Optional[date] = None,
     events: Optional[List[CalendarEvent]] = None,
     cards_due_today: int = 100,
-    new_cards_target: int = 100,
+    new_cards_target: int = 95,
     start_time_str: str = "08:30",
     lunch_duration_mins: int = 75,
     include_lecture: bool = True,
@@ -173,7 +173,7 @@ def generate_daily_science_rhythm(
             curriculum_assignment = None
 
     if curriculum_assignment:
-        new_cards_target = curriculum_assignment.get("adjusted_target_cards", new_cards_target or 101)
+        new_cards_target = curriculum_assignment.get("adjusted_target_cards", new_cards_target or 95)
         today_slots = curriculum_assignment.get("topic_slots", [])
         slot_summary = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in today_slots) if today_slots else f"{new_cards_target} neue Karten"
         tomorrow_data = curriculum_assignment.get("tomorrow_preview") or {}
@@ -558,7 +558,7 @@ def generate_daily_science_rhythm(
         tom_title = tomorrow_data.get("primary_lecture_title") or "Vorlesung für MORGEN"
         tom_lec = tomorrow_data.get("primary_lecturer") or "Dozententeam"
         tom_date = tomorrow_data.get("primary_lecture_date")
-        tom_cards = tomorrow_data.get("target_cards", 101)
+        tom_cards = tomorrow_data.get("target_cards", 95)
         tom_topics = tomorrow_data.get("topics_summary") or "morgige Anki-Karten"
         tom_speed = tomorrow_data.get("primary_speed_factor", 1.2)
         tom_timecode = tomorrow_data.get("primary_timecode_guidance")

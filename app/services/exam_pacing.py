@@ -156,6 +156,17 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
         daily_target_cards = 0
     else:
         daily_target_cards = math.ceil(remaining_curriculum_cards_for_quota / max(1, learning_days_remaining))
+        try:
+            from app.services.curriculum_roadmap_service import generate_curriculum_roadmap
+            rdm = generate_curriculum_roadmap(target_date=curr_date, sync_active_day=False, user_id=user_id)
+            date_iso = curr_date.isoformat()
+            for d in rdm.get("schedule", []):
+                if d.get("date") == date_iso:
+                    if not d.get("is_rest_day") and d.get("target_cards", 0) > 0:
+                        daily_target_cards = d["target_cards"]
+                    break
+        except Exception:
+            pass
 
     # Detailed backlog explanation
     if is_rest_day:
@@ -173,7 +184,7 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
             f"({daily_target_cards} statt Basis {base_daily_quota} neue Karten heute)."
         )
     else:
-        backlog_explanation = f"Standard-Tagesziel von {base_daily_quota} neuen Karten (Voll im Soll)."
+        backlog_explanation = f"Standard-Tagesziel von {daily_target_cards} neuen Karten (Voll im Soll)."
 
     # All-time card progress metrics (including today)
     total_cards_completed = get_total_cards_completed_all_time(user_id=user_id)

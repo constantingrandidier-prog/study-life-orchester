@@ -4593,8 +4593,17 @@ async function loadScienceRhythm(targetDate) {
   });
 
   const removedKey = `sl_rhythm_removed_${dateStr}`;
-  const localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
+  let localRemoved = JSON.parse(localStorage.getItem(removedKey) || '[]');
+  // Safety: Core morning repetition block must never be filtered out by legacy keys
+  if (localRemoved.includes('block_morning_reps')) {
+    localRemoved = localRemoved.filter(id => id !== 'block_morning_reps');
+    localStorage.setItem(removedKey, JSON.stringify(localRemoved));
+  }
   const remQuery = localRemoved.length ? `&removed_blocks=${encodeURIComponent(localRemoved.join(','))}` : '';
+
+  // Clean legacy split blocks so blocks are never fragmented or deleted
+  const splitKey = `sl_rhythm_split_${dateStr}`;
+  localStorage.removeItem(splitKey);
 
   const orderKey = `sl_rhythm_order_${dateStr}`;
   const localOrder = JSON.parse(localStorage.getItem(orderKey) || '[]');
@@ -4686,20 +4695,7 @@ async function loadScienceRhythm(targetDate) {
       recalculateRhythmTimes(data);
     }
 
-    // Check if client has local split blocks for this date
-    const splitKey = `sl_rhythm_split_${dateStr}`;
-    const localSplit = JSON.parse(localStorage.getItem(splitKey) || '{}');
-    if (data.split_blocks && typeof data.split_blocks === 'object') {
-      for (const [k, v] of Object.entries(data.split_blocks)) {
-        if (!localSplit[k]) localSplit[k] = v;
-      }
-    }
-    for (const [parentId, splitData] of Object.entries(localSplit)) {
-      const idx = data.blocks.findIndex(b => b.id === parentId);
-      if (idx >= 0 && splitData && Array.isArray(splitData.sub_blocks)) {
-        data.blocks.splice(idx, 1, ...splitData.sub_blocks);
-      }
-    }
+    // Legacy split blocks replaced with clean block interruptions
 
     // Check if client has local inserted blocks for this date
     const insertKey = `sl_rhythm_inserted_${dateStr}`;

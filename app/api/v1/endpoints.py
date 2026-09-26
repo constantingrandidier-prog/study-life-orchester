@@ -1271,8 +1271,8 @@ def get_daily_rhythm_endpoint(
     curr_assign = get_daily_curriculum_assignment(t_date)
     new_target = curr_assign.get("adjusted_target_cards", 101)
 
-    rem_list = [b.strip() for b in removed_blocks.split(",") if b.strip()] if removed_blocks else None
-    order_list = [b.strip() for b in custom_order.split(",") if b.strip()] if custom_order else None
+    rem_list = [b.strip() for b in removed_blocks.split(",") if b.strip()] if isinstance(removed_blocks, str) and removed_blocks else None
+    order_list = [b.strip() for b in custom_order.split(",") if b.strip()] if isinstance(custom_order, str) and custom_order else None
 
     return generate_daily_science_rhythm(
         target_date=t_date,

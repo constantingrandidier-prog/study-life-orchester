@@ -249,11 +249,6 @@ def generate_daily_science_rhythm(
 
         dur = b_dict.get("duration_minutes", 30)
 
-        # DYNAMIC TIME ADJUSTMENT: if today, incomplete, and current time has passed
-        # the scheduled end of this block, shift start to current time (plan catches up live)
-        if is_today_date and not is_done and not b_dict.get("is_break") and now_minutes > cur_m:
-            cur_m = now_minutes
-
         s_time = _minutes_to_time(cur_m)
         e_time = _minutes_to_time(cur_m + dur)
         b_dict["start_time"] = s_time

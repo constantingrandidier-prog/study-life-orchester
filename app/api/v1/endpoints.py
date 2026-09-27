@@ -1216,6 +1216,29 @@ def get_anki_workload_forecast_endpoint(days_ahead: int = Query(14, ge=1, le=30)
 def post_anki_workload_sync_endpoint(payload: dict):
     """Cache workload forecast state on cloud."""
     cache_workload_forecast(payload)
+from app.services.anki_deck_stats import (
+    get_detailed_deck_stats,
+    cache_deck_stats,
+)
+
+@router.get(
+    "/anki/deck-retention-stats",
+    summary="Get detailed retention and performance stats for all Anki decks",
+    description="Returns retention rates, total reviews, recency, and card breakdown grouped by major topics and small subdecks.",
+)
+def get_anki_deck_retention_stats_endpoint():
+    """Retrieve detailed retention, reviews count, and recency for all Anki decks."""
+    return get_detailed_deck_stats()
+
+
+@router.post(
+    "/anki/deck-retention-sync",
+    summary="Receive deck retention stats sync payload from laptop background watcher",
+    description="Syncs pre-calculated deck statistics to cloud server.",
+)
+def post_anki_deck_retention_sync_endpoint(payload: dict):
+    """Cache deck stats state on cloud."""
+    cache_deck_stats(payload)
     return {"status": "ok", "cached": True}
 
 

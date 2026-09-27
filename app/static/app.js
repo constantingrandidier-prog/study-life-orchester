@@ -6311,6 +6311,8 @@ function switchAppPage(pageId) {
     }
   } else if (pageId === 'page-roadmap') {
     renderPageRoadmap();
+  } else if (pageId === 'page-deck-stats') {
+    loadDeckStats();
   } else if (pageId === 'page-analytics') {
     renderPageAnalytics();
   } else if (pageId === 'page-setup') {
@@ -7071,7 +7073,382 @@ document.addEventListener('DOMContentLoaded', () => {
   // Automatischer Anki-Sync via AnkiConnect (alle 90s)
   // Hält iPad-Reviews aktuell und verschiebt Plan bei Overrun
   setTimeout(startAnkiAutoSync, 3000); // 3s Verzögerung damit App erst lädt
+
+  // Lade Deck-Statistiken im Hintergrund für Badges
+  setTimeout(loadDeckStats, 1000);
 });
+
+// ============================================================================
+// ANKI DECK-RADAR & DETAILED RETENTION STATS
+// ============================================================================
+
+let currentDeckStatsFilter = 'all';
+let currentDeckStatsSort = 'retention_asc';
+let currentDeckStatsSearch = '';
+
+async function loadDeckStats(forceRefresh = false) {
+  const container = document.getElementById('deckStatsTopicsContainer');
+  if (forceRefresh && container) {
+    container.innerHTML = '<div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px;">⏳ Aktualisiere Deck-Statistiken aus Anki...</div>';
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/anki/deck-retention-stats`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    state.deckStatsData = data;
+
+    // Update Global KPIs
+    const sm = data.summary || {};
+    const retEl = document.getElementById('kpiDeckOverallRetention');
+    const revsEl = document.getElementById('kpiDeckTotalReviews');
+    const weakEl = document.getElementById('kpiDeckWeakCount');
+    const negEl = document.getElementById('kpiDeckNeglectedCount');
+
+    if (retEl) retEl.textContent = (sm.overall_retention != null ? sm.overall_retention : 0) + '%';
+    if (revsEl) revsEl.textContent = (sm.total_reviews || 0).toLocaleString('de-CH');
+    if (weakEl) weakEl.textContent = sm.weak_decks_count || 0;
+    if (negEl) negEl.textContent = sm.neglected_decks_count || 0;
+
+    // Update badges on navigation tabs
+    const weakBadge = document.getElementById('navBadgeWeakDecks');
+    const sideWeakBadge = document.getElementById('sideBadgeWeakDecks');
+    const wCount = sm.weak_decks_count || 0;
+    if (weakBadge) {
+      weakBadge.textContent = wCount;
+      weakBadge.style.display = wCount > 0 ? 'inline-block' : 'none';
+    }
+    if (sideWeakBadge) {
+      sideWeakBadge.textContent = `${wCount} Schwach`;
+      sideWeakBadge.style.display = wCount > 0 ? 'inline-block' : 'none';
+    }
+
+    // Update Filter Pill Counts
+    updateDeckStatsFilterCounts(data);
+
+    // Render Topics & Decks
+    renderDeckStats();
+
+    if (forceRefresh && typeof showToast === 'function') {
+      showToast('Deck-Statistiken erfolgreich aktualisiert');
+    }
+  } catch (err) {
+    console.warn('Error loading deck stats:', err);
+    if (container) {
+      container.innerHTML = '<div style="text-align: center; padding: 2.5rem 1rem; color: #ff7b72; font-size: 13px;">Fehler beim Laden der Deck-Statistiken. Bitte versuche es erneut.</div>';
+    }
+  }
+}
+
+function updateDeckStatsFilterCounts(data) {
+  const all = data.all_decks || [];
+  const cntAll = all.length;
+  const cntWeak = all.filter(d => d.status === 'weak').length;
+  const cntNeglected = all.filter(d => d.is_neglected).length;
+  const cntRecent = all.filter(d => d.last_reviewed_days_ago !== null && d.last_reviewed_days_ago <= 2.0).length;
+  const cntStrong = all.filter(d => d.status === 'strong').length;
+  const cntUnreviewed = all.filter(d => d.status === 'unreviewed').length;
+
+  const elAll = document.getElementById('cntFilterAll');
+  const elWeak = document.getElementById('cntFilterWeak');
+  const elNeglected = document.getElementById('cntFilterNeglected');
+  const elRecent = document.getElementById('cntFilterRecent');
+  const elStrong = document.getElementById('cntFilterStrong');
+  const elUnreviewed = document.getElementById('cntFilterUnreviewed');
+
+  if (elAll) elAll.textContent = cntAll;
+  if (elWeak) elWeak.textContent = cntWeak;
+  if (elNeglected) elNeglected.textContent = cntNeglected;
+  if (elRecent) elRecent.textContent = cntRecent;
+  if (elStrong) elStrong.textContent = cntStrong;
+  if (elUnreviewed) elUnreviewed.textContent = cntUnreviewed;
+}
+
+function setDeckStatsFilter(filterKey, btn) {
+  currentDeckStatsFilter = filterKey;
+  const filterBtns = document.querySelectorAll('#deckStatsFilterPills .advisor-filter-btn');
+  filterBtns.forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDeckStats();
+}
+
+function handleFilterDeckStats(query) {
+  currentDeckStatsSearch = (query || '').toLowerCase().trim();
+  renderDeckStats();
+}
+
+function handleSortDeckStats(sortKey) {
+  currentDeckStatsSort = sortKey;
+  renderDeckStats();
+}
+
+function getTopicEmoji(topicName) {
+  const n = (topicName || '').toLowerCase();
+  if (n.includes('blut')) return '🩸';
+  if (n.includes('herz')) return '🫀';
+  if (n.includes('atmung') || n.includes('lunge')) return '🫁';
+  if (n.includes('verdauung') || n.includes('magen')) return '🍽️';
+  if (n.includes('endokrin') || n.includes('hormon')) return '🧬';
+  if (n.includes('stoffwechsel')) return '🔬';
+  if (n.includes('vorklinik') || n.includes('biochemie')) return '📚';
+  return '📁';
+}
+
+function renderDeckStats() {
+  const container = document.getElementById('deckStatsTopicsContainer');
+  if (!container) return;
+
+  const data = state.deckStatsData;
+  if (!data || !data.topics || data.topics.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px;">Keine Decks gefunden.</div>';
+    return;
+  }
+
+  const query = currentDeckStatsSearch;
+  const filter = currentDeckStatsFilter;
+  const sort = currentDeckStatsSort;
+
+  let renderedTopicsHtml = '';
+  let totalMatchingDecks = 0;
+
+  data.topics.forEach((t, tIdx) => {
+    let matchingDecks = t.subdecks.filter(d => {
+      if (query) {
+        const fullTxt = `${d.anki_name} ${d.parent_topic}`.toLowerCase();
+        if (!fullTxt.includes(query)) return false;
+      }
+
+      if (filter === 'weak') return d.status === 'weak';
+      if (filter === 'neglected') return d.is_neglected;
+      if (filter === 'recent') return d.last_reviewed_days_ago !== null && d.last_reviewed_days_ago <= 2.0;
+      if (filter === 'strong') return d.status === 'strong';
+      if (filter === 'unreviewed') return d.status === 'unreviewed';
+
+      return true;
+    });
+
+    if (matchingDecks.length === 0) return;
+    totalMatchingDecks += matchingDecks.length;
+
+    matchingDecks.sort((a, b) => {
+      if (sort === 'retention_asc') {
+        const ra = a.retention_rate !== null ? a.retention_rate : 999;
+        const rb = b.retention_rate !== null ? b.retention_rate : 999;
+        return ra - rb || b.total_reviews - a.total_reviews;
+      }
+      if (sort === 'retention_desc') {
+        const ra = a.retention_rate !== null ? a.retention_rate : -1;
+        const rb = b.retention_rate !== null ? b.retention_rate : -1;
+        return rb - ra || b.total_reviews - a.total_reviews;
+      }
+      if (sort === 'neglected') {
+        const da = a.last_reviewed_days_ago !== null ? a.last_reviewed_days_ago : -1;
+        const db = b.last_reviewed_days_ago !== null ? b.last_reviewed_days_ago : -1;
+        return db - da;
+      }
+      if (sort === 'reviews_desc') {
+        return b.total_reviews - a.total_reviews;
+      }
+      if (sort === 'cards_desc') {
+        return b.card_count - a.card_count;
+      }
+      if (sort === 'name_asc') {
+        return a.anki_name.localeCompare(b.anki_name);
+      }
+      return 0;
+    });
+
+    const topicEmoji = getTopicEmoji(t.topic_name);
+    const retVal = t.retention_rate !== null ? `${t.retention_rate}%` : 'Keine Reviews';
+    let retColor = '#8b949e';
+    if (t.retention_rate !== null) {
+      retColor = t.retention_rate >= 80 ? '#3fb950' : (t.retention_rate >= 70 ? '#d29922' : '#ff7b72');
+    }
+
+    const topicId = `deckTopicCard_${tIdx}`;
+    const isOpen = (t.total_reviews > 0) || query.length > 0;
+
+    const tot = Math.max(1, t.total_cards);
+    const maturePct = Math.round((t.mature_cards / tot) * 100);
+    const youngPct = Math.round((t.young_cards / tot) * 100);
+    const learningPct = Math.round((t.learning_cards / tot) * 100);
+    const newPct = Math.max(0, 100 - maturePct - youngPct - learningPct);
+
+    const subdecksHtml = matchingDecks.map(sd => {
+      let sdRetColor = '#8b949e';
+      let sdRetLabel = 'Unberührt';
+      let sdRetBarPct = 0;
+      if (sd.retention_rate !== null) {
+        sdRetBarPct = Math.min(100, Math.max(0, sd.retention_rate));
+        if (sd.retention_rate >= 85) {
+          sdRetColor = '#3fb950';
+          sdRetLabel = `${sd.retention_rate}% Stark`;
+        } else if (sd.retention_rate >= 70) {
+          sdRetColor = '#d29922';
+          sdRetLabel = `${sd.retention_rate}% Mittel`;
+        } else {
+          sdRetColor = '#ff7b72';
+          sdRetLabel = `${sd.retention_rate}% Schwach`;
+        }
+      }
+
+      let recencyBadgeStyle = 'background: rgba(255,255,255,0.05); color: var(--text-muted);';
+      if (sd.last_reviewed_days_ago !== null) {
+        if (sd.last_reviewed_days_ago <= 1.0) {
+          recencyBadgeStyle = 'background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3);';
+        } else if (sd.last_reviewed_days_ago <= 3.0) {
+          recencyBadgeStyle = 'background: rgba(88,166,255,0.15); color: #58a6ff; border: 1px solid rgba(88,166,255,0.3);';
+        } else if (sd.last_reviewed_days_ago > 7.0) {
+          recencyBadgeStyle = 'background: rgba(210,153,34,0.15); color: #d29922; border: 1px solid rgba(210,153,34,0.3);';
+        }
+      }
+
+      const escapedName = escapeHtml(sd.anki_name);
+      return `
+        <div class="deck-row-item">
+          <div class="deck-row-name-wrap">
+            <div class="deck-row-name" title="${escapedName}">
+              ${escapedName}
+            </div>
+            <div class="deck-row-meta">
+              <span>📚 <strong>${sd.card_count}</strong> Karten (${sd.mature_count} Mature • ${sd.young_count} Jung • ${sd.learning_count} Lern • ${sd.new_count} Neu)</span>
+              <span>•</span>
+              <span>⚡ Ease: <strong>${Math.round(sd.avg_ease_factor)}%</strong></span>
+              ${sd.due_count > 0 ? `<span style="color: #58a6ff;">• <strong>${sd.due_count} fällig</strong></span>` : ''}
+            </div>
+          </div>
+
+          <div class="deck-row-metrics">
+            <div class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${sdRetColor}44; color: ${sdRetColor};" title="${sd.total_reviews} Reviews: ${sd.pass_count} Gut/Einfach, ${sd.fail_count} Nochmal">
+              ${sdRetLabel}
+              <div class="retention-bar-wrap">
+                <div class="retention-bar-fill" style="width: ${sdRetBarPct}%; background: ${sdRetColor};"></div>
+              </div>
+            </div>
+
+            <div class="deck-stat-badge" style="background: rgba(88,166,255,0.1); color: #79c0ff; border: 1px solid rgba(88,166,255,0.25);" title="Wie oft gelernt">
+              🔄 ${sd.total_reviews} Revs ${sd.avg_reviews_per_card > 0 ? `(Ø ${sd.avg_reviews_per_card}x)` : ''}
+            </div>
+
+            <div class="deck-stat-badge" style="${recencyBadgeStyle}" title="Zuletzt wiederholt">
+              ⏱️ ${sd.last_reviewed_text}
+            </div>
+
+            <button type="button" class="btn-copy-deck-query" onclick="copyDeckQueryToClipboard('${escapedName}')" title="Anki-Suchstring kopieren (für Suchfeld oder gefilterten Stapel)">
+              📋 Anki-Filter
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    renderedTopicsHtml += `
+      <div class="deck-topic-card ${isOpen ? 'open' : ''}" id="${topicId}">
+        <div class="deck-topic-header" onclick="toggleDeckTopicAccordion('${topicId}')">
+          <div class="deck-topic-title-wrap">
+            <span class="deck-topic-chevron">▼</span>
+            <span style="font-size: 18px;">${topicEmoji}</span>
+            <div>
+              <div class="deck-topic-title">${escapeHtml(t.topic_name)}</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                ${matchingDecks.length} Decks ${matchingDecks.length !== t.decks_count ? `(von ${t.decks_count})` : ''} • ${t.total_cards.toLocaleString('de-CH')} Karten • ${t.total_reviews.toLocaleString('de-CH')} Durchgänge
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-topic-stats-row">
+            <span class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${retColor}55; color: ${retColor};">
+              Ø Retention: <strong>${retVal}</strong>
+            </span>
+
+            <span class="deck-stat-badge" style="background: rgba(255,255,255,0.03); color: var(--text-muted); border: 1px solid var(--border-subtle);">
+              ⏱️ ${t.last_reviewed_text}
+            </span>
+
+            ${t.weak_decks_count > 0 ? `
+              <span class="deck-stat-badge" style="background: rgba(248,81,73,0.15); color: #ff7b72; border: 1px solid rgba(248,81,73,0.35);">
+                ⚠️ ${t.weak_decks_count} Schwachstelle${t.weak_decks_count > 1 ? 'n' : ''}
+              </span>
+            ` : ''}
+
+            ${t.neglected_decks_count > 0 ? `
+              <span class="deck-stat-badge" style="background: rgba(210,153,34,0.15); color: #e3b341; border: 1px solid rgba(210,153,34,0.35);">
+                ⏳ ${t.neglected_decks_count} &gt;7d
+              </span>
+            ` : ''}
+          </div>
+        </div>
+
+        <div style="height: 4px; width: 100%; display: flex; background: #21262d;">
+          <div style="width: ${maturePct}%; background: #3fb950;" title="Mature (${maturePct}%)"></div>
+          <div style="width: ${youngPct}%; background: #58a6ff;" title="Jung (${youngPct}%)"></div>
+          <div style="width: ${learningPct}%; background: #d29922;" title="Lernphase (${learningPct}%)"></div>
+          <div style="width: ${newPct}%; background: #30363d;" title="Neu (${newPct}%)"></div>
+        </div>
+
+        <div class="deck-topic-body">
+          ${subdecksHtml}
+        </div>
+      </div>
+    `;
+  });
+
+  if (totalMatchingDecks === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px;">
+        Keine Decks gefunden, die zu den aktuellen Filterkriterien passen.
+        <br><br>
+        <button type="button" class="btn-secondary" onclick="setDeckStatsFilter('all'); document.getElementById('deckStatsSearchInput').value=''; currentDeckStatsSearch='';" style="font-size: 11.5px; padding: 0.35rem 0.75rem;">
+          Filter zurücksetzen
+        </button>
+      </div>
+    `;
+  } else {
+    container.innerHTML = renderedTopicsHtml;
+  }
+}
+
+function toggleDeckTopicAccordion(topicId) {
+  const el = document.getElementById(topicId);
+  if (el) {
+    el.classList.toggle('open');
+  }
+}
+
+function toggleAllDeckTopics(expandAll) {
+  const cards = document.querySelectorAll('.deck-topic-card');
+  cards.forEach(c => {
+    if (expandAll) c.classList.add('open');
+    else c.classList.remove('open');
+  });
+}
+
+function copyDeckQueryToClipboard(ankiName) {
+  const query = `deck:"${ankiName}"`;
+  if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(query).then(() => {
+      if (typeof showToast === 'function') {
+        showToast(`Anki-Suchstring kopiert: ${query}`);
+      }
+    }).catch(() => {
+      fallbackCopyDeckQuery(query);
+    });
+  } else {
+    fallbackCopyDeckQuery(query);
+  }
+}
+
+function fallbackCopyDeckQuery(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  if (typeof showToast === 'function') {
+    showToast(`Anki-Suchstring kopiert: ${text}`);
+  }
+}
 
 // Window exports
 window.switchAppPage = switchAppPage;
@@ -7099,6 +7476,15 @@ window.selectSwapTargetDay = selectSwapTargetDay;
 window.handleSwapTargetChanged = handleSwapTargetChanged;
 window.confirmExecuteSwapDays = confirmExecuteSwapDays;
 window.openSwapForCurrentViewDay = openSwapForCurrentViewDay;
+window.loadDeckStats = loadDeckStats;
+window.renderDeckStats = renderDeckStats;
+window.setDeckStatsFilter = setDeckStatsFilter;
+window.handleFilterDeckStats = handleFilterDeckStats;
+window.handleSortDeckStats = handleSortDeckStats;
+window.toggleDeckTopicAccordion = toggleDeckTopicAccordion;
+window.toggleAllDeckTopics = toggleAllDeckTopics;
+window.copyDeckQueryToClipboard = copyDeckQueryToClipboard;
+
 
 
 

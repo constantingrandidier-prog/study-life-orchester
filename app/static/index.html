@@ -81,10 +81,18 @@
             </div>
           </button>
 
+          <button type="button" class="side-menu-item" data-page="page-deck-stats" onclick="navigateToPage('page-deck-stats')">
+            <div class="side-item-text">
+              <span class="side-item-title">Deck-Radar &amp; Stats</span>
+              <span class="side-item-desc">Retention, Reviews &amp; Anki-Namen</span>
+            </div>
+            <span class="side-item-badge" id="sideBadgeWeakDecks" style="display: none; background: rgba(248,81,73,0.25); color: #ff7b72;">11 Schwach</span>
+          </button>
+
           <button type="button" class="side-menu-item" data-page="page-analytics" onclick="navigateToPage('page-analytics')">
             <div class="side-item-text">
-              <span class="side-item-title">Anki & Retention</span>
-              <span class="side-item-desc">Workload & Triage</span>
+              <span class="side-item-title">Workload &amp; Triage</span>
+              <span class="side-item-desc">Fälligkeiten &amp; Notfall-Filter</span>
             </div>
             <span class="side-item-badge" id="sideBadgeDue">102 fällig</span>
           </button>
@@ -166,8 +174,12 @@
       <button type="button" class="nav-tab-btn" id="navBtnRoadmap" data-page="page-roadmap" onclick="switchAppPage('page-roadmap')">
         <span>Roadmap</span>
       </button>
+      <button type="button" class="nav-tab-btn" id="navBtnDeckStats" data-page="page-deck-stats" onclick="switchAppPage('page-deck-stats')">
+        <span>Deck-Radar</span>
+        <span class="nav-tab-badge" id="navBadgeWeakDecks" style="display: none; background: rgba(248,81,73,0.3); color: #ff7b72;">11</span>
+      </button>
       <button type="button" class="nav-tab-btn" id="navBtnAnalytics" data-page="page-analytics" onclick="switchAppPage('page-analytics')">
-        <span>Anki</span>
+        <span>Triage &amp; Workload</span>
         <span class="nav-tab-badge" id="navBadgeDue" style="display: none;">102</span>
       </button>
       <button type="button" class="nav-tab-btn" id="navBtnSetup" data-page="page-setup" onclick="switchAppPage('page-setup')">
@@ -798,7 +810,128 @@
   </div>
 
   <!-- =========================================================================
-       PAGE 4: ANKI & RETENTION RADAR
+       PAGE 4: ANKI DECK-RADAR & RETENTION STATISTIKEN
+       ========================================================================= -->
+  <div id="page-deck-stats" class="app-page">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 1.25rem 1.75rem 2.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      
+      <!-- Top Deck Stats Header Card -->
+      <div class="advisor-hero-search-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+          <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+              <span>🗂️ Anki Deck-Radar &amp; Retention-Statistiken</span>
+            </h2>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              Erfolgsquoten, Reviews und Recency aller Decks – geordnet nach Grossen Überthemen &amp; 1:1 Original Anki-Namen.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button type="button" class="btn-primary" onclick="loadDeckStats(true)" style="font-size: 11.5px; padding: 0.35rem 0.75rem;">
+              🔄 Statistiken aktualisieren
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Global KPI Cards -->
+        <div class="mission-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <!-- 1. Ø Retention -->
+          <div class="mission-kpi-box" style="padding: 0.85rem 1rem; border-left: 3px solid #3fb950;">
+            <span class="mission-kpi-label">Ø Retention (Erfolgsquote)</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="kpiDeckOverallRetention" style="font-size: 1.6rem; color: #3fb950;">--%</span>
+            </div>
+            <span class="mission-kpi-sub" id="kpiDeckOverallSub" style="font-size: 11px;">Pass-Quote aller Wiederholungen</span>
+          </div>
+
+          <!-- 2. Reviews Total -->
+          <div class="mission-kpi-box" style="padding: 0.85rem 1rem; border-left: 3px solid #58a6ff;">
+            <span class="mission-kpi-label">Gesamte Reviews</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="kpiDeckTotalReviews" style="font-size: 1.6rem; color: #58a6ff;">--</span>
+              <span class="mission-kpi-unit">Durchgänge</span>
+            </div>
+            <span class="mission-kpi-sub" id="kpiDeckTotalReviewsSub" style="font-size: 11px;">über alle Themenblöcke</span>
+          </div>
+
+          <!-- 3. Schwachstellen -->
+          <div class="mission-kpi-box" style="padding: 0.85rem 1rem; border-left: 3px solid #f85149;">
+            <span class="mission-kpi-label">Schwachstellen (&lt;70% Retention)</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="kpiDeckWeakCount" style="font-size: 1.6rem; color: #ff7b72;">--</span>
+              <span class="mission-kpi-unit">Decks</span>
+            </div>
+            <span class="mission-kpi-sub" style="font-size: 11px; color: #ff7b72;">Erhöhte Lapse-Rate / Nachholbedarf</span>
+          </div>
+
+          <!-- 4. Lange nicht gelernt -->
+          <div class="mission-kpi-box" style="padding: 0.85rem 1rem; border-left: 3px solid #d29922;">
+            <span class="mission-kpi-label">Lange nicht wiederholt (&gt;7 Tage)</span>
+            <div class="mission-kpi-value-row" style="margin-top: 2px;">
+              <span class="mission-kpi-val" id="kpiDeckNeglectedCount" style="font-size: 1.6rem; color: #e3b341;">--</span>
+              <span class="mission-kpi-unit">Decks</span>
+            </div>
+            <span class="mission-kpi-sub" style="font-size: 11px; color: #d29922;">Vergessenskurve beachten</span>
+          </div>
+        </div>
+
+        <!-- Filter & Control Toolbar -->
+        <div style="background: rgba(22, 27, 34, 0.85); padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 0.75rem;">
+          
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <!-- Real-time Search -->
+            <div class="deck-search-wrap" style="flex: 1; min-width: 260px;">
+              <input type="text" id="deckStatsSearchInput" placeholder="Deck suchen (z. B. Manatschal, Blut, Mundhöhle, Loffing)..." oninput="handleFilterDeckStats(this.value)">
+            </div>
+
+            <!-- Sort By Select -->
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <label for="deckStatsSortSelect" style="font-size: 11px; color: var(--text-muted); font-weight: 600; white-space: nowrap;">Sortierung:</label>
+              <select id="deckStatsSortSelect" onchange="handleSortDeckStats(this.value)" style="background: var(--bg-surface); border: 1px solid var(--border-medium); color: var(--text-main); font-size: 11.5px; padding: 0.3rem 0.5rem; border-radius: 4px; cursor: pointer;">
+                <option value="retention_asc">⚠️ Niedrigste Retention (Schwachstellen zuerst)</option>
+                <option value="neglected">⏳ Am längsten nicht wiederholt (Älteste zuerst)</option>
+                <option value="retention_desc">🟢 Höchste Retention zuerst</option>
+                <option value="reviews_desc">🔄 Meiste Reviews zuerst</option>
+                <option value="cards_desc">📚 Meiste Karten zuerst</option>
+                <option value="name_asc">🔤 Alphabetisch (A–Z)</option>
+              </select>
+            </div>
+
+            <!-- Expand/Collapse All Buttons -->
+            <div style="display: flex; gap: 0.35rem;">
+              <button type="button" class="btn-secondary" onclick="toggleAllDeckTopics(true)" style="font-size: 11px; padding: 0.3rem 0.6rem;">Alle aufklappen</button>
+              <button type="button" class="btn-secondary" onclick="toggleAllDeckTopics(false)" style="font-size: 11px; padding: 0.3rem 0.6rem;">Alle zuklappen</button>
+            </div>
+          </div>
+
+          <!-- Filter Pills -->
+          <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;" id="deckStatsFilterPills">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 0.2rem;">Schnellfilter:</span>
+            <button type="button" class="advisor-filter-btn active" data-filter="all" onclick="setDeckStatsFilter('all', this)">Alle Decks (<span id="cntFilterAll">0</span>)</button>
+            <button type="button" class="advisor-filter-btn" data-filter="weak" onclick="setDeckStatsFilter('weak', this)">⚠️ Schwachstellen (<span id="cntFilterWeak">0</span>)</button>
+            <button type="button" class="advisor-filter-btn" data-filter="neglected" onclick="setDeckStatsFilter('neglected', this)">⏳ &gt;7 Tage her (<span id="cntFilterNeglected">0</span>)</button>
+            <button type="button" class="advisor-filter-btn" data-filter="recent" onclick="setDeckStatsFilter('recent', this)">🔥 Kürzlich aktiv (&le;2 Tage) (<span id="cntFilterRecent">0</span>)</button>
+            <button type="button" class="advisor-filter-btn" data-filter="strong" onclick="setDeckStatsFilter('strong', this)">🟢 Stark (&ge;80%) (<span id="cntFilterStrong">0</span>)</button>
+            <button type="button" class="advisor-filter-btn" data-filter="unreviewed" onclick="setDeckStatsFilter('unreviewed', this)">🆕 Unberührt (<span id="cntFilterUnreviewed">0</span>)</button>
+          </div>
+
+        </div>
+
+        <!-- Topics & Decks Accordion Container -->
+        <div id="deckStatsTopicsContainer" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem;">
+          <!-- Dynamically populated via loadDeckStats() -->
+          <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px;">
+            Lade Anki-Deckstatistiken...
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PAGE 5: ANKI & RETENTION RADAR
        ========================================================================= -->
   <div id="page-analytics" class="app-page">
     <div style="max-width: 1400px; margin: 0 auto; padding: 1.25rem 1.75rem 2.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
@@ -1690,6 +1823,10 @@
     <button type="button" class="bottom-nav-item" data-page="page-roadmap" onclick="switchAppPage('page-roadmap')">
       <span class="bottom-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg></span>
       <span class="bottom-nav-label">Roadmap</span>
+    </button>
+    <button type="button" class="bottom-nav-item" data-page="page-deck-stats" onclick="switchAppPage('page-deck-stats')">
+      <span class="bottom-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span>
+      <span class="bottom-nav-label">Decks</span>
     </button>
     <button type="button" class="bottom-nav-item" data-page="page-analytics" onclick="switchAppPage('page-analytics')">
       <span class="bottom-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>

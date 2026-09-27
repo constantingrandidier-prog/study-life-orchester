@@ -114,6 +114,15 @@ def sync_now():
     except Exception as e:
         print("Weakness sync error:", e, flush=True)
 
+    # 6. Sync comprehensive deck stats & retention
+    try:
+        from app.services.anki_deck_stats import get_detailed_deck_stats
+        deck_stats = get_detailed_deck_stats()
+        for base in targets:
+            post_json(f"{base}/deck-retention-sync", deck_stats)
+    except Exception as e:
+        print("Deck stats sync error:", e, flush=True)
+
     revs = state.get("today_reviewed_count", 0)
     opened = state.get("new_cards_opened_count", revs)
     learning = state.get("new_cards_in_learning_count", 0)

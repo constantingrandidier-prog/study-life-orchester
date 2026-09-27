@@ -14,6 +14,9 @@ from typing import Any, Dict, List, Optional
 from app.db.repository import get_db_connection
 from app.services.anki_desktop_sync import find_local_anki_collection
 
+# Current semester start: 2026-09-14 00:00:00 (ignore previous semester logs and card resets)
+SEMESTER_START_TS = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+
 
 def clean_display_name(raw_name: str) -> str:
     """Converts internal Anki unit separator to ' :: ' and fixes UTF-8 glitches."""
@@ -158,13 +161,14 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             sum(case when c.queue = 2 and c.ivl >= 21 then 1 else 0 end) as mature_cards,
             sum(case when c.queue = 2 and c.ivl < 21 then 1 else 0 end) as young_cards,
             sum(case when c.queue = 1 or (c.queue = 2 and c.due <= ?) then 1 else 0 end) as due_cards,
-            avg(case when c.factor > 0 then c.factor else null end) as avg_factor
+            avg(case when c.factor > 0 then c.factor else null end) as avg_factor,
+            sum(case when c.queue in (1, 2, 3) or c.reps > 0 then 1 else 0 end) as cards_studied
         FROM cards c
         GROUP BY c.did
     """
     card_data = {r[0]: r for r in cur.execute(card_sql, (today_anki_day,)).fetchall()}
 
-    # 3. Revlog stats per deck
+    # 3. Revlog stats per deck (scoped strictly to active semester, excluding card resets type=4)
     rev_sql = """
         SELECT 
             c.did,
@@ -177,9 +181,10 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             sum(r.time) as total_time_ms
         FROM revlog r
         JOIN cards c ON r.cid = c.id
+        WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
         GROUP BY c.did
     """
-    rev_data = {r[0]: r for r in cur.execute(rev_sql).fetchall()}
+    rev_data = {r[0]: r for r in cur.execute(rev_sql, (SEMESTER_START_TS,)).fetchall()}
     conn.close()
 
     # 4. Build individual deck list
@@ -196,9 +201,9 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
 
         # Ignore empty root container decks that contain 0 cards directly and 0 reviews
         total_cards = c_row[1] if c_row else 0
-        total_revs = r_row[1] if r_row else 0
+        cards_studied = c_row[8] if c_row else 0
 
-        if total_cards == 0 and total_revs == 0:
+        if total_cards == 0 and cards_studied == 0:
             continue
 
         new_c = c_row[2] if c_row else 0
@@ -209,58 +214,77 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         raw_factor = c_row[7] if c_row else None
         avg_ease = round(raw_factor / 10.0, 1) if raw_factor else 250.0
 
-        passes = r_row[2] if r_row else 0
-        fails = r_row[3] if r_row else 0
-        rep_revs = r_row[4] if r_row else 0
-        rep_passes = r_row[5] if r_row else 0
-        last_rev_ts = r_row[6] if r_row else None
-        time_ms = r_row[7] if r_row else 0
-
-        retention_rate = round((passes / total_revs * 100), 1) if total_revs > 0 else None
-        rep_retention_rate = round((rep_passes / rep_revs * 100), 1) if rep_revs > 0 else retention_rate
-
-        days_ago = round((now_ms - last_rev_ts) / (86400 * 1000), 1) if last_rev_ts else None
-        revs_per_card = round(total_revs / max(1, total_cards), 1) if total_cards > 0 else 0.0
-        time_minutes = round(time_ms / 1000 / 60, 1)
-
-        # Classification
-        if total_revs == 0:
+        # Strictly check if this deck has been studied by the student this semester:
+        if cards_studied == 0 or not r_row or r_row[1] == 0:
+            total_revs = 0
+            passes = 0
+            fails = 0
+            rep_revs = 0
+            rep_passes = 0
+            last_rev_ts = None
+            time_ms = 0
+            retention_rate = None
+            rep_retention_rate = None
+            days_ago = None
+            recency_str = "Noch nicht gestartet"
             status = "unreviewed"
-            status_label = "Unberührt"
+            status_label = "Noch nicht gelernt"
             badge_color = "#8b949e"
-        elif total_revs >= 10 and retention_rate < 70.0:
-            status = "weak"
-            status_label = "Schwachstelle"
-            badge_color = "#f85149"
-            weak_decks_count += 1
-        elif total_revs >= 10 and retention_rate >= 85.0:
-            status = "strong"
-            status_label = "Sehr gut"
-            badge_color = "#3fb950"
+            is_neglected = False
+            revs_per_card = 0.0
+            time_minutes = 0.0
         else:
-            status = "medium"
-            status_label = "Mittel"
-            badge_color = "#d29922"
+            total_revs = r_row[1]
+            passes = r_row[2]
+            fails = r_row[3]
+            rep_revs = r_row[4]
+            rep_passes = r_row[5]
+            last_rev_ts = r_row[6]
+            time_ms = r_row[7]
 
-        is_neglected = (days_ago is not None and days_ago > 7.0 and total_revs > 0)
-        if is_neglected:
-            neglected_decks_count += 1
+            retention_rate = round((passes / total_revs * 100), 1) if total_revs > 0 else None
+            rep_retention_rate = round((rep_passes / rep_revs * 100), 1) if rep_revs > 0 else retention_rate
+
+            days_ago = round((now_ms - last_rev_ts) / (86400 * 1000), 1) if last_rev_ts else None
+            revs_per_card = round(total_revs / max(1, total_cards), 1) if total_cards > 0 else 0.0
+            time_minutes = round(time_ms / 1000 / 60, 1)
+
+            # Friendly recency text
+            if days_ago is None:
+                recency_str = "Noch nicht gestartet"
+            elif days_ago < 0.05:
+                recency_str = "Gerade eben"
+            elif days_ago < 1.0:
+                recency_str = "Heute"
+            elif days_ago < 2.0:
+                recency_str = "Gestern"
+            elif days_ago < 7.0:
+                recency_str = f"vor {int(days_ago)} Tagen"
+            else:
+                recency_str = f"vor {int(days_ago)} Tagen"
+
+            # Classification: only decks with real study activity (> 15 reviews)
+            if total_revs >= 15 and retention_rate < 70.0:
+                status = "weak"
+                status_label = "Schwachstelle"
+                badge_color = "#f85149"
+                weak_decks_count += 1
+            elif total_revs >= 15 and retention_rate >= 85.0:
+                status = "strong"
+                status_label = "Sehr gut"
+                badge_color = "#3fb950"
+            else:
+                status = "medium"
+                status_label = "Solide"
+                badge_color = "#d29922"
+
+            is_neglected = (days_ago is not None and days_ago > 7.0 and total_revs > 0)
+            if is_neglected:
+                neglected_decks_count += 1
 
         total_reviews_all += total_revs
         total_passes_all += passes
         total_cards_all += total_cards
-
-        # Friendly recency text
-        if days_ago is None:
-            recency_str = "Noch nie"
-        elif days_ago < 1.0:
-            recency_str = "Heute"
-        elif days_ago < 2.0:
-            recency_str = "Gestern"
-        elif days_ago < 7.0:
-            recency_str = f"vor {int(days_ago)} Tagen"
-        else:
-            recency_str = f"vor {int(days_ago)} Tagen"
 
         all_decks.append({
             "deck_id": did,
@@ -333,10 +357,13 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
 
     topics_list = []
     for pt, t in topics_dict.items():
-        ret_rate = round((t["total_passes"] / t["total_reviews"] * 100), 1) if t["total_reviews"] > 0 else None
+        total_revs_topic = t["total_reviews"]
+        ret_rate = round((t["total_passes"] / total_revs_topic * 100), 1) if total_revs_topic > 0 else None
         
-        if t["min_days_ago"] is None:
-            last_text = "Noch nie gelernt"
+        if t["min_days_ago"] is None or total_revs_topic == 0:
+            last_text = "Noch nicht gestartet"
+        elif t["min_days_ago"] < 0.05:
+            last_text = "Gerade eben"
         elif t["min_days_ago"] < 1.0:
             last_text = "Heute aktiv"
         elif t["min_days_ago"] < 2.0:

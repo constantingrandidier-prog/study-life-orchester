@@ -59,14 +59,16 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = None) 
     """
     cards_stats = cur.execute(sql_cards, (current_day, next_day)).fetchall()
 
+    sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
     sql_revs = """
     SELECT c.did, MAX(r.id) as last_ms, COUNT(*) as total_revs,
            SUM(CASE WHEN r.ease = 1 THEN 1 ELSE 0 END) as fail_count
     FROM revlog r
     JOIN cards c ON r.cid = c.id
+    WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
     GROUP BY c.did
     """
-    rev_stats = {r[0]: {"last_ms": r[1], "revs": r[2], "fails": r[3]} for r in cur.execute(sql_revs).fetchall()}
+    rev_stats = {r[0]: {"last_ms": r[1], "revs": r[2], "fails": r[3]} for r in cur.execute(sql_revs, (sem_start_ts,)).fetchall()}
 
     topics = []
     total_due_today = 0

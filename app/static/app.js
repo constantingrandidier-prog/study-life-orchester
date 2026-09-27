@@ -7284,7 +7284,7 @@ function renderDeckStats() {
     });
 
     const topicEmoji = getTopicEmoji(t.topic_name);
-    const retVal = t.retention_rate !== null ? `${t.retention_rate}%` : 'Keine Reviews';
+    const retVal = t.retention_rate !== null ? `${t.retention_rate}%` : 'Noch nicht gelernt';
     let retColor = '#8b949e';
     if (t.retention_rate !== null) {
       retColor = t.retention_rate >= 80 ? '#3fb950' : (t.retention_rate >= 70 ? '#d29922' : '#ff7b72');
@@ -7301,7 +7301,7 @@ function renderDeckStats() {
 
     const subdecksHtml = matchingDecks.map(sd => {
       let sdRetColor = '#8b949e';
-      let sdRetLabel = 'Unberührt';
+      let sdRetLabel = 'Noch nicht gelernt';
       let sdRetBarPct = 0;
       if (sd.retention_rate !== null) {
         sdRetBarPct = Math.min(100, Math.max(0, sd.retention_rate));

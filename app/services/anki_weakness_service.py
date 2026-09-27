@@ -147,15 +147,18 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
 
     # 3. Cards by deck — only queue=2 cards due today + all queue=1
     deck_card_stats = {}
-    for did, total, due in cur.execute("""
+    sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+
+    for did, total, due, studied in cur.execute("""
         SELECT did, count(id),
-               sum(case when queue=1 OR (queue=2 AND due <= ?) then 1 else 0 end)
+               sum(case when queue=1 OR (queue=2 AND due <= ?) then 1 else 0 end),
+               sum(case when queue in (1, 2, 3) or reps > 0 then 1 else 0 end)
         FROM cards
         GROUP BY did
     """, (today_anki_day,)).fetchall():
-        deck_card_stats[did] = {"total": total, "due": due or 0}
+        deck_card_stats[did] = {"total": total, "due": due or 0, "studied": studied or 0}
 
-    # 4. Review history by deck (Revlog)
+    # 4. Review history by deck (Revlog) strictly for active semester
     now = datetime.now()
     deck_rev_stats = {}
     revlog_rows = cur.execute("""
@@ -166,10 +169,13 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
                max(r.id) as last_rev_ms
         FROM revlog r
         JOIN cards c ON r.cid = c.id
+        WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
         GROUP BY c.did
-    """).fetchall()
+    """, (sem_start_ts,)).fetchall()
 
     for did, rev_count, avg_ease, again_count, last_rev_ms in revlog_rows:
+        if deck_card_stats.get(did, {}).get("studied", 0) == 0:
+            continue
         fail_rate = round((again_count / rev_count) * 100, 1) if rev_count > 0 else 0.0
         last_dt = datetime.fromtimestamp(last_rev_ms / 1000) if last_rev_ms else None
         days_ago = (now - last_dt).days if last_dt else 999

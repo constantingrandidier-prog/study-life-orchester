@@ -84,3 +84,22 @@ def test_post_deck_stats_sync_endpoint():
     assert cached is not None
     assert cached["summary"]["total_decks"] == 1
     assert cached["summary"]["overall_retention"] == 85.0
+
+def test_untouched_decks_and_topics_have_zero_reviews_and_no_retention():
+    stats = get_detailed_deck_stats()
+    if not stats.get("available"):
+        pytest.skip("Local Anki DB not available")
+    
+    # Verify that TB Atmung has 0 reviews and retention None because the student hasn't touched it yet
+    atmung = next((t for t in stats["topics"] if "atmung" in t["topic_name"].lower()), None)
+    if atmung:
+        assert atmung["total_reviews"] == 0, f"Expected 0 reviews in Atmung, got {atmung['total_reviews']}"
+        assert atmung["retention_rate"] is None
+        assert atmung["last_reviewed_text"] == "Noch nicht gestartet"
+        assert atmung["weak_decks_count"] == 0
+        assert atmung["neglected_decks_count"] == 0
+        for sd in atmung["subdecks"]:
+            assert sd["status"] == "unreviewed"
+            assert sd["retention_rate"] is None
+            assert sd["total_reviews"] == 0
+

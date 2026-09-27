@@ -3994,11 +3994,24 @@ async function loadAnkiDesktopStatus(showFeedback = false) {
 
 async function syncAnkiDesktopNow(showFeedback = true) {
   const btn = document.getElementById('btnRefreshCurriculum') || document.querySelector('#ankiDesktopLiveCard button');
-  if (btn) btn.textContent = '⏳ Lade...';
+  if (btn) btn.textContent = '⏳ Synchronisiere...';
+  
+  // If local server is reachable, trigger immediate AnkiConnect sync with AnkiWeb
+  try {
+    const triggerUrl = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+      ? `${API_BASE}/anki/connect-sync`
+      : 'http://127.0.0.1:8000/api/v1/schedule/anki/connect-sync';
+    await fetch(triggerUrl, {
+      method: 'POST',
+      signal: (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(2500) : undefined
+    }).catch(() => {});
+  } catch (e) {}
+
   await loadAnkiDesktopStatus(showFeedback);
   if (typeof loadCurriculumToday === 'function') await loadCurriculumToday(false);
   if (typeof loadExamPacing === 'function') await loadExamPacing();
   if (typeof loadWorkloadForecast === 'function') await loadWorkloadForecast(false);
+  if (typeof loadDeckStats === 'function') await loadDeckStats(false);
   if (btn) btn.textContent = 'Aktualisieren';
 }
 

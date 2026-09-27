@@ -4,6 +4,7 @@ import time
 import json
 import ssl
 import urllib.request
+import subprocess
 from pathlib import Path
 
 # Redirect stdout and stderr for pythonw.exe (windowless mode on Windows)
@@ -37,6 +38,7 @@ SSL_CTX = ssl.create_default_context()
 SSL_CTX.check_hostname = False
 SSL_CTX.verify_mode = ssl.CERT_NONE
 
+
 def is_local_server_running() -> bool:
     try:
         import socket
@@ -44,6 +46,89 @@ def is_local_server_running() -> bool:
             return True
     except Exception:
         return False
+
+
+def is_ankiconnect_alive(timeout: float = 0.8) -> bool:
+    """Check if Anki Desktop is running with the AnkiConnect add-on responding."""
+    try:
+        req = urllib.request.Request(
+            "http://127.0.0.1:8765",
+            data=json.dumps({"action": "version", "version": 6}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return data.get("result") is not None
+    except Exception:
+        return False
+
+
+def ensure_anki_desktop_running():
+    """Ensure Anki Desktop is running. If closed, launch minimized without stealing focus."""
+    if is_ankiconnect_alive():
+        return True
+
+    # Check if anki.exe process is already active
+    try:
+        res = subprocess.run(["tasklist", "/FI", "IMAGENAME eq anki.exe"], capture_output=True, text=True)
+        if "anki.exe" in res.stdout.lower():
+            return True
+    except Exception:
+        pass
+
+    # Search for anki.exe in standard installation paths
+    anki_paths = [
+        Path(os.path.expandvars(r"%LOCALAPPDATA%\Programs\Anki\anki.exe")),
+        Path(os.path.expandvars(r"%PROGRAMFILES%\Anki\anki.exe")),
+        Path(os.path.expandvars(r"%PROGRAMFILES(X86)%\Anki\anki.exe")),
+    ]
+    for p in anki_paths:
+        if p.exists():
+            try:
+                si = subprocess.STARTUPINFO()
+                si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                si.wShowWindow = 7  # SW_SHOWMINNOACTIVE (minimized in taskbar, absolutely no focus stealing)
+                DETACHED = 0x00000008
+                subprocess.Popen([str(p)], startupinfo=si, creationflags=DETACHED)
+                log_msg("[AUTO-START] Anki Desktop im Hintergrund minimiert gestartet.")
+                return True
+            except Exception as e:
+                log_msg(f"[AUTO-START] Fehler beim Starten von Anki: {e}")
+                return False
+    return False
+
+
+def trigger_anki_desktop_sync(timeout: float = 25.0) -> bool:
+    """
+    Trigger Anki Desktop's native synchronization with AnkiWeb via AnkiConnect.
+    This pulls the latest card reviews/progress from the iPad/AnkiWeb down into the
+    local collection.anki2 SQLite database completely silently without any popups!
+    """
+    if not is_ankiconnect_alive():
+        ensure_anki_desktop_running()
+        time.sleep(1.0)
+        if not is_ankiconnect_alive():
+            return False
+
+    try:
+        req = urllib.request.Request(
+            "http://127.0.0.1:8765",
+            data=json.dumps({"action": "sync", "version": 6}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            if not data.get("error"):
+                log_msg("[ANKI-SYNC] Anki Desktop mit AnkiWeb synchronisiert (iPad-Reviews geladen).")
+                return True
+            else:
+                log_msg(f"[ANKI-SYNC] AnkiConnect sync warning: {data.get('error')}")
+                return False
+    except Exception as exc:
+        log_msg(f"[ANKI-SYNC] Sync note: {exc}")
+        return False
+
 
 def post_json(url: str, data_dict: dict, timeout: float = 6.0) -> bool:
     try:
@@ -59,11 +144,18 @@ def post_json(url: str, data_dict: dict, timeout: float = 6.0) -> bool:
     except Exception as e:
         return False
 
-def sync_now():
+
+def sync_now(trigger_anki_sync: bool = True):
     from datetime import date, timedelta
     targets = [RENDER_BASE]
     if is_local_server_running():
         targets.append(LOCAL_BASE)
+
+    # 0. Silently trigger Anki Desktop to sync with AnkiWeb (pulls iPad reviews down to PC!)
+    if trigger_anki_sync:
+        synced = trigger_anki_desktop_sync()
+        if synced:
+            time.sleep(0.5)  # Wait for SQLite file lock/write buffers to settle
 
     # 1. Sync all past days since semester start (ensures cumulative backlog is always 100% accurate)
     try:
@@ -77,7 +169,6 @@ def sync_now():
             curr += timedelta(days=1)
     except Exception as e:
         print("Semester history sync error:", e, flush=True)
-
 
     # 2. Sync today's state
     try:
@@ -131,6 +222,7 @@ def sync_now():
     due_tom = state.get("due_tomorrow_count", 0)
     log_msg(f"[SYNC-OK] Render synced: {due_today} Faellig heute, {revs} Neu gemeistert ({learning} in Lernphase, {opened} aufgemacht), {reps} Wiederholungen, {due_tom} morgen faellig.")
 
+
 def log_msg(msg: str):
     now_str = time.strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{now_str}] {msg}\n"
@@ -168,7 +260,7 @@ def acquire_single_instance_lock():
 
 if __name__ == "__main__":
     if "--once" in sys.argv:
-        sync_now()
+        sync_now(trigger_anki_sync=True)
     else:
         lock = acquire_single_instance_lock()
         if lock is None:
@@ -178,9 +270,9 @@ if __name__ == "__main__":
         col = find_local_anki_collection()
         last_mtime = 0
         last_periodic = 0
-        log_msg("[START] Anki Live Sync Agent running (Silent background data sync)...")
+        log_msg("[START] Anki Live Sync Agent running (Silent background AnkiWeb & Render data sync)...")
         try:
-            sync_now()
+            sync_now(trigger_anki_sync=True)
             last_periodic = time.time()
         except Exception:
             pass
@@ -198,11 +290,16 @@ if __name__ == "__main__":
                         last_mtime = m
                         file_changed = True
 
-                # Sync if database changed OR every 60 seconds periodically
-                if file_changed or (now - last_periodic >= 60):
-                    sync_now()
+                # Every 60s: trigger AnkiWeb sync (pulls iPad progress) + push metrics to cloud
+                # If local file changed outside periodic sync: push immediately without extra AnkiWeb trigger
+                if now - last_periodic >= 60:
+                    sync_now(trigger_anki_sync=True)
+                    last_periodic = now
+                    if col and col.exists():
+                        last_mtime = col.stat().st_mtime
+                elif file_changed:
+                    sync_now(trigger_anki_sync=False)
                     last_periodic = now
             except Exception as exc:
                 print(f"Sync loop note: {exc}", flush=True)
             time.sleep(2)
-

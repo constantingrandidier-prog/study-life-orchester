@@ -7064,9 +7064,19 @@ document.addEventListener('keydown', (e) => {
 // Restore previous page on startup if user refreshed while on a specific tab
 document.addEventListener('DOMContentLoaded', () => {
   try {
-    const savedPage = localStorage.getItem('study_current_page');
-    if (savedPage && savedPage !== 'page-today' && document.getElementById(savedPage)) {
-      switchAppPage(savedPage);
+    let targetPage = null;
+    if (window.location.hash) {
+      const hashName = window.location.hash.replace('#', '');
+      const candidate = 'page-' + hashName;
+      if (document.getElementById(candidate)) {
+        targetPage = candidate;
+      }
+    }
+    if (!targetPage) {
+      targetPage = localStorage.getItem('study_current_page');
+    }
+    if (targetPage && document.getElementById(targetPage)) {
+      switchAppPage(targetPage);
     }
   } catch (e) {}
 
@@ -7075,7 +7085,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(startAnkiAutoSync, 3000); // 3s Verzögerung damit App erst lädt
 
   // Lade Deck-Statistiken im Hintergrund für Badges
-  setTimeout(loadDeckStats, 1000);
+  setTimeout(loadDeckStats, 500);
 });
 
 // ============================================================================
@@ -7139,6 +7149,8 @@ async function loadDeckStats(forceRefresh = false) {
     }
   }
 }
+window._execLoadDeckStats = loadDeckStats;
+window.loadDeckStats = loadDeckStats;
 
 function updateDeckStatsFilterCounts(data) {
   const all = data.all_decks || [];

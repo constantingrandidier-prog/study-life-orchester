@@ -73,7 +73,7 @@ app.add_middleware(
 # Auth middleware — protects only '/' and '/app'
 # ---------------------------------------------------------------------------
 @app.middleware("http")
-async def auth_middleware(request: Request, call_next):
+async def auth_and_cache_middleware(request: Request, call_next):
     """
     Redirect unauthenticated *browser* requests for '/' and '/app' to /login.
     API clients (no text/html in Accept) are never redirected so that JSON
@@ -91,7 +91,12 @@ async def auth_middleware(request: Request, call_next):
             if not token or not verify_token(token):
                 return RedirectResponse(url="/login", status_code=302)
 
-    return await call_next(request)
+    response = await call_next(request)
+    if path.endswith(".js") or path.endswith(".css") or path in protected_paths:
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

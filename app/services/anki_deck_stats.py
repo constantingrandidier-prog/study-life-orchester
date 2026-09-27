@@ -108,6 +108,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
     Computes comprehensive retention and recency statistics for all decks.
     Works directly with local collection.anki2 or falls back to cached daemon state.
     """
+    is_cloud = (os.environ.get("RENDER") is not None or os.environ.get("APPDATA") is None)
+    if is_cloud:
+        cached = get_cached_deck_stats()
+        if cached:
+            return cached
+
     target_path = Path(col_path) if col_path else find_local_anki_collection()
     now_ms = time.time() * 1000
 

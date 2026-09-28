@@ -172,11 +172,20 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     if is_rest_day:
         backlog_explanation = f"Eingeplanter Ruhetag: {rest_day_reason}"
     elif cumulative_backlog > 0:
-        backlog_explanation = (
-            f"⚖️ +{backlog_spread_per_day} Karten/Tag aus kumulativem Rückstand "
-            f"({cumulative_backlog} Karten Rückstand aus {elapsed_learning_days} Tagen über {learning_days_remaining} verbleibende Lerntage verteilt: "
-            f"Basis {base_daily_quota} + {backlog_spread_per_day} = {daily_target_cards} neue Karten heute)."
-        )
+        theoretical_target = base_daily_quota + backlog_spread_per_day
+        if daily_target_cards != theoretical_target:
+            backlog_explanation = (
+                f"⚖️ +{backlog_spread_per_day} Karten/Tag Richtwert aus kumulativem Rückstand "
+                f"({cumulative_backlog} Karten Rückstand aus {elapsed_learning_days} Tagen über {learning_days_remaining} verbleibende Lerntage verteilt: "
+                f"Soll-Schnitt {base_daily_quota} + {backlog_spread_per_day} = {theoretical_target} Karten/Tag; "
+                f"heute didaktisch zugeteilt: {daily_target_cards} neue Karten aus ganzen Vorlesungs-Decks)."
+            )
+        else:
+            backlog_explanation = (
+                f"⚖️ +{backlog_spread_per_day} Karten/Tag aus kumulativem Rückstand "
+                f"({cumulative_backlog} Karten Rückstand aus {elapsed_learning_days} Tagen über {learning_days_remaining} verbleibende Lerntage verteilt: "
+                f"Basis {base_daily_quota} + {backlog_spread_per_day} = {daily_target_cards} neue Karten heute)."
+            )
     elif cards_completed_prior > expected_cards_prior:
         surplus = cards_completed_prior - expected_cards_prior
         backlog_explanation = (

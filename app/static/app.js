@@ -7111,12 +7111,22 @@ let currentDeckStatsSearch = '';
 
 async function loadDeckStats(forceRefresh = false) {
   const container = document.getElementById('deckStatsTopicsContainer');
-  if (forceRefresh && container) {
-    container.innerHTML = '<div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px;">⏳ Aktualisiere Deck-Statistiken aus Anki...</div>';
+  const btn = document.getElementById('btnRefreshDeckStats');
+  const updatedEl = document.getElementById('deckStatsLastUpdated');
+
+  if (forceRefresh) {
+    if (btn) {
+      btn.disabled = true;
+      btn.style.opacity = '0.75';
+      btn.textContent = '⏳ Aktualisiere...';
+    }
+    if (container && (!state.deckStatsData || !state.deckStatsData.topics)) {
+      container.innerHTML = '<div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px;">⏳ Aktualisiere Deck-Statistiken aus Anki...</div>';
+    }
   }
 
   try {
-    const res = await fetch(`${API_BASE}/anki/deck-retention-stats`);
+    const res = await fetch(`${API_BASE}/anki/deck-retention-stats?_ts=${Date.now()}`);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     state.deckStatsData = data;
@@ -7132,6 +7142,22 @@ async function loadDeckStats(forceRefresh = false) {
     if (revsEl) revsEl.textContent = (sm.total_reviews || 0).toLocaleString('de-CH');
     if (weakEl) weakEl.textContent = sm.weak_decks_count || 0;
     if (negEl) negEl.textContent = sm.neglected_decks_count || 0;
+
+    // Display formatted last updated timestamp
+    if (updatedEl) {
+      if (sm.updated_at) {
+        try {
+          const d = new Date(sm.updated_at);
+          const timeStr = d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+          const dateStr = d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit' });
+          updatedEl.textContent = `Stand: ${dateStr}. ${timeStr}`;
+        } catch (_) {
+          updatedEl.textContent = 'Stand: gerade eben';
+        }
+      } else {
+        updatedEl.textContent = 'Stand: gerade eben';
+      }
+    }
 
     // Update badges on navigation tabs
     const weakBadge = document.getElementById('navBadgeWeakDecks');
@@ -7157,8 +7183,17 @@ async function loadDeckStats(forceRefresh = false) {
     }
   } catch (err) {
     console.warn('Error loading deck stats:', err);
-    if (container) {
+    if (container && (!state.deckStatsData || !state.deckStatsData.topics)) {
       container.innerHTML = '<div style="text-align: center; padding: 2.5rem 1rem; color: #ff7b72; font-size: 13px;">Fehler beim Laden der Deck-Statistiken. Bitte versuche es erneut.</div>';
+    }
+    if (forceRefresh && typeof showToast === 'function') {
+      showToast('Fehler beim Laden der Deck-Statistiken', 'error');
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = '🔄 Statistiken aktualisieren';
     }
   }
 }

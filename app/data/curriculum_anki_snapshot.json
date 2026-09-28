@@ -222,11 +222,11 @@
   {
     "deck_id": 1789378222984,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
-    "card_count": 50,
+    "card_count": 52,
     "new_cards": 0,
-    "mastered_cards": 50,
+    "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 224.7,
+    "avg_card_chars": 226.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 243.7,
+    "avg_card_chars": 246.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,12 +278,12 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 25,
-    "mastered_cards": 107,
+    "new_cards": 0,
+    "mastered_cards": 110,
     "learning_cards": 0,
-    "avg_card_chars": 437.2,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 437.6,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222990,
@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 265.8,
+    "avg_card_chars": 265.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -564,12 +564,12 @@
     "deck_id": 1789378223017,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
     "card_count": 64,
-    "new_cards": 23,
-    "mastered_cards": 39,
+    "new_cards": 0,
+    "mastered_cards": 62,
     "learning_cards": 0,
-    "avg_card_chars": 492.4,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 492.8,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223018,
@@ -578,7 +578,7 @@
     "new_cards": 0,
     "mastered_cards": 52,
     "learning_cards": 0,
-    "avg_card_chars": 440.1,
+    "avg_card_chars": 441.4,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -589,7 +589,7 @@
     "new_cards": 0,
     "mastered_cards": 68,
     "learning_cards": 0,
-    "avg_card_chars": 331.4,
+    "avg_card_chars": 331.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -619,12 +619,12 @@
     "deck_id": 1789378223022,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
     "card_count": 97,
-    "new_cards": 97,
-    "mastered_cards": 0,
+    "new_cards": 96,
+    "mastered_cards": 1,
     "learning_cards": 0,
     "avg_card_chars": 337.9,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223023,
@@ -751,12 +751,12 @@
     "deck_id": 1789378223034,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
     "card_count": 36,
-    "new_cards": 36,
-    "mastered_cards": 0,
+    "new_cards": 5,
+    "mastered_cards": 31,
     "learning_cards": 0,
-    "avg_card_chars": 258.4,
+    "avg_card_chars": 266.8,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223035,
@@ -817,12 +817,12 @@
     "deck_id": 1789378223040,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
     "card_count": 120,
-    "new_cards": 1,
-    "mastered_cards": 119,
+    "new_cards": 0,
+    "mastered_cards": 120,
     "learning_cards": 0,
-    "avg_card_chars": 270.6,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 270.9,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223041,
@@ -982,12 +982,12 @@
     "deck_id": 1789378223056,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
     "card_count": 48,
-    "new_cards": 38,
-    "mastered_cards": 10,
+    "new_cards": 0,
+    "mastered_cards": 48,
     "learning_cards": 0,
-    "avg_card_chars": 403.6,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 408.5,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223057,

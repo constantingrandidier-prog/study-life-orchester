@@ -6263,7 +6263,20 @@ setInterval(() => {
   loadAnkiDesktopStatus(false);
   loadWorkloadForecast(false);
   loadAnkiWeaknesses();
+  if (typeof loadDeckStats === 'function') loadDeckStats(false);
 }, 30000);
+
+// Auto-sync immediately when user returns to this browser window/tab
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    loadAnkiDesktopStatus(false);
+    if (typeof loadDeckStats === 'function') loadDeckStats(false);
+  }
+});
+window.addEventListener('focus', () => {
+  loadAnkiDesktopStatus(false);
+  if (typeof loadDeckStats === 'function') loadDeckStats(false);
+});
 
 // Run on page load (support immediate execution if DOM is already ready)
 if (document.readyState === 'loading') {
@@ -7143,19 +7156,19 @@ async function loadDeckStats(forceRefresh = false) {
     if (weakEl) weakEl.textContent = sm.weak_decks_count || 0;
     if (negEl) negEl.textContent = sm.neglected_decks_count || 0;
 
-    // Display formatted last updated timestamp
+    // Display formatted last updated timestamp with clear live indicator
     if (updatedEl) {
       if (sm.updated_at) {
         try {
           const d = new Date(sm.updated_at);
           const timeStr = d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
           const dateStr = d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit' });
-          updatedEl.textContent = `Stand: ${dateStr}. ${timeStr}`;
+          updatedEl.innerHTML = `<span style="color: #3fb950; font-weight: 600;">● Live synchron</span> · Stand: ${dateStr}. ${timeStr}`;
         } catch (_) {
-          updatedEl.textContent = 'Stand: gerade eben';
+          updatedEl.innerHTML = '<span style="color: #3fb950; font-weight: 600;">● Live synchron</span> · Stand: gerade eben';
         }
       } else {
-        updatedEl.textContent = 'Stand: gerade eben';
+        updatedEl.innerHTML = '<span style="color: #3fb950; font-weight: 600;">● Live synchron</span> · Stand: gerade eben';
       }
     }
 

@@ -130,7 +130,7 @@ def trigger_anki_desktop_sync(timeout: float = 25.0) -> bool:
         return False
 
 
-def post_json(url: str, data_dict: dict, timeout: float = 6.0) -> bool:
+def post_json(url: str, data_dict: dict, timeout: float = 25.0) -> bool:
     try:
         payload = json.dumps(data_dict).encode("utf-8")
         req = urllib.request.Request(
@@ -210,9 +210,11 @@ def sync_now(trigger_anki_sync: bool = True):
         from app.services.anki_deck_stats import get_detailed_deck_stats
         deck_stats = get_detailed_deck_stats()
         for base in targets:
-            post_json(f"{base}/deck-retention-sync", deck_stats)
+            ok = post_json(f"{base}/deck-retention-sync", deck_stats, timeout=25.0)
+            if not ok:
+                log_msg(f"[WARN] deck-retention-sync failed to {base}")
     except Exception as e:
-        print("Deck stats sync error:", e, flush=True)
+        log_msg(f"[ERROR] Deck stats sync error: {e}")
 
     revs = state.get("today_reviewed_count", 0)
     opened = state.get("new_cards_opened_count", revs)

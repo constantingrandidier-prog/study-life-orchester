@@ -6041,8 +6041,8 @@ function renderScienceRhythm(data) {
         <!-- Detail Strip for Mandatory Attendance Events -->
         ${isMandatory && b.description ? `
           <div style="margin-top: 0.3rem; padding: 0.35rem 0.65rem; border-radius: 4px; background: rgba(163, 113, 247, 0.08); border-left: 2px solid #a371f7; font-size: 11px; color: #e2d9f3; line-height: 1.4;">
-            <strong>Offizielle Kurs-Information:</strong> ${escapeHtml(b.description.split('\n')[0])}
-            ${b.location ? `<div style="margin-top: 0.15rem; color: #bca4ea; font-size: 10.5px;">Kursort: ${escapeHtml(b.location)}</div>` : ''}
+            <div><strong>Offizielle Kurs-Information:</strong> ${escapeHtml(b.description.replace(/\r?\n\s*\r?\n/g, ' · '))}</div>
+            ${b.location ? `<div style="margin-top: 0.2rem; color: #bca4ea; font-size: 10.5px;">Kursort: ${escapeHtml(b.location)}</div>` : ''}
           </div>
         ` : ''}
 

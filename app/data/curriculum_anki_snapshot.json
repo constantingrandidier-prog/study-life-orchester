@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 246.5,
+    "avg_card_chars": 247.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -279,9 +279,9 @@
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
     "new_cards": 0,
-    "mastered_cards": 110,
+    "mastered_cards": 115,
     "learning_cards": 0,
-    "avg_card_chars": 437.6,
+    "avg_card_chars": 437.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 265.9,
+    "avg_card_chars": 266.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -410,11 +410,11 @@
     "deck_id": 1789378223001,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
     "card_count": 54,
-    "new_cards": 54,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 54,
     "learning_cards": 0,
-    "avg_card_chars": 275.9,
-    "is_completed": false,
+    "avg_card_chars": 298.8,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -567,7 +567,7 @@
     "new_cards": 0,
     "mastered_cards": 62,
     "learning_cards": 0,
-    "avg_card_chars": 492.8,
+    "avg_card_chars": 495.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -589,7 +589,7 @@
     "new_cards": 0,
     "mastered_cards": 68,
     "learning_cards": 0,
-    "avg_card_chars": 331.8,
+    "avg_card_chars": 332.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -751,12 +751,12 @@
     "deck_id": 1789378223034,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
     "card_count": 36,
-    "new_cards": 5,
-    "mastered_cards": 31,
+    "new_cards": 0,
+    "mastered_cards": 36,
     "learning_cards": 0,
-    "avg_card_chars": 266.8,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 276.6,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223035,
@@ -773,12 +773,12 @@
     "deck_id": 1789378223036,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
     "card_count": 50,
-    "new_cards": 50,
-    "mastered_cards": 0,
+    "new_cards": 37,
+    "mastered_cards": 13,
     "learning_cards": 0,
-    "avg_card_chars": 307.7,
+    "avg_card_chars": 323.1,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223037,
@@ -820,7 +820,7 @@
     "new_cards": 0,
     "mastered_cards": 120,
     "learning_cards": 0,
-    "avg_card_chars": 270.9,
+    "avg_card_chars": 271.1,
     "is_completed": true,
     "is_in_progress": false
   },

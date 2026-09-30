@@ -41,8 +41,8 @@ SSL_CTX.verify_mode = ssl.CERT_NONE
 
 def is_local_server_running() -> bool:
     try:
-        import socket
-        with socket.create_connection(("127.0.0.1", 8000), timeout=0.2):
+        req = urllib.request.Request("http://127.0.0.1:8000/docs", method="HEAD")
+        with urllib.request.urlopen(req, timeout=0.3):
             return True
     except Exception:
         return False
@@ -145,7 +145,10 @@ def post_json(url: str, data_dict: dict, timeout: float = 25.0) -> bool:
         return False
 
 
+_last_history_sync_date = None
+
 def sync_now(trigger_anki_sync: bool = True):
+    global _last_history_sync_date
     from datetime import date, timedelta
     targets = [RENDER_BASE]
     if is_local_server_running():
@@ -157,18 +160,21 @@ def sync_now(trigger_anki_sync: bool = True):
         if synced:
             time.sleep(0.5)  # Wait for SQLite file lock/write buffers to settle
 
-    # 1. Sync all past days since semester start (ensures cumulative backlog is always 100% accurate)
-    try:
-        sem_start = date(2026, 9, 14)
-        curr = sem_start
-        while curr < date.today():
-            past_str = curr.isoformat()
-            past_state = read_live_anki_desktop_state(target_date_str=past_str)
-            for base in targets:
-                post_json(f"{base}/desktop-sync", past_state)
-            curr += timedelta(days=1)
-    except Exception as e:
-        print("Semester history sync error:", e, flush=True)
+    # 1. Sync all past days since semester start (once per day to keep sync fast)
+    today = date.today()
+    if _last_history_sync_date != today:
+        try:
+            sem_start = date(2026, 9, 14)
+            curr = sem_start
+            while curr < today:
+                past_str = curr.isoformat()
+                past_state = read_live_anki_desktop_state(target_date_str=past_str)
+                for base in targets:
+                    post_json(f"{base}/desktop-sync", past_state, timeout=10.0)
+                curr += timedelta(days=1)
+            _last_history_sync_date = today
+        except Exception as e:
+            print("Semester history sync error:", e, flush=True)
 
     # 2. Sync today's state
     try:

@@ -278,12 +278,12 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 14,
-    "mastered_cards": 118,
+    "new_cards": 0,
+    "mastered_cards": 122,
     "learning_cards": 0,
     "avg_card_chars": 438.2,
-    "is_completed": false,
-    "is_in_progress": true
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222990,
@@ -619,12 +619,12 @@
     "deck_id": 1789378223022,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
     "card_count": 97,
-    "new_cards": 1,
-    "mastered_cards": 96,
+    "new_cards": 0,
+    "mastered_cards": 97,
     "learning_cards": 0,
-    "avg_card_chars": 348.4,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 350.3,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223023,

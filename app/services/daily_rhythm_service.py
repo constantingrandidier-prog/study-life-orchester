@@ -276,10 +276,13 @@ def generate_daily_science_rhythm(
     if is_today_date:
         done_cards = max(0, planned_due - remaining_due)
         is_reps_completed = (remaining_due == 0 and done_cards > 0)
+        # Wenn heute alle Repetitionen erledigt sind, soll der Block nicht künstlich über 12:30 hinausragen
+        if is_reps_completed and cur_m < (12 * 60 + 30) and (cur_m + dur_reps) > (12 * 60 + 30):
+            dur_reps = max(30, (12 * 60 + 30) - cur_m)
 
         if is_reps_completed:
             reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten) - Erledigt"
-            reps_subtitle = f"Alle {planned_due} Wiederholungen erledigt! · {dur_reps}m Zeitplan eingehalten"
+            reps_subtitle = f"Alle {planned_due} Wiederholungen erledigt! · Vormittag optimal genutzt"
         elif done_cards > 0:
             reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten)"
             reps_subtitle = f"{planned_due} fällig ({done_cards} erledigt, {remaining_due} noch offen) · ~{calc_reps_mins} Min. benötigt"
@@ -474,8 +477,36 @@ def generate_daily_science_rhythm(
             lunch_placed = True
             continue
 
-        # Option C: Block startet vor 12:30 und würde über 13:30 hinausragen -> Unterteilung!
+        # Option C: Block startet vor 12:30 und würde über 13:30 hinausragen
         elif cur_m < LUNCH_START_MIN and b_end > LUNCH_START_MAX:
+            # Anki Neue Karten (Deep Encoding) NIEMALS durch die Mittagspause zerstückeln!
+            # Ankis haben absolute Priorität und gehören als ungeteilter Fokusblock direkt nach der Pause.
+            if b.get("id") == "block_new_cards" or b.get("focus_type") == "deep_encoding":
+                if cur_m < LUNCH_START_MIN:
+                    gap = LUNCH_START_MIN - cur_m
+                    if gap >= 15:
+                        add_block_if_active({
+                            "id": "pause_pre_lunch",
+                            "duration_minutes": gap,
+                            "title": "Pause: Übergang zur Mittagspause",
+                            "subtitle": "Kognitive Entlastung vor dem Essen",
+                            "focus_type": "pause",
+                            "icon": "",
+                            "color": "#3fb950",
+                            "badge": f"Pause ({gap}m)",
+                            "description": "Kurze Bildschirmpause und Vorbereitung auf das Mittagessen.",
+                            "is_break": True,
+                            "is_mandatory": False,
+                        })
+                    else:
+                        cur_m = LUNCH_START_MIN
+                add_block_if_active(lunch_block)
+                lunch_placed = True
+                add_block_if_active(b)
+                if p_after and (p_after.get("id") not in removed_set):
+                    add_block_if_active(p_after)
+                continue
+
             target_split = max(12 * 60 + 30, cur_m + 30)
             target_split = min(13 * 60 + 15, target_split)
             target_split = int(round(target_split / 15.0) * 15)
@@ -567,8 +598,8 @@ def generate_daily_science_rhythm(
     # 8. Afternoon Lecture Priming (24h-Pipeline for Tomorrow)
     has_afternoon_mandatory_conflict = any(
         m for m in mandatory_events
-        if _parse_time_to_minutes(m.start_time.strftime("%H:%M")) < (15 * 60 + 30)
-        and _parse_time_to_minutes(m.end_time.strftime("%H:%M")) > (14 * 60)
+        if _parse_time_to_minutes(m.start_time.strftime("%H:%M")) < (cur_m + 75)
+        and _parse_time_to_minutes(m.end_time.strftime("%H:%M")) > (13 * 60 + 30)
     )
 
     if include_lecture and not has_afternoon_mandatory_conflict:
@@ -750,6 +781,10 @@ def generate_daily_science_rhythm(
             if bid in block_map:
                 ordered_blocks.append(block_map.pop(bid))
             else:
+                base_id = bid.split("_part")[0] if "_part" in bid else bid
+                if base_id in block_map:
+                    ordered_blocks.append(block_map.pop(base_id))
+                    continue
                 sub_keys = [k for k, v in list(block_map.items()) if v.get("parent_id") == bid]
                 for sk in sub_keys:
                     ordered_blocks.append(block_map.pop(sk))

@@ -74,8 +74,30 @@ def _ensure_cache_table(conn):
     """)
 
 
+def _normalize_deck_stats_payload(data: Any) -> Any:
+    if not isinstance(data, dict):
+        return data
+    sm = data.get("summary")
+    if isinstance(sm, dict):
+        sem_ret = sm.get("semester_retention", sm.get("overall_retention", 0.0))
+        sm.setdefault("semester_retention", sem_ret)
+        sm.setdefault("today_reviews", 0)
+        sm.setdefault("today_passes", 0)
+        sm.setdefault("today_retention", None)
+        sm.setdefault("week_reviews", 0)
+        sm.setdefault("week_passes", 0)
+        sm.setdefault("week_retention", None)
+        sm.setdefault("two_weeks_reviews", 0)
+        sm.setdefault("two_weeks_passes", 0)
+        sm.setdefault("two_weeks_retention", None)
+        sm.setdefault("trend_week_vs_semester", None)
+        sm.setdefault("trend_today_vs_semester", None)
+    return data
+
+
 def cache_deck_stats(stats: Dict[str, Any]):
     try:
+        norm = _normalize_deck_stats_payload(stats)
         with get_db_connection() as conn:
             _ensure_cache_table(conn)
             cur = conn.cursor()
@@ -85,7 +107,7 @@ def cache_deck_stats(stats: Dict[str, Any]):
                 ON CONFLICT(id) DO UPDATE SET
                     payload_json = excluded.payload_json,
                     updated_at = CURRENT_TIMESTAMP;
-            """, (json.dumps(stats),))
+            """, (json.dumps(norm),))
     except Exception:
         pass
 
@@ -97,7 +119,7 @@ def get_cached_deck_stats() -> Optional[Dict[str, Any]]:
             cur = conn.cursor()
             row = cur.execute("SELECT payload_json FROM anki_deck_stats_cache WHERE id = 1").fetchone()
             if row:
-                return json.loads(row[0])
+                return _normalize_deck_stats_payload(json.loads(row[0]))
     except Exception:
         pass
     return None

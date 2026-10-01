@@ -7198,6 +7198,9 @@ async function loadDeckStats(forceRefresh = false) {
     if (weakEl) weakEl.textContent = sm.weak_decks_count || 0;
     if (negEl) negEl.textContent = sm.neglected_decks_count || 0;
 
+    // Robust numeric check to avoid any "undefined%" in the UI
+    const hasNum = (v) => typeof v === 'number' && !isNaN(v);
+
     // Update Retention Trend Drawer
     const tvToday = document.getElementById('trendValToday');
     const tsToday = document.getElementById('trendSubToday');
@@ -7212,23 +7215,23 @@ async function loadDeckStats(forceRefresh = false) {
     const trIcon = document.getElementById('retentionTrendIcon');
 
     if (tvToday) {
-      tvToday.textContent = todayRet !== null ? `${todayRet}%` : '–';
-      tvToday.style.color = todayRet !== null ? (todayRet >= 80 ? '#3fb950' : (todayRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
+      tvToday.textContent = hasNum(todayRet) ? `${todayRet}%` : '–';
+      tvToday.style.color = hasNum(todayRet) ? (todayRet >= 80 ? '#3fb950' : (todayRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
     }
     if (tsToday) {
       tsToday.textContent = todayRevs > 0 ? `${todayRevs} Reviews (${todayPass} gewusst)` : 'Noch keine Reviews heute';
     }
 
     if (tvWeek) {
-      tvWeek.textContent = weekRet !== null ? `${weekRet}%` : '–';
-      tvWeek.style.color = weekRet !== null ? (weekRet >= 80 ? '#3fb950' : (weekRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
+      tvWeek.textContent = hasNum(weekRet) ? `${weekRet}%` : '–';
+      tvWeek.style.color = hasNum(weekRet) ? (weekRet >= 80 ? '#3fb950' : (weekRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
     }
     if (tsWeek) {
       tsWeek.textContent = `${(sm.week_reviews || 0).toLocaleString('de-CH')} Reviews (7 Tage)`;
     }
     if (tdWeek) {
       const diffW = sm.trend_week_vs_semester;
-      if (diffW !== null && diffW !== undefined) {
+      if (hasNum(diffW)) {
         const sign = diffW >= 0 ? '+' : '';
         const color = diffW >= 0 ? '#3fb950' : '#ff7b72';
         tdWeek.innerHTML = `<span style="color: ${color}; background: ${color}22; padding: 1px 5px; border-radius: 4px;">${sign}${diffW}% vs Sem</span>`;
@@ -7239,16 +7242,16 @@ async function loadDeckStats(forceRefresh = false) {
 
     if (tvTwoWeeks) {
       const twRet = sm.two_weeks_retention;
-      tvTwoWeeks.textContent = twRet !== null ? `${twRet}%` : '–';
-      tvTwoWeeks.style.color = twRet !== null ? (twRet >= 80 ? '#3fb950' : (twRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
+      tvTwoWeeks.textContent = hasNum(twRet) ? `${twRet}%` : '–';
+      tvTwoWeeks.style.color = hasNum(twRet) ? (twRet >= 80 ? '#3fb950' : (twRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
     }
     if (tsTwoWeeks) {
       tsTwoWeeks.textContent = `${(sm.two_weeks_reviews || 0).toLocaleString('de-CH')} Reviews (14 Tage)`;
     }
 
     if (tvSem) {
-      tvSem.textContent = semRet !== null ? `${semRet}%` : '–';
-      tvSem.style.color = semRet >= 80 ? '#3fb950' : (semRet >= 70 ? '#d29922' : '#ff7b72');
+      tvSem.textContent = hasNum(semRet) ? `${semRet}%` : '–';
+      tvSem.style.color = hasNum(semRet) ? (semRet >= 80 ? '#3fb950' : (semRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
     }
     if (tsSem) {
       tsSem.textContent = `${(sm.total_reviews || 0).toLocaleString('de-CH')} Reviews (ab 14.09.)`;
@@ -7256,21 +7259,29 @@ async function loadDeckStats(forceRefresh = false) {
 
     if (trBanner) {
       const diffW = sm.trend_week_vs_semester;
-      if (todayRevs > 0 && todayRet !== null) {
+      if (todayRevs > 0 && hasNum(todayRet)) {
         const diffT = sm.trend_today_vs_semester;
-        if (diffT !== null && diffT >= 0) {
+        if (hasNum(diffT) && diffT >= 0) {
           if (trIcon) trIcon.textContent = '🚀';
           trBanner.innerHTML = `<strong>Top Form heute!</strong> Deine Erfolgsquote von <strong>${todayRet}%</strong> liegt um <strong style="color: #3fb950;">+${diffT}%</strong> über deinem Semesterschnitt (${semRet}%).`;
-        } else if (diffT !== null) {
+        } else if (hasNum(diffT)) {
           if (trIcon) trIcon.textContent = '🎯';
           trBanner.innerHTML = `<strong>Heutiger Stand:</strong> <strong>${todayRet}%</strong> bei ${todayRevs} Reviews (${Math.abs(diffT)}% unter Semesterschnitt von ${semRet}%).`;
+        } else {
+          if (trIcon) trIcon.textContent = '🎯';
+          trBanner.innerHTML = `<strong>Heutiger Stand:</strong> <strong>${todayRet}%</strong> bei ${todayRevs} Reviews.`;
         }
-      } else if (diffW !== null && diffW >= 0) {
-        if (trIcon) trIcon.textContent = '📈';
-        trBanner.innerHTML = `<strong>Positiver Wochentrend:</strong> In den letzten 7 Tagen liegt deine Retention bei <strong>${weekRet}%</strong> (<strong style="color: #3fb950;">+${diffW}%</strong> über dem Semesterschnitt von ${semRet}%).`;
-      } else if (diffW !== null) {
-        if (trIcon) trIcon.textContent = '⚖️';
-        trBanner.innerHTML = `<strong>Wochenüberblick:</strong> <strong>${weekRet}%</strong> in den letzten 7 Tagen vs. <strong>${semRet}%</strong> Semester-Durchschnitt.`;
+      } else if (hasNum(weekRet)) {
+        if (hasNum(diffW) && diffW >= 0) {
+          if (trIcon) trIcon.textContent = '📈';
+          trBanner.innerHTML = `<strong>Positiver Wochentrend:</strong> In den letzten 7 Tagen liegt deine Retention bei <strong>${weekRet}%</strong> (<strong style="color: #3fb950;">+${diffW}%</strong> über dem Semesterschnitt von ${semRet}%).`;
+        } else if (hasNum(diffW)) {
+          if (trIcon) trIcon.textContent = '⚖️';
+          trBanner.innerHTML = `<strong>Wochenüberblick:</strong> <strong>${weekRet}%</strong> in den letzten 7 Tagen vs. <strong>${semRet}%</strong> Semester-Durchschnitt.`;
+        } else {
+          if (trIcon) trIcon.textContent = '📊';
+          trBanner.innerHTML = `<strong>Wochenüberblick:</strong> <strong>${weekRet}%</strong> in den letzten 7 Tagen.`;
+        }
       } else {
         if (trIcon) trIcon.textContent = 'ℹ️';
         trBanner.innerHTML = `<strong>Semesterschnitt:</strong> <strong>${semRet}%</strong> bei ${(sm.total_reviews || 0).toLocaleString('de-CH')} Durchgängen seit dem 14. September.`;

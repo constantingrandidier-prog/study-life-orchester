@@ -7186,11 +7186,11 @@ async function loadDeckStats(forceRefresh = false) {
         if (retLabel) retLabel.textContent = 'Retention Heute';
         if (retSub) retSub.textContent = `${todayRevs} Reviews heute (${todayPass} gewusst) · Ø Sem: ${semRet}%`;
       } else {
-        // Noch keine Reviews heute: indicate clearly and show week/sem as reference
-        retEl.textContent = weekRet !== null ? `${weekRet}%` : `${semRet}%`;
+        // Noch keine Reviews heute: clear distinct display so it's impossible to mistake for an old value
+        retEl.textContent = '--%';
         retEl.style.color = '#8b949e';
-        if (retLabel) retLabel.textContent = 'Retention Heute (Noch offen)';
-        if (retSub) retSub.textContent = `Heute noch keine Reviews · 7-Tage-Ø: ${weekRet !== null ? weekRet + '%' : semRet + '%'}`;
+        if (retLabel) retLabel.textContent = 'Retention Heute';
+        if (retSub) retSub.textContent = `Heute noch keine Karten gelernt · Klicke auf „📈 Verlauf“ für 7d / Semester`;
       }
     }
 

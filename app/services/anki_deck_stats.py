@@ -8,7 +8,7 @@ import json
 import os
 import sqlite3
 import time
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from app.db.repository import get_db_connection
@@ -175,6 +175,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
     card_data = {r[0]: r for r in cur.execute(card_sql, (today_anki_day,)).fetchall()}
 
     # 3. Revlog stats per deck (scoped strictly to active semester, excluding card resets type=4)
+    now_dt = datetime.now()
+    today_midnight = datetime(now_dt.year, now_dt.month, now_dt.day)
+    today_start_ts = int(today_midnight.timestamp() * 1000)
+    seven_days_ts = int((today_midnight - timedelta(days=7)).timestamp() * 1000)
+    fourteen_days_ts = int((today_midnight - timedelta(days=14)).timestamp() * 1000)
+
     rev_sql = """
         SELECT 
             c.did,
@@ -184,13 +190,28 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             sum(case when r.type in (1, 2) then 1 else 0 end) as rep_reviews,
             sum(case when r.type in (1, 2) and r.ease in (2, 3, 4) then 1 else 0 end) as rep_passes,
             max(r.id) as last_rev_ts,
-            sum(r.time) as total_time_ms
+            sum(r.time) as total_time_ms,
+            -- Today (since 00:00)
+            sum(case when r.id >= ? then 1 else 0 end) as today_reviews,
+            sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as today_passes,
+            -- Last 7 days
+            sum(case when r.id >= ? then 1 else 0 end) as week_reviews,
+            sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as week_passes,
+            -- Last 14 days (2 weeks)
+            sum(case when r.id >= ? then 1 else 0 end) as two_weeks_reviews,
+            sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as two_weeks_passes
         FROM revlog r
         JOIN cards c ON r.cid = c.id
         WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
         GROUP BY c.did
     """
-    rev_data = {r[0]: r for r in cur.execute(rev_sql, (SEMESTER_START_TS,)).fetchall()}
+    rev_params = (
+        today_start_ts, today_start_ts,
+        seven_days_ts, seven_days_ts,
+        fourteen_days_ts, fourteen_days_ts,
+        SEMESTER_START_TS,
+    )
+    rev_data = {r[0]: r for r in cur.execute(rev_sql, rev_params).fetchall()}
     conn.close()
 
     # 4. Build individual deck list
@@ -198,6 +219,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
     total_reviews_all = 0
     total_passes_all = 0
     total_cards_all = 0
+    total_today_reviews_all = 0
+    total_today_passes_all = 0
+    total_week_reviews_all = 0
+    total_week_passes_all = 0
+    total_two_weeks_reviews_all = 0
+    total_two_weeks_passes_all = 0
     weak_decks_count = 0
     neglected_decks_count = 0
 
@@ -239,6 +266,15 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             is_neglected = False
             revs_per_card = 0.0
             time_minutes = 0.0
+            today_revs = 0
+            today_passes = 0
+            today_retention = None
+            week_revs = 0
+            week_passes = 0
+            week_retention = None
+            two_weeks_revs = 0
+            two_weeks_passes = 0
+            two_weeks_retention = None
         else:
             total_revs = r_row[1]
             passes = r_row[2]
@@ -247,6 +283,18 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             rep_passes = r_row[5]
             last_rev_ts = r_row[6]
             time_ms = r_row[7]
+
+            today_revs = r_row[8] or 0
+            today_passes = r_row[9] or 0
+            today_retention = round((today_passes / today_revs * 100), 1) if today_revs > 0 else None
+
+            week_revs = r_row[10] or 0
+            week_passes = r_row[11] or 0
+            week_retention = round((week_passes / week_revs * 100), 1) if week_revs > 0 else None
+
+            two_weeks_revs = r_row[12] or 0
+            two_weeks_passes = r_row[13] or 0
+            two_weeks_retention = round((two_weeks_passes / two_weeks_revs * 100), 1) if two_weeks_revs > 0 else None
 
             retention_rate = round((passes / total_revs * 100), 1) if total_revs > 0 else None
             rep_retention_rate = round((rep_passes / rep_revs * 100), 1) if rep_revs > 0 else retention_rate
@@ -291,6 +339,15 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         total_reviews_all += total_revs
         total_passes_all += passes
         total_cards_all += total_cards
+        total_today_reviews_all += today_revs
+        total_today_passes_all += today_passes
+        total_week_reviews_all += week_revs
+        total_week_passes_all += week_passes
+        total_two_weeks_reviews_all += two_weeks_revs
+        total_two_weeks_passes_all += two_weeks_passes
+
+        primary_ret = today_retention if today_retention is not None else retention_rate
+        primary_ret_lbl = "Heute" if today_retention is not None else "Ø Semester"
 
         all_decks.append({
             "deck_id": did,
@@ -307,7 +364,19 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             "pass_count": passes,
             "fail_count": fails,
             "retention_rate": retention_rate,
+            "semester_retention": retention_rate,
             "rep_retention_rate": rep_retention_rate,
+            "today_reviews": today_revs,
+            "today_passes": today_passes,
+            "today_retention": today_retention,
+            "week_reviews": week_revs,
+            "week_passes": week_passes,
+            "week_retention": week_retention,
+            "two_weeks_reviews": two_weeks_revs,
+            "two_weeks_passes": two_weeks_passes,
+            "two_weeks_retention": two_weeks_retention,
+            "primary_retention": primary_ret,
+            "primary_retention_label": primary_ret_lbl,
             "avg_reviews_per_card": revs_per_card,
             "avg_ease_factor": avg_ease,
             "last_reviewed_days_ago": days_ago,
@@ -335,6 +404,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
                 "total_reviews": 0,
                 "total_passes": 0,
                 "total_fails": 0,
+                "today_reviews": 0,
+                "today_passes": 0,
+                "week_reviews": 0,
+                "week_passes": 0,
+                "two_weeks_reviews": 0,
+                "two_weeks_passes": 0,
                 "total_time_minutes": 0.0,
                 "min_days_ago": None,
                 "weak_decks_count": 0,
@@ -351,6 +426,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         t["total_reviews"] += d["total_reviews"]
         t["total_passes"] += d["pass_count"]
         t["total_fails"] += d["fail_count"]
+        t["today_reviews"] += d["today_reviews"]
+        t["today_passes"] += d["today_passes"]
+        t["week_reviews"] += d["week_reviews"]
+        t["week_passes"] += d["week_passes"]
+        t["two_weeks_reviews"] += d["two_weeks_reviews"]
+        t["two_weeks_passes"] += d["two_weeks_passes"]
         t["total_time_minutes"] += d["time_minutes"]
         if d["status"] == "weak":
             t["weak_decks_count"] += 1
@@ -365,7 +446,10 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
     for pt, t in topics_dict.items():
         total_revs_topic = t["total_reviews"]
         ret_rate = round((t["total_passes"] / total_revs_topic * 100), 1) if total_revs_topic > 0 else None
-        
+        today_ret_topic = round((t["today_passes"] / t["today_reviews"] * 100), 1) if t["today_reviews"] > 0 else None
+        week_ret_topic = round((t["week_passes"] / t["week_reviews"] * 100), 1) if t["week_reviews"] > 0 else None
+        two_weeks_ret_topic = round((t["two_weeks_passes"] / t["two_weeks_reviews"] * 100), 1) if t["two_weeks_reviews"] > 0 else None
+
         if t["min_days_ago"] is None or total_revs_topic == 0:
             last_text = "Noch nicht gestartet"
         elif t["min_days_ago"] < 0.05:
@@ -395,6 +479,13 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             "due_cards": t["due_cards"],
             "total_reviews": t["total_reviews"],
             "retention_rate": ret_rate,
+            "semester_retention": ret_rate,
+            "today_reviews": t["today_reviews"],
+            "today_retention": today_ret_topic,
+            "week_reviews": t["week_reviews"],
+            "week_retention": week_ret_topic,
+            "two_weeks_reviews": t["two_weeks_reviews"],
+            "two_weeks_retention": two_weeks_ret_topic,
             "total_time_minutes": round(t["total_time_minutes"], 1),
             "last_reviewed_days_ago": t["min_days_ago"],
             "last_reviewed_text": last_text,
@@ -415,6 +506,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
     topics_list.sort(key=topic_sort_key)
 
     overall_retention = round((total_passes_all / total_reviews_all * 100), 1) if total_reviews_all > 0 else 0.0
+    today_overall = round((total_today_passes_all / total_today_reviews_all * 100), 1) if total_today_reviews_all > 0 else None
+    week_overall = round((total_week_passes_all / total_week_reviews_all * 100), 1) if total_week_reviews_all > 0 else None
+    two_weeks_overall = round((total_two_weeks_passes_all / total_two_weeks_reviews_all * 100), 1) if total_two_weeks_reviews_all > 0 else None
+
+    trend_vs_semester = round(week_overall - overall_retention, 1) if (week_overall is not None and overall_retention > 0) else 0.0
+    trend_today_vs_semester = round(today_overall - overall_retention, 1) if (today_overall is not None and overall_retention > 0) else None
 
     result = {
         "available": True,
@@ -431,6 +528,14 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             "total_cards": total_cards_all,
             "total_reviews": total_reviews_all,
             "overall_retention": overall_retention,
+            "today_reviews": total_today_reviews_all,
+            "today_retention": today_overall,
+            "week_reviews": total_week_reviews_all,
+            "week_retention": week_overall,
+            "two_weeks_reviews": total_two_weeks_reviews_all,
+            "two_weeks_retention": two_weeks_overall,
+            "trend_week_vs_semester": trend_vs_semester,
+            "trend_today_vs_semester": trend_today_vs_semester,
             "weak_decks_count": weak_decks_count,
             "neglected_decks_count": neglected_decks_count,
             "updated_at": datetime.now().isoformat(),

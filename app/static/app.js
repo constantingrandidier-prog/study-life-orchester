@@ -7121,6 +7121,25 @@ document.addEventListener('DOMContentLoaded', () => {
 let currentDeckStatsFilter = 'all';
 let currentDeckStatsSort = 'retention_asc';
 let currentDeckStatsSearch = '';
+let isRetentionTrendDrawerOpen = false;
+
+function toggleRetentionTrendDrawer(explicitOpen) {
+  const drawer = document.getElementById('retentionTrendDrawer');
+  const chevron = document.getElementById('retentionTrendChevron');
+  if (!drawer) return;
+
+  if (typeof explicitOpen === 'boolean') {
+    isRetentionTrendDrawerOpen = explicitOpen;
+  } else {
+    isRetentionTrendDrawerOpen = !isRetentionTrendDrawerOpen;
+  }
+
+  drawer.style.display = isRetentionTrendDrawerOpen ? 'block' : 'none';
+  if (chevron) {
+    chevron.style.transform = isRetentionTrendDrawerOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+  }
+}
+window.toggleRetentionTrendDrawer = toggleRetentionTrendDrawer;
 
 async function loadDeckStats(forceRefresh = false) {
   const container = document.getElementById('deckStatsTopicsContainer');
@@ -7147,14 +7166,116 @@ async function loadDeckStats(forceRefresh = false) {
     // Update Global KPIs
     const sm = data.summary || {};
     const retEl = document.getElementById('kpiDeckOverallRetention');
+    const retLabel = document.getElementById('kpiDeckRetentionLabel');
+    const retSub = document.getElementById('kpiDeckOverallSub');
     const revsEl = document.getElementById('kpiDeckTotalReviews');
     const weakEl = document.getElementById('kpiDeckWeakCount');
     const negEl = document.getElementById('kpiDeckNeglectedCount');
 
-    if (retEl) retEl.textContent = (sm.overall_retention != null ? sm.overall_retention : 0) + '%';
+    // Main Retention Display: TODAY is primary!
+    const todayRevs = sm.today_reviews || 0;
+    const todayPass = sm.today_passes || 0;
+    const todayRet = sm.today_retention;
+    const semRet = sm.semester_retention ?? sm.overall_retention ?? 0;
+    const weekRet = sm.week_retention;
+
+    if (retEl) {
+      if (todayRevs > 0 && todayRet !== null) {
+        retEl.textContent = `${todayRet}%`;
+        retEl.style.color = todayRet >= 80 ? '#3fb950' : (todayRet >= 70 ? '#d29922' : '#ff7b72');
+        if (retLabel) retLabel.textContent = 'Retention Heute';
+        if (retSub) retSub.textContent = `${todayRevs} Reviews heute (${todayPass} gewusst) · Ø Sem: ${semRet}%`;
+      } else {
+        // Noch keine Reviews heute: indicate clearly and show week/sem as reference
+        retEl.textContent = weekRet !== null ? `${weekRet}%` : `${semRet}%`;
+        retEl.style.color = '#8b949e';
+        if (retLabel) retLabel.textContent = 'Retention Heute (Noch offen)';
+        if (retSub) retSub.textContent = `Heute noch keine Reviews · 7-Tage-Ø: ${weekRet !== null ? weekRet + '%' : semRet + '%'}`;
+      }
+    }
+
     if (revsEl) revsEl.textContent = (sm.total_reviews || 0).toLocaleString('de-CH');
     if (weakEl) weakEl.textContent = sm.weak_decks_count || 0;
     if (negEl) negEl.textContent = sm.neglected_decks_count || 0;
+
+    // Update Retention Trend Drawer
+    const tvToday = document.getElementById('trendValToday');
+    const tsToday = document.getElementById('trendSubToday');
+    const tvWeek = document.getElementById('trendValWeek');
+    const tsWeek = document.getElementById('trendSubWeek');
+    const tdWeek = document.getElementById('trendDiffWeek');
+    const tvTwoWeeks = document.getElementById('trendValTwoWeeks');
+    const tsTwoWeeks = document.getElementById('trendSubTwoWeeks');
+    const tvSem = document.getElementById('trendValSemester');
+    const tsSem = document.getElementById('trendSubSemester');
+    const trBanner = document.getElementById('retentionTrendText');
+    const trIcon = document.getElementById('retentionTrendIcon');
+
+    if (tvToday) {
+      tvToday.textContent = todayRet !== null ? `${todayRet}%` : '–';
+      tvToday.style.color = todayRet !== null ? (todayRet >= 80 ? '#3fb950' : (todayRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
+    }
+    if (tsToday) {
+      tsToday.textContent = todayRevs > 0 ? `${todayRevs} Reviews (${todayPass} gewusst)` : 'Noch keine Reviews heute';
+    }
+
+    if (tvWeek) {
+      tvWeek.textContent = weekRet !== null ? `${weekRet}%` : '–';
+      tvWeek.style.color = weekRet !== null ? (weekRet >= 80 ? '#3fb950' : (weekRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
+    }
+    if (tsWeek) {
+      tsWeek.textContent = `${(sm.week_reviews || 0).toLocaleString('de-CH')} Reviews (7 Tage)`;
+    }
+    if (tdWeek) {
+      const diffW = sm.trend_week_vs_semester;
+      if (diffW !== null && diffW !== undefined) {
+        const sign = diffW >= 0 ? '+' : '';
+        const color = diffW >= 0 ? '#3fb950' : '#ff7b72';
+        tdWeek.innerHTML = `<span style="color: ${color}; background: ${color}22; padding: 1px 5px; border-radius: 4px;">${sign}${diffW}% vs Sem</span>`;
+      } else {
+        tdWeek.innerHTML = '';
+      }
+    }
+
+    if (tvTwoWeeks) {
+      const twRet = sm.two_weeks_retention;
+      tvTwoWeeks.textContent = twRet !== null ? `${twRet}%` : '–';
+      tvTwoWeeks.style.color = twRet !== null ? (twRet >= 80 ? '#3fb950' : (twRet >= 70 ? '#d29922' : '#ff7b72')) : '#8b949e';
+    }
+    if (tsTwoWeeks) {
+      tsTwoWeeks.textContent = `${(sm.two_weeks_reviews || 0).toLocaleString('de-CH')} Reviews (14 Tage)`;
+    }
+
+    if (tvSem) {
+      tvSem.textContent = semRet !== null ? `${semRet}%` : '–';
+      tvSem.style.color = semRet >= 80 ? '#3fb950' : (semRet >= 70 ? '#d29922' : '#ff7b72');
+    }
+    if (tsSem) {
+      tsSem.textContent = `${(sm.total_reviews || 0).toLocaleString('de-CH')} Reviews (ab 14.09.)`;
+    }
+
+    if (trBanner) {
+      const diffW = sm.trend_week_vs_semester;
+      if (todayRevs > 0 && todayRet !== null) {
+        const diffT = sm.trend_today_vs_semester;
+        if (diffT !== null && diffT >= 0) {
+          if (trIcon) trIcon.textContent = '🚀';
+          trBanner.innerHTML = `<strong>Top Form heute!</strong> Deine Erfolgsquote von <strong>${todayRet}%</strong> liegt um <strong style="color: #3fb950;">+${diffT}%</strong> über deinem Semesterschnitt (${semRet}%).`;
+        } else if (diffT !== null) {
+          if (trIcon) trIcon.textContent = '🎯';
+          trBanner.innerHTML = `<strong>Heutiger Stand:</strong> <strong>${todayRet}%</strong> bei ${todayRevs} Reviews (${Math.abs(diffT)}% unter Semesterschnitt von ${semRet}%).`;
+        }
+      } else if (diffW !== null && diffW >= 0) {
+        if (trIcon) trIcon.textContent = '📈';
+        trBanner.innerHTML = `<strong>Positiver Wochentrend:</strong> In den letzten 7 Tagen liegt deine Retention bei <strong>${weekRet}%</strong> (<strong style="color: #3fb950;">+${diffW}%</strong> über dem Semesterschnitt von ${semRet}%).`;
+      } else if (diffW !== null) {
+        if (trIcon) trIcon.textContent = '⚖️';
+        trBanner.innerHTML = `<strong>Wochenüberblick:</strong> <strong>${weekRet}%</strong> in den letzten 7 Tagen vs. <strong>${semRet}%</strong> Semester-Durchschnitt.`;
+      } else {
+        if (trIcon) trIcon.textContent = 'ℹ️';
+        trBanner.innerHTML = `<strong>Semesterschnitt:</strong> <strong>${semRet}%</strong> bei ${(sm.total_reviews || 0).toLocaleString('de-CH')} Durchgängen seit dem 14. September.`;
+      }
+    }
 
     // Display formatted last updated timestamp with clear live indicator
     if (updatedEl) {
@@ -7392,8 +7513,14 @@ function renderDeckStats() {
           </div>
 
           <div class="deck-row-metrics">
-            <div class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${sdRetColor}44; color: ${sdRetColor};" title="${sd.total_reviews} Reviews: ${sd.pass_count} Gut/Einfach, ${sd.fail_count} Nochmal">
-              ${sdRetLabel}
+            ${sd.today_reviews > 0 && sd.today_retention !== null ? `
+              <div class="deck-stat-badge" style="background: rgba(63,185,80,0.18); border: 1px solid rgba(63,185,80,0.45); color: #3fb950; font-weight: 700;" title="Heute gelernt: ${sd.today_reviews} Durchgänge (${sd.today_passes} Gut/Einfach, ${sd.today_fails} Nochmal)">
+                ✨ Heute: ${sd.today_retention}% (${sd.today_reviews}x)
+              </div>
+            ` : ''}
+
+            <div class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${sdRetColor}44; color: ${sdRetColor};" title="${sd.total_reviews} Reviews (Semester): ${sd.pass_count} Gut/Einfach, ${sd.fail_count} Nochmal">
+              ${sd.today_reviews > 0 ? `Ø Sem: ${sdRetLabel}` : sdRetLabel}
               <div class="retention-bar-wrap">
                 <div class="retention-bar-fill" style="width: ${sdRetBarPct}%; background: ${sdRetColor};"></div>
               </div>
@@ -7430,8 +7557,14 @@ function renderDeckStats() {
           </div>
 
           <div class="deck-topic-stats-row">
+            ${t.today_reviews > 0 && t.today_retention !== null ? `
+              <span class="deck-stat-badge" style="background: rgba(63,185,80,0.18); border: 1px solid rgba(63,185,80,0.45); color: #3fb950; font-weight: 700;">
+                ✨ Heute: <strong>${t.today_retention}%</strong> (${t.today_reviews}x)
+              </span>
+            ` : ''}
+
             <span class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${retColor}55; color: ${retColor};">
-              Ø Retention: <strong>${retVal}</strong>
+              Ø Sem: <strong>${retVal}</strong>
             </span>
 
             <span class="deck-stat-badge" style="background: rgba(255,255,255,0.03); color: var(--text-muted); border: 1px solid var(--border-subtle);">

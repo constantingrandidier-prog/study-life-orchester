@@ -4643,6 +4643,11 @@ async function loadScienceRhythm(targetDate) {
     const res = await fetch(`/api/v1/schedule/daily-rhythm?target_date=${dateStr}${startQuery}&lunch_duration=${lunchDur}&include_lecture=${incLec}${remQuery}${orderQuery}`);
     if (!res.ok) return;
     const data = await res.json();
+
+    // Filter out removed blocks directly on client as well
+    if (localRemoved.length > 0 && Array.isArray(data.blocks)) {
+      data.blocks = data.blocks.filter(b => b && !localRemoved.includes(b.id) && !localRemoved.includes(b.original_id));
+    }
     
     // Check if client has local postponed blocks for this date not yet returned by server
     const postKey = `sl_rhythm_postponed_${dateStr}`;

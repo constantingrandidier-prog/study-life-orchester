@@ -596,8 +596,14 @@ def generate_daily_science_rhythm(
         })
 
     # 8. Afternoon Lecture Priming (24h-Pipeline for Tomorrow)
-    has_afternoon_mandatory_conflict = any(
+    active_mandatory_events = [
         m for m in mandatory_events
+        if f"mandatory_event_{m.id or 0}" not in removed_set
+        and str(m.id) not in removed_set
+        and f"event_{m.id}" not in removed_set
+    ]
+    has_afternoon_mandatory_conflict = any(
+        m for m in active_mandatory_events
         if _parse_time_to_minutes(m.start_time.strftime("%H:%M")) < (cur_m + 75)
         and _parse_time_to_minutes(m.end_time.strftime("%H:%M")) > (13 * 60 + 30)
     )
@@ -655,6 +661,10 @@ def generate_daily_science_rhythm(
     # 9. Fixed Mandatory In-Person Sessions (Praktika, Tutorate, Testate, Klinische Kurse)
     sorted_mandatory = sorted(mandatory_events, key=lambda ev: ev.start_time)
     for m_ev in sorted_mandatory:
+        m_id = f"mandatory_event_{m_ev.id or 0}"
+        if m_id in removed_set or str(m_ev.id) in removed_set or f"event_{m_ev.id}" in removed_set:
+            continue
+
         ev_start_str = m_ev.start_time.strftime("%H:%M")
         ev_end_str = m_ev.end_time.strftime("%H:%M")
         ev_start_m = _parse_time_to_minutes(ev_start_str)
@@ -662,7 +672,8 @@ def generate_daily_science_rhythm(
         dur = max(15, ev_end_m - ev_start_m)
 
         # If there is a noticeable gap between study work and this mandatory session, insert a buffer/commute block
-        if ev_start_m > cur_m and (ev_start_m - cur_m) >= 25:
+        buf_id = f"buffer_commute_{m_ev.id or 0}"
+        if buf_id not in removed_set and ev_start_m > cur_m and (ev_start_m - cur_m) >= 25:
             gap_dur = ev_start_m - cur_m
             gap_h = gap_dur // 60
             gap_rem = gap_dur % 60
@@ -778,10 +789,14 @@ def generate_daily_science_rhythm(
         block_map = {b["id"]: b for b in blocks}
         ordered_blocks = []
         for bid in custom_block_order:
+            if bid in removed_set:
+                continue
             if bid in block_map:
                 ordered_blocks.append(block_map.pop(bid))
             else:
                 base_id = bid.split("_part")[0] if "_part" in bid else bid
+                if base_id in removed_set:
+                    continue
                 if base_id in block_map:
                     ordered_blocks.append(block_map.pop(base_id))
                     continue

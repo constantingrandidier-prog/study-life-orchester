@@ -585,6 +585,57 @@ def save_rhythm_action(
     }
 
 
+def get_or_set_daily_baseline_due(
+    target_date: str,
+    current_due: int,
+    reviewed_reps: int = 0,
+    user_id: str = "student",
+) -> int:
+    """
+    Guarantees that the daily planned repetition quota for a given date never shrinks
+    as the student reviews cards during the day.
+    """
+    total_candidate = max(int(current_due or 0) + int(reviewed_reps or 0), int(current_due or 0))
+    if total_candidate <= 0:
+        total_candidate = 0
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS rhythm_daily_baselines (
+                user_id TEXT NOT NULL,
+                source_date TEXT NOT NULL,
+                planned_due_cards INTEGER NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, source_date)
+            );
+        """)
+        cursor.execute("""
+            SELECT planned_due_cards FROM rhythm_daily_baselines
+            WHERE user_id = ? AND source_date = ?;
+        """, (user_id, target_date))
+        row = cursor.fetchone()
+
+        if row is None:
+            final_due = total_candidate if total_candidate > 0 else 100
+            cursor.execute("""
+                INSERT INTO rhythm_daily_baselines (user_id, source_date, planned_due_cards, updated_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP);
+            """, (user_id, target_date, final_due))
+            return final_due
+
+        stored_due = int(row["planned_due_cards"])
+        final_due = max(stored_due, total_candidate)
+        if final_due > stored_due:
+            cursor.execute("""
+                UPDATE rhythm_daily_baselines
+                SET planned_due_cards = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND source_date = ?;
+            """, (final_due, user_id, target_date))
+        return final_due
+
+
 def get_rhythm_actions_for_date(target_date: str, user_id: str = "student") -> Dict[str, Any]:
     """
     Returns rhythm adjustments for a given date:

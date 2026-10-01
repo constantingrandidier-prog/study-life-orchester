@@ -86,6 +86,7 @@ def generate_daily_science_rhythm(
     target_date: Optional[date] = None,
     events: Optional[List[CalendarEvent]] = None,
     cards_due_today: int = 100,
+    cards_remaining_due: Optional[int] = None,
     new_cards_target: int = 95,
     start_time_str: str = "08:30",
     lunch_duration_mins: int = 75,
@@ -182,11 +183,16 @@ def generate_daily_science_rhythm(
         slot_summary = f"{new_cards_target} neue Karten"
         tomorrow_data = {}
 
+    # Planned repetitions baseline: represents the full planned quota for the day (e.g. 94 cards).
+    # Remaining due represents cards not yet reviewed today.
+    planned_due = max(1, cards_due_today)
+    remaining_due = cards_remaining_due if cards_remaining_due is not None else planned_due
+
     # Time estimates based on gross study time
     # 50s per review card (realistic, was 36s which was too optimistic)
     SECS_PER_REVIEW = 50.0
     SECS_PER_NEW = 63.0
-    rep_gross_mins = max(30, round((cards_due_today * SECS_PER_REVIEW) / 60.0))
+    rep_gross_mins = max(30, round((planned_due * SECS_PER_REVIEW) / 60.0))
     new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0))
 
     now = datetime.now()
@@ -261,18 +267,28 @@ def generate_daily_science_rhythm(
         blocks.append(b_dict)
         return True
 
-    # 1. Block 1: Morning Reps (dynamisch an tatsächliche Anki-Last angepasst)
+    # 1. Block 1: Morning Reps
+    # Planned repetition quota sets the fixed block duration and timetable so that
+    # reviews completed during the day NEVER shrink the block or shift Feierabend!
+    calc_reps_mins = max(30, min(240, round((planned_due * SECS_PER_REVIEW) / 60.0)))
+    dur_reps = int(round(calc_reps_mins / 15.0) * 15)
 
     if is_today_date:
-        # Dynamisch für heute: 50s pro Karte, gerundet auf 15-Minuten-Raster (mindestens 30m, maximal 240m)
-        calc_reps_mins = max(30, min(240, round((cards_due_today * SECS_PER_REVIEW) / 60.0)))
-        dur_reps = int(round(calc_reps_mins / 15.0) * 15)
-        is_reps_completed = (cards_due_today == 0)
-        reps_title = f"Block 1: Morgen-Repetitionen ({cards_due_today} Karten)" if cards_due_today > 0 else "Block 1: Morgen-Repetitionen (Erledigt)"
-        reps_subtitle = f"{cards_due_today} fällig · ~{calc_reps_mins} Min. benötigt"
+        done_cards = max(0, planned_due - remaining_due)
+        is_reps_completed = (remaining_due == 0 and done_cards > 0)
+
+        if is_reps_completed:
+            reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten) - Erledigt"
+            reps_subtitle = f"Alle {planned_due} Wiederholungen erledigt! · {dur_reps}m Zeitplan eingehalten"
+        elif done_cards > 0:
+            reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten)"
+            reps_subtitle = f"{planned_due} fällig ({done_cards} erledigt, {remaining_due} noch offen) · ~{calc_reps_mins} Min. benötigt"
+        else:
+            reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten)"
+            reps_subtitle = f"{planned_due} fällig · ~{calc_reps_mins} Min. benötigt"
     else:
         # Für zukünftige Tage: niemals vorab als 'Erledigt' markieren! Volle Zeit einplanen.
-        effective_due = cards_due_today if cards_due_today > 0 else 100
+        effective_due = planned_due if planned_due > 0 else 100
         calc_reps_mins = max(30, min(240, round((effective_due * SECS_PER_REVIEW) / 60.0)))
         dur_reps = int(round(calc_reps_mins / 15.0) * 15)
         is_reps_completed = False
@@ -280,7 +296,7 @@ def generate_daily_science_rhythm(
         reps_subtitle = f"{effective_due} fällig · ~{calc_reps_mins} Min. eingeplant"
 
     reps_badge = f"Active Recall ({dur_reps}m)"
-    reps_desc = f"Fällige Wiederholungen ({cards_due_today} Karten, ~{calc_reps_mins} Min. Brutto) abarbeiten. Plan passt sich automatisch an deinen Lernfortschritt an."
+    reps_desc = f"Fällige Wiederholungen ({planned_due} Karten geplant, ~{calc_reps_mins} Min. Brutto) abarbeiten. Geplante Dauer bleibt stabil, damit dein Feierabend verlässlich ist."
 
     reps_block = {
         "id": "block_morning_reps",
@@ -295,7 +311,9 @@ def generate_daily_science_rhythm(
         "is_break": False,
         "is_mandatory": False,
         "is_completed": is_reps_completed,
-        "cards_due": cards_due_today,
+        "cards_due": planned_due,
+        "cards_remaining": remaining_due,
+        "cards_completed": max(0, planned_due - remaining_due),
     }
 
     # 2. Pause 1

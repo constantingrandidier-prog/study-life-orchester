@@ -215,3 +215,43 @@ def test_smart_lunch_splits_block_when_spanning_across_lunch():
     assert idx_p1 < idx_lunch < idx_p2
 
 
+def test_repetition_block_does_not_shrink_when_cards_completed():
+    target = date.today()
+    # Scenario: 94 planned due cards
+    res_start = generate_daily_science_rhythm(
+        target_date=target,
+        cards_due_today=94,
+        cards_remaining_due=94,
+        start_time_str="09:32",
+    )
+    b_start = next(b for b in res_start["blocks"] if b["id"] == "block_morning_reps")
+    dur_start = b_start["duration_minutes"]
+    assert dur_start > 0
+
+    # Scenario: 50 cards completed, 44 remaining
+    res_mid = generate_daily_science_rhythm(
+        target_date=target,
+        cards_due_today=94,
+        cards_remaining_due=44,
+        start_time_str="09:32",
+    )
+    b_mid = next(b for b in res_mid["blocks"] if b["id"] == "block_morning_reps")
+    assert b_mid["duration_minutes"] == dur_start
+    assert "94 Karten" in b_mid["title"]
+    assert "50 erledigt" in b_mid["subtitle"]
+    assert res_mid["feierabend_time"] == res_start["feierabend_time"]
+
+    # Scenario: All 94 cards completed, 0 remaining
+    res_done = generate_daily_science_rhythm(
+        target_date=target,
+        cards_due_today=94,
+        cards_remaining_due=0,
+        start_time_str="09:32",
+    )
+    b_done = next(b for b in res_done["blocks"] if b["id"] == "block_morning_reps")
+    assert b_done["duration_minutes"] == dur_start
+    assert b_done["is_completed"] is True
+    assert res_done["feierabend_time"] == res_start["feierabend_time"]
+
+
+

@@ -1288,7 +1288,15 @@ def get_daily_rhythm_endpoint(
     if due_val is None:
         due_val = anki_st.get("due_reviews_count")
     due_today = int(due_val) if due_val is not None else 100
+    reps_reviewed = int(anki_st.get("repetition_cards_count", 0))
     anki_first_rev = anki_st.get("first_review_time")
+
+    # Freeze and preserve planned daily baseline so reviews done during the day never shrink block duration or shift Feierabend
+    planned_due = repository.get_or_set_daily_baseline_due(
+        target_date=t_date.isoformat(),
+        current_due=due_today,
+        reviewed_reps=reps_reviewed,
+    )
     
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     curr_assign = get_daily_curriculum_assignment(t_date)
@@ -1300,7 +1308,8 @@ def get_daily_rhythm_endpoint(
     return generate_daily_science_rhythm(
         target_date=t_date,
         events=cal_events,
-        cards_due_today=due_today,
+        cards_due_today=planned_due,
+        cards_remaining_due=due_today,
         new_cards_target=new_target,
         start_time_str=start_time or "08:30",
         lunch_duration_mins=lunch_duration if lunch_duration is not None else 75,

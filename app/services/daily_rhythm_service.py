@@ -788,13 +788,23 @@ def generate_daily_science_rhythm(
                 sub_keys = [k for k, v in list(block_map.items()) if v.get("parent_id") == bid]
                 for sk in sub_keys:
                     ordered_blocks.append(block_map.pop(sk))
-        # Add any remaining blocks
+        # Add any remaining blocks (skip obsolete helper pauses or conflicting flex blocks)
         for b in block_map.values():
+            if b.get("id") in ("pause_pre_lunch", "pause_1", "pause_2"):
+                continue
+            if b.get("id") == "block_afternoon_flex" and any(m for m in mandatory_events if _parse_time_to_minutes(m.end_time.strftime("%H:%M")) >= 18 * 60):
+                continue
             ordered_blocks.append(b)
 
-        # Keep evening_free at the very end
+        # Keep block_evening_lapse right before evening_free, and evening_free at the very end
+        lapse_block = next((b for b in ordered_blocks if b["id"] == "block_evening_lapse"), None)
         free_block = next((b for b in ordered_blocks if b["id"] == "evening_free"), None)
-        if free_block:
+        if lapse_block and free_block:
+            ordered_blocks.remove(lapse_block)
+            ordered_blocks.remove(free_block)
+            ordered_blocks.append(lapse_block)
+            ordered_blocks.append(free_block)
+        elif free_block:
             ordered_blocks.remove(free_block)
             ordered_blocks.append(free_block)
 

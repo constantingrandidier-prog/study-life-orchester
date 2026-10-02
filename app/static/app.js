@@ -4709,6 +4709,7 @@ async function loadScienceRhythm(targetDate) {
       }
       data.blocks = reordered;
       recalculateRhythmTimes(data);
+      localStorage.setItem(orderKey, JSON.stringify(data.blocks.map(b => b.id)));
     }
 
     // Check if client or server has custom durations for blocks on this date
@@ -5367,8 +5368,151 @@ window.handleQuickSplitBlock = handleQuickSplitBlock;
 window.handleMergeSplitBlock = handleMergeSplitBlock;
 window.executeAddCustomPause = executeAddCustomPause;
 
+function ensureSlickLunchPlacement(data) {
+  if (!data || !Array.isArray(data.blocks)) return;
+  const lunchIdx = data.blocks.findIndex(b => b && b.id === 'pause_lunch');
+  if (lunchIdx < 0) return;
+
+  const startTimeStr = (data && data.start_time) ? data.start_time : (state.rhythmStartTime || '08:30');
+  const [sh, sm] = startTimeStr.split(':').map(Number);
+  const startM = (sh || 8) * 60 + (sm || 30);
+  if (startM >= (13 * 60 + 30)) return; // Day starts after 13:30
+
+  const lunchBlock = data.blocks[lunchIdx];
+  const lunchDur = lunchBlock.duration_minutes || 60;
+
+  // Predict where lunch would start currently
+  let curM = startM;
+  let lunchStartPredicted = -1;
+  for (let i = 0; i < data.blocks.length; i++) {
+    const b = data.blocks[i];
+    if (!b || b.id === 'evening_free') continue;
+    if (b.id === 'pause_lunch') {
+      lunchStartPredicted = curM;
+      break;
+    }
+    const dur = b.duration_minutes || 45;
+    const interPause = (Array.isArray(b.interruptions) ? b.interruptions : []).reduce((sum, item) => sum + (item.duration_minutes || 0), 0);
+    curM += (dur + interPause);
+  }
+
+  // If lunch predicted start is already in [12:20, 13:35], it's well-placed!
+  if (lunchStartPredicted >= (12 * 60 + 20) && lunchStartPredicted <= (13 * 60 + 35)) {
+    return;
+  }
+
+  // Otherwise lunch is misplaced (e.g. pushed to 16:37 or placed too early). Reposition it!
+  data.blocks.splice(lunchIdx, 1);
+
+  // Filter candidate blocks (excluding evening lapse and free)
+  const remaining = data.blocks.filter(b => b && b.id !== 'evening_free' && b.id !== 'block_evening_lapse');
+  const tail = data.blocks.filter(b => b && (b.id === 'evening_free' || b.id === 'block_evening_lapse'));
+
+  const scheduled = [];
+  curM = startM;
+  let lunchPlaced = false;
+
+  for (let i = 0; i < remaining.length; i++) {
+    const b = remaining[i];
+    const dur = b.duration_minutes || 45;
+    const interPause = (Array.isArray(b.interruptions) ? b.interruptions : []).reduce((sum, item) => sum + (item.duration_minutes || 0), 0);
+    const bSpan = dur + interPause;
+
+    if (lunchPlaced) {
+      // If this is a small 15m pause immediately following lunch, skip it
+      if (scheduled.length > 0 && scheduled[scheduled.length - 1].id === 'pause_lunch' && b.is_break && dur <= 20) {
+        continue;
+      }
+      scheduled.push(b);
+      curM += bSpan;
+      continue;
+    }
+
+    const bEnd = curM + bSpan;
+
+    // Case 1: current time is already >= 12:25
+    if (curM >= (12 * 60 + 25)) {
+      scheduled.push(lunchBlock);
+      curM += lunchDur;
+      lunchPlaced = true;
+      if (!(b.is_break && dur <= 20)) {
+        scheduled.push(b);
+        curM += bSpan;
+      }
+      continue;
+    }
+
+    // Case 2: b ends inside [12:15, 13:30]
+    if (bEnd >= (12 * 60 + 15) && bEnd <= (13 * 60 + 30)) {
+      scheduled.push(b);
+      curM = bEnd;
+      scheduled.push(lunchBlock);
+      curM += lunchDur;
+      lunchPlaced = true;
+      continue;
+    }
+
+    // Case 3: b crosses lunch window (starts < 12:30, ends > 13:30)
+    if (curM < (12 * 60 + 30) && bEnd > (13 * 60 + 30)) {
+      if (!b.is_break && dur >= 60) {
+        const targetSplit = Math.min(13 * 60 + 15, Math.max(12 * 60 + 30, curM + 30));
+        const p1Dur = Math.max(30, targetSplit - curM);
+        const p2Dur = dur - p1Dur;
+        if (p2Dur >= 20) {
+          const cleanTitle = (b.title || 'Lernblock').replace(/\s*\((?:Teil\s*\d+|vor|nach)[^)]*\)/g, '').trim();
+          const baseId = b.parent_id || b.id.replace(/_part\d+$/, '');
+
+          const part1 = Object.assign({}, b, {
+            id: `${baseId}_part1`,
+            parent_id: baseId,
+            duration_minutes: p1Dur,
+            title: `${cleanTitle} (Teil 1, vor Mittagspause)`,
+          });
+          scheduled.push(part1);
+          curM += p1Dur;
+
+          scheduled.push(lunchBlock);
+          curM += lunchDur;
+          lunchPlaced = true;
+
+          const part2 = Object.assign({}, b, {
+            id: `${baseId}_part2`,
+            parent_id: baseId,
+            duration_minutes: p2Dur,
+            title: `${cleanTitle} (Teil 2, nach Mittagspause)`,
+          });
+          scheduled.push(part2);
+          curM += p2Dur;
+          continue;
+        }
+      }
+      scheduled.push(lunchBlock);
+      curM += lunchDur;
+      lunchPlaced = true;
+      scheduled.push(b);
+      curM += bSpan;
+      continue;
+    }
+
+    // Case 4: b ends before 12:15
+    scheduled.push(b);
+    curM = bEnd;
+  }
+
+  if (!lunchPlaced) {
+    scheduled.push(lunchBlock);
+    lunchPlaced = true;
+  }
+
+  data.blocks = [...scheduled, ...tail];
+}
+
 function recalculateRhythmTimes(data) {
   if (!data || !Array.isArray(data.blocks)) return;
+
+  // Guarantee slick biological lunch window between 12:30 and 13:30
+  ensureSlickLunchPlacement(data);
+
   const startTimeStr = (data && data.start_time) ? data.start_time : (state.rhythmStartTime || '08:30');
   const [sh, sm] = startTimeStr.split(':').map(Number);
   let curM = (sh || 8) * 60 + (sm || 30);

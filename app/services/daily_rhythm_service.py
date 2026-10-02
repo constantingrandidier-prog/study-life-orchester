@@ -479,34 +479,6 @@ def generate_daily_science_rhythm(
 
         # Option C: Block startet vor 12:30 und würde über 13:30 hinausragen
         elif cur_m < LUNCH_START_MIN and b_end > LUNCH_START_MAX:
-            # Anki Neue Karten (Deep Encoding) NIEMALS durch die Mittagspause zerstückeln!
-            # Ankis haben absolute Priorität und gehören als ungeteilter Fokusblock direkt nach der Pause.
-            if b.get("id") == "block_new_cards" or b.get("focus_type") == "deep_encoding":
-                if cur_m < LUNCH_START_MIN:
-                    gap = LUNCH_START_MIN - cur_m
-                    if gap >= 15:
-                        add_block_if_active({
-                            "id": "pause_pre_lunch",
-                            "duration_minutes": gap,
-                            "title": "Pause: Übergang zur Mittagspause",
-                            "subtitle": "Kognitive Entlastung vor dem Essen",
-                            "focus_type": "pause",
-                            "icon": "",
-                            "color": "#3fb950",
-                            "badge": f"Pause ({gap}m)",
-                            "description": "Kurze Bildschirmpause und Vorbereitung auf das Mittagessen.",
-                            "is_break": True,
-                            "is_mandatory": False,
-                        })
-                    else:
-                        cur_m = LUNCH_START_MIN
-                add_block_if_active(lunch_block)
-                lunch_placed = True
-                add_block_if_active(b)
-                if p_after and (p_after.get("id") not in removed_set):
-                    add_block_if_active(p_after)
-                continue
-
             target_split = max(12 * 60 + 30, cur_m + 30)
             target_split = min(13 * 60 + 15, target_split)
             target_split = int(round(target_split / 15.0) * 15)
@@ -519,12 +491,24 @@ def generate_daily_science_rhythm(
                 p2_dur = b_dur - p1_dur
 
             import re
+            clean_title = re.sub(r'\s*\((?:Teil\s*\d+|vor|nach)[^)]*\)', '', b.get('title', 'Lernblock')).strip()
+
             # Teil 1 vor Mittagspause
             part1_dict = dict(b)
             part1_dict["id"] = f"{bid}_part1"
             part1_dict["parent_id"] = bid
             part1_dict["duration_minutes"] = p1_dur
-            part1_dict["title"] = f"{b.get('title', 'Lernblock')} (Teil 1, vor Mittagspause)"
+            if b.get("id") == "block_new_cards" and "target_cards" in b:
+                p1_cards = max(10, round(b["target_cards"] * (p1_dur / float(b_dur))))
+                part1_dict["target_cards"] = p1_cards
+                part1_dict["title"] = f"Block 2: {p1_cards} Neue Karten (Teil 1, vor Mittagspause)"
+            elif b.get("id") == "block_morning_reps":
+                p1_reps = max(10, round(planned_due * (p1_dur / float(b_dur))))
+                part1_dict["cards_due"] = p1_reps
+                part1_dict["title"] = f"Block 1: Morgen-Repetitionen (~{p1_reps} Karten) (Teil 1, vor Mittagspause)"
+            else:
+                part1_dict["title"] = f"{clean_title} (Teil 1, vor Mittagspause)"
+
             if "badge" in part1_dict and isinstance(part1_dict["badge"], str):
                 part1_dict["badge"] = re.sub(r'\(\d+m\)', f'({p1_dur}m)', part1_dict["badge"])
             add_block_if_active(part1_dict)
@@ -538,7 +522,17 @@ def generate_daily_science_rhythm(
             part2_dict["id"] = f"{bid}_part2"
             part2_dict["parent_id"] = bid
             part2_dict["duration_minutes"] = p2_dur
-            part2_dict["title"] = f"{b.get('title', 'Lernblock')} (Teil 2, nach Mittagspause)"
+            if b.get("id") == "block_new_cards" and "target_cards" in b:
+                p2_cards = max(5, b["target_cards"] - part1_dict.get("target_cards", 0))
+                part2_dict["target_cards"] = p2_cards
+                part2_dict["title"] = f"Block 2: {p2_cards} Neue Karten (Teil 2, nach Mittagspause)"
+            elif b.get("id") == "block_morning_reps":
+                p2_reps = max(5, planned_due - part1_dict.get("cards_due", 0))
+                part2_dict["cards_due"] = p2_reps
+                part2_dict["title"] = f"Block 1: Morgen-Repetitionen (~{p2_reps} Karten) (Teil 2, nach Mittagspause)"
+            else:
+                part2_dict["title"] = f"{clean_title} (Teil 2, nach Mittagspause)"
+
             if "badge" in part2_dict and isinstance(part2_dict["badge"], str):
                 part2_dict["badge"] = re.sub(r'\(\d+m\)', f'({p2_dur}m)', part2_dict["badge"])
             add_block_if_active(part2_dict)
@@ -811,53 +805,171 @@ def generate_daily_science_rhythm(
                 continue
             ordered_blocks.append(b)
 
-        # Keep block_evening_lapse right before evening_free, and evening_free at the very end
-        lapse_block = next((b for b in ordered_blocks if b["id"] == "block_evening_lapse"), None)
-        free_block = next((b for b in ordered_blocks if b["id"] == "evening_free"), None)
-        if lapse_block and free_block:
-            ordered_blocks.remove(lapse_block)
-            ordered_blocks.remove(free_block)
-            ordered_blocks.append(lapse_block)
-            ordered_blocks.append(free_block)
-        elif free_block:
-            ordered_blocks.remove(free_block)
-            ordered_blocks.append(free_block)
+        # Ensure lunch is scheduled slickly between 12:30 and 13:30 even in custom user order!
+        lunch_block = next((b for b in ordered_blocks if b.get("id") == "pause_lunch"), None)
+        lapse_block = next((b for b in ordered_blocks if b.get("id") == "block_evening_lapse"), None)
+        free_block = next((b for b in ordered_blocks if b.get("id") == "evening_free"), None)
+        candidate_blocks = [b for b in ordered_blocks if b.get("id") not in ("pause_lunch", "block_evening_lapse", "evening_free")]
 
-        # Recalculate sequential start and end times
         c_m = _parse_time_to_minutes(effective_start_str)
+        final_ordered = []
         calc_study = 0
         calc_pause = 0
-        for b in ordered_blocks:
-            if b["id"] == "evening_free":
-                continue
+        lunch_placed = False
+
+        LUNCH_MIN = 12 * 60 + 30   # 12:30
+        LUNCH_MAX = 13 * 60 + 30   # 13:30
+
+        for b in candidate_blocks:
             if b.get("is_mandatory") and b.get("start_time") and b.get("end_time"):
                 m_start_m = _parse_time_to_minutes(b["start_time"])
                 m_end_m = _parse_time_to_minutes(b["end_time"])
                 c_m = max(c_m, m_end_m)
                 calc_study += b.get("duration_minutes", m_end_m - m_start_m)
+                final_ordered.append(b)
+                continue
+
+            dur = b.get("duration_minutes", 45)
+            if custom_durations and b.get("id") in custom_durations:
+                try:
+                    dur = int(custom_durations[b["id"]])
+                    b["duration_minutes"] = dur
+                except Exception:
+                    pass
+
+            if lunch_block and not lunch_placed and c_m < LUNCH_MAX:
+                b_end = c_m + dur
+                # Case 1: c_m already in lunch window (>= 12:25)
+                if c_m >= (12 * 60 + 25):
+                    l_dur = lunch_block.get("duration_minutes", 60)
+                    lunch_block["start_time"] = _minutes_to_time(c_m)
+                    c_m += l_dur
+                    lunch_block["end_time"] = _minutes_to_time(c_m)
+                    final_ordered.append(lunch_block)
+                    calc_pause += l_dur
+                    lunch_placed = True
+                    # if b is just a 15m pause, skip it after lunch
+                    if b.get("is_break") and dur <= 20:
+                        continue
+
+                # Case 2: b ends inside lunch window [12:15, 13:30]
+                elif (12 * 60 + 15) <= b_end <= LUNCH_MAX:
+                    b["start_time"] = _minutes_to_time(c_m)
+                    c_m = b_end
+                    b["end_time"] = _minutes_to_time(c_m)
+                    final_ordered.append(b)
+                    if b.get("is_break"):
+                        calc_pause += dur
+                    else:
+                        calc_study += dur
+
+                    l_dur = lunch_block.get("duration_minutes", 60)
+                    lunch_block["start_time"] = _minutes_to_time(c_m)
+                    c_m += l_dur
+                    lunch_block["end_time"] = _minutes_to_time(c_m)
+                    final_ordered.append(lunch_block)
+                    calc_pause += l_dur
+                    lunch_placed = True
+                    continue
+
+                # Case 3: b starts before 12:30 and would end after 13:30 (crosses lunch)
+                elif c_m < LUNCH_MIN and b_end > LUNCH_MAX:
+                    if b.get("is_break"):
+                        l_dur = lunch_block.get("duration_minutes", 60)
+                        lunch_block["start_time"] = _minutes_to_time(c_m)
+                        c_m += l_dur
+                        lunch_block["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(lunch_block)
+                        calc_pause += l_dur
+                        lunch_placed = True
+                        continue
+                    else:
+                        target_split = max(12 * 60 + 30, min(13 * 60 + 15, c_m + 30))
+                        target_split = int(round(target_split / 15.0) * 15)
+                        p1_dur = max(30, target_split - c_m)
+                        p2_dur = dur - p1_dur
+                        if p2_dur < 25 and (target_split - 30 - c_m) >= 30:
+                            target_split -= 30
+                            p1_dur = target_split - c_m
+                            p2_dur = dur - p1_dur
+
+                        import re
+                        clean_title = re.sub(r'\s*\((?:Teil\s*\d+|vor|nach)[^)]*\)', '', b.get('title', 'Lernblock')).strip()
+
+                        # Part 1
+                        part1 = dict(b)
+                        bid = b.get("id", "study_block")
+                        part1["id"] = f"{bid}_part1" if not bid.endswith("_part1") else bid
+                        part1["parent_id"] = bid
+                        part1["duration_minutes"] = p1_dur
+                        part1["title"] = f"{clean_title} (Teil 1, vor Mittagspause)"
+                        if "badge" in part1 and isinstance(part1["badge"], str):
+                            part1["badge"] = re.sub(r'\(\d+m\)', f'({p1_dur}m)', part1["badge"])
+                        part1["start_time"] = _minutes_to_time(c_m)
+                        c_m += p1_dur
+                        part1["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(part1)
+                        calc_study += p1_dur
+
+                        # Lunch
+                        l_dur = lunch_block.get("duration_minutes", 60)
+                        lunch_block["start_time"] = _minutes_to_time(c_m)
+                        c_m += l_dur
+                        lunch_block["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(lunch_block)
+                        calc_pause += l_dur
+                        lunch_placed = True
+
+                        # Part 2
+                        part2 = dict(b)
+                        part2["id"] = f"{bid}_part2" if not bid.endswith("_part2") else f"{bid}_p2"
+                        part2["parent_id"] = bid
+                        part2["duration_minutes"] = p2_dur
+                        part2["title"] = f"{clean_title} (Teil 2, nach Mittagspause)"
+                        if "badge" in part2 and isinstance(part2["badge"], str):
+                            part2["badge"] = re.sub(r'\(\d+m\)', f'({p2_dur}m)', part2["badge"])
+                        part2["start_time"] = _minutes_to_time(c_m)
+                        c_m += p2_dur
+                        part2["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(part2)
+                        calc_study += p2_dur
+                        continue
+
+            b["start_time"] = _minutes_to_time(c_m)
+            c_m += dur
+            b["end_time"] = _minutes_to_time(c_m)
+            final_ordered.append(b)
+            if b.get("is_break"):
+                calc_pause += dur
             else:
-                dur = b.get("duration_minutes", 45)
-                if custom_durations and b.get("id") in custom_durations:
-                    try:
-                        dur = int(custom_durations[b["id"]])
-                        b["duration_minutes"] = dur
-                    except Exception:
-                        pass
-                b["start_time"] = _minutes_to_time(c_m)
-                c_m += dur
-                b["end_time"] = _minutes_to_time(c_m)
-                if b.get("is_break"):
-                    calc_pause += dur
-                else:
-                    calc_study += dur
+                calc_study += dur
+
+        if lunch_block and not lunch_placed:
+            l_dur = lunch_block.get("duration_minutes", 60)
+            lunch_start = max(c_m, 12 * 60 + 30)
+            lunch_block["start_time"] = _minutes_to_time(lunch_start)
+            c_m = lunch_start + l_dur
+            lunch_block["end_time"] = _minutes_to_time(c_m)
+            final_ordered.append(lunch_block)
+            calc_pause += l_dur
+            lunch_placed = True
+
+        if lapse_block:
+            lapse_dur = lapse_block.get("duration_minutes", 30)
+            lapse_block["start_time"] = _minutes_to_time(c_m)
+            c_m += lapse_dur
+            lapse_block["end_time"] = _minutes_to_time(c_m)
+            final_ordered.append(lapse_block)
+            calc_study += lapse_dur
 
         feierabend_time = _minutes_to_time(c_m)
         if free_block:
             free_block["start_time"] = feierabend_time
             free_block["duration_minutes"] = max(60, (22 * 60) - c_m)
             free_block["title"] = f"Feierabend ab {feierabend_time} & Sport am Abend"
+            final_ordered.append(free_block)
 
-        blocks = ordered_blocks
+        blocks = final_ordered
         total_study_mins = calc_study
         total_pause_mins = calc_pause
     else:

@@ -254,4 +254,47 @@ def test_repetition_block_does_not_shrink_when_cards_completed():
     assert res_done["feierabend_time"] == res_start["feierabend_time"]
 
 
+def test_custom_block_order_keeps_lunch_in_1230_1330_window():
+    # Even if custom_block_order lists lunch at the very end after podcasts:
+    res = generate_daily_science_rhythm(
+        target_date=date(2027, 6, 7),
+        cards_due_today=425,
+        new_cards_target=100,
+        start_time_str="08:44",
+        lunch_duration_mins=60,
+        include_lecture=True,
+        is_manual_start=True,
+        custom_block_order=["block_morning_reps", "pause_1", "block_new_cards", "pause_2", "block_podcasts", "pause_lunch"]
+    )
+    lunch = next(b for b in res["blocks"] if b["id"] == "pause_lunch")
+    assert lunch is not None
+    sh, sm = map(int, lunch["start_time"].split(":"))
+    lunch_start_m = sh * 60 + sm
+    # Must start between 12:25 and 13:35 (e.g. 12:44), NEVER in the late afternoon (15:44 or 16:37)!
+    assert (12 * 60 + 25) <= lunch_start_m <= (13 * 60 + 35)
+
+
+def test_new_cards_splits_across_lunch_window():
+    # Start 11:00, morning reps ~60m (ends 12:00), new cards 105m (would run 12:00 to 13:45)
+    # block_new_cards crosses the 12:30-13:30 window and must be split!
+    res = generate_daily_science_rhythm(
+        target_date=date(2027, 6, 8),
+        cards_due_today=70,  # ~60 min reps
+        new_cards_target=95, # 105 min
+        start_time_str="11:00",
+        lunch_duration_mins=60,
+        include_lecture=False,
+        is_manual_start=True,
+    )
+    block_ids = [b["id"] for b in res["blocks"]]
+    assert "block_new_cards_part1" in block_ids
+    assert "pause_lunch" in block_ids
+    assert "block_new_cards_part2" in block_ids
+    idx_p1 = block_ids.index("block_new_cards_part1")
+    idx_lunch = block_ids.index("pause_lunch")
+    idx_p2 = block_ids.index("block_new_cards_part2")
+    assert idx_p1 < idx_lunch < idx_p2
+
+
+
 

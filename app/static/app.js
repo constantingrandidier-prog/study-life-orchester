@@ -7290,12 +7290,12 @@ function toggleRetentionTrendDrawer(explicitOpen) {
 }
 window.toggleRetentionTrendDrawer = toggleRetentionTrendDrawer;
 
-async function loadDeckStats(forceRefresh = false) {
+async function loadDeckStats(forceRefresh = false, isRetry = false) {
   const container = document.getElementById('deckStatsTopicsContainer');
   const btn = document.getElementById('btnRefreshDeckStats');
   const updatedEl = document.getElementById('deckStatsLastUpdated');
 
-  if (forceRefresh) {
+  if (forceRefresh && !isRetry) {
     if (btn) {
       btn.disabled = true;
       btn.style.opacity = '0.75';
@@ -7308,7 +7308,14 @@ async function loadDeckStats(forceRefresh = false) {
 
   try {
     const res = await fetch(`${API_BASE}/anki/deck-retention-stats?_ts=${Date.now()}`);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    if (!res.ok) {
+      if (!isRetry) {
+        // Automatic retry after 1.2s in case container was restarting
+        await new Promise(r => setTimeout(r, 1200));
+        return await loadDeckStats(forceRefresh, true);
+      }
+      throw new Error('HTTP ' + res.status);
+    }
     const data = await res.json();
     state.deckStatsData = data;
 
@@ -7477,11 +7484,24 @@ async function loadDeckStats(forceRefresh = false) {
     }
   } catch (err) {
     console.warn('Error loading deck stats:', err);
+    if (!isRetry) {
+      // Auto-retry once on network/fetch failure
+      await new Promise(r => setTimeout(r, 1200));
+      return await loadDeckStats(forceRefresh, true);
+    }
     if (container && (!state.deckStatsData || !state.deckStatsData.topics)) {
-      container.innerHTML = '<div style="text-align: center; padding: 2.5rem 1rem; color: #ff7b72; font-size: 13px;">Fehler beim Laden der Deck-Statistiken. Bitte versuche es erneut.</div>';
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: #ff7b72; font-size: 13px;">
+          Fehler beim Laden der Deck-Statistiken (${escapeHtml(err.message || 'Server-Verbindung unterbrochen')}).
+          <br><br>
+          <button type="button" class="btn-secondary" onclick="loadDeckStats(true)" style="padding: 0.4rem 0.9rem; font-size: 12px; cursor: pointer;">
+            🔄 Erneut versuchen
+          </button>
+        </div>
+      `;
     }
     if (forceRefresh && typeof showToast === 'function') {
-      showToast('Fehler beim Laden der Deck-Statistiken', 'error');
+      showToast('Fehler beim Laden der Deck-Statistiken: ' + (err.message || ''), 'error');
     }
   } finally {
     if (btn) {
@@ -7566,7 +7586,8 @@ function renderDeckStats() {
   let totalMatchingDecks = 0;
 
   data.topics.forEach((t, tIdx) => {
-    let matchingDecks = t.subdecks.filter(d => {
+    const subdecks = t.subdecks || [];
+    let matchingDecks = subdecks.filter(d => {
       if (query) {
         const fullTxt = `${d.anki_name} ${d.parent_topic}`.toLowerCase();
         if (!fullTxt.includes(query)) return false;
@@ -7586,14 +7607,14 @@ function renderDeckStats() {
 
     matchingDecks.sort((a, b) => {
       if (sort === 'retention_asc') {
-        const ra = a.retention_rate !== null ? a.retention_rate : 999;
-        const rb = b.retention_rate !== null ? b.retention_rate : 999;
-        return ra - rb || b.total_reviews - a.total_reviews;
+        const ra = typeof a.retention_rate === 'number' ? a.retention_rate : 999;
+        const rb = typeof b.retention_rate === 'number' ? b.retention_rate : 999;
+        return ra - rb || (b.total_reviews || 0) - (a.total_reviews || 0);
       }
       if (sort === 'retention_desc') {
-        const ra = a.retention_rate !== null ? a.retention_rate : -1;
-        const rb = b.retention_rate !== null ? b.retention_rate : -1;
-        return rb - ra || b.total_reviews - a.total_reviews;
+        const ra = typeof a.retention_rate === 'number' ? a.retention_rate : -1;
+        const rb = typeof b.retention_rate === 'number' ? b.retention_rate : -1;
+        return rb - ra || (b.total_reviews || 0) - (a.total_reviews || 0);
       }
       if (sort === 'neglected') {
         const da = a.last_reviewed_days_ago !== null ? a.last_reviewed_days_ago : -1;
@@ -7601,31 +7622,32 @@ function renderDeckStats() {
         return db - da;
       }
       if (sort === 'reviews_desc') {
-        return b.total_reviews - a.total_reviews;
+        return (b.total_reviews || 0) - (a.total_reviews || 0);
       }
       if (sort === 'cards_desc') {
-        return b.card_count - a.card_count;
+        return (b.card_count || 0) - (a.card_count || 0);
       }
       if (sort === 'name_asc') {
-        return a.anki_name.localeCompare(b.anki_name);
+        return (a.anki_name || '').localeCompare(b.anki_name || '');
       }
       return 0;
     });
 
     const topicEmoji = getTopicEmoji(t.topic_name);
-    const retVal = t.retention_rate !== null ? `${t.retention_rate}%` : 'Noch nicht gelernt';
+    const hasTopicRet = typeof t.retention_rate === 'number' && !isNaN(t.retention_rate);
+    const retVal = hasTopicRet ? `${t.retention_rate}%` : 'Noch nicht gelernt';
     let retColor = '#8b949e';
-    if (t.retention_rate !== null) {
+    if (hasTopicRet) {
       retColor = t.retention_rate >= 80 ? '#3fb950' : (t.retention_rate >= 70 ? '#d29922' : '#ff7b72');
     }
 
     const topicId = `deckTopicCard_${tIdx}`;
     const isOpen = (t.total_reviews > 0) || query.length > 0;
 
-    const tot = Math.max(1, t.total_cards);
-    const maturePct = Math.round((t.mature_cards / tot) * 100);
-    const youngPct = Math.round((t.young_cards / tot) * 100);
-    const learningPct = Math.round((t.learning_cards / tot) * 100);
+    const tot = Math.max(1, t.total_cards || 0);
+    const maturePct = Math.round(((t.mature_cards || 0) / tot) * 100);
+    const youngPct = Math.round(((t.young_cards || 0) / tot) * 100);
+    const learningPct = Math.round(((t.learning_cards || 0) / tot) * 100);
     const newPct = Math.max(0, 100 - maturePct - youngPct - learningPct);
 
     const subdecksHtml = matchingDecks.map(sd => {
@@ -7634,9 +7656,9 @@ function renderDeckStats() {
       let sdRetBarPct = 0;
       if (sd.is_learning_phase) {
         sdRetColor = '#58a6ff';
-        sdRetLabel = `🌱 In Erarbeitung (${sd.total_reviews}x)`;
+        sdRetLabel = `🌱 In Erarbeitung (${sd.total_reviews || 0}x)`;
         sdRetBarPct = 40;
-      } else if (sd.retention_rate !== null) {
+      } else if (typeof sd.retention_rate === 'number' && !isNaN(sd.retention_rate)) {
         sdRetBarPct = Math.min(100, Math.max(0, sd.retention_rate));
         if (sd.retention_rate >= 80) {
           sdRetColor = '#3fb950';

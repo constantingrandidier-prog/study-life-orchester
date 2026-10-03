@@ -16,6 +16,7 @@ from app.services.anki_desktop_sync import find_local_anki_collection
 
 # Current semester start: 2026-09-14 00:00:00 (ignore previous semester logs and card resets)
 SEMESTER_START_TS = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+DECK_STATS_SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "cached_deck_stats.json"
 
 
 def clean_display_name(raw_name: str) -> str:
@@ -98,30 +99,54 @@ def _normalize_deck_stats_payload(data: Any) -> Any:
 def cache_deck_stats(stats: Dict[str, Any]):
     try:
         norm = _normalize_deck_stats_payload(stats)
-        with get_db_connection() as conn:
-            _ensure_cache_table(conn)
-            cur = conn.cursor()
-            cur.execute("""
-                INSERT INTO anki_deck_stats_cache (id, payload_json, updated_at)
-                VALUES (1, ?, CURRENT_TIMESTAMP)
-                ON CONFLICT(id) DO UPDATE SET
-                    payload_json = excluded.payload_json,
-                    updated_at = CURRENT_TIMESTAMP;
-            """, (json.dumps(norm),))
+        json_str = json.dumps(norm, ensure_ascii=False)
+        
+        # 1. Database table cache
+        try:
+            with get_db_connection() as conn:
+                _ensure_cache_table(conn)
+                cur = conn.cursor()
+                cur.execute("""
+                    INSERT INTO anki_deck_stats_cache (id, payload_json, updated_at)
+                    VALUES (1, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(id) DO UPDATE SET
+                        payload_json = excluded.payload_json,
+                        updated_at = CURRENT_TIMESTAMP;
+                """, (json_str,))
+        except Exception:
+            pass
+
+        # 2. File-system snapshot (committed and deployed to Render)
+        try:
+            DECK_STATS_SNAPSHOT_PATH.parent.mkdir(parents=True, exist_ok=True)
+            DECK_STATS_SNAPSHOT_PATH.write_text(json_str, encoding="utf-8")
+        except Exception:
+            pass
     except Exception:
         pass
 
 
 def get_cached_deck_stats() -> Optional[Dict[str, Any]]:
+    # 1. Try DB cache first
     try:
         with get_db_connection() as conn:
             _ensure_cache_table(conn)
             cur = conn.cursor()
             row = cur.execute("SELECT payload_json FROM anki_deck_stats_cache WHERE id = 1").fetchone()
-            if row:
+            if row and row[0]:
                 return _normalize_deck_stats_payload(json.loads(row[0]))
     except Exception:
         pass
+
+    # 2. Fall back to bundled JSON snapshot file
+    try:
+        if DECK_STATS_SNAPSHOT_PATH.exists():
+            content = DECK_STATS_SNAPSHOT_PATH.read_text(encoding="utf-8")
+            if content.strip():
+                return _normalize_deck_stats_payload(json.loads(content))
+    except Exception:
+        pass
+
     return None
 
 

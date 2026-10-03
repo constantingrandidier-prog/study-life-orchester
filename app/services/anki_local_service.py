@@ -265,7 +265,9 @@ def read_local_anki_database(col_path: Path, deck_scope: str = "curriculum") -> 
             SELECT 
                 count(*),
                 avg(r.time) / 1000.0,
-                sum(case when r.ease > 1 then 1 else 0 end) * 1.0 / max(1, count(*))
+                sum(case when r.ease > 1 then 1 else 0 end) * 1.0 / max(1, count(*)),
+                sum(case when r.type IN (1, 2) and r.ease > 1 then 1 else 0 end) * 1.0 / max(1, sum(case when r.type IN (1, 2) then 1 else 0 end)),
+                sum(case when r.type IN (1, 2) then 1 else 0 end)
             FROM revlog r
             JOIN cards c ON r.cid = c.id
             WHERE c.did IN ({placeholders})
@@ -276,7 +278,11 @@ def read_local_anki_database(col_path: Path, deck_scope: str = "curriculum") -> 
             avg_seconds = round(float(rev_row[1] or 20.0), 1)
             # Clamp realistic review time between 5s and 60s
             avg_seconds = max(5.0, min(60.0, avg_seconds))
-            retention_rate = round(float(rev_row[2] or 0.729), 3)
+            rep_count = rev_row[4] or 0
+            if rep_count > 0:
+                retention_rate = round(float(rev_row[3] or 0.729), 3)
+            else:
+                retention_rate = round(float(rev_row[2] or 0.729), 3)
 
             # Active streak dates for this deck all-time
             dates_res = cur.execute(f"""

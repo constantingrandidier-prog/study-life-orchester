@@ -7632,9 +7632,13 @@ function renderDeckStats() {
       let sdRetColor = '#8b949e';
       let sdRetLabel = 'Noch nicht gelernt';
       let sdRetBarPct = 0;
-      if (sd.retention_rate !== null) {
+      if (sd.is_learning_phase) {
+        sdRetColor = '#58a6ff';
+        sdRetLabel = `🌱 In Erarbeitung (${sd.total_reviews}x)`;
+        sdRetBarPct = 40;
+      } else if (sd.retention_rate !== null) {
         sdRetBarPct = Math.min(100, Math.max(0, sd.retention_rate));
-        if (sd.retention_rate >= 85) {
+        if (sd.retention_rate >= 80) {
           sdRetColor = '#3fb950';
           sdRetLabel = `${sd.retention_rate}% Stark`;
         } else if (sd.retention_rate >= 70) {
@@ -7658,6 +7662,10 @@ function renderDeckStats() {
       }
 
       const escapedName = escapeHtml(sd.anki_name);
+      const retTooltip = sd.is_learning_phase 
+        ? `${sd.total_reviews} Durchgänge (noch im Erstlernen/Aufbau). Sobald Wiederholungen anstehen, wird die Langzeit-Retention gemessen.`
+        : `Retention: ${sd.retention_rate}% · 7d-Schnitt: ${sd.week_retention !== null ? sd.week_retention + '%' : '–'} · Semesterschnitt: ${sd.rep_retention_rate !== null ? sd.rep_retention_rate + '%' : '–'} (${sd.rep_reviews || 0} Reviews, ${sd.learn_reviews || 0} Erstlernen)`;
+
       return `
         <div class="deck-row-item">
           <div class="deck-row-name-wrap">
@@ -7679,8 +7687,8 @@ function renderDeckStats() {
               </div>
             ` : ''}
 
-            <div class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${sdRetColor}44; color: ${sdRetColor};" title="${sd.total_reviews} Reviews (Semester): ${sd.pass_count} Gut/Einfach, ${sd.fail_count} Nochmal">
-              ${sd.today_reviews > 0 ? `Ø Sem: ${sdRetLabel}` : sdRetLabel}
+            <div class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${sdRetColor}44; color: ${sdRetColor};" title="${retTooltip}">
+              ${sdRetLabel}
               <div class="retention-bar-wrap">
                 <div class="retention-bar-fill" style="width: ${sdRetBarPct}%; background: ${sdRetColor};"></div>
               </div>
@@ -7724,7 +7732,7 @@ function renderDeckStats() {
             ` : ''}
 
             <span class="deck-stat-badge" style="background: rgba(255,255,255,0.03); border: 1px solid ${retColor}55; color: ${retColor};">
-              Ø Sem: <strong>${retVal}</strong>
+              Retention: <strong>${retVal}</strong>
             </span>
 
             <span class="deck-stat-badge" style="background: rgba(255,255,255,0.03); color: var(--text-muted); border: 1px solid var(--border-subtle);">

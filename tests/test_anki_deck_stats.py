@@ -103,3 +103,20 @@ def test_untouched_decks_and_topics_have_zero_reviews_and_no_retention():
             assert sd["retention_rate"] is None
             assert sd["total_reviews"] == 0
 
+def test_true_retention_calculation_filters_learning_steps():
+    stats = get_detailed_deck_stats()
+    if not stats.get("available"):
+        pytest.skip("Local Anki DB not available")
+    
+    # Active topics should have true review retention distinct from raw passes/reviews
+    summary = stats["summary"]
+    assert "total_rep_reviews" in summary
+    assert "all_reviews_retention" in summary
+    assert summary["total_rep_reviews"] > 0
+    assert summary["total_reviews"] > summary["total_rep_reviews"]
+    # True review retention should be higher than raw all-time pass rate due to eliminating learning-step noise
+    assert summary["overall_retention"] >= summary.get("all_reviews_retention", 0.0)
+    assert summary["overall_retention"] > 70.0
+
+
+

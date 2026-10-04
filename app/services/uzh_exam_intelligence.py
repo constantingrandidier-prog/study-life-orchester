@@ -311,7 +311,7 @@ def classify_deck_yield(
     """
     nl = anki_name.lower()
 
-    # 1. No Yield (Einführung, Abschluss, Organisation, Vorbesprechung)
+    # 1. No Yield (Reine Orientierung, Einführung, Abschluss, Organisation)
     no_yield_terms = [
         "einführung", "abschluss", "einfuehrung", "organisat", "vorbesprechung", "feedback"
     ]
@@ -322,53 +322,59 @@ def classify_deck_yield(
             "yield_badge": "⚪ No-Yield",
             "yield_color": "#8b949e",
             "yield_order": 4,
-            "yield_reason": "Reine Orientierungs-, Einführungs- oder Abschlussfolien ohne prüfungsrelevante Fakten.",
+            "yield_reason": "Reine Orientierungs-, Einführungs- oder Abschlussfolien ohne prüfbare Lernfakten.",
         }
 
-    # 2. Low Yield (Praktikumsversuche, Kaumuskelbeschwerden, Nischenmethoden)
+    # 2. Low Yield (Praktikumsversuche, Laborversuche, Randkapitel & Nischenanatomie)
     low_yield_terms = [
-        "versuch", "kaumuskelbeschwerden", "pcr und restriktion :: versuch",
-        "proteinreinigung :: versuch", "photometrieren :: versuch", "sds-page :: versuch"
+        "versuch", "kaumuskelbeschwerden", "spurenelemente&mineralien", "2 gesichtsentwicklung",
+        "kauen, schmecken", "mundhöhle, kauapparat", "1 schlunddarmentwicklung",
+        "1 disseminiertes endokrines system", "3 bauchfellverhältnisse", "lymphsystem / loffing",
+        "2. zeichnen", "makronährstoffe", "ernährung / dutzler", "mediastinum und perikard"
     ]
     if any(t in nl for t in low_yield_terms):
         return {
             "yield_level": "low",
-            "yield_label": "Low-Yield (Versuch / Detail)",
+            "yield_label": "Low-Yield (Versuch / Randthema)",
             "yield_badge": "🟢 Low-Yield",
             "yield_color": "#3fb950",
             "yield_order": 3,
-            "yield_reason": "Praktikumsversuch / methodisches Detail mit untergeordneter Relevanz für schriftliche Modulprüfungen.",
+            "yield_reason": "Praktikumsversuch oder Nischenthema mit geringer direkter Relevanz für schriftliche Modulprüfungen.",
         }
 
-    # 3. High Yield (Prüfungs-Kerngebiete, Kern-Dozenten, Kprim-Hotspots)
-    hy_terms = [
+    # 3. High Yield (Die wirklichen UZH Prüfungs-Klassiker & Kprim-Hotspots: ~20-25% der Decks)
+    # Nur echte Kernfragen-Schwerpunkte, an denen massgeblich Punkte & Bestehen hängen:
+    true_hy_terms = [
         "blutgerinnung", "hämostase", "astrup", "säure-base", "hypoxie", "höhenanpassung",
-        "ekg", "raas", "aldosteron", "nephron", "glukagon", "insulin", "ketonkörper",
-        "steroid", "ags", "herzentwicklung", "shunts", "klappen", "immuntoleranz",
-        "t-zell", "autoimmunität", "monoklonale", "diuretika", "tubulär", "kalium",
-        "sglt", "membrantransport", "arrhythmie", "erythrozyten", "co2-transport",
-        "leukozyten", "thrombozyten", "energieumsatz", "schilddrüse", "nebenniere",
-        "kohlenhydrat stoffwechsel", "leberspezifischer", "fettsäurestoffwechsel",
-        "endokrines pankreas", "katecholamine", "hypothalamo", "wenger", "wagner",
-        "tuzlak", "sommer", "loffing", "dutzler", "sokolowska", "emmert"
+        "erythrozyten / wenger", "co2-transport", "immuntoleranz", "autoimmunität",
+        "monoklonale antikörper", "rekombination adaptiver", "herzentwicklung",
+        "gefässentwicklung", "ekg", "erregungsleitungssystem", "herzarbeit und regulation",
+        "herzmechanik", "thrombozyten", "regulation des ca- und phosphatstoffwechsels",
+        "schilddrüsenhormone", "magensaftsekretion", "exokrine pankreasfunktion",
+        "leber, gallenproduktion", "dünndarmfunktion: verdauung und absoption",
+        "regulation kohlenhydrat stoffwechsel", "leberspezifischer stoffwechsel",
+        "regulation des fettsäurestoffwechsels", "steroidhormone nebennierenrinde",
+        "katecholamine", "3 verdauung und absorption", "1 fettlösliche vitamine",
+        "ags", "21-hydroxylase", "raas", "aldosteron", "nephron", "tubulär", "diuretika"
     ]
-    if any(t in nl for t in hy_terms) or (prof_info and prof_info.get("uzh_importance", "").startswith("Sehr hoch")):
+    if any(t in nl for t in true_hy_terms):
         return {
             "yield_level": "high",
-            "yield_label": "High-Yield (Prüfungs-Kern)",
+            "yield_label": "High-Yield (Must-Know Klausur-Kern)",
             "yield_badge": "🔴 High-Yield",
             "yield_color": "#f85149",
             "yield_order": 1,
-            "yield_reason": "Zentraler Prüfungs-Hotspot UZH 2. SJ mit regelmässigen Kprim- und MC-Fragen.",
+            "yield_reason": "Absoluter Prüfungsklassiker UZH 2. SJ (garantierte Kprim- und MC-Fragen der Modulprüfung).",
         }
 
-    # 4. Medium Yield (Standardvorlesungen, Anatomie, Physiologie)
+    # 4. Medium Yield (Solider Standard-Lehrstoff: Physiologie, Anatomie, Biochemie)
     return {
         "yield_level": "medium",
         "yield_label": "Medium-Yield (Standard-Stoff)",
         "yield_badge": "🟡 Medium-Yield",
         "yield_color": "#d29922",
         "yield_order": 2,
-        "yield_reason": "Kanonischer Standardstoff (Physiologie, Anatomie, Biochemie Grundlagen).",
+        "yield_reason": "Wichtiger Standard-Vorlesungsstoff, der für ein solides Fundament und das Bestehen beherrscht werden muss.",
     }
+
 

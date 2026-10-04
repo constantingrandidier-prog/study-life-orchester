@@ -136,9 +136,9 @@ def test_classify_deck_yield():
     assert hy_hypoxie["yield_level"] == "high"
 
     # Medium Yield
-    med_mechanik = classify_deck_yield("2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik")
-    assert med_mechanik["yield_level"] == "medium"
-    assert "Medium-Yield" in med_mechanik["yield_badge"]
+    med_deck = classify_deck_yield("2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu")
+    assert med_deck["yield_level"] == "medium"
+    assert "Medium-Yield" in med_deck["yield_badge"]
 
     # Low Yield (Praktikum / Versuch)
     low_versuch = classify_deck_yield("Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: SDS-Page :: Versuch")

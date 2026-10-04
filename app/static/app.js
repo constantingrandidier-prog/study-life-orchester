@@ -2200,6 +2200,7 @@ function handleModalBackdropClick(event) {
   if (event.target.id === 'curriculumRoadmapModal' && window.closeCurriculumRoadmapModal) window.closeCurriculumRoadmapModal();
   if (event.target.id === 'rhythmBlockActionModal' && window.closeRhythmBlockActionModal) window.closeRhythmBlockActionModal();
   if (event.target.id === 'rhythmAddPauseModal' && window.closeAddPauseModal) window.closeAddPauseModal();
+  if (event.target.id === 'professorExamModal' && window.closeProfessorExamModal) window.closeProfessorExamModal();
 }
 window.handleModalBackdropClick = handleModalBackdropClick;
 
@@ -7724,6 +7725,18 @@ function renderDeckStats() {
               ⏱️ ${sd.last_reviewed_text}
             </div>
 
+            ${sd.professor_name ? `
+              <div class="deck-stat-badge" style="background: rgba(139,92,246,0.14); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.35); font-weight: 600; cursor: pointer;" onclick="openProfessorExamModal('${escapedName}')" title="${escapeHtml(sd.professor_name)} (${escapeHtml(sd.uzh_importance || 'Prüfungsstoff')}) • Klick für UZH-Prüfungsfokus & Kprim-Fallen">
+                👨‍🏫 ${escapeHtml(sd.professor_name.replace('Prof. Dr. ', '').replace('PD Dr. med. ', '').replace('Dr. ', ''))}
+              </div>
+            ` : ''}
+
+            ${sd.exam_risk_level && sd.exam_risk_level !== 'safe' ? `
+              <div class="deck-stat-badge" style="background: ${sd.exam_risk_color}22; color: ${sd.exam_risk_color}; border: 1px solid ${sd.exam_risk_color}55; font-weight: 700; cursor: pointer;" onclick="openProfessorExamModal('${escapedName}')" title="${escapeHtml(sd.exam_risk_action || '')}">
+                ${sd.exam_risk_level === 'critical' ? '🚨 Kprim-Risiko' : '⚠️ Prüfungs-Check'}
+              </div>
+            ` : ''}
+
             <button type="button" class="btn-copy-deck-query" onclick="copyDeckQueryToClipboard('${escapedName}')" title="Anki-Suchstring kopieren (für Suchfeld oder gefilterten Stapel)">
               📋 Anki-Filter
             </button>
@@ -7880,6 +7893,92 @@ window.handleSortDeckStats = handleSortDeckStats;
 window.toggleDeckTopicAccordion = toggleDeckTopicAccordion;
 window.toggleAllDeckTopics = toggleAllDeckTopics;
 window.copyDeckQueryToClipboard = copyDeckQueryToClipboard;
+
+function openProfessorExamModal(deckName) {
+  const modal = document.getElementById('professorExamModal');
+  const titleEl = document.getElementById('profModalTitle');
+  const subEl = document.getElementById('profModalSubtitle');
+  const bodyEl = document.getElementById('profModalBody');
+  if (!modal || !bodyEl) return;
+
+  const all = (state.deckStatsData && state.deckStatsData.all_decks) ? state.deckStatsData.all_decks : [];
+  const deck = all.find(d => d.anki_name === deckName) || {};
+
+  const profName = deck.professor_name || 'Dozententeam UZH';
+  const profInst = deck.professor_institute || 'Medizinische Fakultät UZH';
+  const pearl = deck.exam_pearl || 'Grundlegendes physiologisches / biochemisches Verständnis des Themas erforderlich.';
+  const trap = deck.kprim_trap || 'Achte auf Signalwege, Cofaktoren und Grenzwerte. Bei Kprim-Fragen führen 2 falsche Teilentscheidungen zum Verlust des vollen Prüfungspunktes!';
+  const imp = deck.uzh_importance || 'Prüfungsstoff UZH 2. SJ';
+  const riskLbl = deck.exam_risk_label || 'Standard';
+  const riskClr = deck.exam_risk_color || '#58a6ff';
+  const riskAction = deck.exam_risk_action || 'Stoff im regulären Lernrhythmus bearbeiten.';
+  const ret = deck.retention_rate !== null && deck.retention_rate !== undefined ? `${deck.retention_rate}%` : 'Noch unbewertet';
+
+  if (titleEl) titleEl.textContent = profName;
+  if (subEl) subEl.textContent = `${profInst} · ${escapeHtml(deck.parent_topic || 'Themenblock')}`;
+
+  bodyEl.innerHTML = `
+    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1rem;">
+      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 2px;">Anki-Deck</div>
+      <div style="font-size: 14px; font-weight: 700; color: #f0f6fc;">${escapeHtml(deck.anki_name || deckName)}</div>
+      <div style="font-size: 11.5px; color: #79c0ff; margin-top: 4px; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <span>📚 <strong>${deck.card_count || 0}</strong> Karten</span>
+        <span>•</span>
+        <span>🎯 Deine Retention: <strong>${ret}</strong></span>
+        <span>•</span>
+        <span style="color: ${riskClr}; font-weight: 700;">${escapeHtml(riskLbl)}</span>
+      </div>
+    </div>
+
+    <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <strong style="color: #c4b5fd; font-size: 13px;">Prüfungsstatus UZH:</strong>
+        <span style="color: #e6edf3; font-size: 12.5px; margin-left: 6px;">${escapeHtml(imp)}</span>
+      </div>
+      <span style="font-size: 11px; font-weight: 700; background: rgba(139, 92, 246, 0.25); color: #c4b5fd; padding: 0.2rem 0.5rem; border-radius: 4px;">Modulprüfung</span>
+    </div>
+
+    <div style="background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 0.9rem 1rem;">
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 0.4rem;">
+        <span style="font-size: 16px;">💡</span>
+        <strong style="color: #7ee787; font-size: 13px;">High-Yield Prüfungsfokus (Prof-Schwerpunkt)</strong>
+      </div>
+      <div style="font-size: 12.5px; color: #c9d1d9; line-height: 1.55;">
+        ${escapeHtml(pearl)}
+      </div>
+    </div>
+
+    <div style="background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.35); border-radius: 8px; padding: 0.9rem 1rem;">
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 0.4rem;">
+        <span style="font-size: 16px;">⚠️</span>
+        <strong style="color: #ff7b72; font-size: 13px;">UZH Kprim-Falle (Häufige Punktverluste)</strong>
+      </div>
+      <div style="font-size: 12.5px; color: #f0f6fc; line-height: 1.55;">
+        ${escapeHtml(trap)}
+      </div>
+      <div style="font-size: 11px; color: var(--text-muted); margin-top: 0.5rem; border-top: 1px solid rgba(248, 81, 73, 0.15); padding-top: 0.4rem;">
+        Erinnerung Kprim: 4/4 richtig = 1.0 Pkt · 3/4 = 0.5 Pkt · &lt;3 = 0 Pkt. Keine halben Wahrheiten ankreuzen!
+      </div>
+    </div>
+
+    <div style="background: rgba(56, 139, 253, 0.08); border: 1px solid rgba(56, 139, 253, 0.3); border-radius: 8px; padding: 0.75rem 1rem;">
+      <strong style="color: #79c0ff; font-size: 12.5px;">🎯 Handlungsempfehlung vor der Prüfung:</strong>
+      <div style="font-size: 12px; color: #c9d1d9; margin-top: 3px;">
+        ${escapeHtml(riskAction)}
+      </div>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+window.openProfessorExamModal = openProfessorExamModal;
+
+function closeProfessorExamModal() {
+  const modal = document.getElementById('professorExamModal');
+  if (modal) modal.style.display = 'none';
+}
+window.closeProfessorExamModal = closeProfessorExamModal;
+
 
 
 

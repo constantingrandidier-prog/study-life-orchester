@@ -1922,5 +1922,33 @@ def stop_media_endpoint():
     }
 
 
+@router.get(
+    "/exam-intelligence/professors",
+    summary="Get verified UZH professor profiles, exam styles, and Kprim traps",
+)
+def get_exam_intelligence_professors_endpoint():
+    """Returns research profiles, high-yield pearls, and Kprim pitfall warnings for UZH 2. SJ professors."""
+    from app.services.uzh_exam_intelligence import UZH_PROFESSORS
+    return {
+        "success": True,
+        "professors": UZH_PROFESSORS,
+        "count": len(UZH_PROFESSORS),
+    }
+
+
+@router.get(
+    "/exam-intelligence/regulations",
+    summary="Get UZH Modulprüfungen structure, scoring, pass thresholds, and Kprim rules",
+)
+def get_exam_intelligence_regulations_endpoint():
+    """Returns structure, date, grading, and safety margins for UZH Modulprüfung 1 & 2."""
+    from app.services.uzh_exam_intelligence import UZH_EXAM_REGULATIONS
+    return {
+        "success": True,
+        "regulations": UZH_EXAM_REGULATIONS,
+    }
+
+
+
 
 

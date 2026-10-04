@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional
 
 from app.services.olat_connector import scan_local_uzh_slides
 from app.services.lecture_advisor_service import search_lecture_advisor
+from app.services.uzh_exam_intelligence import match_professor_for_topic
 
 # Semester milestone constants
 SEMESTER_START_DATE = date(2026, 9, 14)  # Monday
@@ -1366,6 +1367,11 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
                 "red_thread": scaffolding.get("red_thread"),
                 "cross_links": scaffolding.get("cross_links"),
                 "concept_goal": scaffolding.get("concept_goal"),
+                "professor_name": (match_professor_for_topic(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"]) or {}).get("name", clean_info["lecturer"]),
+                "professor_institute": (match_professor_for_topic(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"]) or {}).get("institute", "Medizinische Fakultät UZH"),
+                "kprim_trap": (match_professor_for_topic(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"]) or {}).get("kprim_trap"),
+                "high_yield_pearl": (match_professor_for_topic(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"]) or {}).get("high_yield_pearl"),
+                "uzh_importance": (match_professor_for_topic(c_deck["deck_name"], clean_info["clean_title"], c_deck["module_name"]) or {}).get("uzh_importance", "Standard"),
             })
 
             cumulative_cards += take
@@ -1480,6 +1486,9 @@ def _get_canonical_roadmap() -> Dict[str, Any]:
             "yield_stars": day_yield_stars,
             "yield_label": day_yield_label,
             "exam_yield_badge": day_yield_badge,
+            "primary_professor": day_slots[0].get("professor_name") if day_slots else None,
+            "primary_kprim_trap": day_slots[0].get("kprim_trap") if day_slots else None,
+            "primary_high_yield_pearl": day_slots[0].get("high_yield_pearl") if day_slots else None,
         })
         cur_date += timedelta(days=1)
 

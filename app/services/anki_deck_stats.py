@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from app.db.repository import get_db_connection
 from app.services.anki_desktop_sync import find_local_anki_collection
+from app.services.uzh_exam_intelligence import match_professor_for_topic, calculate_uzh_exam_risk_score
 
 # Current semester start: 2026-09-14 00:00:00 (ignore previous semester logs and card resets)
 SEMESTER_START_TS = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
@@ -471,6 +472,15 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         primary_ret = today_retention if today_retention is not None else retention_rate
         primary_ret_lbl = "Heute" if today_retention is not None else retention_basis
 
+        prof_info = match_professor_for_topic(dmeta["anki_name"], dmeta["anki_name"], dmeta["parent_topic"])
+        is_hy = prof_info.get("uzh_importance", "").startswith("Sehr hoch") if prof_info else False
+        risk_data = calculate_uzh_exam_risk_score(
+            retention_rate=primary_ret,
+            card_count=total_cards,
+            is_high_yield=is_hy,
+            last_reviewed_days_ago=days_ago,
+        )
+
         all_decks.append({
             "deck_id": did,
             "anki_name": dmeta["anki_name"],
@@ -508,6 +518,16 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             "status_label": status_label,
             "badge_color": badge_color,
             "is_neglected": is_neglected,
+            "professor_name": prof_info["name"] if prof_info else "Dozententeam UZH",
+            "professor_institute": prof_info["institute"] if prof_info else "Medizinische Fakultät UZH",
+            "exam_pearl": prof_info["high_yield_pearl"] if prof_info else None,
+            "kprim_trap": prof_info["kprim_trap"] if prof_info else None,
+            "uzh_importance": prof_info["uzh_importance"] if prof_info else "Standard",
+            "exam_risk_score": risk_data["risk_score"],
+            "exam_risk_level": risk_data["risk_level"],
+            "exam_risk_label": risk_data["risk_label"],
+            "exam_risk_color": risk_data["color"],
+            "exam_risk_action": risk_data["recommended_action"],
         })
 
     # 5. Group by Grosse Überthemen (Themenblöcke)

@@ -626,8 +626,13 @@ def get_or_set_daily_baseline_due(
             return final_due
 
         stored_due = int(row["planned_due_cards"])
-        final_due = max(stored_due, total_candidate)
-        if final_due > stored_due:
+        today_iso = dt_date.today().isoformat()
+        if target_date > today_iso or stored_due == 100:
+            final_due = total_candidate if total_candidate > 0 else stored_due
+        else:
+            final_due = max(stored_due, total_candidate)
+
+        if final_due != stored_due:
             cursor.execute("""
                 UPDATE rhythm_daily_baselines
                 SET planned_due_cards = ?, updated_at = CURRENT_TIMESTAMP

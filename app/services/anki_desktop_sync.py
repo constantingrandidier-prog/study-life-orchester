@@ -406,6 +406,27 @@ def get_cached_desktop_sync_state(target_date_str: Optional[str] = None):
             row = cur.execute('SELECT state_json FROM anki_desktop_sync_cache WHERE target_date = ?', (t_date,)).fetchone()
             if row:
                 return json.loads(row[0])
+
+            # If tomorrow is requested and not directly synced yet, synthesize from today's live preview!
+            from datetime import timedelta
+            tom_iso = (date.today() + timedelta(days=1)).isoformat()
+            if t_date == tom_iso:
+                today_row = cur.execute('SELECT state_json FROM anki_desktop_sync_cache WHERE target_date = ?', (date.today().isoformat(),)).fetchone()
+                if today_row:
+                    today_data = json.loads(today_row[0])
+                    tom_cnt = int(today_data.get('due_tomorrow_count') or 0)
+                    if tom_cnt > 0:
+                        synth = dict(today_data)
+                        synth['target_date'] = t_date
+                        synth['due_today_count'] = tom_cnt
+                        synth['due_reviews_count'] = tom_cnt
+                        synth['repetition_cards_count'] = 0
+                        synth['today_reviewed_count'] = 0
+                        synth['new_cards_count'] = 0
+                        synth['today_time_minutes'] = 0
+                        synth['today_session_time_minutes'] = 0
+                        synth['effective_study_minutes'] = 0
+                        return synth
     except Exception:
         pass
     return None

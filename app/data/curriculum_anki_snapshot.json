@@ -39,7 +39,7 @@
     "new_cards": 0,
     "mastered_cards": 23,
     "learning_cards": 0,
-    "avg_card_chars": 201.1,
+    "avg_card_chars": 201.4,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -226,7 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 226.7,
+    "avg_card_chars": 227.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 247.6,
+    "avg_card_chars": 248.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,8 +278,8 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 10,
-    "mastered_cards": 122,
+    "new_cards": 2,
+    "mastered_cards": 124,
     "learning_cards": 0,
     "avg_card_chars": 438.2,
     "is_completed": false,
@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 266.9,
+    "avg_card_chars": 269.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -567,7 +567,7 @@
     "new_cards": 0,
     "mastered_cards": 62,
     "learning_cards": 0,
-    "avg_card_chars": 498.0,
+    "avg_card_chars": 498.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -589,7 +589,7 @@
     "new_cards": 0,
     "mastered_cards": 68,
     "learning_cards": 0,
-    "avg_card_chars": 334.1,
+    "avg_card_chars": 336.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -622,7 +622,7 @@
     "new_cards": 0,
     "mastered_cards": 97,
     "learning_cards": 0,
-    "avg_card_chars": 350.8,
+    "avg_card_chars": 353.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -674,23 +674,23 @@
     "deck_id": 1789378223027,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
     "card_count": 20,
-    "new_cards": 20,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 20,
     "learning_cards": 0,
-    "avg_card_chars": 137.6,
-    "is_completed": false,
+    "avg_card_chars": 164.4,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378223028,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
-    "card_count": 59,
-    "new_cards": 59,
-    "mastered_cards": 0,
+    "card_count": 60,
+    "new_cards": 2,
+    "mastered_cards": 53,
     "learning_cards": 0,
-    "avg_card_chars": 192.2,
+    "avg_card_chars": 252.0,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223029,
@@ -699,7 +699,7 @@
     "new_cards": 0,
     "mastered_cards": 20,
     "learning_cards": 0,
-    "avg_card_chars": 246.0,
+    "avg_card_chars": 254.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -710,7 +710,7 @@
     "new_cards": 0,
     "mastered_cards": 32,
     "learning_cards": 0,
-    "avg_card_chars": 202.1,
+    "avg_card_chars": 205.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -718,11 +718,11 @@
     "deck_id": 1789378223031,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
     "card_count": 22,
-    "new_cards": 22,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 22,
     "learning_cards": 0,
-    "avg_card_chars": 161.3,
-    "is_completed": false,
+    "avg_card_chars": 196.3,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -754,7 +754,7 @@
     "new_cards": 0,
     "mastered_cards": 36,
     "learning_cards": 0,
-    "avg_card_chars": 276.6,
+    "avg_card_chars": 279.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -776,7 +776,7 @@
     "new_cards": 37,
     "mastered_cards": 13,
     "learning_cards": 0,
-    "avg_card_chars": 323.1,
+    "avg_card_chars": 324.9,
     "is_completed": false,
     "is_in_progress": true
   },

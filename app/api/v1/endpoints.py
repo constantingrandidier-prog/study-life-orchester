@@ -1283,13 +1283,30 @@ def get_daily_rhythm_endpoint(
     cal_events = [CalendarEvent(**e) for e in events_raw] if events_raw else []
 
     from app.services.anki_desktop_sync import read_live_anki_desktop_state
-    anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
-    due_val = anki_st.get("due_today_count")
-    if due_val is None:
-        due_val = anki_st.get("due_reviews_count")
-    due_today = int(due_val) if due_val is not None else 100
-    reps_reviewed = int(anki_st.get("repetition_cards_count", 0))
-    anki_first_rev = anki_st.get("first_review_time")
+    today_iso = date.today().isoformat()
+    from datetime import timedelta
+    tomorrow_iso = (date.today() + timedelta(days=1)).isoformat()
+
+    if t_date.isoformat() == tomorrow_iso:
+        # Check today's preview for tomorrow first
+        today_st = read_live_anki_desktop_state(target_date_str=today_iso)
+        tom_preview = today_st.get("due_tomorrow_count")
+        anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
+        due_val = anki_st.get("due_today_count") or anki_st.get("due_reviews_count")
+        if due_val is None or due_val == 100:
+            due_today = int(tom_preview) if (tom_preview and int(tom_preview) > 0) else (int(due_val) if due_val is not None else 100)
+        else:
+            due_today = int(due_val)
+        reps_reviewed = 0
+        anki_first_rev = None
+    else:
+        anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
+        due_val = anki_st.get("due_today_count")
+        if due_val is None:
+            due_val = anki_st.get("due_reviews_count")
+        due_today = int(due_val) if due_val is not None else 100
+        reps_reviewed = int(anki_st.get("repetition_cards_count", 0))
+        anki_first_rev = anki_st.get("first_review_time")
 
     # Freeze and preserve planned daily baseline so reviews done during the day never shrink block duration or shift Feierabend
     planned_due = repository.get_or_set_daily_baseline_due(

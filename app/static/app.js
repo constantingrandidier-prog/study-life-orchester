@@ -8008,7 +8008,7 @@ async function loadExamIntelPage(forceRefresh = false) {
     }
 
     // 2. Fetch professor dossiers
-    const res = await fetch(`${API_BASE}/schedule/exam-intelligence/professors`);
+    const res = await fetch(`${API_BASE}/exam-intelligence/professors`);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     state.examIntelData = data.professors || {};

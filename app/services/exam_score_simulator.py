@@ -86,11 +86,10 @@ def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[st
     total_potential = 0.0
 
     for top in exam_config["topics"]:
-        kws = top["keywords"]
+        from app.services.uzh_exam_intelligence import get_deck_exam_topic
         matched_decks = [
             d for d in all_decks
-            if any(k in (d.get("anki_name") or "").lower() for k in kws)
-            or any(k in (d.get("parent_topic") or "").lower() for k in kws)
+            if get_deck_exam_topic(d.get("anki_name") or "", d.get("parent_topic"))["topic_id"] == top["id"]
         ]
 
         total_cards = sum(d.get("card_count", 0) for d in matched_decks)

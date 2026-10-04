@@ -220,8 +220,10 @@ def analyze_card_content(
         "hy_terms_detected": hy_hits[:6],
         "negation_count": len(negation_hits),
         "directional_count": len(directional_hits),
-        "front_snippet": front_clean[:120],
-        "back_snippet": back_clean[:140],
+        "front": front_clean[:280],
+        "back": back_clean[:320],
+        "front_snippet": front_clean[:240],
+        "back_snippet": back_clean[:260],
     }
 
 
@@ -301,6 +303,8 @@ def scan_all_cards_in_collection(col_path: Optional[str] = None) -> Dict[str, An
             "trap_label": analysis["trap_label"],
             "trap_warning": analysis["trap_warning"],
             "card_type": analysis["card_type"],
+            "front": analysis["front"],
+            "back": analysis["back"],
             "front_snippet": analysis["front_snippet"],
             "back_snippet": analysis["back_snippet"],
             "hy_terms_detected": analysis["hy_terms_detected"],

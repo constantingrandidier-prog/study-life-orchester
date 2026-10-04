@@ -100,13 +100,9 @@ def calculate_actionable_deck_roi(
         advice = "Im Standard-Rhythmus wiederholen."
 
     # Determine which exam this deck belongs to
-    d_name_low = (deck.get("anki_name") or "").lower()
-    p_topic_low = (deck.get("parent_topic") or "").lower()
-    combined = d_name_low + " " + p_topic_low
-    if any(k in combined for k in ["blut", "immun", "herz", "kreislauf", "atmung", "lunge"]):
-        target_exam = "Modulprüfung 1 (Theorie)"
-    else:
-        target_exam = "Modulprüfung 2 (Theorie)"
+    from app.services.uzh_exam_intelligence import get_deck_exam_topic
+    exam_meta = get_deck_exam_topic(deck.get("anki_name") or "", deck.get("parent_topic"))
+    target_exam = exam_meta["exam_name"]
 
     return {
         "deck_id": deck.get("deck_id"),

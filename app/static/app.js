@@ -8487,14 +8487,27 @@ function renderExamIntelPage() {
       if (!haystack.includes(q)) return false;
     }
 
+    // Helper to determine exact exam for a deck
+    function getDeckExam(deck) {
+      const full = `${deck.anki_name || ''} ${deck.parent_topic || ''}`.toLowerCase();
+      if (full.includes('tb blut') || full.includes('tb immun') || full.includes('blut/immun') || full.includes('tb herz') || full.includes('tb atmung')) {
+        return 'mp1';
+      }
+      if (full.includes('tb verdauung') || full.includes('tb stoffwechsel') || full.includes('tb endokrin')) {
+        return 'mp2';
+      }
+      if (full.includes('blut') || full.includes('immun') || full.includes('herz') || full.includes('kreislauf') || full.includes('atmung') || full.includes('lunge')) {
+        return 'mp1';
+      }
+      return 'mp2';
+    }
+
     // Filter pills
     if (filter === 'mp1') {
-      const mp1Topics = ['atmung', 'blut', 'immun', 'herz', 'kreislauf', 'hämoglobin', 'gerinnung'];
-      const hasMp1 = prof.primary_topics.some(t => mp1Topics.some(m => t.toLowerCase().includes(m)));
+      const hasMp1 = allDecks.some(d => d.professor_name === prof.name && getDeckExam(d) === 'mp1');
       if (!hasMp1) return false;
     } else if (filter === 'mp2') {
-      const mp2Topics = ['verdauung', 'magen', 'darm', 'stoffwechsel', 'endokrin', 'hormon', 'steroid', 'insulin'];
-      const hasMp2 = prof.primary_topics.some(t => mp2Topics.some(m => t.toLowerCase().includes(m)));
+      const hasMp2 = allDecks.some(d => d.professor_name === prof.name && getDeckExam(d) === 'mp2');
       if (!hasMp2) return false;
     } else if (filter === 'high_yield') {
       if (!prof.uzh_importance.toLowerCase().includes('sehr hoch')) return false;
@@ -8673,15 +8686,8 @@ function renderExamIntelPage() {
       if (filter === 'low_yield' && yLvl !== 'low') return false;
       if (filter === 'no_yield' && yLvl !== 'none') return false;
 
-      if (filter === 'mp1') {
-        const mp1Terms = ['atmung', 'blut', 'immun', 'herz', 'kreislauf', 'hämoglobin', 'gerinnung'];
-        const hasMp1 = mp1Terms.some(m => dName.includes(m) || (d.parent_topic || '').toLowerCase().includes(m));
-        if (!hasMp1) return false;
-      } else if (filter === 'mp2') {
-        const mp2Terms = ['verdauung', 'magen', 'darm', 'stoffwechsel', 'endokrin', 'hormon', 'steroid', 'insulin'];
-        const hasMp2 = mp2Terms.some(m => dName.includes(m) || (d.parent_topic || '').toLowerCase().includes(m));
-        if (!hasMp2) return false;
-      }
+      if (filter === 'mp1' && getDeckExam(d) !== 'mp1') return false;
+      if (filter === 'mp2' && getDeckExam(d) !== 'mp2') return false;
 
       return true;
     });

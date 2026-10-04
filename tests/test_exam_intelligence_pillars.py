@@ -164,7 +164,7 @@ def test_get_ranked_actionable_yield_list():
 # ============================================================================
 
 def test_compute_exam_simulation_structure():
-    """Verify simulation calculates predicted score, Angoff cutoff, and topic scores."""
+    """Verify simulation calculates predicted score, Angoff cutoff, coverage, and potential scores."""
     mock_decks = [
         {"anki_name": "TB Blut :: Manatschal :: Gerinnung", "parent_topic": "1. Blut", "card_count": 100, "retention_rate": 85.0, "total_reviews": 10},
         {"anki_name": "TB Herz :: Kurtcuoglu :: EKG", "parent_topic": "2. Herz", "card_count": 120, "retention_rate": 75.0, "total_reviews": 15},
@@ -174,9 +174,20 @@ def test_compute_exam_simulation_structure():
     assert sim["exam_name"] == "Modulprüfung 1 (Theorie)"
     assert sim["angoff_cutoff"] == 60.0
     assert sim["safety_target"] == 75.0
+    assert sim["coverage_pct"] == 100.0
     assert sim["predicted_score"] > 60.0
+    assert sim["potential_score"] > 60.0
     assert sim["safety_margin"] > 0
     assert len(sim["topic_breakdown"]) == 3
+
+    # Test realistic scenario with partially studied curriculum
+    partial_decks = [
+        {"anki_name": "TB Blut :: Manatschal :: Gerinnung", "parent_topic": "1. Blut", "card_count": 100, "retention_rate": 80.0, "total_reviews": 10},
+        {"anki_name": "TB Herz :: Kurtcuoglu :: EKG", "parent_topic": "2. Herz", "card_count": 900, "retention_rate": None, "total_reviews": 0},
+    ]
+    partial_sim = compute_exam_simulation(MP1_CONFIG, partial_decks)
+    assert partial_sim["coverage_pct"] == 10.0
+    assert partial_sim["predicted_score"] < 60.0  # realistic: unstudied material is penalized
 
 
 def test_get_full_exam_simulation():

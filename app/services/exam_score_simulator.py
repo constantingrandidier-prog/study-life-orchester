@@ -71,9 +71,19 @@ MP2_CONFIG = {
 
 
 def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Computes weighted exam score simulation for one Modulprüfung."""
+    """
+    Computes weighted exam score simulation for one Modulprüfung.
+    Realistic medical examination model:
+    - Factors in curriculum coverage (how many cards were actually studied).
+    - Unstudied material is evaluated at standard Type-A / Kprim guessing baseline (20.0%).
+    - Studied material is evaluated at the student's actual retention rate.
+    - Also calculates potential score (if 100% of material is studied at current retention).
+    """
     topic_scores = []
+    total_cards_exam = 0
+    studied_cards_exam = 0
     total_predicted = 0.0
+    total_potential = 0.0
 
     for top in exam_config["topics"]:
         kws = top["keywords"]
@@ -83,33 +93,43 @@ def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[st
             or any(k in (d.get("parent_topic") or "").lower() for k in kws)
         ]
 
-        # Calculate weighted retention for this topic
+        total_cards = sum(d.get("card_count", 0) for d in matched_decks)
         studied_decks = [d for d in matched_decks if d.get("retention_rate") is not None and d.get("total_reviews", 0) > 0]
-        if studied_decks:
-            # Weighted by card count
-            total_cards = sum(d.get("card_count", 0) for d in studied_decks)
-            if total_cards > 0:
-                topic_ret = sum(float(d["retention_rate"]) * d.get("card_count", 0) for d in studied_decks) / total_cards
-            else:
-                topic_ret = sum(float(d["retention_rate"]) for d in studied_decks) / len(studied_decks)
-        else:
-            # Baseline expectation for unreviewed decks under Angoff guessing baseline
-            topic_ret = 48.0
+        studied_cards = sum(d.get("card_count", 0) for d in studied_decks)
 
-        topic_ret = round(topic_ret, 1)
-        contribution = round(topic_ret * top["weight"], 1)
+        total_cards_exam += total_cards
+        studied_cards_exam += studied_cards
+
+        coverage_ratio = (studied_cards / total_cards) if total_cards > 0 else 0.0
+        coverage_pct = round(coverage_ratio * 100.0, 1)
+
+        if studied_cards > 0:
+            ret_studied = sum(float(d["retention_rate"]) * d.get("card_count", 0) for d in studied_decks) / studied_cards
+        else:
+            ret_studied = 0.0
+
+        # Realistic expected score:
+        # Studied part: coverage_ratio * ret_studied
+        # Unstudied part: (1.0 - coverage_ratio) * 20.0 (guessing baseline on MC/Kprim)
+        real_score = (coverage_ratio * ret_studied) + ((1.0 - coverage_ratio) * 20.0) if total_cards > 0 else 20.0
+        potential_score = ret_studied if studied_cards > 0 else 80.0
+
+        real_score = round(real_score, 1)
+        potential_score = round(potential_score, 1)
+        contribution = round(real_score * top["weight"], 1)
         total_predicted += contribution
+        total_potential += round(potential_score * top["weight"], 1)
 
         # Status of this topic
-        if topic_ret >= 80.0:
+        if real_score >= 60.0:
             top_status = "safe"
             top_color = "#3fb950"
-        elif topic_ret >= 65.0:
-            top_status = "moderate"
-            top_color = "#d29922"
+        elif coverage_pct > 0.0:
+            top_status = "in_progress"
+            top_color = "#d29922" if real_score >= 35.0 else "#ff7b72"
         else:
-            top_status = "critical"
-            top_color = "#ff7b72"
+            top_status = "unstarted"
+            top_color = "#8b949e"
 
         # Find weakest high-yield deck in this topic
         hy_weak = [
@@ -123,7 +143,12 @@ def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[st
             "topic_id": top["id"],
             "topic_name": top["name"],
             "weight_pct": int(top["weight"] * 100),
-            "retention_rate": topic_ret,
+            "total_cards": total_cards,
+            "studied_cards": studied_cards,
+            "coverage_pct": coverage_pct,
+            "retention_rate": round(ret_studied, 1),
+            "real_score": real_score,
+            "potential_score": potential_score,
             "contribution_points": contribution,
             "status": top_status,
             "status_color": top_color,
@@ -132,11 +157,17 @@ def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[st
         })
 
     predicted_score = round(total_predicted, 1)
+    potential_score = round(total_potential, 1)
+    exam_coverage_pct = round((studied_cards_exam / total_cards_exam * 100.0) if total_cards_exam > 0 else 0.0, 1)
     cutoff = exam_config["angoff_cutoff"]
     safety_target = exam_config["safety_target"]
     safety_margin = round(predicted_score - cutoff, 1)
 
-    if predicted_score >= safety_target:
+    if studied_cards_exam == 0:
+        pass_status = "unstarted"
+        status_label = "⚪ Noch unberührt (0% gelernt)"
+        status_color = "#8b949e"
+    elif predicted_score >= safety_target:
         pass_status = "safe_pass"
         status_label = "✅ Sicherer Bestehensbereich (Solider Puffer)"
         status_color = "#3fb950"
@@ -145,8 +176,8 @@ def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[st
         status_label = "⚠️ Knapp im Bestehensbereich (Gefahr bei Kprim-Fallen!)"
         status_color = "#d29922"
     else:
-        pass_status = "fail_risk"
-        status_label = "🚨 Unter der Bestehensgrenze (Sofortiger Fokus nötig!)"
+        pass_status = "in_progress"
+        status_label = f"⏳ In Erarbeitung ({exam_coverage_pct}% Stoff gelernt)"
         status_color = "#ff7b72"
 
     return {
@@ -157,6 +188,10 @@ def compute_exam_simulation(exam_config: Dict[str, Any], all_decks: List[Dict[st
         "angoff_cutoff": cutoff,
         "safety_target": safety_target,
         "predicted_score": predicted_score,
+        "potential_score": potential_score,
+        "coverage_pct": exam_coverage_pct,
+        "studied_cards": studied_cards_exam,
+        "total_cards": total_cards_exam,
         "safety_margin": safety_margin,
         "safety_margin_text": f"+{safety_margin}% Puffer" if safety_margin >= 0 else f"{safety_margin}% Lücke",
         "pass_status": pass_status,

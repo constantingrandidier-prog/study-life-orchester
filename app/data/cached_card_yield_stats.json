@@ -23,9 +23,9 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschle",
       "hy_terms_detected": [
+        "pfk-2",
         "pfk-1",
         "glykolyse",
-        "pfk-2",
         "phosphat"
       ]
     },
@@ -48,9 +48,9 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase, PFK-1, Pyruvatkinase & PFK-2/ FBPase-2",
       "hy_terms_detected": [
+        "pfk-2",
         "pfk-1",
-        "glykolyse",
-        "pfk-2"
+        "glykolyse"
       ]
     },
     {
@@ -72,9 +72,9 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Wie ist die Wirkung von ChREBP?",
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
+        "pfk-2",
         "pfk-1",
-        "glykolyse",
-        "pfk-2"
+        "glykolyse"
       ]
     },
     {
@@ -96,9 +96,9 @@
       "front_snippet": "Hypothalamus-HVL-Nebennierenrinden-Achse (glandotrop) Was läuft ab? Feedback Mechanismus?",
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona",
       "hy_terms_detected": [
+        "cortisol",
         "aldosteron",
-        "acth",
-        "cortisol"
+        "acth"
       ]
     },
     {
@@ -142,8 +142,8 @@
       "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
       "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
       "hy_terms_detected": [
-        "aldosteron",
-        "cortisol"
+        "cortisol",
+        "aldosteron"
       ]
     },
     {
@@ -387,10 +387,10 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und",
       "hy_terms_detected": [
+        "hypoxie",
         "po2",
         "hämoglobin",
         "thrombose",
-        "hypoxie",
         "epo"
       ]
     },
@@ -413,11 +413,11 @@
       "front_snippet": "Metabolische Regulation während Aerober Belastung Glucoseaufnahme in arbeitenden Muskelzellen → von was hängt der Aufnah",
       "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ P",
       "hy_terms_detected": [
-        "adrenalin",
         "noradrenalin",
         "glykolyse",
-        "t4",
-        "insulin"
+        "adrenalin",
+        "insulin",
+        "t4"
       ]
     },
     {
@@ -439,10 +439,10 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und",
       "hy_terms_detected": [
+        "hypoxie",
         "po2",
         "hämoglobin",
         "thrombose",
-        "hypoxie",
         "epo"
       ]
     },
@@ -490,11 +490,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilat",
       "hy_terms_detected": [
-        "sauerstoffbindung",
+        "hypoxie",
         "po2",
         "hämoglobin",
-        "hypoxie",
-        "epo"
+        "epo",
+        "sauerstoffbindung"
       ]
     },
     {
@@ -516,11 +516,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilat",
       "hy_terms_detected": [
-        "sauerstoffbindung",
+        "hypoxie",
         "po2",
         "hämoglobin",
-        "hypoxie",
-        "epo"
+        "epo",
+        "sauerstoffbindung"
       ]
     },
     {
@@ -542,11 +542,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilat",
       "hy_terms_detected": [
-        "sauerstoffbindung",
+        "hypoxie",
         "po2",
         "hämoglobin",
-        "hypoxie",
-        "epo"
+        "epo",
+        "sauerstoffbindung"
       ]
     },
     {
@@ -568,11 +568,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilat",
       "hy_terms_detected": [
-        "sauerstoffbindung",
+        "hypoxie",
         "po2",
         "hämoglobin",
-        "hypoxie",
-        "epo"
+        "epo",
+        "sauerstoffbindung"
       ]
     }
   ],
@@ -670,9 +670,9 @@
           "front_snippet": "Welche Merkmale haben Thrombozyten? Funktion, Grösse, Vorkommen, Lebensdauer, Besonderheiten",
           "back_snippet": "Funktion: - Adhäsion , Aggregation & Freisetzung . - Wichtig für Blutgerinnung -> Sehr formvariabel im Blut in inaktivem Zustand, bei Oberfl",
           "hy_terms_detected": [
-            "fibrinogen",
-            "blutgerinnung",
             "thrombozyt",
+            "blutgerinnung",
+            "fibrinogen",
             "calcium"
           ]
         }
@@ -844,9 +844,9 @@
           "front_snippet": "Was kann mit dem MHC-II/Antigen-Komplex an der Zelloberfläche geschehen bei einer Antigenpräsentation mit MHC-II Molekül",
           "back_snippet": "Dort kann nur ein T-Cell Receptor (TCR) mit dem Molekülkomplex interagieren, stabilisiert und ermöglicht durch CD4. Falls das Antigen als kö",
           "hy_terms_detected": [
-            "mhc-ii",
             "mhc-i",
-            "t-zell"
+            "t-zell",
+            "mhc-ii"
           ]
         }
       ]
@@ -919,9 +919,9 @@
           "front_snippet": "Was muss passieren damit der TCR mit dem MHC-II Komplex interagieren kann? Was passiert nachdem der TCR gebunden hat? (b",
           "back_snippet": "Ein LFA-1 Molekül der T-Zelle interagiert mit geringer Affinität mit einem ICAM-1 der APC Nachdem der TCR dann gebunden hat, erhöht sich dur",
           "hy_terms_detected": [
-            "mhc-ii",
             "mhc-i",
-            "t-zell"
+            "t-zell",
+            "mhc-ii"
           ]
         },
         {
@@ -1073,8 +1073,8 @@
           "front_snippet": "Welche sind die Unterschiede zwischen dem Blutplasma und dem Serum?",
           "back_snippet": "Das Serum ist der Überstand von geronnenem Blut (Nach Gerinnung zentrifugiert) und enthält kein Fribrinogen . Im Serum sind die Thrombozyten",
           "hy_terms_detected": [
-            "fibrinogen",
-            "thrombozyt"
+            "thrombozyt",
+            "fibrinogen"
           ]
         },
         {
@@ -1486,9 +1486,9 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "1. Matrixbindung : vWF bindet an freigelegtes Kollagen der EZM. 2. Initiale Adhäsion : Thrombozyten binden über GPIb an den verankerten vWF.",
           "hy_terms_detected": [
-            "fibrinogen",
             "thrombozyt",
             "von-willebrand",
+            "fibrinogen",
             "phosphat"
           ]
         },
@@ -1511,8 +1511,8 @@
           "front_snippet": "Über welches System wird aus dem nicht-kovalenten Thrombozytenaggregat ein kovalent-verknüpfter Thrombus?",
           "back_snippet": "Über ein doppelt enzymatisches Kaskadensystem Ein extravaskuläres (exogenes) (extrinsisch) System -> aktiviert Thrombin in Sekunden ein intr",
           "hy_terms_detected": [
-            "thrombin",
-            "thrombozyt"
+            "thrombozyt",
+            "thrombin"
           ]
         },
         {
@@ -1764,8 +1764,8 @@
           "front_snippet": "Was bewirkt Phospholamban? Wie wird es reguliert?",
           "back_snippet": "PLB hemmt im dephosphorylierten Zustand SERCA Ausschüttung von Noradrenalin durch Sympathikus aktiviert Beta1-Rezeptoren: --> aktiviert Aden",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin"
+            "noradrenalin",
+            "adrenalin"
           ]
         }
       ]
@@ -1841,9 +1841,9 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung ",
           "hy_terms_detected": [
+            "depolarisation",
             "ekg",
             "repolarisation",
-            "depolarisation",
             "epo"
           ]
         },
@@ -2723,8 +2723,8 @@
           "back_snippet": "Dehnung von Vorhofmyozyten führt zur Freisetzung von ANP --> Blutdruckreduktion durch Vasodilatation, Hemmung der Reninsekretion der Niere (",
           "hy_terms_detected": [
             "aldosteron",
-            "angiotensin",
-            "renin"
+            "renin",
+            "angiotensin"
           ]
         }
       ]
@@ -3073,11 +3073,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkt",
           "hy_terms_detected": [
-            "angiotensin",
-            "t3",
-            "t4",
             "erythropoietin",
-            "hämoglobin"
+            "t3",
+            "hämoglobin",
+            "t4",
+            "angiotensin"
           ]
         },
         {
@@ -3661,10 +3661,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroi",
           "hy_terms_detected": [
+            "schilddrüse",
             "t3",
             "tsh",
-            "t4",
-            "schilddrüse"
+            "t4"
           ]
         },
         {
@@ -3687,11 +3687,11 @@
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine",
           "hy_terms_detected": [
             "inr",
+            "schilddrüse",
             "t3",
             "thyreoglobulin",
-            "peroxidase",
             "t4",
-            "schilddrüse"
+            "peroxidase"
           ]
         },
         {
@@ -4251,10 +4251,10 @@
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus ",
           "hy_terms_detected": [
             "aldosteron",
-            "angiotensin",
-            "renin",
             "depolarisation",
-            "epo"
+            "epo",
+            "renin",
+            "angiotensin"
           ]
         }
       ]
@@ -5093,11 +5093,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimulier",
           "hy_terms_detected": [
-            "calcitonin",
+            "schilddrüse",
             "t3",
+            "calcitonin",
             "tsh",
-            "t4",
-            "schilddrüse"
+            "t4"
           ]
         }
       ]
@@ -5170,8 +5170,8 @@
           "front_snippet": "Was passiert wenn ACTH von der Hypophyse ausgeschüttet wird? Beschreibe Feedbackloop",
           "back_snippet": "- es stimmuliert die poduktion von Cortisol in den Nebennieren - Cortisol hemmt CRH (corticotropin releasing hormone) - CRH gehemmt -> wenig",
           "hy_terms_detected": [
-            "acth",
-            "cortisol"
+            "cortisol",
+            "acth"
           ]
         },
         {
@@ -5423,8 +5423,8 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enteris",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
             "noradrenalin",
+            "adrenalin",
             "insulin",
             "katecholamin"
           ]
@@ -5448,8 +5448,8 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enteris",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
             "noradrenalin",
+            "adrenalin",
             "insulin",
             "katecholamin"
           ]
@@ -5473,8 +5473,8 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enteris",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
             "noradrenalin",
+            "adrenalin",
             "insulin",
             "katecholamin"
           ]
@@ -5498,10 +5498,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen Wie wirkt Sympathikus (über Katecholamine) auf Insulinsekretion? Beschrei",
           "back_snippet": "➢ α2 → cAMP ↓ → Kalium Kanal wird nicht durch PKA/EPAC2 phosphoryliert und geschlossen ⇒ keine Depolarisation, kein Ca 2+ Einstrom, keine In",
           "hy_terms_detected": [
-            "insulin",
-            "katecholamin",
             "depolarisation",
-            "epo"
+            "insulin",
+            "epo",
+            "katecholamin"
           ]
         }
       ]
@@ -5645,8 +5645,8 @@
           "front_snippet": "Nebenniere Zona Glomerulosa: Eigenschaften evt. auslassen, kommt bei jele schon vor. hier mehr als repetition",
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Co",
           "hy_terms_detected": [
-            "aldosteron",
             "cortisol",
+            "aldosteron",
             "angiotensin"
           ]
         },
@@ -5689,8 +5689,8 @@
           "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
           "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         }
       ]
@@ -6146,8 +6146,8 @@
           "front_snippet": "Haben Cortisol- und Aldosteron-Synthese dieselben Enzyme?",
           "back_snippet": "einige ja, aber nicht alle Cortisol-Synthese teilt fast alle Enzyme mit Aldosteron-Synthese. Das letzte Enzym der Cortisol-Synthese hat in d",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         },
         {
@@ -6169,8 +6169,8 @@
           "front_snippet": "Regulation der Cortisol-Synthese long feedback?",
           "back_snippet": "Cortisol: negative Rückkopplung auf - Hypophyse → hemmt ACTH-Freisetzung - Hypothalamus → hemmt CRH-Freisetzung",
           "hy_terms_detected": [
-            "acth",
-            "cortisol"
+            "cortisol",
+            "acth"
           ]
         }
       ]
@@ -6336,10 +6336,10 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Was stimuliert die Synthese von: Dopamin und Noradrenalin? Was von Adrenalin?",
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimu",
           "hy_terms_detected": [
-            "adrenalin",
+            "cortisol",
             "noradrenalin",
             "acth",
-            "cortisol",
+            "adrenalin",
             "katecholamin"
           ]
         },
@@ -6362,10 +6362,10 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Die Synthese von Adrenalin aus Noradrenalin wird hauptsächlich von Cortisol (← ",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
+            "cortisol",
             "noradrenalin",
             "acth",
-            "cortisol",
+            "adrenalin",
             "katecholamin"
           ]
         }
@@ -6400,10 +6400,10 @@
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II →",
           "hy_terms_detected": [
             "aldosteron",
-            "azidose",
-            "angiotensin",
             "depolarisation",
-            "epo"
+            "azidose",
+            "epo",
+            "angiotensin"
           ]
         },
         {
@@ -6425,8 +6425,8 @@
           "front_snippet": "Wieso bekommt man einen Bluthockdruck wenn man Lakritze isst?",
           "back_snippet": "Weil Lakrize 11βHSD 2 hemmt → Cortisol kann nicht zu in aktivem Cortiso n gemacht werden. Folge: → Mineralokortikoidrezeptor (MR) kann Corti",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         },
         {
@@ -6468,8 +6468,8 @@
           "front_snippet": "Zweite sympathische Synapse: fast immer Noradrenalin Ausnahme: Nierenmark schüttet Adrenalin aus Schweissdrüsen werden ü",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin"
+            "noradrenalin",
+            "adrenalin"
           ]
         }
       ]
@@ -7254,8 +7254,8 @@
           "front_snippet": "Sauerstoffbindungskurve für Hämoglobin: - Was für eine Form hat die O2-Bindungskurve? - Warum nimmt sie diese Form an? -",
           "back_snippet": "- Die Sauerstoffbindungskurve für Hämoglobin ähnelt einem \"S\", die aufgrund ihrer S-Form als sigmoid bezeichnet wird (Abb. 4). - Dies bedeut",
           "hy_terms_detected": [
-            "sauerstoffbindung",
-            "hämoglobin"
+            "hämoglobin",
+            "sauerstoffbindung"
           ]
         },
         {
@@ -7277,8 +7277,8 @@
           "front_snippet": "Wer ist für den Bohr-Effekt verantwortlich? Beschreibe, wie dieser Effekt die Sauerstoffbindung reguliert:",
           "back_snippet": "- Für den Bohr-Effekt sind die alpha-Aminogruppen am aminoterminalen Ende der alpha-Ketten und die Seitenketten der Histidine verantwortlich",
           "hy_terms_detected": [
-            "sauerstoffbindung",
-            "bohr-effekt"
+            "bohr-effekt",
+            "sauerstoffbindung"
           ]
         },
         {
@@ -7930,9 +7930,9 @@
           "front_snippet": "T-Zell abhängige B-Zell Aktivierung",
           "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klas",
           "hy_terms_detected": [
-            "mhc-ii",
             "mhc-i",
-            "t-zell"
+            "t-zell",
+            "mhc-ii"
           ]
         },
         {
@@ -8119,5 +8119,5 @@
       ]
     }
   },
-  "updated_at": 1791139971.4892993
+  "updated_at": 1791142071.5253587
 }

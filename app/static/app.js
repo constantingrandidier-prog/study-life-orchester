@@ -8090,27 +8090,40 @@ function renderExamSimulation() {
 
     if (sEl) sEl.textContent = `${mp1.predicted_score}%`;
     if (bEl) {
-      bEl.textContent = mp1.status_label || (mp1.predicted_score >= 60 ? 'Bestehen sicher' : 'Gefährdet');
-      bEl.style.color = mp1.status_color || '#3fb950';
-      bEl.style.background = `${mp1.status_color || '#3fb950'}22`;
-      bEl.style.border = `1px solid ${mp1.status_color || '#3fb950'}44`;
+      bEl.textContent = mp1.status_label || `${mp1.coverage_pct}% gelernt`;
+      bEl.style.color = mp1.status_color || '#ff7b72';
+      bEl.style.background = `${mp1.status_color || '#ff7b72'}22`;
+      bEl.style.border = `1px solid ${mp1.status_color || '#ff7b72'}44`;
     }
     if (bufEl) {
-      bufEl.innerHTML = `Dienstag, 19. Januar 2027 · Angoff-Bestehensgrenze: <strong>60%</strong> · <strong style="color: ${mp1.status_color || '#3fb950'};">${escapeHtml(mp1.safety_margin_text)}</strong>`;
+      const studiedStr = (mp1.studied_cards || 0).toLocaleString();
+      const totalStr = (mp1.total_cards || 0).toLocaleString();
+      bufEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 2px;">
+          <span>Angoff: <strong>60%</strong> · <strong style="color: ${mp1.status_color || '#ff7b72'};">${escapeHtml(mp1.safety_margin_text)}</strong></span>
+          <span style="color: #79c0ff; font-weight: 600;">📚 ${studiedStr} / ${totalStr} Karten (${mp1.coverage_pct}%)</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-dim);">
+          Dein Potenzial bei 100% Stoff: <strong style="color: #3fb950;">${mp1.potential_score}%</strong> (exzellente ${mp1.potential_score}% Retention auf gelerntem Stoff!)
+        </div>
+      `;
     }
     if (tCont && mp1.topic_breakdown) {
       let tHtml = '';
       mp1.topic_breakdown.forEach(tb => {
-        const ret = tb.retention_rate != null ? tb.retention_rate : 48.0;
         const col = tb.status_color || '#79c0ff';
+        const cardInfo = tb.studied_cards > 0
+          ? `${tb.studied_cards}/${tb.total_cards} (${tb.coverage_pct}%) · Ret: ${tb.retention_rate}% → Score: <strong style="color: ${col};">${tb.real_score}%</strong>`
+          : `${tb.total_cards} Karten · <span style="color: #8b949e;">0% gelernt (20% Rateniveau)</span>`;
+
         tHtml += `
-          <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 3px;">
             <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 11px;">
               <span>${escapeHtml(tb.topic_name)} (${tb.weight_pct}%)</span>
-              <strong style="color: ${col};">${ret}%</strong>
+              <span style="font-size: 10.5px;">${cardInfo}</span>
             </div>
-            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden;">
-              <div style="width: ${Math.min(100, Math.max(0, ret))}%; height: 100%; background: ${col}; border-radius: 2px;"></div>
+            <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; position: relative;">
+              <div style="position: absolute; left: 0; top: 0; width: ${Math.min(100, Math.max(0, tb.real_score))}%; height: 100%; background: ${col}; border-radius: 3px;"></div>
             </div>
           </div>
         `;
@@ -8128,27 +8141,40 @@ function renderExamSimulation() {
 
     if (sEl) sEl.textContent = `${mp2.predicted_score}%`;
     if (bEl) {
-      bEl.textContent = mp2.status_label || (mp2.predicted_score >= 60 ? 'Bestehen sicher' : 'Gefährdet');
-      bEl.style.color = mp2.status_color || '#3fb950';
-      bEl.style.background = `${mp2.status_color || '#3fb950'}22`;
-      bEl.style.border = `1px solid ${mp2.status_color || '#3fb950'}44`;
+      bEl.textContent = mp2.status_label || `${mp2.coverage_pct}% gelernt`;
+      bEl.style.color = mp2.status_color || '#8b949e';
+      bEl.style.background = `${mp2.status_color || '#8b949e'}22`;
+      bEl.style.border = `1px solid ${mp2.status_color || '#8b949e'}44`;
     }
     if (bufEl) {
-      bufEl.innerHTML = `Donnerstag, 21. Januar 2027 · Angoff-Bestehensgrenze: <strong>60%</strong> · <strong style="color: ${mp2.status_color || '#3fb950'};">${escapeHtml(mp2.safety_margin_text)}</strong>`;
+      const studiedStr = (mp2.studied_cards || 0).toLocaleString();
+      const totalStr = (mp2.total_cards || 0).toLocaleString();
+      bufEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 2px;">
+          <span>Angoff: <strong>60%</strong> · <strong style="color: ${mp2.status_color || '#8b949e'};">${escapeHtml(mp2.safety_margin_text)}</strong></span>
+          <span style="color: var(--text-dim);">📚 ${studiedStr} / ${totalStr} Karten (${mp2.coverage_pct}%)</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-dim);">
+          Themenblock 4–6 starten planmässig nach Modulprüfung 1
+        </div>
+      `;
     }
     if (tCont && mp2.topic_breakdown) {
       let tHtml = '';
       mp2.topic_breakdown.forEach(tb => {
-        const ret = tb.retention_rate != null ? tb.retention_rate : 48.0;
-        const col = tb.status_color || '#c4b5fd';
+        const col = tb.status_color || '#8b949e';
+        const cardInfo = tb.studied_cards > 0
+          ? `${tb.studied_cards}/${tb.total_cards} (${tb.coverage_pct}%) · Ret: ${tb.retention_rate}% → Score: <strong style="color: ${col};">${tb.real_score}%</strong>`
+          : `${tb.total_cards} Karten · <span style="color: #8b949e;">0% gelernt (20% Rateniveau)</span>`;
+
         tHtml += `
-          <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 3px;">
             <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 11px;">
               <span>${escapeHtml(tb.topic_name)} (${tb.weight_pct}%)</span>
-              <strong style="color: ${col};">${ret}%</strong>
+              <span style="font-size: 10.5px;">${cardInfo}</span>
             </div>
-            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden;">
-              <div style="width: ${Math.min(100, Math.max(0, ret))}%; height: 100%; background: ${col}; border-radius: 2px;"></div>
+            <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; position: relative;">
+              <div style="position: absolute; left: 0; top: 0; width: ${Math.min(100, Math.max(0, tb.real_score))}%; height: 100%; background: ${col}; border-radius: 3px;"></div>
             </div>
           </div>
         `;

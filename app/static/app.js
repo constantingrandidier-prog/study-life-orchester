@@ -6489,6 +6489,8 @@ function switchAppPage(pageId) {
     renderPageRoadmap();
   } else if (pageId === 'page-deck-stats') {
     loadDeckStats();
+  } else if (pageId === 'page-exam-intel') {
+    loadExamIntelPage();
   } else if (pageId === 'page-analytics') {
     renderPageAnalytics();
   } else if (pageId === 'page-setup') {
@@ -7978,6 +7980,242 @@ function closeProfessorExamModal() {
   if (modal) modal.style.display = 'none';
 }
 window.closeProfessorExamModal = closeProfessorExamModal;
+
+// ============================================================================
+// UZH DOZENTEN- & PRÜFUNGS-INTELLIGENCE CONTROLLER
+// ============================================================================
+
+state.examIntelData = null;
+state.profFilter = 'all';
+state.profSearch = '';
+
+async function loadExamIntelPage(forceRefresh = false) {
+  const container = document.getElementById('professorsGridContainer');
+  const btn = document.getElementById('btnRefreshExamIntel');
+
+  if (btn && forceRefresh) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Aktualisiere...';
+  }
+
+  try {
+    // 1. Ensure deck stats are loaded so we can show live Anki retention for each professor's topics
+    if (!state.deckStatsData || !state.deckStatsData.all_decks) {
+      try {
+        const dsRes = await fetch(`${API_BASE}/anki/deck-retention-stats?_ts=${Date.now()}`);
+        if (dsRes.ok) state.deckStatsData = await dsRes.json();
+      } catch (_) {}
+    }
+
+    // 2. Fetch professor dossiers
+    const res = await fetch(`${API_BASE}/schedule/exam-intelligence/professors`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    state.examIntelData = data.professors || {};
+
+    renderExamIntelPage();
+
+    if (forceRefresh && typeof showToast === 'function') {
+      showToast('UZH Dozenten-Dossiers erfolgreich aktualisiert.');
+    }
+  } catch (err) {
+    console.warn('Error loading exam intel:', err);
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: #ff7b72; font-size: 13px; grid-column: 1 / -1;">
+          Fehler beim Laden der Dozenten-Dossiers (${escapeHtml(err.message || 'Serverfehler')}).
+          <br><br>
+          <button type="button" class="btn-secondary" onclick="loadExamIntelPage(true)" style="padding: 0.4rem 0.9rem; font-size: 12px; cursor: pointer;">
+            🔄 Erneut versuchen
+          </button>
+        </div>
+      `;
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '🔄 Dossiers aktualisieren';
+    }
+  }
+}
+window.loadExamIntelPage = loadExamIntelPage;
+
+function handleProfSearch(query) {
+  state.profSearch = (query || '').toLowerCase().trim();
+  renderExamIntelPage();
+}
+window.handleProfSearch = handleProfSearch;
+
+function setProfFilter(filterKey, btn) {
+  state.profFilter = filterKey;
+  const pills = document.querySelectorAll('#profFilterPills .advisor-filter-btn');
+  pills.forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderExamIntelPage();
+}
+window.setProfFilter = setProfFilter;
+
+function renderExamIntelPage() {
+  const container = document.getElementById('professorsGridContainer');
+  if (!container || !state.examIntelData) return;
+
+  const profEntries = Object.entries(state.examIntelData);
+  const allDecks = (state.deckStatsData && state.deckStatsData.all_decks) ? state.deckStatsData.all_decks : [];
+  const q = state.profSearch;
+  const filter = state.profFilter;
+
+  const filtered = profEntries.filter(([profId, prof]) => {
+    // Search match
+    if (q) {
+      const haystack = `${prof.name} ${prof.title} ${prof.institute} ${prof.research_focus} ${prof.primary_topics.join(' ')} ${prof.high_yield_pearl} ${prof.kprim_trap}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+
+    // Filter pills
+    if (filter === 'mp1') {
+      const mp1Topics = ['atmung', 'blut', 'immun', 'herz', 'kreislauf', 'hämoglobin', 'gerinnung'];
+      const hasMp1 = prof.primary_topics.some(t => mp1Topics.some(m => t.toLowerCase().includes(m)));
+      if (!hasMp1) return false;
+    } else if (filter === 'mp2') {
+      const mp2Topics = ['verdauung', 'magen', 'darm', 'stoffwechsel', 'endokrin', 'hormon', 'steroid', 'insulin'];
+      const hasMp2 = prof.primary_topics.some(t => mp2Topics.some(m => t.toLowerCase().includes(m)));
+      if (!hasMp2) return false;
+    } else if (filter === 'high_yield') {
+      if (!prof.uzh_importance.toLowerCase().includes('sehr hoch')) return false;
+    }
+
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">
+        Kein Dozent gefunden für „${escapeHtml(q)}“. Probiere einen anderen Suchbegriff (z. B. Wenger, Gerinnung, Astrup).
+      </div>
+    `;
+    return;
+  }
+
+  const profEmojiMap = {
+    'roland_wenger': '🫁',
+    'carsten_wagner': '🧪',
+    'johannes_loffing': '🔬',
+    'selma_tuzlak': '🛡️',
+    'cristina_manatschal': '🩸',
+    'raimund_dutzler': '⚡',
+    'christian_stockmann': '🫀',
+    'philipp_sommer': '💓',
+    'andrew_hall': '🧬',
+    'milena_sokolowska': '💊',
+    'heimo_emmert': '🍎',
+    'oliver_ullrich': '🚀',
+  };
+
+  container.innerHTML = filtered.map(([profId, prof]) => {
+    const emoji = profEmojiMap[profId] || '👨‍🏫';
+    const isVeryHigh = prof.uzh_importance.toLowerCase().includes('sehr hoch');
+    const impBadgeColor = isVeryHigh ? 'background: rgba(248,81,73,0.18); color: #ff7b72; border: 1px solid rgba(248,81,73,0.4);' : 'background: rgba(88,166,255,0.15); color: #79c0ff; border: 1px solid rgba(88,166,255,0.3);';
+
+    // Find linked Anki decks
+    const matchedDecks = allDecks.filter(d => {
+      if (d.professor_name && d.professor_name === prof.name) return true;
+      const dName = (d.anki_name || '').toLowerCase();
+      return prof.keywords.some(k => dName.includes(k));
+    });
+
+    const totalProfCards = matchedDecks.reduce((sum, d) => sum + (d.card_count || 0), 0);
+    const avgRet = matchedDecks.length > 0
+      ? Math.round(matchedDecks.reduce((sum, d) => sum + (d.retention_rate || 0), 0) / matchedDecks.length)
+      : null;
+
+    let retBadge = '';
+    if (avgRet !== null && avgRet > 0) {
+      const retCol = avgRet >= 80 ? '#3fb950' : (avgRet >= 70 ? '#d29922' : '#ff7b72');
+      retBadge = `<span style="font-size: 11px; font-weight: 700; color: ${retCol}; background: ${retCol}18; border: 1px solid ${retCol}44; padding: 0.15rem 0.5rem; border-radius: 4px;">Deine Ø Retention: ${avgRet}%</span>`;
+    }
+
+    const decksHtml = matchedDecks.slice(0, 5).map(d => {
+      const escaped = escapeHtml(d.anki_name);
+      const dRet = typeof d.retention_rate === 'number' ? `${d.retention_rate}%` : 'Neu';
+      const dCol = d.retention_rate >= 80 ? '#3fb950' : (d.retention_rate >= 70 ? '#d29922' : '#ff7b72');
+      return `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); padding: 0.4rem 0.65rem; border-radius: 6px; font-size: 11.5px; gap: 0.5rem;">
+          <span style="color: #c9d1d9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;" title="${escaped}">
+            ${escaped}
+          </span>
+          <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0;">
+            <span style="color: var(--text-muted); font-size: 10.5px;">${d.card_count} Karten</span>
+            <span style="font-weight: 700; color: ${dCol}; font-size: 11px;">${dRet}</span>
+            <button type="button" class="btn-secondary" onclick="copyDeckQueryToClipboard('${escaped}')" title="Anki-Filter kopieren" style="padding: 0.15rem 0.4rem; font-size: 10px;">📋</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div style="background: var(--bg-surface-elevated, #161b22); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.9rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;">
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+              ${emoji}
+            </div>
+            <div>
+              <h3 style="margin: 0; font-size: 15.5px; font-weight: 700; color: #f0f6fc;">${escapeHtml(prof.name)}</h3>
+              <div style="font-size: 11.5px; color: #79c0ff; margin-top: 1px;">${escapeHtml(prof.title)}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">${escapeHtml(prof.institute)}</div>
+            </div>
+          </div>
+          <span style="font-size: 10.5px; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; ${impBadgeColor}">
+            ${escapeHtml(prof.uzh_importance.split('(')[0].trim())}
+          </span>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 12px; line-height: 1.45;">
+          <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Forschung &amp; Lehrauftrag</strong>
+          <span style="color: #c9d1d9;">${escapeHtml(prof.research_focus)}</span>
+        </div>
+
+        <div style="background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.25); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 12px; line-height: 1.45;">
+          <strong style="color: #79c0ff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Prüfungsstil &amp; Klausurvorlieben</strong>
+          <span style="color: #e6edf3;">${escapeHtml(prof.exam_style)}</span>
+        </div>
+
+        <div style="background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 0.75rem 0.85rem; font-size: 12px; line-height: 1.5;">
+          <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
+            <span>💡</span>
+            <strong style="color: #7ee787; font-size: 12px;">High-Yield Klausurfokus:</strong>
+          </div>
+          <span style="color: #c9d1d9;">${escapeHtml(prof.high_yield_pearl)}</span>
+        </div>
+
+        <div style="background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.35); border-radius: 8px; padding: 0.75rem 0.85rem; font-size: 12px; line-height: 1.5;">
+          <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
+            <span>🚨</span>
+            <strong style="color: #ff7b72; font-size: 12px;">Typische UZH Kprim-Falle:</strong>
+          </div>
+          <span style="color: #f0f6fc;">${escapeHtml(prof.kprim_trap)}</span>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <strong style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+              Relevante Anki-Decks (${matchedDecks.length} Decks • ${totalProfCards} Karten)
+            </strong>
+            ${retBadge}
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+            ${decksHtml || '<span style="font-size: 11px; color: var(--text-muted);">Keine direkten Unterdecks zugeordnet.</span>'}
+            ${matchedDecks.length > 5 ? `<span style="font-size: 10.5px; color: var(--text-muted); text-align: center;">+ ${matchedDecks.length - 5} weitere Decks im Deck-Radar</span>` : ''}
+          </div>
+        </div>
+
+      </div>
+    `;
+  }).join('');
+}
+window.renderExamIntelPage = renderExamIntelPage;
+
 
 
 

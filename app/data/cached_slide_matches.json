@@ -1,0 +1,517 @@
+{
+  "available": true,
+  "total_slides_indexed": 75,
+  "high_emphasis_slides_count": 0,
+  "cluster_distribution": {
+    "TB Atmung": 1,
+    "Allgemein": 28,
+    "TB Herz-Kreislauf": 1,
+    "TB Blut & Immunsystem": 10,
+    "TB Endokrinologie": 14,
+    "TB Verdauung": 18,
+    "TB Stoffwechsel": 3
+  },
+  "slides": [
+    {
+      "filename": "Sommer_LungenZwerchentw-VAM.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Atmung\\Sommer_LungenZwerchentw-VAM.pdf",
+      "cluster": "TB Atmung",
+      "professor": "Prof. Dr. Philipp Sommer",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:47",
+      "size_kb": 6398.5
+    },
+    {
+      "filename": "2_Klin-Untersuchungskurs_Abdomen.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Kurs Klinischer Untersuchungskurs I\\Archive\\Unterlagen 1. Fachsemester (HS 2025)\\2_Klin-Untersuchungskurs_Abdomen.pdf",
+      "cluster": "Allgemein",
+      "professor": null,
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 1418.5
+    },
+    {
+      "filename": "2_Klin-Untersuchungskurs_Thorax.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Kurs Klinischer Untersuchungskurs I\\Archive\\Unterlagen 1. Fachsemester (HS 2025)\\2_Klin-Untersuchungskurs_Thorax.pdf",
+      "cluster": "Allgemein",
+      "professor": null,
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 1149.8
+    },
+    {
+      "filename": "2_Klin-Untersuchungskurs_Allgemein.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Kurs Klinischer Untersuchungskurs I\\Archive_1\\Unterlagen 2. Fachsemester (FS 2026)\\2_Klin-Untersuchungskurs_Allgemein.pdf",
+      "cluster": "Allgemein",
+      "professor": null,
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 3392.5
+    },
+    {
+      "filename": "2_Klin-Untersuchungskurs_Neuro.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Kurs Klinischer Untersuchungskurs I\\Archive_1\\Unterlagen 2. Fachsemester (FS 2026)\\2_Klin-Untersuchungskurs_Neuro.pdf",
+      "cluster": "Allgemein",
+      "professor": null,
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 10661.0
+    },
+    {
+      "filename": "Sommer_HerzGefaessentwicklung-VAM.pdf",
+      "relative_path": "Desktop\\UNI sem app\\TB herz-Kreislauf\\Archive_1\\Anatomie\\Sommer_HerzGefaessentwicklung-VAM.pdf",
+      "cluster": "TB Herz-Kreislauf",
+      "professor": "Prof. Dr. Philipp Sommer",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 14318.5
+    },
+    {
+      "filename": "Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Tuzlak_Adaptives und angeborenes Immunsystem.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:44",
+      "size_kb": 3736.1
+    },
+    {
+      "filename": "Tuzlak_Autoimmunitat und Antikorper.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Tuzlak_Autoimmunitat und Antikorper.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:44",
+      "size_kb": 6596.8
+    },
+    {
+      "filename": "Tuzlak_B Zell Entstehung Reifung.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Tuzlak_B Zell Entstehung Reifung.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:45",
+      "size_kb": 3400.1
+    },
+    {
+      "filename": "Tuzlak_Immuntoleranz.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Tuzlak_Immuntoleranz.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:45",
+      "size_kb": 3426.0
+    },
+    {
+      "filename": "Tuzlak_RekombinationAdapImmunRezept.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Tuzlak_RekombinationAdapImmunRezept.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:45",
+      "size_kb": 2831.4
+    },
+    {
+      "filename": "1-4_CM_Myoglobin_Hamoglobin.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Cristina Manatschal\\1-4_CM_Myoglobin_Hamoglobin.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:45",
+      "size_kb": 4160.8
+    },
+    {
+      "filename": "5_CM_Saure-Base_CO2-Transport.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Cristina Manatschal\\5_CM_Saure-Base_CO2-Transport.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Prof. Dr. Carsten Wagner",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:46",
+      "size_kb": 1682.2
+    },
+    {
+      "filename": "6-7_CM_Blutgerinnung.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Cristina Manatschal\\6-7_CM_Blutgerinnung.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:44",
+      "size_kb": 2155.2
+    },
+    {
+      "filename": "8_CM_Komplementsystem.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Cristina Manatschal\\8_CM_Komplementsystem.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:44",
+      "size_kb": 792.2
+    },
+    {
+      "filename": "8_CM_Komplementsystem_update.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Blut und Immunsystem\\Cristina Manatschal\\8_CM_Komplementsystem_update.pdf",
+      "cluster": "TB Blut & Immunsystem",
+      "professor": "Dr. Selma Tuzlak",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:45",
+      "size_kb": 852.5
+    },
+    {
+      "filename": "Sommer_Endokrin-Entw-VAM.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Sommer_Endokrin-Entw-VAM.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Philipp Sommer",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:51",
+      "size_kb": 3191.7
+    },
+    {
+      "filename": "10_11_Pankreashormone-Insulin Glucagon_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\10_11_Pankreashormone-Insulin Glucagon_HE.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 9377.9
+    },
+    {
+      "filename": "12_13_Hypothalamische u. hypophysare Hormone_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\12_13_Hypothalamische u. hypophysare Hormone_HE.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 4270.0
+    },
+    {
+      "filename": "7_Hormone_Einfuhrung_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\7_Hormone_Einfuhrung_HE.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 3832.9
+    },
+    {
+      "filename": "8_9_Stoffwechsel i.B. auf die Nahrungsaufnahme_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\8_9_Stoffwechsel i.B. auf die Nahrungsaufnahme_HE.pdf",
+      "cluster": "TB Stoffwechsel",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 7764.7
+    },
+    {
+      "filename": "Korrigiert_18_19_Stoffwechsel bei erhohtem Energiebedarf_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\Korrigiert_18_19_Stoffwechsel bei erhohtem Energiebedarf_HE.pdf",
+      "cluster": "TB Stoffwechsel",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 4295.2
+    },
+    {
+      "filename": "Biochemie der Hormone.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\Emmert_Skripte_Endokrinologie\\Biochemie der Hormone.pdf",
+      "cluster": "TB Stoffwechsel",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 12115.4
+    },
+    {
+      "filename": "Muskelarbeit.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\Emmert_Skripte_Endokrinologie\\Muskelarbeit.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 3072.1
+    },
+    {
+      "filename": "Nahrungsaufnahme.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive\\Emmert_TB_Endokrinologie\\Emmert_Skripte_Endokrinologie\\Nahrungsaufnahme.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 2500.5
+    },
+    {
+      "filename": "Adrenals_Hall 2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_1\\Hall - Endokrinologie\\Adrenals_Hall 2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Andrew Hall",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 2275.7
+    },
+    {
+      "filename": "Disseminiertes endokrines System_2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_1\\Hall - Endokrinologie\\Disseminiertes endokrines System_2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Andrew Hall",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 3266.6
+    },
+    {
+      "filename": "Hypothalamus pituitary Hall 2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_1\\Hall - Endokrinologie\\Hypothalamus pituitary Hall 2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Andrew Hall",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 3250.1
+    },
+    {
+      "filename": "Islet_thyroid_parathyroid_Hall 2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_1\\Hall - Endokrinologie\\Islet_thyroid_parathyroid_Hall 2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Andrew Hall",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 5093.2
+    },
+    {
+      "filename": "14_15_Steroidhormone der Nebennierenrinde_MS_15.12.2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_3\\Sokolowska_Endokrinologie\\14_15_Steroidhormone der Nebennierenrinde_MS_15.12.2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "PD Dr. med. Milena Sokolowska",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 13751.5
+    },
+    {
+      "filename": "16_17_Katecholamine_17.12.2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_3\\Sokolowska_Endokrinologie\\16_17_Katecholamine_17.12.2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "PD Dr. med. Milena Sokolowska",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 7290.0
+    },
+    {
+      "filename": "Nebenniere HS2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_4\\Wagner - Endokrinologie\\Nebenniere HS2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Carsten Wagner",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 3330.8
+    },
+    {
+      "filename": "Regulation Ca und P Haushalt HS 2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_4\\Wagner - Endokrinologie\\Regulation Ca und P Haushalt HS 2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Carsten Wagner",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 9600.6
+    },
+    {
+      "filename": "Schilddruse HS 2025.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Endokrinologie\\Archive_4\\Wagner - Endokrinologie\\Schilddruse HS 2025.pdf",
+      "cluster": "TB Endokrinologie",
+      "professor": "Prof. Dr. Carsten Wagner",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 7180.1
+    },
+    {
+      "filename": "Anatomie_Dickdarm_Rektum.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Anatomie_Dickdarm_Rektum.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:48",
+      "size_kb": 12014.0
+    },
+    {
+      "filename": "Anatomie_Duenndarm_Pankreas.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Anatomie_Duenndarm_Pankreas.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:48",
+      "size_kb": 13018.8
+    },
+    {
+      "filename": "Anatomie_Leber_Gallenblase.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Anatomie_Leber_Gallenblase.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 19626.2
+    },
+    {
+      "filename": "Anatomie_Mundhoehle_Kauapparat_Zaehne_Zunge_Gaumen.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Anatomie_Mundhoehle_Kauapparat_Zaehne_Zunge_Gaumen.pdf",
+      "cluster": "TB Verdauung",
+      "professor": null,
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 41078.6
+    },
+    {
+      "filename": "Anatomie_Oesophagus_Magen.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Anatomie_Oesophagus_Magen.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 20592.5
+    },
+    {
+      "filename": "Mundhohle_Kauapparat_Zahne.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Mundhohle_Kauapparat_Zahne.pdf",
+      "cluster": "TB Verdauung",
+      "professor": null,
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 9360.4
+    },
+    {
+      "filename": "Sommer_Gesichtsentw-VAM.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Sommer_Gesichtsentw-VAM.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Philipp Sommer",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 6451.1
+    },
+    {
+      "filename": "Sommer_Schlunddarmentwicklung-VAM.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Sommer_Schlunddarmentwicklung-VAM.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 5142.7
+    },
+    {
+      "filename": "Sommer_Verdauungstrakt Entwicklung-VAM.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Sommer_Verdauungstrakt Entwicklung-VAM.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Philipp Sommer",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:49",
+      "size_kb": 7610.7
+    },
+    {
+      "filename": "Ern_Verd_Skript.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive\\Dutzler_ErnVerd\\Ern_Verd_Skript.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Raimund Dutzler",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 17901.5
+    },
+    {
+      "filename": "Ern_Verd_Vorlesung1.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive\\Dutzler_ErnVerd\\Ern_Verd_Vorlesung1.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Raimund Dutzler",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 2567.1
+    },
+    {
+      "filename": "Ern_Verd_Vorlesung2.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive\\Dutzler_ErnVerd\\Ern_Verd_Vorlesung2.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Raimund Dutzler",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 5990.3
+    },
+    {
+      "filename": "Ern_Verd_Vorlesung3.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive\\Dutzler_ErnVerd\\Ern_Verd_Vorlesung3.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Raimund Dutzler",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 5922.2
+    },
+    {
+      "filename": "1_3_Regulation des KH Stw_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive_1\\Emmert_TB_Verdauung\\1_3_Regulation des KH Stw_HE.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Heimo Emmert",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 6773.0
+    },
+    {
+      "filename": "4_6_Leberspezifischer Stoffwechsel_HE.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive_1\\Emmert_TB_Verdauung\\4_6_Leberspezifischer Stoffwechsel_HE.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 8516.9
+    },
+    {
+      "filename": "Leberspezifischer Stoffwechsel.pdf",
+      "relative_path": "Desktop\\UNI sem app\\Vorlesungen im Themenblock Verdauung und Ernährung\\Archive_1\\Emmert_TB_Verdauung\\Skripte_HE\\Leberspezifischer Stoffwechsel.pdf",
+      "cluster": "TB Verdauung",
+      "professor": "Prof. Dr. Christian Stockmann",
+      "is_high_emphasis": false,
+      "emphasis_cues": [],
+      "modified": "2026-09-13 18:55",
+      "size_kb": 4725.2
+    }
+  ],
+  "cross_match_summary": "75 Vorlesungsfolien erfolgreich mit 2. SJ Anki-Themen synchronisiert."
+}

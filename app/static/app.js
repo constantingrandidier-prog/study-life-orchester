@@ -7986,8 +7986,17 @@ window.closeProfessorExamModal = closeProfessorExamModal;
 // ============================================================================
 
 state.examIntelData = null;
+state.examSimulationData = null;
+state.actionableRoiData = null;
+state.kprimTrapsData = null;
 state.profFilter = 'all';
 state.profSearch = '';
+state.examIntelSearch = '';
+state.examIntelFilter = 'all';
+state.actionableSectionOpen = true;
+state.trapsSectionOpen = true;
+state.profsSectionOpen = true;
+state.decksSectionOpen = true;
 
 async function loadExamIntelPage(forceRefresh = false) {
   const container = document.getElementById('professorsGridContainer');
@@ -8000,30 +8009,55 @@ async function loadExamIntelPage(forceRefresh = false) {
 
   try {
     // 1. Ensure deck stats are loaded so we can show live Anki retention for each professor's topics
-    if (!state.deckStatsData || !state.deckStatsData.all_decks) {
+    if (!state.deckStatsData || !state.deckStatsData.all_decks || forceRefresh) {
       try {
         const dsRes = await fetch(`${API_BASE}/anki/deck-retention-stats?_ts=${Date.now()}`);
         if (dsRes.ok) state.deckStatsData = await dsRes.json();
       } catch (_) {}
     }
 
-    // 2. Fetch professor dossiers
-    const res = await fetch(`${API_BASE}/exam-intelligence/professors`);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    state.examIntelData = data.professors || {};
+    // 2. Fetch parallel endpoints: simulation, actionable ROI, card traps, and professors
+    const [simRes, roiRes, trapsRes, profsRes] = await Promise.all([
+      fetch(`${API_BASE}/exam-intelligence/simulation`).catch(() => null),
+      fetch(`${API_BASE}/exam-intelligence/actionable-roi`).catch(() => null),
+      fetch(`${API_BASE}/exam-intelligence/card-traps`).catch(() => null),
+      fetch(`${API_BASE}/exam-intelligence/professors`).catch(() => null),
+    ]);
+
+    if (simRes && simRes.ok) {
+      const sJson = await simRes.json();
+      state.examSimulationData = sJson.simulation || sJson;
+      renderExamSimulation();
+    }
+
+    if (roiRes && roiRes.ok) {
+      const rJson = await roiRes.json();
+      state.actionableRoiData = rJson.actionable_roi || rJson;
+      renderActionableRoi();
+    }
+
+    if (trapsRes && trapsRes.ok) {
+      const tJson = await trapsRes.json();
+      state.kprimTrapsData = tJson.card_stats || tJson;
+      renderKprimTraps();
+    }
+
+    if (profsRes && profsRes.ok) {
+      const data = await profsRes.json();
+      state.examIntelData = data.professors || {};
+    }
 
     renderExamIntelPage();
 
     if (forceRefresh && typeof showToast === 'function') {
-      showToast('UZH Dozenten-Dossiers erfolgreich aktualisiert.');
+      showToast('UZH Prüfungs-Intelligence erfolgreich aktualisiert.');
     }
   } catch (err) {
     console.warn('Error loading exam intel:', err);
     if (container) {
       container.innerHTML = `
         <div style="text-align: center; padding: 2.5rem 1rem; color: #ff7b72; font-size: 13px; grid-column: 1 / -1;">
-          Fehler beim Laden der Dozenten-Dossiers (${escapeHtml(err.message || 'Serverfehler')}).
+          Fehler beim Laden der Prüfungs-Intelligence (${escapeHtml(err.message || 'Serverfehler')}).
           <br><br>
           <button type="button" class="btn-secondary" onclick="loadExamIntelPage(true)" style="padding: 0.4rem 0.9rem; font-size: 12px; cursor: pointer;">
             🔄 Erneut versuchen
@@ -8040,43 +8074,292 @@ async function loadExamIntelPage(forceRefresh = false) {
 }
 window.loadExamIntelPage = loadExamIntelPage;
 
-state.examIntelSearch = '';
-state.examIntelFilter = 'all';
-state.profsSectionOpen = true;
-state.decksSectionOpen = true;
+function renderExamSimulation() {
+  const data = state.examSimulationData;
+  if (!data) return;
+
+  const mp1 = data.modulpruefung_1;
+  const mp2 = data.modulpruefung_2;
+
+  // MP1 Rendering
+  if (mp1) {
+    const sEl = document.getElementById('mp1ScoreDisplay');
+    const bEl = document.getElementById('mp1PassBadge');
+    const bufEl = document.getElementById('mp1BufferText');
+    const tCont = document.getElementById('mp1TopicsContainer');
+
+    if (sEl) sEl.textContent = `${mp1.predicted_score}%`;
+    if (bEl) {
+      bEl.textContent = mp1.status_label || (mp1.predicted_score >= 60 ? 'Bestehen sicher' : 'Gefährdet');
+      bEl.style.color = mp1.status_color || '#3fb950';
+      bEl.style.background = `${mp1.status_color || '#3fb950'}22`;
+      bEl.style.border = `1px solid ${mp1.status_color || '#3fb950'}44`;
+    }
+    if (bufEl) {
+      bufEl.innerHTML = `Dienstag, 19. Januar 2027 · Angoff-Bestehensgrenze: <strong>60%</strong> · <strong style="color: ${mp1.status_color || '#3fb950'};">${escapeHtml(mp1.safety_margin_text)}</strong>`;
+    }
+    if (tCont && mp1.topic_breakdown) {
+      let tHtml = '';
+      mp1.topic_breakdown.forEach(tb => {
+        const ret = tb.retention_rate != null ? tb.retention_rate : 48.0;
+        const col = tb.status_color || '#79c0ff';
+        tHtml += `
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 11px;">
+              <span>${escapeHtml(tb.topic_name)} (${tb.weight_pct}%)</span>
+              <strong style="color: ${col};">${ret}%</strong>
+            </div>
+            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden;">
+              <div style="width: ${Math.min(100, Math.max(0, ret))}%; height: 100%; background: ${col}; border-radius: 2px;"></div>
+            </div>
+          </div>
+        `;
+      });
+      tCont.innerHTML = tHtml;
+    }
+  }
+
+  // MP2 Rendering
+  if (mp2) {
+    const sEl = document.getElementById('mp2ScoreDisplay');
+    const bEl = document.getElementById('mp2PassBadge');
+    const bufEl = document.getElementById('mp2BufferText');
+    const tCont = document.getElementById('mp2TopicsContainer');
+
+    if (sEl) sEl.textContent = `${mp2.predicted_score}%`;
+    if (bEl) {
+      bEl.textContent = mp2.status_label || (mp2.predicted_score >= 60 ? 'Bestehen sicher' : 'Gefährdet');
+      bEl.style.color = mp2.status_color || '#3fb950';
+      bEl.style.background = `${mp2.status_color || '#3fb950'}22`;
+      bEl.style.border = `1px solid ${mp2.status_color || '#3fb950'}44`;
+    }
+    if (bufEl) {
+      bufEl.innerHTML = `Donnerstag, 21. Januar 2027 · Angoff-Bestehensgrenze: <strong>60%</strong> · <strong style="color: ${mp2.status_color || '#3fb950'};">${escapeHtml(mp2.safety_margin_text)}</strong>`;
+    }
+    if (tCont && mp2.topic_breakdown) {
+      let tHtml = '';
+      mp2.topic_breakdown.forEach(tb => {
+        const ret = tb.retention_rate != null ? tb.retention_rate : 48.0;
+        const col = tb.status_color || '#c4b5fd';
+        tHtml += `
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 11px;">
+              <span>${escapeHtml(tb.topic_name)} (${tb.weight_pct}%)</span>
+              <strong style="color: ${col};">${ret}%</strong>
+            </div>
+            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden;">
+              <div style="width: ${Math.min(100, Math.max(0, ret))}%; height: 100%; background: ${col}; border-radius: 2px;"></div>
+            </div>
+          </div>
+        `;
+      });
+      tCont.innerHTML = tHtml;
+    }
+  }
+}
+window.renderExamSimulation = renderExamSimulation;
+
+function renderActionableRoi() {
+  const container = document.getElementById('actionableRoiContainer');
+  const badge = document.getElementById('actionableGapsCountBadge');
+  if (!container || !state.actionableRoiData) return;
+
+  const q = state.examIntelSearch || '';
+  const filter = state.examIntelFilter || 'all';
+  let items = state.actionableRoiData.top_10_leverage_decks || [];
+
+  if (q) {
+    items = (state.actionableRoiData.all_ranked_decks || []).filter(d => {
+      const matchText = `${d.anki_name || ''} ${d.parent_topic || ''} ${d.professor_name || ''} ${d.actionable_advice || ''}`.toLowerCase();
+      return matchText.includes(q);
+    }).slice(0, 10);
+  }
+
+  // Filter by MP1 / MP2 if active
+  if (filter === 'mp1') {
+    items = items.filter(d => (d.target_exam || '').includes('1'));
+  } else if (filter === 'mp2') {
+    items = items.filter(d => (d.target_exam || '').includes('2'));
+  } else if (filter === 'high_yield') {
+    items = items.filter(d => d.yield_level === 'high');
+  }
+
+  if (badge) {
+    badge.textContent = `${items.length} Top-Hebel`;
+  }
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">
+        Keine Lern-Hebel für die aktuelle Filterung gefunden.
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  items.forEach((item, idx) => {
+    const parts = (item.anki_name || '').split('::').map(s => s.trim());
+    const leafTitle = parts[parts.length - 1];
+    const subPath = parts.slice(0, -1).join(' › ');
+    const ret = item.retention_rate != null ? `${item.retention_rate}%` : 'Neu';
+    const retCol = item.retention_rate >= 80 ? '#3fb950' : (item.retention_rate >= 70 ? '#d29922' : '#ff7b72');
+    const urgBg = `${item.urgency_color || '#f87171'}18`;
+    const urgBorder = `${item.urgency_color || '#f87171'}44`;
+
+    html += `
+      <div class="anki-deck-yield-card" style="border-left: 4px solid ${item.urgency_color || '#ff7b72'};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+          <div style="min-width: 0; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 2px;">
+              <span style="font-size: 11px; font-weight: 800; color: ${item.urgency_color || '#ff7b72'};">#${idx + 1}</span>
+              <span style="font-size: 10px; color: var(--text-dim);">${escapeHtml(subPath)}</span>
+            </div>
+            <strong style="color: #f0f6fc; font-size: 13px; display: block; word-break: break-word;">
+              ${escapeHtml(leafTitle)}
+            </strong>
+          </div>
+          <span style="background: ${urgBg}; color: ${item.urgency_color || '#ff7b72'}; border: 1px solid ${urgBorder}; font-size: 10.5px; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap;">
+            ROI ${item.roi_score}
+          </span>
+        </div>
+
+        <div style="font-size: 11.5px; color: #f0f6fc; line-height: 1.4; background: rgba(255,255,255,0.03); padding: 0.45rem 0.6rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); margin-top: 0.2rem;">
+          <strong style="color: #79c0ff;">💡 Klausur-Hebel:</strong> ${escapeHtml(item.actionable_advice)}
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; gap: 0.35rem;">
+          <div>
+            <span style="color: #c4b5fd; font-weight: 600;">👨‍🏫 ${escapeHtml(item.professor_name)}</span>
+            <span style="color: var(--text-dim); margin-left: 4px;">(${escapeHtml(item.target_exam)})</span>
+          </div>
+          <span style="color: ${item.urgency_color || '#ff7b72'}; font-weight: 700; font-size: 10.5px;">
+            ${escapeHtml(item.urgency_label)}
+          </span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; font-size: 11px;">
+          <div style="display: flex; gap: 0.6rem; color: var(--text-dim);">
+            <span><strong>${item.card_count || 0}</strong> Karten</span>
+            <span style="color: #f87171;"><strong>${item.kprim_traps_count || 0}</strong> Kprim-Fallen</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="color: var(--text-dim);">Retention:</span>
+            <strong style="color: ${retCol};">${ret}</strong>
+            <button type="button" class="btn-secondary" onclick="copyDeckQueryToClipboard('${escapeHtml(item.anki_name)}')" title="In Anki öffnen / Filter kopieren" style="padding: 0.15rem 0.4rem; font-size: 10px;">📋</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+window.renderActionableRoi = renderActionableRoi;
+
+function renderKprimTraps() {
+  const container = document.getElementById('kprimTrapsContainer');
+  const badge = document.getElementById('trapsCountBadge');
+  if (!container || !state.kprimTrapsData) return;
+
+  const q = state.examIntelSearch || '';
+  let traps = state.kprimTrapsData.top_25_todesfallen || [];
+
+  if (badge && state.kprimTrapsData.total_kprim_traps != null) {
+    badge.textContent = `${state.kprimTrapsData.total_kprim_traps} Fallen erkannt`;
+  }
+
+  if (q) {
+    traps = traps.filter(t => {
+      const matchText = `${t.front || t.front_snippet || ''} ${t.back || t.back_snippet || ''} ${t.deck_name || ''} ${t.professor || t.professor_name || ''} ${t.trap_label || ''} ${t.trap_warning || ''}`.toLowerCase();
+      return matchText.includes(q);
+    });
+  }
+
+  if (traps.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 13px;">
+        Keine Kprim-Todesfallen für die aktuelle Suche „${escapeHtml(q)}“ gefunden.
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  traps.forEach((trap, idx) => {
+    const parts = (trap.deck_name || '').split('::').map(s => s.trim());
+    const deckShort = parts[parts.length - 1];
+    const fText = trap.front || trap.front_snippet || '';
+    const bText = trap.back || trap.back_snippet || '';
+    const profName = trap.professor || trap.professor_name || 'Dozententeam';
+
+    html += `
+      <div style="background: rgba(22, 27, 34, 0.7); border: 1px solid rgba(248, 81, 73, 0.35); border-left: 4px solid #f87171; border-radius: 8px; padding: 0.9rem 1.1rem; display: flex; flex-direction: column; gap: 0.55rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="background: rgba(248, 81, 73, 0.2); color: #f87171; font-weight: 800; font-size: 11px; padding: 0.15rem 0.45rem; border-radius: 4px;">
+              Falle #${idx + 1}
+            </span>
+            <strong style="color: #ff7b72; font-size: 13px;">${escapeHtml(trap.trap_label || 'Kprim-Fangfrage')}</strong>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 11px; color: var(--text-dim);">
+            <span>📁 ${escapeHtml(deckShort)}</span>
+            <span>·</span>
+            <span style="color: #c4b5fd;">👨‍🏫 ${escapeHtml(profName)}</span>
+            <span style="background: rgba(255,255,255,0.06); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700; color: #e3b341;">Yield ${trap.card_yield_score}</span>
+          </div>
+        </div>
+
+        <!-- Question & Answer Preview -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem; background: rgba(13, 17, 23, 0.6); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle); font-size: 12px;">
+          <div>
+            <div style="font-size: 10.5px; font-weight: 700; color: #79c0ff; text-transform: uppercase; margin-bottom: 3px;">Karten-Vorderseite / Fragestellung:</div>
+            <div style="color: #f0f6fc; line-height: 1.45;">${escapeHtml(fText)}</div>
+          </div>
+          <div>
+            <div style="font-size: 10.5px; font-weight: 700; color: #3fb950; text-transform: uppercase; margin-bottom: 3px;">Karten-Rückseite / UZH-Fakt:</div>
+            <div style="color: var(--text-muted); line-height: 1.45;">${escapeHtml(bText)}</div>
+          </div>
+        </div>
+
+        <!-- Warning Callout -->
+        <div style="background: rgba(248, 81, 73, 0.08); border: 1px dashed rgba(248, 81, 73, 0.4); border-radius: 6px; padding: 0.55rem 0.8rem; font-size: 11.5px; color: #f0f6fc; line-height: 1.4; display: flex; align-items: flex-start; gap: 0.45rem;">
+          <span>⚠️</span>
+          <div>
+            <strong style="color: #f87171;">Todesfalle für Kprim:</strong> ${escapeHtml(trap.trap_warning || '')}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+window.renderKprimTraps = renderKprimTraps;
 
 function toggleExamIntelSection(sectionKey) {
-  if (sectionKey === 'profs') {
-    state.profsSectionOpen = !state.profsSectionOpen;
-    const card = document.getElementById('accordionCardProfs');
-    const icon = document.getElementById('toggleProfsIcon');
-    const text = document.getElementById('toggleProfsText');
-    if (card) {
-      if (state.profsSectionOpen) {
-        card.classList.add('open');
-        if (icon) icon.textContent = '▾';
-        if (text) text.textContent = 'Zuklappen';
-      } else {
-        card.classList.remove('open');
-        if (icon) icon.textContent = '▸';
-        if (text) text.textContent = 'Aufklappen';
-      }
-    }
-  } else if (sectionKey === 'decks') {
-    state.decksSectionOpen = !state.decksSectionOpen;
-    const card = document.getElementById('accordionCardDecks');
-    const icon = document.getElementById('toggleDecksIcon');
-    const text = document.getElementById('toggleDecksText');
-    if (card) {
-      if (state.decksSectionOpen) {
-        card.classList.add('open');
-        if (icon) icon.textContent = '▾';
-        if (text) text.textContent = 'Zuklappen';
-      } else {
-        card.classList.remove('open');
-        if (icon) icon.textContent = '▸';
-        if (text) text.textContent = 'Aufklappen';
-      }
+  const configs = {
+    actionable: { key: 'actionableSectionOpen', card: 'accordionCardActionable', icon: 'toggleActionableIcon', text: 'toggleActionableText' },
+    traps: { key: 'trapsSectionOpen', card: 'accordionCardTraps', icon: 'toggleTrapsIcon', text: 'toggleTrapsText' },
+    profs: { key: 'profsSectionOpen', card: 'accordionCardProfs', icon: 'toggleProfsIcon', text: 'toggleProfsText' },
+    decks: { key: 'decksSectionOpen', card: 'accordionCardDecks', icon: 'toggleDecksIcon', text: 'toggleDecksText' }
+  };
+  const cfg = configs[sectionKey];
+  if (!cfg) return;
+
+  state[cfg.key] = !state[cfg.key];
+  const card = document.getElementById(cfg.card);
+  const icon = document.getElementById(cfg.icon);
+  const text = document.getElementById(cfg.text);
+  if (card) {
+    if (state[cfg.key]) {
+      card.classList.add('open');
+      if (icon) icon.textContent = '▾';
+      if (text) text.textContent = 'Zuklappen';
+    } else {
+      card.classList.remove('open');
+      if (icon) icon.textContent = '▸';
+      if (text) text.textContent = 'Aufklappen';
     }
   }
 }
@@ -8089,28 +8372,28 @@ function handleExamIntelGlobalSearch(query) {
     clearBtn.style.display = state.examIntelSearch ? 'block' : 'none';
   }
 
-  // If user is actively searching, auto-expand both sections so hits are immediately visible
+  // If user is actively searching, auto-expand all sections so hits are immediately visible
   if (state.examIntelSearch) {
-    const profsCard = document.getElementById('accordionCardProfs');
-    const decksCard = document.getElementById('accordionCardDecks');
-    if (profsCard && !profsCard.classList.contains('open')) {
-      profsCard.classList.add('open');
-      state.profsSectionOpen = true;
-      const icon = document.getElementById('toggleProfsIcon');
-      const text = document.getElementById('toggleProfsText');
+    ['accordionCardActionable', 'accordionCardTraps', 'accordionCardProfs', 'accordionCardDecks'].forEach(cid => {
+      const card = document.getElementById(cid);
+      if (card && !card.classList.contains('open')) {
+        card.classList.add('open');
+      }
+    });
+    state.actionableSectionOpen = true;
+    state.trapsSectionOpen = true;
+    state.profsSectionOpen = true;
+    state.decksSectionOpen = true;
+    ['Actionable', 'Traps', 'Profs', 'Decks'].forEach(k => {
+      const icon = document.getElementById(`toggle${k}Icon`);
+      const text = document.getElementById(`toggle${k}Text`);
       if (icon) icon.textContent = '▾';
       if (text) text.textContent = 'Zuklappen';
-    }
-    if (decksCard && !decksCard.classList.contains('open')) {
-      decksCard.classList.add('open');
-      state.decksSectionOpen = true;
-      const icon = document.getElementById('toggleDecksIcon');
-      const text = document.getElementById('toggleDecksText');
-      if (icon) icon.textContent = '▾';
-      if (text) text.textContent = 'Zuklappen';
-    }
+    });
   }
 
+  renderActionableRoi();
+  renderKprimTraps();
   renderExamIntelPage();
 }
 window.handleExamIntelGlobalSearch = handleExamIntelGlobalSearch;
@@ -8133,26 +8416,26 @@ function setExamIntelFilter(filterKey, btn) {
 
   // Auto-expand sections when a specific filter is clicked
   if (filterKey !== 'all') {
-    const profsCard = document.getElementById('accordionCardProfs');
-    const decksCard = document.getElementById('accordionCardDecks');
-    if (profsCard && !profsCard.classList.contains('open')) {
-      profsCard.classList.add('open');
-      state.profsSectionOpen = true;
-      const icon = document.getElementById('toggleProfsIcon');
-      const text = document.getElementById('toggleProfsText');
+    ['accordionCardActionable', 'accordionCardTraps', 'accordionCardProfs', 'accordionCardDecks'].forEach(cid => {
+      const card = document.getElementById(cid);
+      if (card && !card.classList.contains('open')) {
+        card.classList.add('open');
+      }
+    });
+    state.actionableSectionOpen = true;
+    state.trapsSectionOpen = true;
+    state.profsSectionOpen = true;
+    state.decksSectionOpen = true;
+    ['Actionable', 'Traps', 'Profs', 'Decks'].forEach(k => {
+      const icon = document.getElementById(`toggle${k}Icon`);
+      const text = document.getElementById(`toggle${k}Text`);
       if (icon) icon.textContent = '▾';
       if (text) text.textContent = 'Zuklappen';
-    }
-    if (decksCard && !decksCard.classList.contains('open')) {
-      decksCard.classList.add('open');
-      state.decksSectionOpen = true;
-      const icon = document.getElementById('toggleDecksIcon');
-      const text = document.getElementById('toggleDecksText');
-      if (icon) icon.textContent = '▾';
-      if (text) text.textContent = 'Zuklappen';
-    }
+    });
   }
 
+  renderActionableRoi();
+  renderKprimTraps();
   renderExamIntelPage();
 }
 window.setExamIntelFilter = setExamIntelFilter;

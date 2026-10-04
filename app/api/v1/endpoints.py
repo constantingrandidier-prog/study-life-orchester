@@ -1957,6 +1957,75 @@ def get_exam_intelligence_regulations_endpoint():
     }
 
 
+@router.get(
+    "/exam-intelligence/simulation",
+    summary="Get live Modulprüfung 1 & 2 score prediction and Angoff pass safety margin",
+)
+@router.get(
+    "/schedule/exam-intelligence/simulation",
+    include_in_schema=False,
+)
+def get_exam_intelligence_simulation_endpoint():
+    """Returns weighted score prediction for MP1 and MP2 based on current Anki retention."""
+    from app.services.exam_score_simulator import get_full_exam_simulation
+    return {
+        "success": True,
+        "simulation": get_full_exam_simulation(),
+    }
+
+
+@router.get(
+    "/exam-intelligence/actionable-roi",
+    summary="Get ranked actionable study ROI list (highest point-gain leverage decks)",
+)
+@router.get(
+    "/schedule/exam-intelligence/actionable-roi",
+    include_in_schema=False,
+)
+def get_exam_intelligence_actionable_roi_endpoint():
+    """Returns decks ranked by personal study ROI and knowledge gap severity."""
+    from app.services.actionable_yield_service import get_ranked_actionable_yield_list
+    return {
+        "success": True,
+        "actionable_roi": get_ranked_actionable_yield_list(),
+    }
+
+
+@router.get(
+    "/exam-intelligence/card-traps",
+    summary="Get card-level deep inspection results and Top 25 Kprim Todesfallen",
+)
+@router.get(
+    "/schedule/exam-intelligence/card-traps",
+    include_in_schema=False,
+)
+def get_exam_intelligence_card_traps_endpoint():
+    """Returns deep card inspection metrics, Kprim pitfall counts, and Top 25 Todesfallen cards."""
+    from app.services.card_yield_engine import get_card_yield_stats
+    return {
+        "success": True,
+        "card_stats": get_card_yield_stats(),
+    }
+
+
+@router.get(
+    "/exam-intelligence/slides",
+    summary="Get UZH lecture slides cross-match index and emphasis flags",
+)
+@router.get(
+    "/schedule/exam-intelligence/slides",
+    include_in_schema=False,
+)
+def get_exam_intelligence_slides_endpoint():
+    """Returns indexed UZH lecture slides mapped to topics and exam emphasis flags."""
+    from app.services.slide_cross_matcher import get_slide_cross_match_stats
+    return {
+        "success": True,
+        "slides": get_slide_cross_match_stats(),
+    }
+
+
+
 
 
 

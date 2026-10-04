@@ -13,7 +13,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from app.db.repository import get_db_connection
 from app.services.anki_desktop_sync import find_local_anki_collection
-from app.services.uzh_exam_intelligence import match_professor_for_topic, calculate_uzh_exam_risk_score
+from app.services.uzh_exam_intelligence import (
+    match_professor_for_topic,
+    calculate_uzh_exam_risk_score,
+    classify_deck_yield,
+)
 
 # Current semester start: 2026-09-14 00:00:00 (ignore previous semester logs and card resets)
 SEMESTER_START_TS = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
@@ -473,7 +477,8 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         primary_ret_lbl = "Heute" if today_retention is not None else retention_basis
 
         prof_info = match_professor_for_topic(dmeta["anki_name"], dmeta["anki_name"], dmeta["parent_topic"])
-        is_hy = prof_info.get("uzh_importance", "").startswith("Sehr hoch") if prof_info else False
+        yield_data = classify_deck_yield(dmeta["anki_name"], dmeta["parent_topic"], prof_info)
+        is_hy = yield_data["yield_level"] == "high"
         risk_data = calculate_uzh_exam_risk_score(
             retention_rate=primary_ret,
             card_count=total_cards,
@@ -518,6 +523,12 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             "status_label": status_label,
             "badge_color": badge_color,
             "is_neglected": is_neglected,
+            "yield_level": yield_data["yield_level"],
+            "yield_label": yield_data["yield_label"],
+            "yield_badge": yield_data["yield_badge"],
+            "yield_color": yield_data["yield_color"],
+            "yield_order": yield_data["yield_order"],
+            "yield_reason": yield_data["yield_reason"],
             "professor_name": prof_info["name"] if prof_info else "Dozententeam UZH",
             "professor_institute": prof_info["institute"] if prof_info else "Medizinische Fakultät UZH",
             "exam_pearl": prof_info["high_yield_pearl"] if prof_info else None,
@@ -723,6 +734,7 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             x["retention_rate"] if x["retention_rate"] is not None else 999,
             -x["total_reviews"]
         )),
+        "all_decks_anki_order": sorted(all_decks, key=lambda x: x["anki_name"].lower()),
         "summary": {
             "total_topics": len(topics_list),
             "total_decks": len(all_decks),

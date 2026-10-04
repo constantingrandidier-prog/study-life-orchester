@@ -8040,31 +8040,138 @@ async function loadExamIntelPage(forceRefresh = false) {
 }
 window.loadExamIntelPage = loadExamIntelPage;
 
-function handleProfSearch(query) {
-  state.profSearch = (query || '').toLowerCase().trim();
+state.examIntelSearch = '';
+state.examIntelFilter = 'all';
+state.profsSectionOpen = true;
+state.decksSectionOpen = true;
+
+function toggleExamIntelSection(sectionKey) {
+  if (sectionKey === 'profs') {
+    state.profsSectionOpen = !state.profsSectionOpen;
+    const card = document.getElementById('accordionCardProfs');
+    const icon = document.getElementById('toggleProfsIcon');
+    const text = document.getElementById('toggleProfsText');
+    if (card) {
+      if (state.profsSectionOpen) {
+        card.classList.add('open');
+        if (icon) icon.textContent = '▾';
+        if (text) text.textContent = 'Zuklappen';
+      } else {
+        card.classList.remove('open');
+        if (icon) icon.textContent = '▸';
+        if (text) text.textContent = 'Aufklappen';
+      }
+    }
+  } else if (sectionKey === 'decks') {
+    state.decksSectionOpen = !state.decksSectionOpen;
+    const card = document.getElementById('accordionCardDecks');
+    const icon = document.getElementById('toggleDecksIcon');
+    const text = document.getElementById('toggleDecksText');
+    if (card) {
+      if (state.decksSectionOpen) {
+        card.classList.add('open');
+        if (icon) icon.textContent = '▾';
+        if (text) text.textContent = 'Zuklappen';
+      } else {
+        card.classList.remove('open');
+        if (icon) icon.textContent = '▸';
+        if (text) text.textContent = 'Aufklappen';
+      }
+    }
+  }
+}
+window.toggleExamIntelSection = toggleExamIntelSection;
+
+function handleExamIntelGlobalSearch(query) {
+  state.examIntelSearch = (query || '').toLowerCase().trim();
+  const clearBtn = document.getElementById('btnClearExamIntelSearch');
+  if (clearBtn) {
+    clearBtn.style.display = state.examIntelSearch ? 'block' : 'none';
+  }
+
+  // If user is actively searching, auto-expand both sections so hits are immediately visible
+  if (state.examIntelSearch) {
+    const profsCard = document.getElementById('accordionCardProfs');
+    const decksCard = document.getElementById('accordionCardDecks');
+    if (profsCard && !profsCard.classList.contains('open')) {
+      profsCard.classList.add('open');
+      state.profsSectionOpen = true;
+      const icon = document.getElementById('toggleProfsIcon');
+      const text = document.getElementById('toggleProfsText');
+      if (icon) icon.textContent = '▾';
+      if (text) text.textContent = 'Zuklappen';
+    }
+    if (decksCard && !decksCard.classList.contains('open')) {
+      decksCard.classList.add('open');
+      state.decksSectionOpen = true;
+      const icon = document.getElementById('toggleDecksIcon');
+      const text = document.getElementById('toggleDecksText');
+      if (icon) icon.textContent = '▾';
+      if (text) text.textContent = 'Zuklappen';
+    }
+  }
+
   renderExamIntelPage();
 }
-window.handleProfSearch = handleProfSearch;
+window.handleExamIntelGlobalSearch = handleExamIntelGlobalSearch;
 
-function setProfFilter(filterKey, btn) {
-  state.profFilter = filterKey;
-  const pills = document.querySelectorAll('#profFilterPills .advisor-filter-btn');
+// Backwards-compatibility alias
+window.handleProfSearch = handleExamIntelGlobalSearch;
+
+function clearExamIntelSearch() {
+  const input = document.getElementById('examIntelGlobalSearch');
+  if (input) input.value = '';
+  handleExamIntelGlobalSearch('');
+}
+window.clearExamIntelSearch = clearExamIntelSearch;
+
+function setExamIntelFilter(filterKey, btn) {
+  state.examIntelFilter = filterKey;
+  const pills = document.querySelectorAll('#examIntelFilterPills .advisor-filter-btn');
   pills.forEach(p => p.classList.remove('active'));
   if (btn) btn.classList.add('active');
+
+  // Auto-expand sections when a specific filter is clicked
+  if (filterKey !== 'all') {
+    const profsCard = document.getElementById('accordionCardProfs');
+    const decksCard = document.getElementById('accordionCardDecks');
+    if (profsCard && !profsCard.classList.contains('open')) {
+      profsCard.classList.add('open');
+      state.profsSectionOpen = true;
+      const icon = document.getElementById('toggleProfsIcon');
+      const text = document.getElementById('toggleProfsText');
+      if (icon) icon.textContent = '▾';
+      if (text) text.textContent = 'Zuklappen';
+    }
+    if (decksCard && !decksCard.classList.contains('open')) {
+      decksCard.classList.add('open');
+      state.decksSectionOpen = true;
+      const icon = document.getElementById('toggleDecksIcon');
+      const text = document.getElementById('toggleDecksText');
+      if (icon) icon.textContent = '▾';
+      if (text) text.textContent = 'Zuklappen';
+    }
+  }
+
   renderExamIntelPage();
 }
-window.setProfFilter = setProfFilter;
+window.setExamIntelFilter = setExamIntelFilter;
+window.setProfFilter = setExamIntelFilter;
 
 function renderExamIntelPage() {
-  const container = document.getElementById('professorsGridContainer');
-  if (!container || !state.examIntelData) return;
+  const profsContainer = document.getElementById('professorsGridContainer');
+  const decksContainer = document.getElementById('ankiDecksYieldContainer');
+  if (!state.examIntelData) return;
 
   const profEntries = Object.entries(state.examIntelData);
   const allDecks = (state.deckStatsData && state.deckStatsData.all_decks) ? state.deckStatsData.all_decks : [];
-  const q = state.profSearch;
-  const filter = state.profFilter;
+  const q = state.examIntelSearch || '';
+  const filter = state.examIntelFilter || 'all';
 
-  const filtered = profEntries.filter(([profId, prof]) => {
+  // -------------------------------------------------------------------------
+  // 1. FILTER PROFESSORS
+  // -------------------------------------------------------------------------
+  const filteredProfs = profEntries.filter(([profId, prof]) => {
     // Search match
     if (q) {
       const haystack = `${prof.name} ${prof.title} ${prof.institute} ${prof.research_focus} ${prof.primary_topics.join(' ')} ${prof.high_yield_pearl} ${prof.kprim_trap}`.toLowerCase();
@@ -8082,19 +8189,21 @@ function renderExamIntelPage() {
       if (!hasMp2) return false;
     } else if (filter === 'high_yield') {
       if (!prof.uzh_importance.toLowerCase().includes('sehr hoch')) return false;
+    } else if (filter === 'medium_yield' || filter === 'low_yield' || filter === 'no_yield') {
+      // In yield deck filter mode, only show profs who have at least one matching deck
+      const matchedDecks = allDecks.filter(d => {
+        const pMatch = d.professor_name && d.professor_name === prof.name;
+        if (!pMatch) return false;
+        if (filter === 'medium_yield') return d.yield_level === 'medium';
+        if (filter === 'low_yield') return d.yield_level === 'low';
+        if (filter === 'no_yield') return d.yield_level === 'none';
+        return true;
+      });
+      if (matchedDecks.length === 0) return false;
     }
 
     return true;
   });
-
-  if (filtered.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">
-        Kein Dozent gefunden für „${escapeHtml(q)}“. Probiere einen anderen Suchbegriff (z. B. Wenger, Gerinnung, Astrup).
-      </div>
-    `;
-    return;
-  }
 
   const profEmojiMap = {
     'roland_wenger': '🫁',
@@ -8111,110 +8220,293 @@ function renderExamIntelPage() {
     'oliver_ullrich': '🚀',
   };
 
-  container.innerHTML = filtered.map(([profId, prof]) => {
-    const emoji = profEmojiMap[profId] || '👨‍🏫';
-    const isVeryHigh = prof.uzh_importance.toLowerCase().includes('sehr hoch');
-    const impBadgeColor = isVeryHigh ? 'background: rgba(248,81,73,0.18); color: #ff7b72; border: 1px solid rgba(248,81,73,0.4);' : 'background: rgba(88,166,255,0.15); color: #79c0ff; border: 1px solid rgba(88,166,255,0.3);';
+  const profsHeaderCount = document.getElementById('profsHeaderCount');
+  if (profsHeaderCount) {
+    profsHeaderCount.textContent = `${filteredProfs.length} von ${profEntries.length} Dozenten`;
+  }
 
-    // Find linked Anki decks
-    const matchedDecks = allDecks.filter(d => {
-      if (d.professor_name && d.professor_name === prof.name) return true;
-      const dName = (d.anki_name || '').toLowerCase();
-      return prof.keywords.some(k => dName.includes(k));
-    });
-
-    const totalProfCards = matchedDecks.reduce((sum, d) => sum + (d.card_count || 0), 0);
-    const avgRet = matchedDecks.length > 0
-      ? Math.round(matchedDecks.reduce((sum, d) => sum + (d.retention_rate || 0), 0) / matchedDecks.length)
-      : null;
-
-    let retBadge = '';
-    if (avgRet !== null && avgRet > 0) {
-      const retCol = avgRet >= 80 ? '#3fb950' : (avgRet >= 70 ? '#d29922' : '#ff7b72');
-      retBadge = `<span style="font-size: 11px; font-weight: 700; color: ${retCol}; background: ${retCol}18; border: 1px solid ${retCol}44; padding: 0.15rem 0.5rem; border-radius: 4px;">Deine Ø Retention: ${avgRet}%</span>`;
-    }
-
-    const decksHtml = matchedDecks.slice(0, 5).map(d => {
-      const escaped = escapeHtml(d.anki_name);
-      const dRet = typeof d.retention_rate === 'number' ? `${d.retention_rate}%` : 'Neu';
-      const dCol = d.retention_rate >= 80 ? '#3fb950' : (d.retention_rate >= 70 ? '#d29922' : '#ff7b72');
-      return `
-        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); padding: 0.4rem 0.65rem; border-radius: 6px; font-size: 11.5px; gap: 0.5rem;">
-          <span style="color: #c9d1d9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;" title="${escaped}">
-            ${escaped}
-          </span>
-          <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0;">
-            <span style="color: var(--text-muted); font-size: 10.5px;">${d.card_count} Karten</span>
-            <span style="font-weight: 700; color: ${dCol}; font-size: 11px;">${dRet}</span>
-            <button type="button" class="btn-secondary" onclick="copyDeckQueryToClipboard('${escaped}')" title="Anki-Filter kopieren" style="padding: 0.15rem 0.4rem; font-size: 10px;">📋</button>
-          </div>
+  if (profsContainer) {
+    if (filteredProfs.length === 0) {
+      profsContainer.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">
+          Kein Dozent gefunden für die aktuelle Suche „${escapeHtml(q)}“.
         </div>
       `;
-    }).join('');
+    } else {
+      profsContainer.innerHTML = filteredProfs.map(([profId, prof]) => {
+        const emoji = profEmojiMap[profId] || '👨‍🏫';
+        const isVeryHigh = prof.uzh_importance.toLowerCase().includes('sehr hoch');
+        const impBadgeColor = isVeryHigh
+          ? 'background: rgba(248,81,73,0.18); color: #ff7b72; border: 1px solid rgba(248,81,73,0.4);'
+          : 'background: rgba(88,166,255,0.15); color: #79c0ff; border: 1px solid rgba(88,166,255,0.3);';
 
-    return `
-      <div style="background: var(--bg-surface-elevated, #161b22); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.9rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;">
-          <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
-              ${emoji}
+        // Find linked Anki decks
+        const matchedDecks = allDecks.filter(d => {
+          if (d.professor_name && d.professor_name === prof.name) return true;
+          const dName = (d.anki_name || '').toLowerCase();
+          return prof.keywords.some(k => dName.includes(k));
+        });
+
+        const totalProfCards = matchedDecks.reduce((sum, d) => sum + (d.card_count || 0), 0);
+        const avgRet = matchedDecks.length > 0
+          ? Math.round(matchedDecks.reduce((sum, d) => sum + (d.retention_rate || 0), 0) / matchedDecks.length)
+          : null;
+
+        let retBadge = '';
+        if (avgRet !== null && avgRet > 0) {
+          const retCol = avgRet >= 80 ? '#3fb950' : (avgRet >= 70 ? '#d29922' : '#ff7b72');
+          retBadge = `<span style="font-size: 11px; font-weight: 700; color: ${retCol}; background: ${retCol}18; border: 1px solid ${retCol}44; padding: 0.15rem 0.5rem; border-radius: 4px;">Deine Ø Retention: ${avgRet}%</span>`;
+        }
+
+        const decksHtml = matchedDecks.slice(0, 5).map(d => {
+          const escaped = escapeHtml(d.anki_name);
+          const dRet = typeof d.retention_rate === 'number' ? `${d.retention_rate}%` : 'Neu';
+          const dCol = d.retention_rate >= 80 ? '#3fb950' : (d.retention_rate >= 70 ? '#d29922' : '#ff7b72');
+          return `
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); padding: 0.4rem 0.65rem; border-radius: 6px; font-size: 11.5px; gap: 0.5rem;">
+              <span style="color: #c9d1d9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;" title="${escaped}">
+                ${escaped}
+              </span>
+              <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0;">
+                <span style="color: var(--text-muted); font-size: 10.5px;">${d.card_count} Karten</span>
+                <span style="font-weight: 700; color: ${dCol}; font-size: 11px;">${dRet}</span>
+                <button type="button" class="btn-secondary" onclick="copyDeckQueryToClipboard('${escaped}')" title="Anki-Filter kopieren" style="padding: 0.15rem 0.4rem; font-size: 10px;">📋</button>
+              </div>
             </div>
-            <div>
-              <h3 style="margin: 0; font-size: 15.5px; font-weight: 700; color: #f0f6fc;">${escapeHtml(prof.name)}</h3>
-              <div style="font-size: 11.5px; color: #79c0ff; margin-top: 1px;">${escapeHtml(prof.title)}</div>
-              <div style="font-size: 11px; color: var(--text-muted);">${escapeHtml(prof.institute)}</div>
+          `;
+        }).join('');
+
+        return `
+          <div style="background: var(--bg-surface-elevated, #161b22); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.9rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                  ${emoji}
+                </div>
+                <div>
+                  <h3 style="margin: 0; font-size: 15.5px; font-weight: 700; color: #f0f6fc;">${escapeHtml(prof.name)}</h3>
+                  <div style="font-size: 11.5px; color: #79c0ff; margin-top: 1px;">${escapeHtml(prof.title)}</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">${escapeHtml(prof.institute)}</div>
+                </div>
+              </div>
+              <span style="font-size: 10.5px; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; ${impBadgeColor}">
+                ${escapeHtml(prof.uzh_importance.split('(')[0].trim())}
+              </span>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 12px; line-height: 1.45;">
+              <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Forschung &amp; Lehrauftrag</strong>
+              <span style="color: #c9d1d9;">${escapeHtml(prof.research_focus)}</span>
+            </div>
+
+            <div style="background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.25); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 12px; line-height: 1.45;">
+              <strong style="color: #79c0ff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Prüfungsstil &amp; Klausurvorlieben</strong>
+              <span style="color: #e6edf3;">${escapeHtml(prof.exam_style)}</span>
+            </div>
+
+            <div style="background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 0.75rem 0.85rem; font-size: 12px; line-height: 1.5;">
+              <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
+                <span>💡</span>
+                <strong style="color: #7ee787; font-size: 12px;">High-Yield Klausurfokus:</strong>
+              </div>
+              <span style="color: #c9d1d9;">${escapeHtml(prof.high_yield_pearl)}</span>
+            </div>
+
+            <div style="background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.35); border-radius: 8px; padding: 0.75rem 0.85rem; font-size: 12px; line-height: 1.5;">
+              <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
+                <span>🚨</span>
+                <strong style="color: #ff7b72; font-size: 12px;">Typische UZH Kprim-Falle:</strong>
+              </div>
+              <span style="color: #f0f6fc;">${escapeHtml(prof.kprim_trap)}</span>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <strong style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+                  Relevante Anki-Decks (${matchedDecks.length} Decks • ${totalProfCards} Karten)
+                </strong>
+                ${retBadge}
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                ${decksHtml || '<span style="font-size: 11px; color: var(--text-muted);">Keine direkten Unterdecks zugeordnet.</span>'}
+                ${matchedDecks.length > 5 ? `<span style="font-size: 10.5px; color: var(--text-muted); text-align: center;">+ ${matchedDecks.length - 5} weitere Decks im Deck-Radar</span>` : ''}
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // 2. FILTER & RENDER ANKI DECKS (1:1 SORTED AS IN ANKI DESKTOP)
+  // -------------------------------------------------------------------------
+  if (decksContainer) {
+    // 1. Filter decks based on search & filter
+    const filteredDecks = allDecks.filter(d => {
+      const dName = (d.anki_name || '').toLowerCase();
+      const pName = (d.professor_name || '').toLowerCase();
+      const pInst = (d.professor_institute || '').toLowerCase();
+      const yLvl = (d.yield_level || 'medium').toLowerCase();
+      const yLbl = (d.yield_label || '').toLowerCase();
+
+      // Search match
+      if (q) {
+        const dHaystack = `${dName} ${pName} ${pInst} ${yLvl} ${yLbl} ${d.parent_topic || ''}`.toLowerCase();
+        if (!dHaystack.includes(q)) return false;
+      }
+
+      // Filter pills
+      if (filter === 'high_yield' && yLvl !== 'high') return false;
+      if (filter === 'medium_yield' && yLvl !== 'medium') return false;
+      if (filter === 'low_yield' && yLvl !== 'low') return false;
+      if (filter === 'no_yield' && yLvl !== 'none') return false;
+
+      if (filter === 'mp1') {
+        const mp1Terms = ['atmung', 'blut', 'immun', 'herz', 'kreislauf', 'hämoglobin', 'gerinnung'];
+        const hasMp1 = mp1Terms.some(m => dName.includes(m) || (d.parent_topic || '').toLowerCase().includes(m));
+        if (!hasMp1) return false;
+      } else if (filter === 'mp2') {
+        const mp2Terms = ['verdauung', 'magen', 'darm', 'stoffwechsel', 'endokrin', 'hormon', 'steroid', 'insulin'];
+        const hasMp2 = mp2Terms.some(m => dName.includes(m) || (d.parent_topic || '').toLowerCase().includes(m));
+        if (!hasMp2) return false;
+      }
+
+      return true;
+    });
+
+    // 2. Sort 1:1 identically to Anki Desktop (natural hierarchical order)
+    filteredDecks.sort((a, b) => (a.anki_name || '').localeCompare(b.anki_name || '', 'de', { numeric: true, sensitivity: 'base' }));
+
+    // Count badges update
+    const totalHigh = allDecks.filter(d => d.yield_level === 'high').length;
+    const totalMed = allDecks.filter(d => d.yield_level === 'medium').length;
+    const totalLow = allDecks.filter(d => d.yield_level === 'low').length;
+    const totalNone = allDecks.filter(d => d.yield_level === 'none').length;
+    const bHigh = document.getElementById('badgeHighCount');
+    const bMed = document.getElementById('badgeMedCount');
+    const bLow = document.getElementById('badgeLowCount');
+    const bNone = document.getElementById('badgeNoneCount');
+    if (bHigh) bHigh.textContent = `🔴 ${totalHigh} High`;
+    if (bMed) bMed.textContent = `🟡 ${totalMed} Med`;
+    if (bLow) bLow.textContent = `🟢 ${totalLow} Low`;
+    if (bNone) bNone.textContent = `⚪ ${totalNone} None`;
+
+    // Global search summary update
+    const sumEl = document.getElementById('examIntelSearchSummary');
+    if (sumEl) {
+      sumEl.innerHTML = `Sichtbar: <strong style="color: #c4b5fd;">${filteredProfs.length}</strong> Dozenten · <strong style="color: #79c0ff;">${filteredDecks.length}</strong> von ${allDecks.length} Anki-Sets`;
+    }
+
+    if (filteredDecks.length === 0) {
+      decksContainer.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 13px;">
+          Keine Anki-Sets gefunden für die aktuelle Auswahl „${escapeHtml(q)}“.
+        </div>
+      `;
+    } else {
+      // Group by top parent block in exact Anki natural order
+      const groupedByBlock = new Map();
+      filteredDecks.forEach(d => {
+        const parts = (d.anki_name || '').split('::').map(s => s.trim());
+        const blockName = parts.length > 1 ? parts[1] : (parts[0] || 'Weitere Decks');
+        if (!groupedByBlock.has(blockName)) {
+          groupedByBlock.set(blockName, []);
+        }
+        groupedByBlock.get(blockName).push(d);
+      });
+
+      let decksHtml = '';
+      for (const [blockName, blockDecks] of groupedByBlock.entries()) {
+        decksHtml += `
+          <div style="background: rgba(22, 27, 34, 0.45); border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden;">
+            <div style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--border-subtle); padding: 0.65rem 1rem; font-size: 13px; font-weight: 700; color: #79c0ff; display: flex; justify-content: space-between; align-items: center;">
+              <span>📁 ${escapeHtml(blockName)}</span>
+              <span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">${blockDecks.length} Sets in Anki-Reihenfolge</span>
+            </div>
+            <div style="padding: 0.85rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 0.85rem;">
+        `;
+
+        blockDecks.forEach(d => {
+          const yLvl = d.yield_level || 'medium';
+          const yBadgeClass = yLvl === 'high' ? 'yield-pill-high' : (yLvl === 'medium' ? 'yield-pill-medium' : (yLvl === 'low' ? 'yield-pill-low' : 'yield-pill-none'));
+          const yBorderClass = yLvl === 'high' ? 'border-high' : (yLvl === 'medium' ? 'border-medium' : (yLvl === 'low' ? 'border-low' : 'border-none'));
+          const yBadgeText = d.yield_badge || (yLvl === 'high' ? '🔴 High-Yield' : (yLvl === 'medium' ? '🟡 Medium-Yield' : (yLvl === 'low' ? '🟢 Low-Yield' : '⚪ No-Yield')));
+          const yReason = d.yield_reason || (yLvl === 'high' ? 'Prüfungs-Kerngebiet UZH 2. SJ (häufige Kprim-/MC-Fragen).' : 'Standard-Lehrstoff.');
+
+          const ret = typeof d.retention_rate === 'number' ? `${d.retention_rate}%` : 'Neu';
+          const retCol = d.retention_rate >= 80 ? '#3fb950' : (d.retention_rate >= 70 ? '#d29922' : '#ff7b72');
+          const retPct = Math.min(100, Math.max(0, d.retention_rate || 0));
+
+          // Breadcrumb path display
+          const pathParts = (d.anki_name || '').split('::').map(s => s.trim());
+          const leafTitle = pathParts[pathParts.length - 1];
+          const subPath = pathParts.slice(0, -1).join(' › ');
+
+          const riskBadge = d.exam_risk_label
+            ? `<span style="font-size: 10px; font-weight: 700; color: ${d.exam_risk_color || '#d29922'}; background: ${d.exam_risk_color || '#d29922'}18; border: 1px solid ${d.exam_risk_color || '#d29922'}44; padding: 0.15rem 0.4rem; border-radius: 4px;">${escapeHtml(d.exam_risk_label.split('(')[0].trim())}</span>`
+            : '';
+
+          decksHtml += `
+            <div class="anki-deck-yield-card ${yBorderClass}">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+                <div style="min-width: 0; flex: 1;">
+                  <div class="deck-tree-breadcrumb" title="${escapeHtml(d.anki_name)}">
+                    ${escapeHtml(subPath)}
+                  </div>
+                  <strong style="color: #f0f6fc; font-size: 13px; display: block; margin-top: 2px; word-break: break-word;">
+                    ${escapeHtml(leafTitle)}
+                  </strong>
+                </div>
+                <span class="${yBadgeClass}">
+                  ${yBadgeText}
+                </span>
+              </div>
+
+              <div style="font-size: 11px; color: var(--text-muted); line-height: 1.35; background: rgba(255,255,255,0.02); padding: 0.35rem 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.04);">
+                <strong>Relevanz:</strong> ${escapeHtml(yReason)}
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; gap: 0.35rem;">
+                <div>
+                  <span style="color: #79c0ff; font-weight: 600;">👨‍🏫 ${escapeHtml(d.professor_name || 'Dozententeam UZH')}</span>
+                </div>
+                ${riskBadge}
+              </div>
+
+              <!-- Metrics Row -->
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; font-size: 11px;">
+                <div style="display: flex; gap: 0.6rem; color: var(--text-dim);">
+                  <span><strong>${d.card_count || 0}</strong> Karten</span>
+                  <span><strong style="color: ${d.due_count > 0 ? '#ff7b72' : 'inherit'};">${d.due_count || 0}</strong> fällig</span>
+                  <span><strong>${d.new_count || 0}</strong> neu</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.45rem;">
+                  <div style="width: 50px; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden;">
+                    <div style="width: ${retPct}%; height: 100%; background: ${retCol}; border-radius: 3px;"></div>
+                  </div>
+                  <strong style="color: ${retCol}; font-size: 11px;">${ret}</strong>
+                  <button type="button" class="btn-secondary" onclick="copyDeckQueryToClipboard('${escapeHtml(d.anki_name)}')" title="Anki-Suchfilter kopieren" style="padding: 0.15rem 0.35rem; font-size: 10px; margin-left: 2px;">📋</button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        decksHtml += `
             </div>
           </div>
-          <span style="font-size: 10.5px; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; ${impBadgeColor}">
-            ${escapeHtml(prof.uzh_importance.split('(')[0].trim())}
-          </span>
-        </div>
+        `;
+      }
 
-        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 12px; line-height: 1.45;">
-          <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Forschung &amp; Lehrauftrag</strong>
-          <span style="color: #c9d1d9;">${escapeHtml(prof.research_focus)}</span>
-        </div>
-
-        <div style="background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.25); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 12px; line-height: 1.45;">
-          <strong style="color: #79c0ff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;">Prüfungsstil &amp; Klausurvorlieben</strong>
-          <span style="color: #e6edf3;">${escapeHtml(prof.exam_style)}</span>
-        </div>
-
-        <div style="background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 0.75rem 0.85rem; font-size: 12px; line-height: 1.5;">
-          <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
-            <span>💡</span>
-            <strong style="color: #7ee787; font-size: 12px;">High-Yield Klausurfokus:</strong>
-          </div>
-          <span style="color: #c9d1d9;">${escapeHtml(prof.high_yield_pearl)}</span>
-        </div>
-
-        <div style="background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.35); border-radius: 8px; padding: 0.75rem 0.85rem; font-size: 12px; line-height: 1.5;">
-          <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
-            <span>🚨</span>
-            <strong style="color: #ff7b72; font-size: 12px;">Typische UZH Kprim-Falle:</strong>
-          </div>
-          <span style="color: #f0f6fc;">${escapeHtml(prof.kprim_trap)}</span>
-        </div>
-
-        <div style="border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <strong style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
-              Relevante Anki-Decks (${matchedDecks.length} Decks • ${totalProfCards} Karten)
-            </strong>
-            ${retBadge}
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-            ${decksHtml || '<span style="font-size: 11px; color: var(--text-muted);">Keine direkten Unterdecks zugeordnet.</span>'}
-            ${matchedDecks.length > 5 ? `<span style="font-size: 10.5px; color: var(--text-muted); text-align: center;">+ ${matchedDecks.length - 5} weitere Decks im Deck-Radar</span>` : ''}
-          </div>
-        </div>
-
-      </div>
-    `;
-  }).join('');
+      decksContainer.innerHTML = decksHtml;
+    }
+  }
 }
 window.renderExamIntelPage = renderExamIntelPage;
+
 
 
 

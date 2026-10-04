@@ -295,3 +295,80 @@ def calculate_uzh_exam_risk_score(
         "recommended_action": action,
         "target_retention_safe": 75.0,
     }
+
+
+def classify_deck_yield(
+    anki_name: str,
+    parent_topic: str = "",
+    prof_info: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Classifies an individual Anki deck into UZH 2. SJ exam yield levels:
+    - 'high': High Yield (🔴 Sehr hoch / Prüfungs-Kern & Kprim-Hotspots)
+    - 'medium': Medium Yield (🟡 Relevant / Standard-Prüfungsstoff)
+    - 'low': Low Yield (🟢 Gering / Spezifische Versuche, Randthemen & Detailnischen)
+    - 'none': No Yield (⚪ Kein Ertrag / Reine Einführungen, Abschlüsse, Orga)
+    """
+    nl = anki_name.lower()
+
+    # 1. No Yield (Einführung, Abschluss, Organisation, Vorbesprechung)
+    no_yield_terms = [
+        "einführung", "abschluss", "einfuehrung", "organisat", "vorbesprechung", "feedback"
+    ]
+    if any(t in nl for t in no_yield_terms) and "versuch" not in nl:
+        return {
+            "yield_level": "none",
+            "yield_label": "No-Yield (Einführung / Orga)",
+            "yield_badge": "⚪ No-Yield",
+            "yield_color": "#8b949e",
+            "yield_order": 4,
+            "yield_reason": "Reine Orientierungs-, Einführungs- oder Abschlussfolien ohne prüfungsrelevante Fakten.",
+        }
+
+    # 2. Low Yield (Praktikumsversuche, Kaumuskelbeschwerden, Nischenmethoden)
+    low_yield_terms = [
+        "versuch", "kaumuskelbeschwerden", "pcr und restriktion :: versuch",
+        "proteinreinigung :: versuch", "photometrieren :: versuch", "sds-page :: versuch"
+    ]
+    if any(t in nl for t in low_yield_terms):
+        return {
+            "yield_level": "low",
+            "yield_label": "Low-Yield (Versuch / Detail)",
+            "yield_badge": "🟢 Low-Yield",
+            "yield_color": "#3fb950",
+            "yield_order": 3,
+            "yield_reason": "Praktikumsversuch / methodisches Detail mit untergeordneter Relevanz für schriftliche Modulprüfungen.",
+        }
+
+    # 3. High Yield (Prüfungs-Kerngebiete, Kern-Dozenten, Kprim-Hotspots)
+    hy_terms = [
+        "blutgerinnung", "hämostase", "astrup", "säure-base", "hypoxie", "höhenanpassung",
+        "ekg", "raas", "aldosteron", "nephron", "glukagon", "insulin", "ketonkörper",
+        "steroid", "ags", "herzentwicklung", "shunts", "klappen", "immuntoleranz",
+        "t-zell", "autoimmunität", "monoklonale", "diuretika", "tubulär", "kalium",
+        "sglt", "membrantransport", "arrhythmie", "erythrozyten", "co2-transport",
+        "leukozyten", "thrombozyten", "energieumsatz", "schilddrüse", "nebenniere",
+        "kohlenhydrat stoffwechsel", "leberspezifischer", "fettsäurestoffwechsel",
+        "endokrines pankreas", "katecholamine", "hypothalamo", "wenger", "wagner",
+        "tuzlak", "sommer", "loffing", "dutzler", "sokolowska", "emmert"
+    ]
+    if any(t in nl for t in hy_terms) or (prof_info and prof_info.get("uzh_importance", "").startswith("Sehr hoch")):
+        return {
+            "yield_level": "high",
+            "yield_label": "High-Yield (Prüfungs-Kern)",
+            "yield_badge": "🔴 High-Yield",
+            "yield_color": "#f85149",
+            "yield_order": 1,
+            "yield_reason": "Zentraler Prüfungs-Hotspot UZH 2. SJ mit regelmässigen Kprim- und MC-Fragen.",
+        }
+
+    # 4. Medium Yield (Standardvorlesungen, Anatomie, Physiologie)
+    return {
+        "yield_level": "medium",
+        "yield_label": "Medium-Yield (Standard-Stoff)",
+        "yield_badge": "🟡 Medium-Yield",
+        "yield_color": "#d29922",
+        "yield_order": 2,
+        "yield_reason": "Kanonischer Standardstoff (Physiologie, Anatomie, Biochemie Grundlagen).",
+    }
+

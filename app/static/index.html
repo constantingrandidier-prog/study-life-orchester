@@ -1099,27 +1099,114 @@
           </span>
         </div>
 
-        <!-- Search & Filter Controls -->
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
-          <div style="position: relative; flex: 1; min-width: 280px; max-width: 480px;">
-            <input type="text" id="profSearchInput" placeholder="Dozent, Institut, Thema oder Stichwort suchen (z. B. Wenger, Gerinnung, Astrup, AGS)..." oninput="handleProfSearch(this.value)" style="width: 100%; padding: 0.5rem 0.85rem; background: var(--bg-surface-elevated, #161b22); border: 1px solid var(--border-subtle); border-radius: 6px; color: #f0f6fc; font-size: 12.5px;">
+        <!-- Top Global Search & Yield Filter Controls -->
+        <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+            <div style="position: relative; flex: 1; min-width: 300px;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-muted); pointer-events: none;">🔍</span>
+              <input type="text" id="examIntelGlobalSearch" placeholder="Spezifisches Thema, Anki-Deck, Dozent oder Stichwort suchen (z. B. Gerinnung, Astrup, Hypoxie, EKG, Aminosäuren, Wagner, Tuzlak)..." oninput="handleExamIntelGlobalSearch(this.value)" style="width: 100%; padding: 0.65rem 2.2rem 0.65rem 2.2rem; background: var(--bg-surface-elevated, #161b22); border: 1px solid var(--border-subtle); border-radius: 8px; color: #f0f6fc; font-size: 13px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-blue)';" onblur="this.style.borderColor='var(--border-subtle)';">
+              <button type="button" id="btnClearExamIntelSearch" onclick="clearExamIntelSearch()" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 2px 6px;">✕</button>
+            </div>
+            <div id="examIntelSearchSummary" style="font-size: 12px; color: var(--text-muted); font-weight: 500;">
+              Lade Übersicht...
+            </div>
           </div>
 
-          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;" id="profFilterPills">
-            <button type="button" class="advisor-filter-btn active" data-filter="all" onclick="setProfFilter('all', this)">Alle Dozenten (12)</button>
-            <button type="button" class="advisor-filter-btn" data-filter="mp1" onclick="setProfFilter('mp1', this)">Modulprüfung 1</button>
-            <button type="button" class="advisor-filter-btn" data-filter="mp2" onclick="setProfFilter('mp2', this)">Modulprüfung 2</button>
-            <button type="button" class="advisor-filter-btn" data-filter="high_yield" onclick="setProfFilter('high_yield', this)">🔥 High-Yield Kern</button>
+          <!-- Quick Yield & Module Filter Pills -->
+          <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center;" id="examIntelFilterPills">
+            <button type="button" class="advisor-filter-btn active" data-filter="all" onclick="setExamIntelFilter('all', this)">
+              Alle (12 Dozenten · 120 Sets)
+            </button>
+            <button type="button" class="advisor-filter-btn" data-filter="high_yield" onclick="setExamIntelFilter('high_yield', this)" style="border-color: rgba(248,81,73,0.4); color: #ff7b72;">
+              🔴 Nur High-Yield
+            </button>
+            <button type="button" class="advisor-filter-btn" data-filter="medium_yield" onclick="setExamIntelFilter('medium_yield', this)" style="border-color: rgba(210,153,34,0.4); color: #e3b341;">
+              🟡 Nur Medium-Yield
+            </button>
+            <button type="button" class="advisor-filter-btn" data-filter="low_yield" onclick="setExamIntelFilter('low_yield', this)" style="border-color: rgba(63,185,80,0.4); color: #3fb950;">
+              🟢 Nur Low-Yield (Versuche)
+            </button>
+            <button type="button" class="advisor-filter-btn" data-filter="no_yield" onclick="setExamIntelFilter('no_yield', this)" style="border-color: rgba(139,148,158,0.4); color: #8b949e;">
+              ⚪ Nur No-Yield (Orga)
+            </button>
+            <button type="button" class="advisor-filter-btn" data-filter="mp1" onclick="setExamIntelFilter('mp1', this)">
+              Modulprüfung 1
+            </button>
+            <button type="button" class="advisor-filter-btn" data-filter="mp2" onclick="setExamIntelFilter('mp2', this)">
+              Modulprüfung 2
+            </button>
           </div>
         </div>
 
       </div>
 
-      <!-- Professors Grid Container -->
-      <div id="professorsGridContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.25rem;">
-        <!-- Populated dynamically via loadExamIntelPage() -->
-        <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">
-          Lade Dozentenprofile und Prüfungs-Dossiers...
+      <!-- SEKTION 1: UZH DOZENTEN-DOSSIERS (AUF- UND ZUKLAPPBAR UNTER EINEM KNOPF) -->
+      <div class="exam-intel-accordion-card open" id="accordionCardProfs">
+        <div class="exam-intel-accordion-header" onclick="toggleExamIntelSection('profs')" id="accordionHeaderProfs">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 22px;">🎓</span>
+            <div>
+              <div style="font-size: 15px; font-weight: 700; color: #f0f6fc; display: flex; align-items: center; gap: 0.5rem;">
+                UZH Dozenten-Dossiers &amp; Prüfungsfokus
+                <span style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; font-size: 11px; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;" id="profsHeaderCount">12 Dozenten</span>
+              </div>
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 1px;">
+                Forschungsfokus, Klausur-Vorlieben, High-Yield Kern und Kprim-Fangfragen
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <button type="button" class="btn-secondary" style="font-size: 11px; padding: 0.3rem 0.7rem; display: flex; align-items: center; gap: 4px; pointer-events: none;">
+              <span id="toggleProfsIcon">▾</span> <span id="toggleProfsText">Zuklappen</span>
+            </button>
+          </div>
+        </div>
+        <div class="exam-intel-accordion-body" id="profsSectionBody">
+          <div id="professorsGridContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.25rem;">
+            <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">
+              Lade Dozentenprofile und Prüfungs-Dossiers...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEKTION 2: ANKI-DECKS NACH PRÜFUNGSRELEVANZ (AUF- UND ZUKLAPPBAR & 1:1 SORTIERT WIE IN ANKI) -->
+      <div class="exam-intel-accordion-card open" id="accordionCardDecks">
+        <div class="exam-intel-accordion-header" onclick="toggleExamIntelSection('decks')" id="accordionHeaderDecks">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 22px;">🗂️</span>
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 15px; font-weight: 700; color: #f0f6fc;">
+                  Anki-Sets &amp; Prüfungsrelevanz (High-Yield bis No-Yield)
+                </span>
+                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 10.5px; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">
+                  1:1 wie in Anki sortiert
+                </span>
+              </div>
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 1px;">
+                Alle einzelnen Sets in Anki-Reihenfolge mit High-Yield-Einstufung, Dozenten-Match &amp; Kprim-Risiko
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div style="display: flex; gap: 0.35rem; font-size: 10.5px; flex-wrap: wrap;">
+              <span style="background: rgba(248, 81, 73, 0.15); color: #ff7b72; border: 1px solid rgba(248,81,73,0.3); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600;" id="badgeHighCount">🔴 63 High</span>
+              <span style="background: rgba(210, 153, 34, 0.15); color: #e3b341; border: 1px solid rgba(210,153,34,0.3); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600;" id="badgeMedCount">🟡 39 Med</span>
+              <span style="background: rgba(63, 185, 80, 0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600;" id="badgeLowCount">🟢 11 Low</span>
+              <span style="background: rgba(139, 148, 158, 0.15); color: #8b949e; border: 1px solid rgba(139,148,158,0.3); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600;" id="badgeNoneCount">⚪ 7 None</span>
+            </div>
+            <button type="button" class="btn-secondary" style="font-size: 11px; padding: 0.3rem 0.7rem; display: flex; align-items: center; gap: 4px; pointer-events: none;">
+              <span id="toggleDecksIcon">▾</span> <span id="toggleDecksText">Zuklappen</span>
+            </button>
+          </div>
+        </div>
+        <div class="exam-intel-accordion-body" id="decksSectionBody">
+          <div id="ankiDecksYieldContainer" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 13px;">
+              Lade Anki-Sets und Prüfungsrelevanz...
+            </div>
+          </div>
         </div>
       </div>
 

@@ -117,3 +117,36 @@ def test_deck_stats_has_exam_intelligence():
     assert "exam_risk_score" in first_deck
     assert "exam_risk_level" in first_deck
     assert "exam_risk_label" in first_deck
+    assert "yield_level" in first_deck
+    assert first_deck["yield_level"] in ["high", "medium", "low", "none"]
+    assert "yield_badge" in first_deck
+    assert "all_decks_anki_order" in stats
+
+
+def test_classify_deck_yield():
+    """Verify 4-tier yield categorization from High-Yield to No-Yield."""
+    from app.services.uzh_exam_intelligence import classify_deck_yield
+
+    # High Yield
+    hy_gerinnung = classify_deck_yield("2. SJ - 1 :: TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung")
+    assert hy_gerinnung["yield_level"] == "high"
+    assert "High-Yield" in hy_gerinnung["yield_badge"]
+
+    hy_hypoxie = classify_deck_yield("2. SJ - 1 :: TB Atmung :: Wenger :: Hypoxie")
+    assert hy_hypoxie["yield_level"] == "high"
+
+    # Medium Yield
+    med_mechanik = classify_deck_yield("2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik")
+    assert med_mechanik["yield_level"] == "medium"
+    assert "Medium-Yield" in med_mechanik["yield_badge"]
+
+    # Low Yield (Praktikum / Versuch)
+    low_versuch = classify_deck_yield("Vorklinik :: 2. SJ - 1 :: 1. Biochemie - Mündlich :: SDS-Page :: Versuch")
+    assert low_versuch["yield_level"] == "low"
+    assert "Low-Yield" in low_versuch["yield_badge"]
+
+    # No Yield (Einführung / Abschluss / Orga)
+    no_intro = classify_deck_yield("2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung")
+    assert no_intro["yield_level"] == "none"
+    assert "No-Yield" in no_intro["yield_badge"]
+

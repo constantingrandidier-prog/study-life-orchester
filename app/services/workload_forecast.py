@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Optional
 from app.services.anki_desktop_sync import find_local_anki_collection, clean_deck_name
 from app.db.repository import get_db_connection
 
+WORKLOAD_FORECAST_SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "cached_workload_forecast.json"
+
 def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]:
     """
     Computes a 14-day forward-looking workload forecast from Anki's review queue.
@@ -20,7 +22,11 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
     if is_cloud or not target_path or not target_path.exists():
         cached = get_cached_workload_forecast()
         if cached:
-            return cached
+            cached_dates = {d.get("date") for d in cached.get("days", []) if isinstance(d, dict)}
+            if today.isoformat() in cached_dates or (today + timedelta(days=1)).isoformat() in cached_dates:
+                return cached
+            if not target_path or not target_path.exists():
+                return cached
         if not target_path or not target_path.exists():
             return {
                 "connected": False,
@@ -136,26 +142,39 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
 
 def cache_workload_forecast(data: Dict[str, Any]):
     try:
-        with get_db_connection() as conn:
-            cur = conn.cursor()
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS anki_workload_forecast_cache (
-                    id INTEGER PRIMARY KEY CHECK (id = 1),
-                    data_json TEXT NOT NULL,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
-            """)
-            cur.execute("""
-                INSERT INTO anki_workload_forecast_cache (id, data_json, updated_at)
-                VALUES (1, ?, CURRENT_TIMESTAMP)
-                ON CONFLICT(id) DO UPDATE SET
-                    data_json = excluded.data_json,
-                    updated_at = CURRENT_TIMESTAMP;
-            """, (json.dumps(data),))
+        json_str = json.dumps(data, ensure_ascii=False)
+        # 1. Database table cache
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS anki_workload_forecast_cache (
+                        id INTEGER PRIMARY KEY CHECK (id = 1),
+                        data_json TEXT NOT NULL,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                """)
+                cur.execute("""
+                    INSERT INTO anki_workload_forecast_cache (id, data_json, updated_at)
+                    VALUES (1, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(id) DO UPDATE SET
+                        data_json = excluded.data_json,
+                        updated_at = CURRENT_TIMESTAMP;
+                """, (json_str,))
+        except Exception:
+            pass
+
+        # 2. File-system snapshot (deployed to Render)
+        try:
+            WORKLOAD_FORECAST_SNAPSHOT_PATH.parent.mkdir(parents=True, exist_ok=True)
+            WORKLOAD_FORECAST_SNAPSHOT_PATH.write_text(json_str, encoding="utf-8")
+        except Exception:
+            pass
     except Exception:
         pass
 
 def get_cached_workload_forecast() -> Optional[Dict[str, Any]]:
+    # 1. Check DB first
     try:
         with get_db_connection() as conn:
             cur = conn.cursor()
@@ -167,8 +186,22 @@ def get_cached_workload_forecast() -> Optional[Dict[str, Any]]:
                 );
             """)
             row = cur.execute("SELECT data_json FROM anki_workload_forecast_cache WHERE id = 1").fetchone()
-            if row:
-                return json.loads(row[0])
+            if row and row[0]:
+                data = json.loads(row[0])
+                today_iso = date.today().isoformat()
+                cached_dates = {d.get("date") for d in data.get("days", []) if isinstance(d, dict)}
+                if today_iso in cached_dates or (date.today() + timedelta(days=1)).isoformat() in cached_dates:
+                    return data
     except Exception:
         pass
+
+    # 2. Fall back to bundled JSON snapshot file
+    try:
+        if WORKLOAD_FORECAST_SNAPSHOT_PATH.exists():
+            content = WORKLOAD_FORECAST_SNAPSHOT_PATH.read_text(encoding="utf-8")
+            if content.strip():
+                return json.loads(content)
+    except Exception:
+        pass
+
     return None

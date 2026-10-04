@@ -1217,7 +1217,7 @@ async function handleSyncAnkiWeb(e) {
     const data = await res.json();
 
     const email = data.account_email || 'constantingrandidier@gmail.com';
-    const totalCards = data.total_cards ?? 8729;
+    const totalCards = data.total_cards ?? 8730;
     const cardsDone = data.cards_completed ?? data.total_cards_reviewed ?? 0;
     const progressPct = data.curriculum_progress_percentage ?? 0.0;
 
@@ -1574,7 +1574,7 @@ async function handleSyncAnkiWebFromTab3(e) {
     const data = await res.json();
 
     const emailRes = data.account_email || email || 'constantingrandidier@gmail.com';
-    const totalCards = data.total_cards ?? 8729;
+    const totalCards = data.total_cards ?? 8730;
     const cardsDone = data.cards_completed ?? 0;
     const progressPct = data.curriculum_progress_percentage ?? 0.0;
 
@@ -1874,7 +1874,7 @@ function renderExamPacing(data) {
     if (data.is_rest_day) {
       targetSub.textContent = data.rest_day_reason || 'Eingeplanter Ruhetag';
     } else {
-      const totalCardsStr = (data.total_curriculum_cards || 8729).toLocaleString('de-CH');
+      const totalCardsStr = (data.total_curriculum_cards || 8730).toLocaleString('de-CH');
       const remCardsStr = (data.remaining_curriculum_cards || 0).toLocaleString('de-CH');
       if (data.cumulative_backlog > 0) {
         targetSub.textContent = `Basis ${data.base_daily_quota || 90} + ${data.backlog_spread_per_day || 1}/Tag (${data.cumulative_backlog} Karten Rückstand über ${data.learning_days_remaining} Lerntage verteilt)`;
@@ -2999,7 +2999,7 @@ function renderCurriculumToday(data) {
     } else if (data.cumulative_cards_learned !== undefined) {
       actual = data.cumulative_cards_learned;
     }
-    const total = (data.total_curriculum_cards || 8729);
+    const total = (data.total_curriculum_cards || 8730);
     const pct = Math.round((actual / Math.max(1, total)) * 1000) / 10;
     cardsProgress.textContent = `${actual.toLocaleString('de-CH')} / ${total.toLocaleString('de-CH')} Karten (${pct}%)`;
     if (progressBarFill) {
@@ -3528,7 +3528,7 @@ async function swapCurriculumDays(date1, date2, dayNum1, dayNum2) {
 
   // Recalculate running cumulative progress
   let cum = 0;
-  const totalCards = _cachedRoadmapData.total_cards || 8729;
+  const totalCards = _cachedRoadmapData.total_cards || 8730;
   _cachedRoadmapData.schedule.forEach(d => {
     if (!d.is_rest_day) {
       cum += (d.target_cards || 0);
@@ -4026,7 +4026,7 @@ function renderAnkiDesktopWidget(data) {
     const cardsProgress = document.getElementById('currCardsProgress');
     const progressBarFill = document.getElementById('currProgressBarFill');
     const actual = data.cumulative_cards_learned;
-    const total = data.total_curriculum_cards || 8729;
+    const total = data.total_curriculum_cards || 8730;
     const pct = data.curriculum_progress_pct !== undefined ? data.curriculum_progress_pct : (Math.round((actual / Math.max(1, total)) * 1000) / 10);
     try {
       localStorage.setItem('sl_real_cumulative_cards', String(actual));

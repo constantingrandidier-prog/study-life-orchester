@@ -173,15 +173,20 @@ def generate_daily_science_rhythm(
         except Exception:
             curriculum_assignment = None
 
-    if curriculum_assignment:
+    if curriculum_assignment and curriculum_assignment.get("topic_slots"):
         new_cards_target = curriculum_assignment.get("adjusted_target_cards", new_cards_target or 95)
         today_slots = curriculum_assignment.get("topic_slots", [])
         slot_summary = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in today_slots) if today_slots else f"{new_cards_target} neue Karten"
         tomorrow_data = curriculum_assignment.get("tomorrow_preview") or {}
-    else:
+    elif curriculum_assignment and curriculum_assignment.get("is_rest_day"):
+        new_cards_target = 0
         today_slots = []
+        slot_summary = "Ruhetag"
+        tomorrow_data = curriculum_assignment.get("tomorrow_preview") or {}
+    else:
+        today_slots = (curriculum_assignment.get("topic_slots", []) if curriculum_assignment else [])
         slot_summary = f"{new_cards_target} neue Karten"
-        tomorrow_data = {}
+        tomorrow_data = (curriculum_assignment.get("tomorrow_preview") if curriculum_assignment else {}) or {}
 
     # Planned repetitions baseline: represents the full planned quota for the day (e.g. 94 cards).
     # Remaining due represents cards not yet reviewed today.
@@ -291,12 +296,19 @@ def generate_daily_science_rhythm(
             reps_subtitle = f"{planned_due} fällig · ~{calc_reps_mins} Min. benötigt"
     else:
         # Für zukünftige Tage: niemals vorab als 'Erledigt' markieren! Volle Zeit einplanen.
-        effective_due = planned_due if planned_due > 0 else 100
-        calc_reps_mins = max(30, min(240, round((effective_due * SECS_PER_REVIEW) / 60.0)))
-        dur_reps = int(round(calc_reps_mins / 15.0) * 15)
-        is_reps_completed = False
-        reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten)"
-        reps_subtitle = f"{effective_due} fällig · ~{calc_reps_mins} Min. eingeplant"
+        effective_due = max(0, planned_due)
+        if effective_due > 0:
+            calc_reps_mins = max(30, min(240, round((effective_due * SECS_PER_REVIEW) / 60.0)))
+            dur_reps = int(round(calc_reps_mins / 15.0) * 15)
+            is_reps_completed = False
+            reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten)"
+            reps_subtitle = f"{effective_due} fällig · ~{calc_reps_mins} Min. eingeplant"
+        else:
+            calc_reps_mins = 0
+            dur_reps = 0
+            is_reps_completed = True
+            reps_title = "Block 1: Keine Repetitionen fällig"
+            reps_subtitle = "Keine Wiederholungen für diesen Tag terminiert"
 
     reps_badge = f"Active Recall ({dur_reps}m)"
     reps_desc = f"Fällige Wiederholungen ({planned_due} Karten geplant, ~{calc_reps_mins} Min. Brutto) abarbeiten. Geplante Dauer bleibt stabil, damit dein Feierabend verlässlich ist."
@@ -418,10 +430,11 @@ def generate_daily_science_rhythm(
     # Nicht stur am Ende aller Vormittags-Blöcke (wodurch sie erst am späten Nachmittag stattfände),
     # sondern slick im Zielfenster zwischen 12:30 und 13:30 Uhr eingetaktet!
     # Kann bei Bedarf auch lange Blöcke sauber in Teil 1 (vor Mittag) und Teil 2 (nach Mittag) unterteilen.
-    morning_items = [
-        (reps_block, p1_block),
-        (new_block, p2_block),
-    ]
+    morning_items = []
+    if dur_reps > 0:
+        morning_items.append((reps_block, p1_block))
+    if new_cards_target > 0:
+        morning_items.append((new_block, p2_block))
     if lec_block:
         morning_items.append((lec_block, None))
 

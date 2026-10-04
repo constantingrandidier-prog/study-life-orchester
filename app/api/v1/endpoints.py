@@ -1283,28 +1283,32 @@ def get_daily_rhythm_endpoint(
     cal_events = [CalendarEvent(**e) for e in events_raw] if events_raw else []
 
     from app.services.anki_desktop_sync import read_live_anki_desktop_state
-    today_iso = date.today().isoformat()
-    from datetime import timedelta
-    tomorrow_iso = (date.today() + timedelta(days=1)).isoformat()
+    today = date.today()
+    today_iso = today.isoformat()
+    t_date_iso = t_date.isoformat()
 
-    if t_date.isoformat() == tomorrow_iso:
-        # Check today's preview for tomorrow first
-        today_st = read_live_anki_desktop_state(target_date_str=today_iso)
-        tom_preview = today_st.get("due_tomorrow_count")
-        anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
-        due_val = anki_st.get("due_today_count") or anki_st.get("due_reviews_count")
-        if due_val is None or due_val == 100:
-            due_today = int(tom_preview) if (tom_preview and int(tom_preview) > 0) else (int(due_val) if due_val is not None else 100)
-        else:
-            due_today = int(due_val)
+    if t_date > today:
+        # Future date: lookup exact Anki scheduled repetitions from 14-day workload forecast!
+        from app.services.workload_forecast import get_workload_forecast
+        try:
+            fc = get_workload_forecast()
+            days_map = {d.get("date"): d.get("total_due", 0) for d in fc.get("days", []) if isinstance(d, dict)}
+            if t_date_iso in days_map:
+                due_today = int(days_map[t_date_iso])
+            elif t_date.weekday() == 6:  # Sunday rest day
+                due_today = 0
+            else:
+                due_today = int(round(fc.get("average_daily_due", 85)))
+        except Exception:
+            due_today = 85
         reps_reviewed = 0
         anki_first_rev = None
     else:
-        anki_st = read_live_anki_desktop_state(target_date_str=t_date.isoformat())
+        anki_st = read_live_anki_desktop_state(target_date_str=t_date_iso)
         due_val = anki_st.get("due_today_count")
         if due_val is None:
             due_val = anki_st.get("due_reviews_count")
-        due_today = int(due_val) if due_val is not None else 100
+        due_today = int(due_val) if due_val is not None else 85
         reps_reviewed = int(anki_st.get("repetition_cards_count", 0))
         anki_first_rev = anki_st.get("first_review_time")
 
@@ -1317,7 +1321,13 @@ def get_daily_rhythm_endpoint(
     
     from app.services.curriculum_roadmap_service import get_daily_curriculum_assignment
     curr_assign = get_daily_curriculum_assignment(t_date)
-    new_target = curr_assign.get("adjusted_target_cards", 95)
+    is_rest = curr_assign.get("is_rest_day", False) if curr_assign else (t_date.weekday() == 6)
+    if is_rest:
+        new_target = 0
+    elif curr_assign and curr_assign.get("adjusted_target_cards", 0) > 0:
+        new_target = curr_assign["adjusted_target_cards"]
+    else:
+        new_target = 95
 
     rem_list = [b.strip() for b in removed_blocks.split(",") if b.strip()] if isinstance(removed_blocks, str) and removed_blocks else None
     order_list = [b.strip() for b in custom_order.split(",") if b.strip()] if isinstance(custom_order, str) and custom_order else None

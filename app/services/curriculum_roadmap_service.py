@@ -1595,7 +1595,7 @@ def generate_curriculum_roadmap(
                         d["original_day_number"] = assigned_num
 
             # Recalculate cumulative cards & progress percentages cleanly
-            total_curriculum_cards = base_data.get("total_cards", 8729)
+            total_curriculum_cards = base_data.get("total_cards", 8730)
             initial_baseline = 185
             if base_data.get("schedule"):
                 first_d = base_data["schedule"][0]
@@ -1615,7 +1615,7 @@ def generate_curriculum_roadmap(
         _sync_active_day_assignment(
             schedule_days=schedule_days,
             active_date=active_dt,
-            total_cards=base_data.get("total_cards", 8729),
+            total_cards=base_data.get("total_cards", 8730),
             user_id=user_id,
         )
 

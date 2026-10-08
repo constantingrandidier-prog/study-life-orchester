@@ -243,13 +243,13 @@
         "front": "Karte"
       }
     ],
-    "last_sync_timestamp": "2026-10-08T10:35:19.163164",
+    "last_sync_timestamp": "2026-10-08T11:03:45.456284",
     "current_day_index": 381,
     "target_day_index": 381,
     "next_day_index": 382
   },
   "_latest_target_date": "2026-10-08",
-  "_updated_at": "2026-10-08T10:35:19.239732",
+  "_updated_at": "2026-10-08T11:03:45.546955",
   "2026-09-14": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -384,7 +384,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:14.191103",
+    "last_sync_timestamp": "2026-10-08T11:03:05.790395",
     "current_day_index": 381,
     "target_day_index": 357,
     "next_day_index": 358
@@ -526,7 +526,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:52.404169",
+    "last_sync_timestamp": "2026-10-08T11:03:23.841980",
     "current_day_index": 381,
     "target_day_index": 358,
     "next_day_index": 359
@@ -667,7 +667,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:37.950843",
+    "last_sync_timestamp": "2026-10-08T11:03:19.088715",
     "current_day_index": 381,
     "target_day_index": 359,
     "next_day_index": 360
@@ -814,7 +814,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:09.214666",
+    "last_sync_timestamp": "2026-10-08T11:03:29.311272",
     "current_day_index": 381,
     "target_day_index": 360,
     "next_day_index": 361
@@ -961,7 +961,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:15.497716",
+    "last_sync_timestamp": "2026-10-08T11:03:31.119996",
     "current_day_index": 381,
     "target_day_index": 361,
     "next_day_index": 362
@@ -1007,7 +1007,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:07.922540",
+    "last_sync_timestamp": "2026-10-08T11:03:31.540841",
     "current_day_index": 381,
     "target_day_index": 362,
     "next_day_index": 363
@@ -1053,7 +1053,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:08.256124",
+    "last_sync_timestamp": "2026-10-08T11:03:32.012662",
     "current_day_index": 381,
     "target_day_index": 363,
     "next_day_index": 364
@@ -1202,7 +1202,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:08.612061",
+    "last_sync_timestamp": "2026-10-08T11:03:32.457248",
     "current_day_index": 381,
     "target_day_index": 364,
     "next_day_index": 365
@@ -1354,7 +1354,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:09.010007",
+    "last_sync_timestamp": "2026-10-08T11:03:32.820035",
     "current_day_index": 381,
     "target_day_index": 365,
     "next_day_index": 366
@@ -1509,7 +1509,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:38.230044",
+    "last_sync_timestamp": "2026-10-08T11:03:33.235879",
     "current_day_index": 381,
     "target_day_index": 366,
     "next_day_index": 367
@@ -1666,7 +1666,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:09.816122",
+    "last_sync_timestamp": "2026-10-08T11:03:33.561534",
     "current_day_index": 381,
     "target_day_index": 367,
     "next_day_index": 368
@@ -1712,7 +1712,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:34:03.980663",
+    "last_sync_timestamp": "2026-10-08T11:03:34.024156",
     "current_day_index": 381,
     "target_day_index": 368,
     "next_day_index": 369
@@ -1872,7 +1872,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:10.649431",
+    "last_sync_timestamp": "2026-10-08T11:03:34.301663",
     "current_day_index": 381,
     "target_day_index": 369,
     "next_day_index": 370
@@ -2033,7 +2033,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:11.077843",
+    "last_sync_timestamp": "2026-10-08T11:03:34.797349",
     "current_day_index": 381,
     "target_day_index": 370,
     "next_day_index": 371
@@ -2202,7 +2202,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:11.437030",
+    "last_sync_timestamp": "2026-10-08T11:03:35.117377",
     "current_day_index": 381,
     "target_day_index": 371,
     "next_day_index": 372
@@ -2371,7 +2371,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:11.725674",
+    "last_sync_timestamp": "2026-10-08T11:03:35.427754",
     "current_day_index": 381,
     "target_day_index": 372,
     "next_day_index": 373
@@ -2538,7 +2538,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:12.092664",
+    "last_sync_timestamp": "2026-10-08T11:03:35.837665",
     "current_day_index": 381,
     "target_day_index": 373,
     "next_day_index": 374
@@ -2714,7 +2714,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:12.410079",
+    "last_sync_timestamp": "2026-10-08T11:03:36.356506",
     "current_day_index": 381,
     "target_day_index": 374,
     "next_day_index": 375
@@ -2879,7 +2879,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:12.805446",
+    "last_sync_timestamp": "2026-10-08T11:03:36.794525",
     "current_day_index": 381,
     "target_day_index": 375,
     "next_day_index": 376
@@ -3059,7 +3059,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:13.274548",
+    "last_sync_timestamp": "2026-10-08T11:03:37.268547",
     "current_day_index": 381,
     "target_day_index": 376,
     "next_day_index": 377
@@ -3228,7 +3228,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:13.715218",
+    "last_sync_timestamp": "2026-10-08T11:03:37.745075",
     "current_day_index": 381,
     "target_day_index": 377,
     "next_day_index": 378
@@ -3415,7 +3415,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-08T10:31:14.091388",
+    "last_sync_timestamp": "2026-10-08T11:03:38.225301",
     "current_day_index": 381,
     "target_day_index": 378,
     "next_day_index": 379
@@ -3609,7 +3609,7 @@
         "front": "Dunkle Granula der Neutrophilen: (primär)-{{c1::UNSPEZIFISCHE}} Granula (historische Bezei"
       }
     ],
-    "last_sync_timestamp": "2026-10-08T10:31:14.499406",
+    "last_sync_timestamp": "2026-10-08T11:03:38.577648",
     "current_day_index": 381,
     "target_day_index": 379,
     "next_day_index": 380
@@ -4004,7 +4004,7 @@
         "front": "Anzahl Leukozyten pro µl Blut?"
       }
     ],
-    "last_sync_timestamp": "2026-10-08T10:33:52.436683",
+    "last_sync_timestamp": "2026-10-08T11:03:38.895095",
     "current_day_index": 381,
     "target_day_index": 380,
     "next_day_index": 381

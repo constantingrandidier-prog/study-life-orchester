@@ -295,6 +295,33 @@ def init_db() -> None:
                 );
             """)
 
+        # Seed historical daily progress logs from cached snapshot if empty
+        cursor.execute("SELECT count(*) FROM daily_progress_logs WHERE user_id = 'student'")
+        if cursor.fetchone()[0] == 0:
+            snapshot_path = DB_DIR / "cached_desktop_sync.json"
+            if snapshot_path.exists():
+                try:
+                    import json
+                    from datetime import date as dt_date
+                    snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
+                    today_str = dt_date.today().isoformat()
+                    for dt_str, payload in snapshot_data.items():
+                        if dt_str.startswith("2026-") and dt_str < today_str and isinstance(payload, dict):
+                            new_cnt = payload.get("new_cards_count", 0)
+                            tot_cnt = payload.get("total_reviews_count", 0)
+                            time_mins = int(round(payload.get("effective_study_minutes", 0) or payload.get("today_time_minutes", 0) or 0))
+                            if new_cnt > 0 or tot_cnt > 0:
+                                cursor.execute("""
+                                    INSERT OR REPLACE INTO daily_progress_logs (
+                                        user_id, log_date, cards_completed, minutes_spent, source, notes, logged_at
+                                    ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                                """, (
+                                    "student", dt_str, new_cnt, time_mins,
+                                    "anki_desktop_auto", f"Auto-Sync Anki Desktop Historical ({new_cnt} neue Karten)"
+                                ))
+                except Exception:
+                    pass
+
         conn.commit()
 
 

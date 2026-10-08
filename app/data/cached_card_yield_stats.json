@@ -25,10 +25,10 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschleunigt die gesamte Glykolyse da: F-6-P → F-1,6-BP beschleunigt wird und F-1,6-BP ein allosterischer Aktivator der Pyruvat",
       "hy_terms_detected": [
+        "pfk-1",
         "phosphat",
         "pfk-2",
-        "glykolyse",
-        "pfk-1"
+        "glykolyse"
       ]
     },
     {
@@ -52,9 +52,9 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase, PFK-1, Pyruvatkinase & PFK-2/ FBPase-2",
       "hy_terms_detected": [
+        "pfk-1",
         "pfk-2",
-        "glykolyse",
-        "pfk-1"
+        "glykolyse"
       ]
     },
     {
@@ -78,9 +78,9 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Wie ist die Wirkung von ChREBP?",
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
+        "pfk-1",
         "pfk-2",
-        "glykolyse",
-        "pfk-1"
+        "glykolyse"
       ]
     },
     {
@@ -105,8 +105,8 @@
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona glomerulosa ⇒ Wirkung Feed-Back Mechanismus ➢ Cortisol hemmt im Hypothalamus und in der Adenohypophyse die Freisetzung ",
       "hy_terms_detected": [
         "cortisol",
-        "aldosteron",
-        "acth"
+        "acth",
+        "aldosteron"
       ]
     },
     {
@@ -423,10 +423,10 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "po2",
-        "hämoglobin",
         "epo",
         "thrombose",
+        "hämoglobin",
+        "po2",
         "hypoxie"
       ]
     },
@@ -451,11 +451,11 @@
       "front_snippet": "Metabolische Regulation während Aerober Belastung Glucoseaufnahme in arbeitenden Muskelzellen → von was hängt der Aufnahmemechanismus NICHT ab, und von was hängt er ab?",
       "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intraz",
       "hy_terms_detected": [
-        "t4",
-        "glykolyse",
         "adrenalin",
         "insulin",
-        "noradrenalin"
+        "noradrenalin",
+        "glykolyse",
+        "t4"
       ]
     },
     {
@@ -479,10 +479,10 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "po2",
-        "hämoglobin",
         "epo",
         "thrombose",
+        "hämoglobin",
+        "po2",
         "hypoxie"
       ]
     },
@@ -507,10 +507,10 @@
       "front_snippet": "Wie wirkt Kortisol?",
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
+        "insulin",
         "inr",
-        "glykolyse",
         "tsh",
-        "insulin"
+        "glykolyse"
       ]
     },
     {
@@ -534,11 +534,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "po2",
-        "hämoglobin",
         "epo",
-        "hypoxie",
-        "sauerstoffbindung"
+        "hämoglobin",
+        "po2",
+        "sauerstoffbindung",
+        "hypoxie"
       ]
     },
     {
@@ -562,11 +562,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "po2",
-        "hämoglobin",
         "epo",
-        "hypoxie",
-        "sauerstoffbindung"
+        "hämoglobin",
+        "po2",
+        "sauerstoffbindung",
+        "hypoxie"
       ]
     },
     {
@@ -590,11 +590,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "po2",
-        "hämoglobin",
         "epo",
-        "hypoxie",
-        "sauerstoffbindung"
+        "hämoglobin",
+        "po2",
+        "sauerstoffbindung",
+        "hypoxie"
       ]
     },
     {
@@ -618,11 +618,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "po2",
-        "hämoglobin",
         "epo",
-        "hypoxie",
-        "sauerstoffbindung"
+        "hämoglobin",
+        "po2",
+        "sauerstoffbindung",
+        "hypoxie"
       ]
     }
   ],
@@ -728,9 +728,9 @@
           "front_snippet": "Welche Merkmale haben Thrombozyten? Funktion, Grösse, Vorkommen, Lebensdauer, Besonderheiten",
           "back_snippet": "Funktion: - Adhäsion , Aggregation & Freisetzung . - Wichtig für Blutgerinnung -> Sehr formvariabel im Blut in inaktivem Zustand, bei Oberflächenkontakt (z.B. Verletzung eines Gefässes) werden sie aktiviert. Durchmesser: - 2.5 μm . Vorkommen: - 150'000-350'000",
           "hy_terms_detected": [
-            "fibrinogen",
             "blutgerinnung",
             "thrombozyt",
+            "fibrinogen",
             "calcium"
           ]
         }
@@ -1163,8 +1163,8 @@
           "front_snippet": "Welche sind die Unterschiede zwischen dem Blutplasma und dem Serum?",
           "back_snippet": "Das Serum ist der Überstand von geronnenem Blut (Nach Gerinnung zentrifugiert) und enthält kein Fribrinogen . Im Serum sind die Thrombozyten aktiviert ! Das Blutplasma ist aus direkt zentrifugiertem Blut und enthält Fibrinogen. —> Serum = Plasma - Gerinnungsfa",
           "hy_terms_detected": [
-            "fibrinogen",
-            "thrombozyt"
+            "thrombozyt",
+            "fibrinogen"
           ]
         },
         {
@@ -1421,8 +1421,8 @@
           "front_snippet": "Was versteht man unter negativer Selektion? Wo findet sie statt?",
           "back_snippet": "Vermeidung von Autoreaktivität und Erzeugung von zentraler Toleranz gegenüber körpereigenem Gewebe (damit sie nur fremdes angreiffen) --> DP-Zellen werden durch dendritische Zellen an der Kortex/Mark-Grenze auf TCRs mit zu hoher Affinität für körpereigene Anti",
           "hy_terms_detected": [
-            "thymus",
             "t-zell",
+            "thymus",
             "negative selektion"
           ]
         },
@@ -1506,8 +1506,8 @@
           "front_snippet": "Was kann man über aktivierte Thrombozyten aussagen?",
           "back_snippet": "Gestaltänderung , klebrig , bilden Propfen , Membranen verschmelzen (irreversibler Prozess) sollte nur am Ort einer Blutung passieren (dürfen nicht in Venen gelangen -> Lunge -> Embolie) (passiert zu schluss der primären hämostase)",
           "hy_terms_detected": [
-            "thrombozyt",
-            "hämostase"
+            "hämostase",
+            "thrombozyt"
           ]
         },
         {
@@ -1610,10 +1610,10 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "3. Aktivierung : Signaltransduktion führt zu Pseudopodien und Phosphatidylserin-Präsentation an der Membran. 4. GPIIb/IIIa-Aktivierung : Der Rezeptor wechselt in seine hochaffine Form. 5. Verstärkung & Aggregation : Aktiviertes GPIIb/IIIa bindet an vWF (feste ",
           "hy_terms_detected": [
-            "fibrinogen",
-            "phosphat",
             "von-willebrand",
-            "thrombozyt"
+            "phosphat",
+            "thrombozyt",
+            "fibrinogen"
           ]
         },
         {
@@ -2033,9 +2033,9 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "ekg",
             "epo",
             "depolarisation",
+            "ekg",
             "repolarisation"
           ]
         },
@@ -2770,8 +2770,8 @@
           "front_snippet": "Was ist die Fallot-Tetralogie?",
           "back_snippet": "Tetralogie: häufige Kombination von 4 Fehlern Zugrundeliegender Defekt: Verengter rechter Kammerausfluss aufgrund einer Verlagerung des Conusseptums. Kinder sind oft zyanotisch, da zu wenig Blut durch den Lungenkreislauf fliesst. Conusseptum trifft nicht genau",
           "hy_terms_detected": [
-            "ductus arteriosus",
-            "tsh"
+            "tsh",
+            "ductus arteriosus"
           ]
         },
         {
@@ -3030,9 +3030,9 @@
           "front_snippet": "Welcher nicht neuronal vermittelte Effekt wird durch Volumenrezeptoren im Niederdrucksystem ausgelöst?",
           "back_snippet": "Dehnung von Vorhofmyozyten führt zur Freisetzung von ANP --> Blutdruckreduktion durch Vasodilatation, Hemmung der Reninsekretion der Niere (Hemmt Angiotensin- und Aldosteronproduktion), erhöhte Diurese",
           "hy_terms_detected": [
+            "renin",
             "aldosteron",
-            "angiotensin",
-            "renin"
+            "angiotensin"
           ]
         }
       ]
@@ -3407,11 +3407,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
-            "t4",
-            "hämoglobin",
-            "angiotensin",
             "erythropoietin",
-            "t3"
+            "hämoglobin",
+            "t3",
+            "t4",
+            "angiotensin"
           ]
         },
         {
@@ -4043,10 +4043,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroidea stimulierendes Hormung = Thyreotropin ) Regt in der Schilddrüse die Bildung von Thyroxin= T4 und Trijodothyronin= T3",
           "hy_terms_detected": [
-            "t4",
             "tsh",
+            "t3",
             "schilddrüse",
-            "t3"
+            "t4"
           ]
         },
         {
@@ -4070,12 +4070,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
-            "t4",
             "thyreoglobulin",
             "inr",
-            "schilddrüse",
             "peroxidase",
-            "t3"
+            "t3",
+            "schilddrüse",
+            "t4"
           ]
         },
         {
@@ -4243,9 +4243,9 @@
           "front_snippet": "Hypophosphatämie: Def, Ursachen, Symptome, Therapie?",
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
+            "insulin",
             "phosphat",
             "inr",
-            "insulin",
             "azidose"
           ]
         },
@@ -4295,8 +4295,8 @@
           "front_snippet": "Was ist die Funktion von FGF23?",
           "back_snippet": "Senkt den Phosphatspiegel und leert Speicher --> immer auch in Kombinatuon mit Abfall des Ca-Spiegels! Hemmt Aufnahme aus dem Darm und fördert die Ausscheidung mit Urin --> wirkt so zusammen mit PTH dem erhöhten Ca/P-Produkt entgegen --> kann P einzel regulier",
           "hy_terms_detected": [
-            "phosphat",
-            "calcitriol"
+            "calcitriol",
+            "phosphat"
           ]
         }
       ]
@@ -4629,10 +4629,10 @@
           "front_snippet": "Wie wirkt Kortisol?",
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
+            "insulin",
             "inr",
-            "glykolyse",
             "tsh",
-            "insulin"
+            "glykolyse"
           ]
         },
         {
@@ -4678,11 +4678,11 @@
           "front_snippet": "Wie funktioniert die Aldosteronfreisetzung über Angiotensin II?",
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
+            "renin",
             "epo",
             "depolarisation",
             "aldosteron",
-            "angiotensin",
-            "renin"
+            "angiotensin"
           ]
         }
       ]
@@ -5589,11 +5589,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
-            "t4",
             "tsh",
-            "schilddrüse",
             "calcitonin",
-            "t3"
+            "t3",
+            "schilddrüse",
+            "t4"
           ]
         }
       ]
@@ -5774,8 +5774,8 @@
           "front_snippet": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: erhöhte hepatische Cholesterin konzentration, Cholesterinhaushalt und Gallensäuresynthese und - Export ?",
           "back_snippet": "HEMMUNG von SREBP-2 ⇒ ↓ HMG-CoA-Red und ↓ LDL-Rezeptor ⟹ HEMMUNG von Synthese und Aufnahme von Cholesterin aber auch: da viel Cholesterin → Oxysterine ↑ → LXR/RXR → ↑ Synthese und Export von Gallensäuren Info am Rande: LXR erhöht auch die Transkription von SRE",
           "hy_terms_detected": [
-            "glykolyse",
-            "insulin"
+            "insulin",
+            "glykolyse"
           ]
         },
         {
@@ -5946,9 +5946,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "katecholamin",
             "insulin",
-            "noradrenalin"
+            "noradrenalin",
+            "katecholamin"
           ]
         },
         {
@@ -5973,9 +5973,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "katecholamin",
             "insulin",
-            "noradrenalin"
+            "noradrenalin",
+            "katecholamin"
           ]
         },
         {
@@ -6000,9 +6000,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "katecholamin",
             "insulin",
-            "noradrenalin"
+            "noradrenalin",
+            "katecholamin"
           ]
         },
         {
@@ -6026,10 +6026,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen Wie wirkt Sympathikus (über Katecholamine) auf Insulinsekretion? Beschreibe Mechanismus",
           "back_snippet": "➢ α2 → cAMP ↓ → Kalium Kanal wird nicht durch PKA/EPAC2 phosphoryliert und geschlossen ⇒ keine Depolarisation, kein Ca 2+ Einstrom, keine Insulinausschüttung ➢ β2 → cAMP ↑ → PKA und EPAC2 ↑ → K+ Kanal wird phosphoryliert & schliesst ⇒ Depolarisation ⇒ Ca 2+ Ei",
           "hy_terms_detected": [
+            "insulin",
             "epo",
             "depolarisation",
-            "katecholamin",
-            "insulin"
+            "katecholamin"
           ]
         }
       ]
@@ -6293,8 +6293,8 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt Insulin auf die Glycerophosphat-Acyltransferase (GPAT)?",
           "back_snippet": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt",
           "hy_terms_detected": [
-            "phosphat",
-            "insulin"
+            "insulin",
+            "phosphat"
           ]
         },
         {
@@ -6419,8 +6419,8 @@
           "front_snippet": "Somatotropin-Wirkungsweise Was ist der GH-Rezeptor für ein Typ Rezeptor und was rekrutiert seine aktive Form? (7 P.)",
           "back_snippet": "Cyto k inrezeptor , hat keine intrinsische Tyr-Kinase-Aktivität (nicht wie Insulin-Rezeptor). nach GH-Bindung ⇒ dimerisierte Rezeptor rekrutiert JAK2-Kinase JAK2 phosphoryliert : - benachbarte JAK2 Moleküle (Transphosphorylation) - sich selbst ( Auto phosphory",
           "hy_terms_detected": [
-            "inr",
-            "insulin"
+            "insulin",
+            "inr"
           ]
         },
         {
@@ -6934,11 +6934,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Was stimuliert die Synthese von: Dopamin und Noradrenalin? Was von Adrenalin?",
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
-            "cortisol",
             "adrenalin",
-            "katecholamin",
+            "noradrenalin",
+            "cortisol",
             "acth",
-            "noradrenalin"
+            "katecholamin"
           ]
         },
         {
@@ -6962,11 +6962,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Die Synthese von Adrenalin aus Noradrenalin wird hauptsächlich von Cortisol (← ACTH) (und unterstützend von ACh (sympath).) angeregt.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "cortisol",
             "adrenalin",
-            "katecholamin",
+            "noradrenalin",
+            "cortisol",
             "acth",
-            "noradrenalin"
+            "katecholamin"
           ]
         }
       ]
@@ -7004,8 +7004,8 @@
             "epo",
             "depolarisation",
             "aldosteron",
-            "angiotensin",
-            "azidose"
+            "azidose",
+            "angiotensin"
           ]
         },
         {
@@ -7947,8 +7947,8 @@
           "front_snippet": "Wer ist für den Bohr-Effekt verantwortlich? Beschreibe, wie dieser Effekt die Sauerstoffbindung reguliert:",
           "back_snippet": "- Für den Bohr-Effekt sind die alpha-Aminogruppen am aminoterminalen Ende der alpha-Ketten und die Seitenketten der Histidine verantwortlich. - Diese Gruppen besitzen pKS-Werte, die nahe bei pH 7 liegen. - So ist zum Beispiel bei tiefem pH-Wert die Imidazolgru",
           "hy_terms_detected": [
-            "sauerstoffbindung",
-            "bohr-effekt"
+            "bohr-effekt",
+            "sauerstoffbindung"
           ]
         },
         {
@@ -8580,8 +8580,8 @@
           "front_snippet": "MHC-Moleküle Klasse 1 und 2 Erkennung und Exprimierung",
           "back_snippet": "1. Präsentierte Peptide werden von Cytotoxischen T-Zellen erkannt; von allen Zellen des Körpers ausser roten BK exprimiert 2. Präsentierte Peptide werden von T-Helfer-Zellen erkannt; nur von Makrophagen , dendritischen Zellen, B-Zellen und Epithelzellen des Th",
           "hy_terms_detected": [
-            "thymus",
-            "t-zell"
+            "t-zell",
+            "thymus"
           ]
         },
         {
@@ -8897,5 +8897,5 @@
       ]
     }
   },
-  "updated_at": 1791446805.1232035
+  "updated_at": 1791448905.1618996
 }

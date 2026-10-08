@@ -1831,7 +1831,7 @@ def _sync_active_day_assignment(
 
     day["topic_slots"] = new_slots
     clean_topics = " + ".join(f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in new_slots)
-    day["summary"] = f"Tag {day['day_number']}/{day.get('total_active_days', 104)}: {day['target_cards']} neue Karten ({clean_topics})."
+    day["summary"] = f"Tag {day['day_number']}/{day.get('total_active_days', 97)}: {day['target_cards']} neue Karten ({clean_topics})."
 
     # Recalculate cognitive metrics for active day
     total_new_cards = sum(s.get("cards_to_learn", 0) for s in new_slots)

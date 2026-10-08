@@ -386,7 +386,7 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             two_weeks_rep_revs = r_row[20] or 0
             two_weeks_rep_passes = r_row[21] or 0
             two_weeks_retention = round((two_weeks_rep_passes / two_weeks_rep_revs * 100), 1) if two_weeks_rep_revs > 0 else (
-                round((two_weeks_passes / two_weeks_revs * 100), 1) if two_weeks_reviews > 0 else None
+                round((two_weeks_passes / two_weeks_revs * 100), 1) if two_weeks_revs > 0 else None
             )
 
             # 1. True Scientific Review Retention Rate (excludes initial memorization / learning steps type 0)

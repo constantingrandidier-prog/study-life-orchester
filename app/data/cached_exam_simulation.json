@@ -1,6 +1,6 @@
 {
   "available": true,
-  "average_predicted_score": 30.1,
+  "average_predicted_score": 33.1,
   "overall_safe": false,
   "modulpruefung_1": {
     "exam_name": "Modulprüfung 1 (Theorie)",
@@ -9,15 +9,15 @@
     "duration_min": 150,
     "angoff_cutoff": 60.0,
     "safety_target": 75.0,
-    "predicted_score": 40.1,
-    "potential_score": 81.7,
-    "coverage_pct": 33.0,
-    "studied_cards": 1299,
-    "total_cards": 3936,
-    "safety_margin": -19.9,
-    "safety_margin_text": "-19.9% Lücke",
+    "predicted_score": 46.3,
+    "potential_score": 78.7,
+    "coverage_pct": 41.0,
+    "studied_cards": 1615,
+    "total_cards": 3939,
+    "safety_margin": -13.7,
+    "safety_margin_text": "-13.7% Lücke",
     "pass_status": "in_progress",
-    "status_label": "⏳ In Erarbeitung (33.0% Stoff gelernt)",
+    "status_label": "⏳ In Erarbeitung (41.0% Stoff gelernt)",
     "status_color": "#ff7b72",
     "topic_breakdown": [
       {
@@ -27,28 +27,28 @@
         "total_cards": 1159,
         "studied_cards": 1159,
         "coverage_pct": 100.0,
-        "retention_rate": 80.6,
-        "real_score": 80.6,
-        "potential_score": 80.6,
-        "contribution_points": 22.6,
+        "retention_rate": 83.5,
+        "real_score": 83.5,
+        "potential_score": 83.5,
+        "contribution_points": 23.4,
         "status": "safe",
         "status_color": "#3fb950",
         "matched_decks_count": 19,
-        "weakest_deck": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren"
+        "weakest_deck": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz"
       },
       {
         "topic_id": "herz_kreislauf",
         "topic_name": "2. Herz-Kreislauf",
         "weight_pct": 42,
-        "total_cards": 1226,
-        "studied_cards": 140,
-        "coverage_pct": 11.4,
-        "retention_rate": 83.5,
-        "real_score": 27.3,
-        "potential_score": 83.5,
-        "contribution_points": 11.5,
+        "total_cards": 1229,
+        "studied_cards": 456,
+        "coverage_pct": 37.1,
+        "retention_rate": 74.5,
+        "real_score": 40.2,
+        "potential_score": 74.5,
+        "contribution_points": 16.9,
         "status": "in_progress",
-        "status_color": "#ff7b72",
+        "status_color": "#d29922",
         "matched_decks_count": 20,
         "weakest_deck": "2. SJ - 1 :: TB Herz-Kreislauf :: Sommer :: Gefässentwicklung / Sommer"
       },
@@ -139,5 +139,5 @@
     ]
   },
   "total_ects": 30,
-  "summary_recommendation": "Fokus auf die schwächere Modulprüfung legen (MP1: 40.1% vs MP2: 20.0%)."
+  "summary_recommendation": "Fokus auf die schwächere Modulprüfung legen (MP1: 46.3% vs MP2: 20.0%)."
 }

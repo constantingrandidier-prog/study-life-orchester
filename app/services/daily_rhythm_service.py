@@ -190,15 +190,16 @@ def generate_daily_science_rhythm(
 
     # Planned repetitions baseline: represents the full planned quota for the day (e.g. 94 cards).
     # Remaining due represents cards not yet reviewed today.
-    planned_due = max(1, cards_due_today)
+    planned_due = max(0, cards_due_today)
     remaining_due = cards_remaining_due if cards_remaining_due is not None else planned_due
 
     # Time estimates based on gross study time
-    # 50s per review card (realistic, was 36s which was too optimistic)
+    # 50s per review card (includes reading, active recall, card explanations, and micro-pauses)
+    # 63s per new card (deep encoding)
     SECS_PER_REVIEW = 50.0
     SECS_PER_NEW = 63.0
-    rep_gross_mins = max(30, round((planned_due * SECS_PER_REVIEW) / 60.0))
-    new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0))
+    rep_gross_mins = max(30, round((planned_due * SECS_PER_REVIEW) / 60.0)) if planned_due > 0 else 0
+    new_gross_mins = max(45, round((new_cards_target * SECS_PER_NEW) / 60.0)) if new_cards_target > 0 else 0
 
     now = datetime.now()
     is_today_date = (t_date == now.date())
@@ -275,17 +276,25 @@ def generate_daily_science_rhythm(
     # 1. Block 1: Morning Reps
     # Planned repetition quota sets the fixed block duration and timetable so that
     # reviews completed during the day NEVER shrink the block or shift Feierabend!
-    calc_reps_mins = max(30, min(240, round((planned_due * SECS_PER_REVIEW) / 60.0)))
-    dur_reps = int(round(calc_reps_mins / 15.0) * 15)
+    if planned_due > 0:
+        calc_reps_mins = max(30, min(240, round((planned_due * SECS_PER_REVIEW) / 60.0)))
+        dur_reps = int(round(calc_reps_mins / 15.0) * 15)
+    else:
+        calc_reps_mins = 0
+        dur_reps = 0
 
     if is_today_date:
         done_cards = max(0, planned_due - remaining_due)
-        is_reps_completed = (remaining_due == 0 and done_cards > 0)
+        is_reps_completed = (remaining_due == 0 and planned_due > 0)
         # Wenn heute alle Repetitionen erledigt sind, soll der Block nicht künstlich über 12:30 hinausragen
         if is_reps_completed and cur_m < (12 * 60 + 30) and (cur_m + dur_reps) > (12 * 60 + 30):
             dur_reps = max(30, (12 * 60 + 30) - cur_m)
 
-        if is_reps_completed:
+        if planned_due == 0:
+            reps_title = "Block 1: Keine Repetitionen fällig"
+            reps_subtitle = "Keine Wiederholungen heute fällig · Fokus auf neue Karten"
+            is_reps_completed = True
+        elif is_reps_completed:
             reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten) - Erledigt"
             reps_subtitle = f"Alle {planned_due} Wiederholungen erledigt! · Vormittag optimal genutzt"
         elif done_cards > 0:

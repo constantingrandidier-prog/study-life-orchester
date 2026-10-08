@@ -226,7 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 227.2,
+    "avg_card_chars": 227.3,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 248.1,
+    "avg_card_chars": 248.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,12 +278,12 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 0,
-    "mastered_cards": 125,
+    "new_cards": 5,
+    "mastered_cards": 127,
     "learning_cards": 0,
-    "avg_card_chars": 438.2,
-    "is_completed": true,
-    "is_in_progress": false
+    "avg_card_chars": 438.3,
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222990,
@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 269.2,
+    "avg_card_chars": 270.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -369,7 +369,7 @@
     "new_cards": 0,
     "mastered_cards": 35,
     "learning_cards": 0,
-    "avg_card_chars": 314.6,
+    "avg_card_chars": 319.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -388,22 +388,22 @@
     "deck_id": 1789378222999,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
     "card_count": 71,
-    "new_cards": 71,
-    "mastered_cards": 0,
+    "new_cards": 31,
+    "mastered_cards": 40,
     "learning_cards": 0,
-    "avg_card_chars": 382.1,
+    "avg_card_chars": 399.5,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223000,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
-    "card_count": 52,
-    "new_cards": 52,
-    "mastered_cards": 0,
+    "card_count": 53,
+    "new_cards": 0,
+    "mastered_cards": 53,
     "learning_cards": 0,
-    "avg_card_chars": 256.6,
-    "is_completed": false,
+    "avg_card_chars": 323.5,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -413,30 +413,30 @@
     "new_cards": 0,
     "mastered_cards": 54,
     "learning_cards": 0,
-    "avg_card_chars": 305.3,
+    "avg_card_chars": 307.5,
     "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378223002,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-    "card_count": 120,
-    "new_cards": 120,
-    "mastered_cards": 0,
+    "card_count": 122,
+    "new_cards": 0,
+    "mastered_cards": 105,
     "learning_cards": 0,
-    "avg_card_chars": 268.8,
-    "is_completed": false,
+    "avg_card_chars": 293.1,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378223003,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
     "card_count": 70,
-    "new_cards": 70,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 70,
     "learning_cards": 0,
-    "avg_card_chars": 263.9,
-    "is_completed": false,
+    "avg_card_chars": 282.7,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -589,7 +589,7 @@
     "new_cards": 0,
     "mastered_cards": 68,
     "learning_cards": 0,
-    "avg_card_chars": 336.0,
+    "avg_card_chars": 333.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -600,7 +600,7 @@
     "new_cards": 0,
     "mastered_cards": 73,
     "learning_cards": 0,
-    "avg_card_chars": 595.0,
+    "avg_card_chars": 596.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -622,7 +622,7 @@
     "new_cards": 0,
     "mastered_cards": 97,
     "learning_cards": 0,
-    "avg_card_chars": 353.1,
+    "avg_card_chars": 353.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -664,9 +664,9 @@
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
     "card_count": 42,
     "new_cards": 0,
-    "mastered_cards": 41,
+    "mastered_cards": 42,
     "learning_cards": 0,
-    "avg_card_chars": 220.7,
+    "avg_card_chars": 222.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -677,7 +677,7 @@
     "new_cards": 0,
     "mastered_cards": 20,
     "learning_cards": 0,
-    "avg_card_chars": 164.4,
+    "avg_card_chars": 170.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -685,12 +685,12 @@
     "deck_id": 1789378223028,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
     "card_count": 60,
-    "new_cards": 0,
-    "mastered_cards": 54,
+    "new_cards": 3,
+    "mastered_cards": 56,
     "learning_cards": 0,
-    "avg_card_chars": 252.0,
-    "is_completed": true,
-    "is_in_progress": false
+    "avg_card_chars": 261.0,
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223029,
@@ -699,7 +699,7 @@
     "new_cards": 0,
     "mastered_cards": 20,
     "learning_cards": 0,
-    "avg_card_chars": 254.3,
+    "avg_card_chars": 271.3,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -710,7 +710,7 @@
     "new_cards": 0,
     "mastered_cards": 32,
     "learning_cards": 0,
-    "avg_card_chars": 205.5,
+    "avg_card_chars": 205.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -721,7 +721,7 @@
     "new_cards": 0,
     "mastered_cards": 22,
     "learning_cards": 0,
-    "avg_card_chars": 196.3,
+    "avg_card_chars": 207.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -754,7 +754,7 @@
     "new_cards": 0,
     "mastered_cards": 36,
     "learning_cards": 0,
-    "avg_card_chars": 279.1,
+    "avg_card_chars": 280.8,
     "is_completed": true,
     "is_in_progress": false
   },

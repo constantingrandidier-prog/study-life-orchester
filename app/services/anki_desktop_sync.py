@@ -57,6 +57,10 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     if not target_path or not target_path.exists():
         if cached and cached.get('target_date') == query_date.isoformat():
             return cached
+        # Try loading latest snapshot from disk file (guaranteed on Render)
+        disk_snap = _load_disk_desktop_sync_snapshot(query_date.isoformat())
+        if disk_snap:
+            return disk_snap
         return {
             'connected': False,
             'source': 'None',
@@ -72,7 +76,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             'today_review_count': 0,
             'today_relearn_count': 0,
             'today_deck_breakdown': {},
-            'due_today_count': 85,
+            'due_today_count': 0,
             'due_tomorrow_count': 0,
             'due_tomorrow_deck_breakdown': {},
             'due_tomorrow_topics': [],
@@ -201,14 +205,32 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             })
 
     if is_today:
-        due_today_cnt = cur.execute('SELECT count(*) FROM cards WHERE queue=2 AND due <= ?', (current_day,)).fetchone()[0]
+        due_today_cnt = cur.execute("""
+            SELECT count(*) FROM cards 
+            WHERE (queue = 2 AND due <= ?) 
+               OR queue = 1 
+               OR (queue = 3 AND due <= ?)
+        """, (current_day, current_day)).fetchone()[0]
     elif query_date > date.today():
         # Future date: cards scheduled specifically for target_day!
-        future_cnt = cur.execute('SELECT count(*) FROM cards WHERE queue=2 AND due = ?', (target_day,)).fetchone()[0]
-        due_today_cnt = future_cnt if future_cnt > 0 else 100
+        future_cnt = cur.execute("""
+            SELECT count(*) FROM cards 
+            WHERE (queue = 2 AND due = ?) 
+               OR (queue = 3 AND due = ?)
+        """, (target_day, target_day)).fetchone()[0]
+        if future_cnt > 0:
+            due_today_cnt = future_cnt
+        else:
+            try:
+                from app.services.workload_forecast import get_workload_forecast
+                fc = get_workload_forecast()
+                days_map = {d.get("date"): d.get("total_due", 0) for d in fc.get("days", []) if isinstance(d, dict)}
+                due_today_cnt = int(days_map.get(query_date.isoformat(), 0))
+            except Exception:
+                due_today_cnt = 0
     else:
-        # Past date: use historical reviews count or sensible fallback
-        due_today_cnt = max(30, total_reviews_count) if total_reviews_count > 0 else 100
+        # Past date: use actual repetition cards completed on that day
+        due_today_cnt = len(unique_rep_cids) if unique_rep_cids else total_reviews_count
 
     # Dynamically select cards due tomorrow relative to target query date!
     tom_sql = 'SELECT c.id, c.did, n.sfld FROM cards c JOIN notes n ON c.nid = n.id WHERE c.queue = 2 AND c.due = ?'
@@ -381,6 +403,60 @@ def _ensure_cache_table(conn):
             );
         ''')
 
+def _get_disk_snapshot_path() -> Path:
+    return Path(__file__).resolve().parent.parent / "data" / "cached_desktop_sync.json"
+
+def _save_disk_desktop_sync_snapshot(state: dict):
+    try:
+        p = _get_disk_snapshot_path()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        store = {}
+        if p.exists():
+            try:
+                store = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                store = {}
+        t_date = state.get("target_date") or date.today().isoformat()
+        store[t_date] = state
+        store["_latest_target_date"] = t_date
+        store["_updated_at"] = datetime.now().isoformat()
+        p.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+def _load_disk_desktop_sync_snapshot(target_date_str: Optional[str] = None) -> Optional[dict]:
+    try:
+        p = _get_disk_snapshot_path()
+        if not p.exists():
+            return None
+        store = json.loads(p.read_text(encoding="utf-8"))
+        t_date = target_date_str or store.get("_latest_target_date") or date.today().isoformat()
+        if t_date in store:
+            return store[t_date]
+        # Synthesize tomorrow from today if present
+        from datetime import timedelta
+        today_iso = date.today().isoformat()
+        tom_iso = (date.today() + timedelta(days=1)).isoformat()
+        if t_date == tom_iso and today_iso in store:
+            today_st = store[today_iso]
+            tom_cnt = int(today_st.get("due_tomorrow_count") or 0)
+            if tom_cnt > 0:
+                synth = dict(today_st)
+                synth["target_date"] = tom_iso
+                synth["due_today_count"] = tom_cnt
+                synth["due_reviews_count"] = tom_cnt
+                synth["repetition_cards_count"] = 0
+                synth["today_reviewed_count"] = 0
+                synth["new_cards_count"] = 0
+                return synth
+        # Fallback to latest target date if requested date is today
+        latest_d = store.get("_latest_target_date")
+        if latest_d and latest_d in store:
+            return store[latest_d]
+    except Exception:
+        pass
+    return None
+
 def cache_desktop_sync_state(state):
     try:
         t_date = state.get('target_date') or date.today().isoformat()
@@ -396,6 +472,7 @@ def cache_desktop_sync_state(state):
             ''', (t_date, json.dumps(state)))
     except Exception:
         pass
+    _save_disk_desktop_sync_snapshot(state)
 
 def get_cached_desktop_sync_state(target_date_str: Optional[str] = None):
     t_date = target_date_str or date.today().isoformat()
@@ -429,4 +506,4 @@ def get_cached_desktop_sync_state(target_date_str: Optional[str] = None):
                         return synth
     except Exception:
         pass
-    return None
+    return _load_disk_desktop_sync_snapshot(t_date)

@@ -1298,9 +1298,9 @@ def get_daily_rhythm_endpoint(
             elif t_date.weekday() == 6:  # Sunday rest day
                 due_today = 0
             else:
-                due_today = int(round(fc.get("average_daily_due", 85)))
+                due_today = int(round(fc.get("average_daily_due", 80.3)))
         except Exception:
-            due_today = 85
+            due_today = 0
         reps_reviewed = 0
         anki_first_rev = None
     else:
@@ -1308,7 +1308,15 @@ def get_daily_rhythm_endpoint(
         due_val = anki_st.get("due_today_count")
         if due_val is None:
             due_val = anki_st.get("due_reviews_count")
-        due_today = int(due_val) if due_val is not None else 85
+        if due_val is None:
+            try:
+                from app.services.workload_forecast import get_workload_forecast
+                fc = get_workload_forecast()
+                days_map = {d.get("date"): d.get("total_due", 0) for d in fc.get("days", []) if isinstance(d, dict)}
+                due_val = days_map.get(t_date_iso, 0)
+            except Exception:
+                due_val = 0
+        due_today = int(due_val) if due_val is not None else 0
         reps_reviewed = int(anki_st.get("repetition_cards_count", 0))
         anki_first_rev = anki_st.get("first_review_time")
 

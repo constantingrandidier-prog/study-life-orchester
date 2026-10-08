@@ -1449,8 +1449,8 @@ function checkAndShiftPlan(dueCount) {
     return;
   }
 
-  // Verschiebung berechnen: ~36s pro Karte
-  const extraSeconds = dueCount * 36;
+  // Verschiebung berechnen: ~22s pro Karte (validierte Anki-Review-Geschwindigkeit)
+  const extraSeconds = dueCount * 22;
   const shiftMins = Math.ceil(extraSeconds / 60);
   _planShiftMinutes = shiftMins;
 

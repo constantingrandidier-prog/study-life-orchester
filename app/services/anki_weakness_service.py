@@ -127,14 +127,13 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
 
     queue_counts = dict(cur.execute("SELECT queue, count(*) FROM cards GROUP BY queue").fetchall())
     new_cards = queue_counts.get(0, 0)
-    # queue=1: intraday learning steps (always due)
     learning_cards = queue_counts.get(1, 0)
-    # queue=2: review cards — only those with due <= today are actually due
+    day_learning_cards = cur.execute("SELECT count(*) FROM cards WHERE queue=3 AND due <= ?", (today_anki_day,)).fetchone()[0]
     review_cards_due_today = cur.execute(
         "SELECT count(*) FROM cards WHERE queue=2 AND due <= ?", (today_anki_day,)
     ).fetchone()[0]
     review_cards = review_cards_due_today
-    total_due = learning_cards + review_cards
+    total_due = learning_cards + day_learning_cards + review_cards_due_today
 
     # 2. Decks map
     decks_map: Dict[int, str] = {}

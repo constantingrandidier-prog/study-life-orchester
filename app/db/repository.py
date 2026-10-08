@@ -1,6 +1,7 @@
 """Database Repository providing clean CRUD operations for StudyLife Orchestrator."""
 
 import json
+from pathlib import Path
 from datetime import date as dt_date, datetime
 from typing import Any, Dict, List, Optional
 from app.db.database import get_db_connection
@@ -585,6 +586,41 @@ def save_rhythm_action(
     }
 
 
+def _get_baselines_snapshot_path() -> Path:
+    return Path(__file__).resolve().parent.parent / "data" / "cached_daily_baselines.json"
+
+def _save_baseline_snapshot(target_date: str, planned_due: int, user_id: str = "student"):
+    try:
+        p = _get_baselines_snapshot_path()
+        p.parent.mkdir(parents=True, exist_ok=True)
+        store = {}
+        if p.exists():
+            try:
+                store = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                store = {}
+        key = f"{user_id}:{target_date}"
+        store[key] = planned_due
+        store[target_date] = planned_due
+        p.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+def _load_baseline_snapshot(target_date: str, user_id: str = "student") -> Optional[int]:
+    try:
+        p = _get_baselines_snapshot_path()
+        if not p.exists():
+            return None
+        store = json.loads(p.read_text(encoding="utf-8"))
+        key = f"{user_id}:{target_date}"
+        if key in store:
+            return int(store[key])
+        if target_date in store:
+            return int(store[target_date])
+    except Exception:
+        pass
+    return None
+
 def get_or_set_daily_baseline_due(
     target_date: str,
     current_due: int,
@@ -594,9 +630,10 @@ def get_or_set_daily_baseline_due(
     """
     Guarantees that the daily planned repetition quota for a given date never shrinks
     as the student reviews cards during the day.
+    Persists baselines to disk snapshot for zero data loss across Render deployments.
     """
     total_candidate = max(int(current_due or 0) + int(reviewed_reps or 0), int(current_due or 0))
-    if total_candidate <= 0:
+    if total_candidate < 0:
         total_candidate = 0
 
     with get_db_connection() as conn:
@@ -617,18 +654,24 @@ def get_or_set_daily_baseline_due(
         """, (user_id, target_date))
         row = cursor.fetchone()
 
+        disk_baseline = _load_baseline_snapshot(target_date, user_id=user_id)
+
         if row is None:
-            final_due = total_candidate if total_candidate > 0 else 100
+            if disk_baseline is not None and disk_baseline > 0:
+                final_due = max(disk_baseline, total_candidate)
+            else:
+                final_due = total_candidate
             cursor.execute("""
                 INSERT INTO rhythm_daily_baselines (user_id, source_date, planned_due_cards, updated_at)
                 VALUES (?, ?, ?, CURRENT_TIMESTAMP);
             """, (user_id, target_date, final_due))
+            _save_baseline_snapshot(target_date, final_due, user_id=user_id)
             return final_due
 
         stored_due = int(row["planned_due_cards"])
         today_iso = dt_date.today().isoformat()
-        if target_date > today_iso or stored_due == 100:
-            final_due = total_candidate if total_candidate > 0 else stored_due
+        if target_date > today_iso:
+            final_due = total_candidate if total_candidate > 0 else (disk_baseline if disk_baseline is not None else stored_due)
         else:
             final_due = max(stored_due, total_candidate)
 
@@ -638,6 +681,7 @@ def get_or_set_daily_baseline_due(
                 SET planned_due_cards = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE user_id = ? AND source_date = ?;
             """, (final_due, user_id, target_date))
+        _save_baseline_snapshot(target_date, final_due, user_id=user_id)
         return final_due
 
 

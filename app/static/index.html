@@ -1366,21 +1366,57 @@
           </div>
         </div>
 
-        <!-- Notfall Triage Box -->
-        <div style="background: rgba(22, 27, 34, 0.9); padding: 1rem; border-radius: 8px; border: 1px solid rgba(248, 81, 73, 0.4); font-size: 12px; margin-bottom: 1.25rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+        <!-- Workload Triage 2.0 (Themenblock- & Dozenten-Ebene mit 300-Karten-Fokus) -->
+        <div style="background: rgba(22, 27, 34, 0.95); padding: 1.25rem; border-radius: 10px; border: 1px solid rgba(88, 166, 255, 0.3); font-size: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          
+          <!-- Header Strip -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
             <div>
-              <span style="color: #ff7b72; font-weight: 700; font-size: 13.5px;">Notfall-Fokus: Intelligente Themen-Triage</span>
-              <div style="color: var(--text-muted); font-size: 11px; margin-top: 2px;">
-                Bei Zeitmangel oder >500 Reviews: Filtere gezielt nach den fehleranfälligsten Karten.
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 15px; font-weight: 700; color: #58a6ff;">🎯 Workload-Triage 2.0: Repetitions-Fokus</span>
+                <span id="triageActiveBudgetBadge" style="font-size: 10.5px; padding: 0.15rem 0.5rem; background: rgba(56, 139, 253, 0.15); border: 1px solid rgba(56, 139, 253, 0.3); color: #79c0ff; border-radius: 12px; font-weight: 600;">
+                  Ziel: ~300 Karten
+                </span>
+              </div>
+              <div style="color: var(--text-muted); font-size: 11.5px; margin-top: 3px;">
+                Wissenschaftlich priorisiert nach <strong>Tagen seit letzter Wiederholung</strong>, <strong>Fehlerquote (Retention)</strong> und <strong>Ease-Stabilität</strong>.
               </div>
             </div>
-            <button type="button" class="btn-secondary" onclick="copyTriageQueryToClipboard()" style="font-size: 11px; padding: 0.25rem 0.65rem; color: #58a6ff;">
-              Anki-Suchstring kopieren
-            </button>
+
+            <!-- Capacity Budget Selector -->
+            <div style="display: flex; align-items: center; gap: 0.35rem; background: rgba(0,0,0,0.25); padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
+              <span style="font-size: 10px; color: var(--text-muted); margin-right: 0.2rem;">Fokus-Budget:</span>
+              <button type="button" class="btn-triage-cap" onclick="setTriageBudget(150, this)" style="padding: 0.2rem 0.5rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">150</button>
+              <button type="button" class="btn-triage-cap active" onclick="setTriageBudget(300, this)" style="padding: 0.2rem 0.5rem; font-size: 10px; border-radius: 4px; border: none; background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer;">~300</button>
+              <button type="button" class="btn-triage-cap" onclick="setTriageBudget(500, this)" style="padding: 0.2rem 0.5rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">500</button>
+              <button type="button" class="btn-triage-cap" onclick="setTriageBudget(null, this)" style="padding: 0.2rem 0.5rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">Alle</button>
+            </div>
           </div>
-          <div id="pageTriageTopicsList" style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 220px; overflow-y: auto;">
-            <!-- Populated dynamically -->
+
+          <!-- Quick Action Bar: 1-Click Anki Filter for Curated Budget -->
+          <div id="pageTriageCombinedBar" style="background: rgba(31, 111, 235, 0.1); border: 1px solid rgba(56, 139, 253, 0.3); border-radius: 6px; padding: 0.65rem 0.85rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 250px;">
+              <span style="font-size: 14px;">⚡</span>
+              <div style="font-size: 11.5px; color: #e6edf3;">
+                <span id="pageTriageBudgetText"><strong>Top-Dozenten-Paket:</strong> Bereit für Anki-Repetition</span>
+                <span id="pageTriageQueryPreview" style="display: block; font-family: monospace; font-size: 10.5px; color: #79c0ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 450px; margin-top: 2px;">is:due</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button type="button" id="btnCopyPageTriageQuery" onclick="copyPageTriageQuery()" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.8rem; background: #238636; border-color: #2ea043; color: #fff; font-weight: 600; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                📋 Anki-Filter kopieren
+              </button>
+            </div>
+          </div>
+
+          <!-- Advice Banner -->
+          <div id="pageTriageAdviceBanner" style="padding: 0.55rem 0.8rem; border-radius: 6px; margin-bottom: 1rem; font-size: 11.5px; background: rgba(56,139,253,0.08); border: 1px solid rgba(56,139,253,0.25); color: #79c0ff;">
+            Lade Dozenten- und Themenblock-Priorisierung...
+          </div>
+
+          <!-- Structured Themenblock Accordions / Deck Cards List -->
+          <div id="pageTriageThemenbloeckeList" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <!-- Dynamically rendered Themenblöcke with Professor Decks -->
           </div>
         </div>
 

@@ -30,10 +30,53 @@ def test_workload_forecast_caching():
 def test_backlog_triage_advanced_queries():
     triage = calculate_backlog_triage(max_capacity=150)
     assert "topics" in triage
+    assert "themenbloecke" in triage
     assert "urgent_combined_anki_query" in triage
     assert "is:due" in triage["urgent_combined_anki_query"]
     assert "budget_combined_anki_query" in triage
     assert "is:due" in triage["budget_combined_anki_query"]
+
+def test_parse_curriculum_deck():
+    from app.services.anki_backlog_triage import parse_curriculum_deck
+
+    # Same professor (Loffing) in different Themenblöcke must parse to distinct TBs
+    tb1, prof1 = parse_curriculum_deck("2. SJ - 1\x1fTB Atmung\x1fLoffing\x1fVentilation")
+    assert tb1 == "TB Atmung"
+    assert prof1 == "Loffing"
+
+    tb2, prof2 = parse_curriculum_deck("2. SJ - 1\x1fTB Herz-Kreislauf\x1fLoffing\x1fRegulation")
+    assert tb2 == "TB Herz-Kreislauf"
+    assert prof2 == "Loffing"
+    assert (tb1, prof1) != (tb2, prof2)
+
+    # Stockmann in TB Blut/Immunsystem
+    tb3, prof3 = parse_curriculum_deck("2. SJ - 1::TB Blut/Immunsystem::Stockmann::Hämatopoese")
+    assert tb3 == "TB Blut/Immunsystem"
+    assert prof3 == "Stockmann"
+
+    # Non-curriculum or oral exam decks ignored
+    assert parse_curriculum_deck("1. SJ - 1\x1fAnatomie") == (None, None)
+    assert parse_curriculum_deck("2. SJ - 1\x1fMündliche Prüfung") == (None, None)
+    assert parse_curriculum_deck("Englisch Vokabeln") == (None, None)
+
+def test_backlog_triage_factors_and_structure():
+    triage = calculate_backlog_triage(max_capacity=300)
+    assert triage["connected"] in (True, False)
+    assert "themenbloecke" in triage
+    for tb in triage["themenbloecke"]:
+        assert "name" in tb
+        assert "total_due_today" in tb
+        assert "professors" in tb
+        for prof in tb["professors"]:
+            assert "themenblock" in prof
+            assert "dozent" in prof
+            assert "avg_ease_pct" in prof
+            assert "retention_rate_pct" in prof
+            assert "urgency_score" in prof
+            assert "anki_filter_query" in prof
+            # Verify query targets both TB and professor
+            assert prof["themenblock"] in prof["anki_filter_query"]
+            assert prof["dozent"] in prof["anki_filter_query"]
 
 from fastapi.testclient import TestClient
 from app.main import app

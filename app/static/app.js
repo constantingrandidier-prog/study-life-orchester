@@ -4104,7 +4104,7 @@ function toggleTomorrowAnkiDetails() {
   }
 }
 
-let currentTriageBudget = null;
+let currentTriageBudget = 300;
 
 async function toggleBacklogTriageModal() {
   const box = document.getElementById('ankiBacklogTriageBox');
@@ -4124,17 +4124,26 @@ async function setTriageBudget(capacity, btnElement) {
     b.classList.remove('active');
   });
   if (btnElement) {
-    btnElement.style.background = 'rgba(255,255,255,0.15)';
+    btnElement.style.background = '#1f6feb';
     btnElement.style.color = '#fff';
     btnElement.classList.add('active');
+  }
+  const badge = document.getElementById('triageActiveBudgetBadge');
+  if (badge) {
+    badge.textContent = capacity ? `Ziel: ~${capacity} Karten` : 'Ziel: Alle fälligen Karten';
   }
   await loadBacklogTriage(capacity);
 }
 
-async function loadBacklogTriage(maxCapacity) {
-  const listEl = document.getElementById('triageTopicsList');
-  const adviceEl = document.getElementById('triageAdviceBanner');
-  if (!listEl) return;
+let latestTriageData = null;
+
+async function loadBacklogTriage(maxCapacity = 300) {
+  const modalListEl = document.getElementById('triageTopicsList');
+  const modalAdviceEl = document.getElementById('triageAdviceBanner');
+  const pageContainer = document.getElementById('pageTriageThemenbloeckeList');
+  const pageAdviceEl = document.getElementById('pageTriageAdviceBanner');
+  const pageQueryPreview = document.getElementById('pageTriageQueryPreview');
+  const pageBudgetText = document.getElementById('pageTriageBudgetText');
 
   try {
     const url = maxCapacity 
@@ -4143,111 +4152,159 @@ async function loadBacklogTriage(maxCapacity) {
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    latestTriageData = data;
 
-    if (adviceEl) {
-      adviceEl.textContent = data.summary_advice || 'Themen priorisiert nach Dringlichkeit.';
-      adviceEl.style.borderColor = data.is_overloaded ? 'rgba(248,81,73,0.4)' : 'rgba(88,166,255,0.3)';
-      adviceEl.style.background = data.is_overloaded ? 'rgba(248,81,73,0.12)' : 'rgba(56,139,253,0.1)';
-      adviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
+    const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Wiederholungs-Fälligkeit und Fehlerquote.';
+    if (modalAdviceEl) {
+      modalAdviceEl.textContent = adviceText;
+      modalAdviceEl.style.borderColor = data.is_overloaded ? 'rgba(248,81,73,0.4)' : 'rgba(88,166,255,0.3)';
+      modalAdviceEl.style.background = data.is_overloaded ? 'rgba(248,81,73,0.12)' : 'rgba(56,139,253,0.1)';
+      modalAdviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
+    }
+    if (pageAdviceEl) {
+      pageAdviceEl.textContent = adviceText;
+      pageAdviceEl.style.borderColor = data.is_overloaded ? 'rgba(248,81,73,0.4)' : 'rgba(88,166,255,0.25)';
+      pageAdviceEl.style.background = data.is_overloaded ? 'rgba(248,81,73,0.12)' : 'rgba(56,139,253,0.08)';
+      pageAdviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
     }
 
-    // 1-Click Copy Bar for combined query
-    const combinedBar = document.getElementById('triageCombinedQueryBar');
-    const combinedText = document.getElementById('triageCombinedQueryText');
-    const combinedQuery = data.budget_combined_anki_query || data.urgent_combined_anki_query;
-    if (combinedBar && combinedText && combinedQuery) {
-      combinedText.textContent = combinedQuery;
-      combinedText.setAttribute('title', combinedQuery);
-      combinedBar.style.display = 'flex';
+    // Update 1-Click Anki query display
+    const query = data.budget_combined_anki_query || data.urgent_combined_anki_query || 'is:due';
+    const selectedCount = data.budget_accumulated_cards || data.total_due_today || 0;
+    if (pageQueryPreview) {
+      pageQueryPreview.textContent = query;
+      pageQueryPreview.setAttribute('title', query);
+    }
+    if (pageBudgetText) {
+      pageBudgetText.innerHTML = `<strong>Kuriertes Paket (${selectedCount} Karten${maxCapacity ? ` / Budget ${maxCapacity}` : ''}):</strong> Sofort in Anki als gefilterter Stapel startbar`;
     }
 
-    const topicsToShow = maxCapacity && data.budget_selected_topics 
-      ? data.budget_selected_topics 
-      : (data.topics || []);
+    // Modal combined query bar
+    const modalCombinedBar = document.getElementById('triageCombinedQueryBar');
+    const modalCombinedText = document.getElementById('triageCombinedQueryText');
+    if (modalCombinedBar && modalCombinedText) {
+      modalCombinedText.textContent = query;
+      modalCombinedText.setAttribute('title', query);
+      modalCombinedBar.style.display = 'flex';
+    }
 
-    const deferredToShow = maxCapacity && data.budget_deferred_topics 
-      ? data.budget_deferred_topics 
-      : [];
-
-    if (topicsToShow.length === 0) {
-      listEl.innerHTML = '<div style="color: var(--text-muted); padding: 0.5rem;">Keine fälligen Karten gefunden.</div>';
+    // Render Hierarchical Themenblöcke & Dozenten
+    const themenbloecke = data.themenbloecke || [];
+    if (themenbloecke.length === 0) {
+      const emptyHtml = '<div style="color: var(--text-muted); padding: 0.75rem; text-align: center;">Keine aktiven 2. SJ Dozenten-Decks gefunden.</div>';
+      if (pageContainer) pageContainer.innerHTML = emptyHtml;
+      if (modalListEl) modalListEl.innerHTML = emptyHtml;
       return;
     }
 
-    let html = '';
-    if (maxCapacity && deferredToShow.length > 0) {
-      html += `<div style="font-size: 11px; font-weight: 600; color: #ff7b72; margin-bottom: 0.25rem;">
-        Priorisierte Themen (Summe: ${data.budget_accumulated_cards || 0} Karten von ${maxCapacity} Budget):
-      </div>`;
-    }
+    let tbHtml = '';
+    themenbloecke.forEach((tb, tbIdx) => {
+      const profCount = (tb.professors || []).length;
+      const totalDueToday = tb.total_due_today || 0;
+      const totalDueTom = tb.total_due_tomorrow || 0;
+      const hasDue = totalDueToday > 0;
+      const borderCol = hasDue ? 'rgba(210, 153, 34, 0.4)' : 'rgba(255, 255, 255, 0.08)';
+      const headerBg = hasDue ? 'rgba(210, 153, 34, 0.08)' : 'rgba(255, 255, 255, 0.02)';
 
-    html += topicsToShow.map((t, idx) => `
-      <div style="padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid ${t.color}40; display: flex; flex-direction: column; gap: 0.35rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-size: 11px; font-weight: 700; color: ${t.color}; background: ${t.color}20; padding: 0.1rem 0.4rem; border-radius: 4px;">
-              #${idx + 1} ${t.level_badge}
-            </span>
-            <strong style="color: #e6edf3; font-size: 12.5px;">${escapeHtml(t.deck_name)}</strong>
+      tbHtml += `
+        <div class="triage-tb-card" style="border: 1px solid ${borderCol}; border-radius: 8px; background: rgba(0,0,0,0.2); overflow: hidden;">
+          <div style="background: ${headerBg}; padding: 0.6rem 0.85rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06);">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <span style="font-size: 13.5px; font-weight: 700; color: #e6edf3;">📚 ${escapeHtml(tb.name)}</span>
+              <span style="font-size: 11px; color: var(--text-muted);">(${profCount} Dozenten-Bereiche)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 11.5px;">
+              ${hasDue ? `
+                <span style="background: rgba(248, 81, 73, 0.15); color: #ff7b72; border: 1px solid rgba(248,81,73,0.3); padding: 0.1rem 0.45rem; border-radius: 12px; font-weight: 700;">
+                  ${totalDueToday} heute fällig
+                </span>
+              ` : `
+                <span style="background: rgba(63, 185, 80, 0.12); color: #3fb950; border: 1px solid rgba(63,185,80,0.25); padding: 0.1rem 0.45rem; border-radius: 12px; font-weight: 600;">
+                  0 heute fällig
+                </span>
+              `}
+              ${totalDueTom > 0 ? `<span style="color: var(--text-muted); font-size: 10.5px;">(+${totalDueTom} morgen)</span>` : ''}
+            </div>
           </div>
-          <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(t.anki_filter_query)}', this)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #c9d1d9; border-radius: 4px; font-size: 10px; padding: 0.2rem 0.45rem; cursor: pointer;">
-            Anki-Filter kopieren
-          </button>
-        </div>
 
-        <div style="display: flex; gap: 1rem; font-size: 11px; color: var(--text-muted); flex-wrap: wrap;">
-          <span><strong>${t.due_today} heute</strong> / <strong>${t.due_tomorrow} morgen</strong> fällig</span>
-          <span>Fehlerquote: <strong style="color: ${t.fail_rate_pct > 30 ? '#ff7b72' : '#e6edf3'};">${t.fail_rate_pct}%</strong></span>
-          <span>⏱️ Zuletzt vor <strong>${t.days_since_last_review} Tagen</strong></span>
-          <span>Stabilität: <strong>${t.avg_ease_pct}%</strong></span>
-          <span>Dringlichkeits-Score: <strong style="color: ${t.color};">${t.urgency_score}/100</strong></span>
-        </div>
+          <div style="padding: 0.65rem 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            ${(tb.professors || []).map((p, pIdx) => {
+              const isSelectedInBudget = (data.budget_selected_topics || []).some(b => b.themenblock === p.themenblock && b.dozent === p.dozent);
+              const cardBorder = isSelectedInBudget ? `1px solid ${p.color}70` : '1px solid rgba(255,255,255,0.06)';
+              const cardBg = isSelectedInBudget ? 'rgba(31, 111, 235, 0.05)' : 'rgba(255,255,255,0.015)';
 
-        <div style="font-size: 11px; color: ${t.color}; font-weight: 500;">
-          ${escapeHtml(t.action_recommendation)}
-        </div>
-      </div>
-    `).join('');
+              return `
+                <div style="border: ${cardBorder}; border-radius: 6px; background: ${cardBg}; padding: 0.55rem 0.75rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                      <span style="font-size: 10.5px; font-weight: 700; color: ${p.color}; background: ${p.color}18; border: 1px solid ${p.color}35; padding: 0.1rem 0.4rem; border-radius: 4px;">
+                        ${p.level_badge}
+                      </span>
+                      <strong style="color: #e6edf3; font-size: 12.5px;">👨‍🏫 ${escapeHtml(p.dozent)}</strong>
+                      ${isSelectedInBudget ? `<span style="font-size: 10px; color: #58a6ff; background: rgba(56,139,253,0.12); padding: 0.08rem 0.35rem; border-radius: 3px; font-weight: 600;">⭐ Im Fokus-Paket</span>` : ''}
+                    </div>
 
-    if (maxCapacity && deferredToShow.length > 0) {
-      html += `<div style="font-size: 11px; font-weight: 600; color: #3fb950; margin-top: 0.75rem; margin-bottom: 0.25rem;">
-        Auf morgen verschiebbar (Geringes Vergessensrisiko):
-      </div>`;
-      html += deferredToShow.map(t => `
-        <div style="padding: 0.45rem 0.65rem; background: rgba(63,185,80,0.03); border-radius: 6px; border: 1px dashed rgba(63,185,80,0.3); display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
-          <span style="color: #8b949e;">${escapeHtml(t.deck_name)} (${t.due_tomorrow} Karten fällig)</span>
-          <span style="color: #3fb950; font-weight: 600;">Kann warten (Stabilität ${t.avg_ease_pct}%)</span>
-        </div>
-      `).join('');
-    }
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                      <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(p.anki_filter_query)}', this)" class="btn-secondary" style="font-size: 10px; padding: 0.2rem 0.5rem; color: #c9d1d9; border-radius: 4px; cursor: pointer;">
+                        Dozent filtern
+                      </button>
+                    </div>
+                  </div>
 
-    listEl.innerHTML = html;
+                  <!-- 3 Key Decision Factors Grid -->
+                  <div style="display: flex; gap: 0.85rem; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; align-items: center; background: rgba(0,0,0,0.15); padding: 0.35rem 0.55rem; border-radius: 4px;">
+                    <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${p.days_since_last_review_str}</strong></span>
+                    <span>🎯 Retention: <strong style="color: ${p.retention_rate_pct < 70 ? '#ff7b72' : '#3fb950'};">${p.retention_rate_pct}%</strong> <span style="font-size: 10px; color: #8b949e;">(${p.total_fails}/${p.total_reviews} Fails)</span></span>
+                    <span>⚙️ Stabilität: <strong style="color: #e6edf3;">${p.avg_ease_pct}% Ease</strong></span>
+                    <span>🗂️ Fällig: <strong style="color: ${p.due_today > 0 ? '#d29922' : '#8b949e'};">${p.due_today} heute</strong> / ${p.due_tomorrow} morgen</span>
+                    <span style="margin-left: auto;">Score: <strong style="color: ${p.color};">${p.urgency_score}/100</strong></span>
+                  </div>
+
+                  <div style="font-size: 10.5px; color: ${p.color}; font-weight: 500;">
+                    ${escapeHtml(p.action_recommendation)}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    if (pageContainer) pageContainer.innerHTML = tbHtml;
+    if (modalListEl) modalListEl.innerHTML = tbHtml;
+
   } catch (err) {
-    if (listEl) listEl.innerHTML = `<div style="color: #ff7b72; padding: 0.5rem;">Fehler beim Laden der Triage: ${err.message}</div>`;
+    console.error('loadBacklogTriage error:', err);
+    const errHtml = `<div style="color: #ff7b72; padding: 0.5rem;">Fehler beim Laden der Triage: ${err.message}</div>`;
+    if (pageContainer) pageContainer.innerHTML = errHtml;
+    if (modalListEl) modalListEl.innerHTML = errHtml;
   }
 }
 
-function copyTriageQueryToClipboard() {
-  const textEl = document.getElementById('triageCombinedQueryText');
-  const btn = document.getElementById('btnCopyCombinedQuery');
-  if (!textEl) return;
-  const query = textEl.textContent.trim();
+function copyPageTriageQuery() {
+  const query = latestTriageData ? (latestTriageData.budget_combined_anki_query || latestTriageData.urgent_combined_anki_query || 'is:due') : 'is:due';
+  const btn = document.getElementById('btnCopyPageTriageQuery');
   navigator.clipboard.writeText(query).then(() => {
     if (btn) {
       const orig = btn.innerHTML;
-      btn.innerHTML = '<span>Kopiert!</span>';
+      btn.innerHTML = '<span>✓ Kopiert!</span>';
       btn.style.background = '#2ea043';
       setTimeout(() => {
         btn.innerHTML = orig;
         btn.style.background = '#238636';
-      }, 2500);
+      }, 2000);
     }
     if (typeof showToast === 'function') {
-      showToast('Anki-Filter kopiert! In Anki: Werkzeuge ➔ Gefilterten Stapel erstellen');
+      showToast('Anki-Filter kopiert! In Anki: Werkzeuge ➔ Gefilterten Stapel erstellen ➔ Einfügen');
     }
   }).catch(() => {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
   });
+}
+
+function copyTriageQueryToClipboard() {
+  copyPageTriageQuery();
 }
 
 function copyAnkiQuery(encodedQuery, btn) {
@@ -4262,8 +4319,13 @@ function copyAnkiQuery(encodedQuery, btn) {
     }, 2000);
   }).catch(() => {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
-  });
 }
+window.toggleAnkiBacklogTriage = toggleAnkiBacklogTriage;
+window.setTriageBudget = setTriageBudget;
+window.loadBacklogTriage = loadBacklogTriage;
+window.copyPageTriageQuery = copyPageTriageQuery;
+window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
+window.copyAnkiQuery = copyAnkiQuery;
 
 // ============================================================================
 // PHASE 5: 14-TAGE RETENTIONS-RADAR & WORKLOAD-VORSCHAU
@@ -7178,16 +7240,13 @@ async function renderPageAnalytics() {
     await loadWorkloadForecast(false);
   }
 
+  // Load Workload Triage 2.0 (Themenblöcke & Dozenten)
+  await loadBacklogTriage(currentTriageBudget);
+
   const pageTree = document.getElementById('pageDeckTreeContainer');
   const modalTree = document.getElementById('deckTreeContainer');
   if (pageTree && modalTree && modalTree.children.length > 0) {
     pageTree.innerHTML = modalTree.innerHTML;
-  }
-
-  const pageTriage = document.getElementById('pageTriageTopicsList');
-  const modalTriage = document.getElementById('triageTopicsList');
-  if (pageTriage && modalTriage && modalTriage.children.length > 0) {
-    pageTriage.innerHTML = modalTriage.innerHTML;
   }
 }
 

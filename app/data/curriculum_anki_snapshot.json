@@ -47,12 +47,12 @@
     "deck_id": 1789378222968,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
     "card_count": 41,
-    "new_cards": 41,
-    "mastered_cards": 0,
+    "new_cards": 28,
+    "mastered_cards": 13,
     "learning_cards": 0,
-    "avg_card_chars": 526.5,
+    "avg_card_chars": 528.2,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222969,
@@ -226,7 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 227.3,
+    "avg_card_chars": 229.6,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 248.7,
+    "avg_card_chars": 249.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,12 +278,12 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 5,
-    "mastered_cards": 127,
+    "new_cards": 0,
+    "mastered_cards": 129,
     "learning_cards": 0,
     "avg_card_chars": 438.3,
-    "is_completed": false,
-    "is_in_progress": true
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222990,
@@ -344,23 +344,23 @@
     "deck_id": 1789378222995,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
     "card_count": 79,
-    "new_cards": 79,
-    "mastered_cards": 0,
+    "new_cards": 75,
+    "mastered_cards": 4,
     "learning_cards": 0,
     "avg_card_chars": 287.5,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222996,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
     "card_count": 63,
-    "new_cards": 63,
-    "mastered_cards": 0,
+    "new_cards": 12,
+    "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 507.5,
+    "avg_card_chars": 528.1,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222997,
@@ -388,10 +388,10 @@
     "deck_id": 1789378222999,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
     "card_count": 71,
-    "new_cards": 31,
-    "mastered_cards": 40,
+    "new_cards": 4,
+    "mastered_cards": 67,
     "learning_cards": 0,
-    "avg_card_chars": 399.5,
+    "avg_card_chars": 412.6,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -402,7 +402,7 @@
     "new_cards": 0,
     "mastered_cards": 53,
     "learning_cards": 0,
-    "avg_card_chars": 323.5,
+    "avg_card_chars": 327.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -424,7 +424,7 @@
     "new_cards": 0,
     "mastered_cards": 105,
     "learning_cards": 0,
-    "avg_card_chars": 293.1,
+    "avg_card_chars": 295.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -435,7 +435,7 @@
     "new_cards": 0,
     "mastered_cards": 70,
     "learning_cards": 0,
-    "avg_card_chars": 282.7,
+    "avg_card_chars": 291.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -443,11 +443,11 @@
     "deck_id": 1789378223004,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu",
     "card_count": 43,
-    "new_cards": 43,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 43,
     "learning_cards": 0,
-    "avg_card_chars": 213.7,
-    "is_completed": false,
+    "avg_card_chars": 229.3,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -487,12 +487,12 @@
     "deck_id": 1789378223008,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
     "card_count": 104,
-    "new_cards": 104,
-    "mastered_cards": 0,
-    "learning_cards": 0,
-    "avg_card_chars": 290.1,
+    "new_cards": 78,
+    "mastered_cards": 26,
+    "learning_cards": 15,
+    "avg_card_chars": 290.2,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223009,
@@ -567,7 +567,7 @@
     "new_cards": 0,
     "mastered_cards": 62,
     "learning_cards": 0,
-    "avg_card_chars": 498.9,
+    "avg_card_chars": 499.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -578,7 +578,7 @@
     "new_cards": 0,
     "mastered_cards": 52,
     "learning_cards": 0,
-    "avg_card_chars": 441.5,
+    "avg_card_chars": 443.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -589,7 +589,7 @@
     "new_cards": 0,
     "mastered_cards": 68,
     "learning_cards": 0,
-    "avg_card_chars": 333.8,
+    "avg_card_chars": 334.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -622,7 +622,7 @@
     "new_cards": 0,
     "mastered_cards": 97,
     "learning_cards": 0,
-    "avg_card_chars": 353.7,
+    "avg_card_chars": 354.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -666,7 +666,7 @@
     "new_cards": 0,
     "mastered_cards": 42,
     "learning_cards": 0,
-    "avg_card_chars": 222.2,
+    "avg_card_chars": 224.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -685,10 +685,10 @@
     "deck_id": 1789378223028,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
     "card_count": 60,
-    "new_cards": 3,
-    "mastered_cards": 56,
+    "new_cards": 1,
+    "mastered_cards": 58,
     "learning_cards": 0,
-    "avg_card_chars": 261.0,
+    "avg_card_chars": 261.6,
     "is_completed": false,
     "is_in_progress": true
   },

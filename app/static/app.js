@@ -4319,6 +4319,7 @@ function copyAnkiQuery(encodedQuery, btn) {
     }, 2000);
   }).catch(() => {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
+  });
 }
 window.toggleAnkiBacklogTriage = toggleAnkiBacklogTriage;
 window.setTriageBudget = setTriageBudget;

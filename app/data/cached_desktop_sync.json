@@ -187,13 +187,13 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:07.964086",
+    "last_sync_timestamp": "2026-10-10T22:36:24.067836",
     "current_day_index": 383,
     "target_day_index": 381,
     "next_day_index": 382
   },
   "_latest_target_date": "2026-10-10",
-  "_updated_at": "2026-10-10T19:26:59.265345",
+  "_updated_at": "2026-10-10T22:40:42.289842",
   "2026-09-14": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -328,7 +328,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:21.086671",
+    "last_sync_timestamp": "2026-10-10T22:40:09.955387",
     "current_day_index": 383,
     "target_day_index": 357,
     "next_day_index": 358
@@ -470,7 +470,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:39.435912",
+    "last_sync_timestamp": "2026-10-10T22:40:27.404459",
     "current_day_index": 383,
     "target_day_index": 358,
     "next_day_index": 359
@@ -611,7 +611,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:31.110237",
+    "last_sync_timestamp": "2026-10-10T22:40:18.705828",
     "current_day_index": 383,
     "target_day_index": 359,
     "next_day_index": 360
@@ -758,7 +758,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:19.464044",
+    "last_sync_timestamp": "2026-10-10T22:40:09.072332",
     "current_day_index": 383,
     "target_day_index": 360,
     "next_day_index": 361
@@ -905,7 +905,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:21.544294",
+    "last_sync_timestamp": "2026-10-10T22:40:10.296037",
     "current_day_index": 383,
     "target_day_index": 361,
     "next_day_index": 362
@@ -951,7 +951,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:04.049206",
+    "last_sync_timestamp": "2026-10-10T22:36:11.410832",
     "current_day_index": 383,
     "target_day_index": 362,
     "next_day_index": 363
@@ -997,7 +997,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:04.235831",
+    "last_sync_timestamp": "2026-10-10T22:36:11.712027",
     "current_day_index": 383,
     "target_day_index": 363,
     "next_day_index": 364
@@ -1146,7 +1146,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:04.405750",
+    "last_sync_timestamp": "2026-10-10T22:36:12.162434",
     "current_day_index": 383,
     "target_day_index": 364,
     "next_day_index": 365
@@ -1298,7 +1298,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:04.584626",
+    "last_sync_timestamp": "2026-10-10T22:36:12.652518",
     "current_day_index": 383,
     "target_day_index": 365,
     "next_day_index": 366
@@ -1453,7 +1453,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:31.442196",
+    "last_sync_timestamp": "2026-10-10T22:40:18.942020",
     "current_day_index": 383,
     "target_day_index": 366,
     "next_day_index": 367
@@ -1610,7 +1610,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:05.002693",
+    "last_sync_timestamp": "2026-10-10T22:36:13.356484",
     "current_day_index": 383,
     "target_day_index": 367,
     "next_day_index": 368
@@ -1656,7 +1656,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T19:26:17.855626",
+    "last_sync_timestamp": "2026-10-10T22:40:07.982016",
     "current_day_index": 383,
     "target_day_index": 368,
     "next_day_index": 369
@@ -1816,7 +1816,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:05.352215",
+    "last_sync_timestamp": "2026-10-10T22:36:14.080659",
     "current_day_index": 383,
     "target_day_index": 369,
     "next_day_index": 370
@@ -1977,7 +1977,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:05.558064",
+    "last_sync_timestamp": "2026-10-10T22:36:14.417686",
     "current_day_index": 383,
     "target_day_index": 370,
     "next_day_index": 371
@@ -2146,7 +2146,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:05.733994",
+    "last_sync_timestamp": "2026-10-10T22:36:16.777824",
     "current_day_index": 383,
     "target_day_index": 371,
     "next_day_index": 372
@@ -2315,7 +2315,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:05.975407",
+    "last_sync_timestamp": "2026-10-10T22:36:21.918417",
     "current_day_index": 383,
     "target_day_index": 372,
     "next_day_index": 373
@@ -2482,7 +2482,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:06.187588",
+    "last_sync_timestamp": "2026-10-10T22:36:22.169364",
     "current_day_index": 383,
     "target_day_index": 373,
     "next_day_index": 374
@@ -2658,7 +2658,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:06.404797",
+    "last_sync_timestamp": "2026-10-10T22:36:22.409294",
     "current_day_index": 383,
     "target_day_index": 374,
     "next_day_index": 375
@@ -2823,7 +2823,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:06.590482",
+    "last_sync_timestamp": "2026-10-10T22:36:22.667626",
     "current_day_index": 383,
     "target_day_index": 375,
     "next_day_index": 376
@@ -3003,7 +3003,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:06.785804",
+    "last_sync_timestamp": "2026-10-10T22:36:22.931464",
     "current_day_index": 383,
     "target_day_index": 376,
     "next_day_index": 377
@@ -3172,7 +3172,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:07.061926",
+    "last_sync_timestamp": "2026-10-10T22:36:23.133129",
     "current_day_index": 383,
     "target_day_index": 377,
     "next_day_index": 378
@@ -3359,7 +3359,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:07.269269",
+    "last_sync_timestamp": "2026-10-10T22:36:23.347890",
     "current_day_index": 383,
     "target_day_index": 378,
     "next_day_index": 379
@@ -3540,7 +3540,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:07.500171",
+    "last_sync_timestamp": "2026-10-10T22:36:23.562287",
     "current_day_index": 383,
     "target_day_index": 379,
     "next_day_index": 380
@@ -3727,7 +3727,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-10T18:56:07.709376",
+    "last_sync_timestamp": "2026-10-10T22:36:23.751641",
     "current_day_index": 383,
     "target_day_index": 380,
     "next_day_index": 381
@@ -3856,32 +3856,20 @@
     "total_curriculum_cards": 8736,
     "curriculum_progress_pct": 19.3,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 168,
+    "due_tomorrow_count": 98,
     "due_tomorrow_deck_breakdown": {
       "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 11,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 4,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 41,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 13,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 33,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 5,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 29,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 10,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 8,
-      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 11,
-      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 11
     },
     "due_tomorrow_topics": [
       {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
         "count": 41
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
-        "count": 33
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-        "count": 29
       },
       {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
@@ -3904,16 +3892,8 @@
         "count": 8
       },
       {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
-        "count": 5
-      },
-      {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
         "count": 4
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
-        "count": 3
       }
     ],
     "recent_reviews_sample": [
@@ -4075,7 +4055,7 @@
         "front": "Was ist eine primäre Funktion der Haut? Wie wird die Durchblutung reguliert?"
       }
     ],
-    "last_sync_timestamp": "2026-10-10T19:26:15.086532",
+    "last_sync_timestamp": "2026-10-10T22:40:05.756678",
     "current_day_index": 383,
     "target_day_index": 382,
     "next_day_index": 383
@@ -4087,20 +4067,24 @@
     "is_today": true,
     "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
     "first_review_time": "17:55",
-    "last_review_time": "18:30",
+    "last_review_time": "19:01",
     "today_reviewed_count": 0,
     "new_cards_count": 0,
     "new_cards_opened_count": 0,
     "new_cards_in_learning_count": 0,
-    "repetition_cards_count": 115,
-    "total_reviews_count": 142,
-    "today_time_minutes": 28.7,
-    "today_session_time_minutes": 35.6,
-    "effective_study_minutes": 35.6,
-    "today_lapses_count": 27,
+    "repetition_cards_count": 185,
+    "total_reviews_count": 229,
+    "today_time_minutes": 49.4,
+    "today_session_time_minutes": 65.8,
+    "effective_study_minutes": 65.8,
+    "today_lapses_count": 44,
     "today_new_count": 0,
-    "today_review_count": 115,
+    "today_review_count": 185,
     "today_deck_breakdown": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 48,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 31,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 5,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 11,
       "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 11,
       "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 23,
@@ -4124,23 +4108,27 @@
     "new_by_deck": {},
     "new_opened_by_deck": {},
     "rep_by_deck": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 33,
       "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 17,
-      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 15,
-      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 1,
-      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 29,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 5,
-      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 9,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 4,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 14,
-      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 4,
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 5,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 14,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 5,
       "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 8,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 15,
       "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 6,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 5,
       "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 3,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 5,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 5,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 5,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 9,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 4,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 1,
       "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 2,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 2
     },
@@ -4150,22 +4138,22 @@
     "yesterday_repetition_cards_count": 296,
     "yesterday_total_reviews_count": 526,
     "yesterday_time_minutes": 184,
-    "due_today_count": 183,
-    "due_reviews_count": 183,
+    "due_today_count": 113,
+    "due_reviews_count": 113,
     "cumulative_cards_learned": 1686,
     "total_curriculum_cards": 8736,
     "curriculum_progress_pct": 19.3,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 49,
+    "due_tomorrow_count": 59,
     "due_tomorrow_deck_breakdown": {
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 1,
       "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 1,
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 1,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 3,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 4,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 9,
       "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 1,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 9,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 7,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 4,
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 3,
@@ -4182,8 +4170,12 @@
     },
     "due_tomorrow_topics": [
       {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "count": 9
+      },
+      {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-        "count": 7
+        "count": 9
       },
       {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
@@ -4234,10 +4226,6 @@
         "count": 1
       },
       {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
-        "count": 1
-      },
-      {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
         "count": 1
       },
@@ -4268,84 +4256,84 @@
     ],
     "recent_reviews_sample": [
       {
-        "time": "18:30:43",
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "time": "19:01:01",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Woraus bestehen die Antigenbindungsstellen bei der B-Zelle? Was ist speziell bei der Bindu"
+        "front": "Woraus setzt sich die Auswurfleistung des Ventrikel zusammen und was ist es?"
       },
       {
-        "time": "18:30:25",
-        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "time": "19:00:35",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Was bedeutet isoosmolal?"
+        "front": "Warum ist das Gesetz von Laplace so wichtig?"
       },
       {
-        "time": "18:30:22",
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
+        "time": "19:00:16",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Was drainieren die Lymphgefässe?"
+        "front": "Was sind Surrogate für Inotropie?"
       },
       {
-        "time": "18:30:16",
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
+        "time": "18:59:57",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Durch was werden Entzündungen meist initiiert?"
+        "front": "Über welchen Mechanismus wirken kardiotonische Glykoside?"
       },
       {
-        "time": "18:30:12",
-        "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
+        "time": "18:59:50",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Was geschieht während der irreversiblen Aggregation (4. Schritt der Primären Hämostase)?Wa"
+        "front": "Welchen Einfluss hat das Laplace-Gesetz während der Auswurfphase?"
       },
       {
-        "time": "18:30:02",
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "time": "18:59:37",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Was ist der Schwellenwert für die Induktion der adaptiven Immunantwort?"
+        "front": "Was sind Surrogate (Ersatzgrösse) für Vorlast?"
       },
       {
-        "time": "18:29:58",
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "time": "18:59:32",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Wie wird die CD8-T-Zelle mit der CD4-T-Zelle aktiviert?"
+        "front": "Karte"
       },
       {
-        "time": "18:29:37",
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
+        "time": "18:59:28",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Welche Region welcher Kette bestimmt den Isotyp der Antikörpers?"
+        "front": "Welchen Anteil hat die kinetische Energie an der Arbeit des Ventrikels? Konsequenz?"
       },
       {
-        "time": "18:29:33",
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "time": "18:57:48",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Wiederlernen",
-        "front": "Wie erkennt man im Blutbild die myeloische Leukämie und die perniziöse Anämie?"
+        "front": "Was ist ein Surrogat für die Nachlast?"
       },
       {
-        "time": "18:29:11",
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
+        "time": "18:57:41",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "ease": 3,
         "ease_label": "Gut",
-        "type_label": "Wiederholung",
-        "front": "Was gegen rhaumatoide Arthritis?"
+        "type_label": "Wiederlernen",
+        "front": "Was ist die Ejection fraction?"
       }
     ],
     "due_tomorrow_sample": [
@@ -4400,32 +4388,32 @@
         "front": "Ist die Impendanz für hochfrequente Komponenten höher oder tiefer?"
       },
       {
+        "card_id": 1603644210753,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "front": "Warum ist das Gesetz von Laplace so wichtig?"
+      },
+      {
+        "card_id": 1603644211075,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "front": "Was ist die Ejection fraction?"
+      },
+      {
+        "card_id": 1603644211248,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "front": "Woraus setzt sich die Auswurfleistung des Ventrikel zusammen und was ist es?"
+      },
+      {
         "card_id": 1603644211959,
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
         "front": "Wie funktioniert die Nährstoffversorgung des Herzen? Wofür wird Energie verwendet?"
       },
       {
-        "card_id": 1603644154225,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
-        "front": "Was ist der Sinusrythmus? Wie heissen Abweichungen und wie kommen sie zustande?"
-      },
-      {
-        "card_id": 1602943293969,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-        "front": "Karte"
-      },
-      {
-        "card_id": 1603098262351,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-        "front": "Was ist die Funktion der Na+/K+-ATPase?"
-      },
-      {
-        "card_id": 1603098424809,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-        "front": "Was ist die Funktion des Na+/Ca2+-Austauschers?"
+        "card_id": 1603644213418,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "front": "Welche Formen der Regulation der Herzfunktion gibt es?"
       }
     ],
-    "last_sync_timestamp": "2026-10-10T19:26:59.191143",
+    "last_sync_timestamp": "2026-10-10T22:40:42.243696",
     "current_day_index": 383,
     "target_day_index": 383,
     "next_day_index": 384

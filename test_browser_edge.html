@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="log"></div>
+<script>
+window.__errors = [];
+window.onerror = function(msg, src, line, col, err) {
+    window.__errors.push({msg: msg, src: src, line: line, col: col});
+    console.error("BROWSER_ERR:", msg, src, line, col);
+};
+</script>
+<script src="http://127.0.0.1:8888/static/app.js?v=60.0"></script>
+<script>
+setTimeout(() => {
+    document.getElementById("log").textContent = JSON.stringify(window.__errors);
+}, 1000);
+</script>
+</body>
+</html>

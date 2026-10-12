@@ -4321,7 +4321,8 @@ function copyAnkiQuery(encodedQuery, btn) {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
   });
 }
-window.toggleAnkiBacklogTriage = toggleAnkiBacklogTriage;
+window.toggleBacklogTriageModal = toggleBacklogTriageModal;
+window.toggleAnkiBacklogTriage = toggleBacklogTriageModal;
 window.setTriageBudget = setTriageBudget;
 window.loadBacklogTriage = loadBacklogTriage;
 window.copyPageTriageQuery = copyPageTriageQuery;

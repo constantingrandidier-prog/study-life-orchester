@@ -43,6 +43,28 @@ def get_progress_comparison_stats(target_date: Optional[date] = None, user_id: s
         yest_row = cursor.fetchone()
         cards_yesterday = yest_row["cards_completed"] if yest_row else 0
 
+        if user_id == "student":
+            try:
+                from app.services.anki_desktop_sync import get_cached_desktop_sync_state
+                today_state = get_cached_desktop_sync_state(curr_str)
+                if today_state:
+                    today_cnt = today_state.get("new_cards_count", 0)
+                    if today_cnt is not None and today_cnt > cards_today:
+                        cards_today = today_cnt
+                        minutes_today = int(round(today_state.get("effective_study_minutes", minutes_today)))
+
+                yest_state = get_cached_desktop_sync_state(yest_str)
+                if yest_state:
+                    yest_cnt = yest_state.get("new_cards_count", 0)
+                    if yest_cnt is not None and yest_cnt > cards_yesterday:
+                        cards_yesterday = yest_cnt
+                elif today_state and today_state.get("yesterday_new_cards_count") is not None:
+                    yest_cnt = today_state.get("yesterday_new_cards_count", 0)
+                    if yest_cnt > cards_yesterday:
+                        cards_yesterday = yest_cnt
+            except Exception:
+                pass
+
         # Diff to yesterday
         diff_cards = cards_today - cards_yesterday
         if cards_yesterday > 0:

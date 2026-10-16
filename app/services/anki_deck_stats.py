@@ -188,93 +188,92 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             }
         }
 
-    uri = f"file:///{target_path.as_posix()}?mode=ro&immutable=1"
-    conn = sqlite3.connect(uri, uri=True)
-    cur = conn.cursor()
+    from app.db.anki_db import open_anki_db_readonly
+    with open_anki_db_readonly(target_path) as conn:
+        cur = conn.cursor()
 
-    # Get current Anki day index
-    crt = cur.execute("SELECT crt FROM col").fetchone()[0]
-    today_anki_day = int((time.time() - crt) / 86400)
+        # Get current Anki day index
+        crt = cur.execute("SELECT crt FROM col").fetchone()[0]
+        today_anki_day = int((time.time() - crt) / 86400)
 
-    # 1. Decks metadata
-    raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
-    decks_info = {}
-    for did, dname in raw_decks:
-        clean_name = clean_display_name(dname)
-        parent_topic = extract_parent_topic(dname)
-        decks_info[did] = {
-            "deck_id": did,
-            "raw_name": dname,
-            "anki_name": clean_name,
-            "parent_topic": parent_topic,
-        }
+        # 1. Decks metadata
+        raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
+        decks_info = {}
+        for did, dname in raw_decks:
+            clean_name = clean_display_name(dname)
+            parent_topic = extract_parent_topic(dname)
+            decks_info[did] = {
+                "deck_id": did,
+                "raw_name": dname,
+                "anki_name": clean_name,
+                "parent_topic": parent_topic,
+            }
 
-    # 2. Card stats per deck
-    card_sql = """
-        SELECT 
-            c.did,
-            count(c.id) as total_cards,
-            sum(case when c.queue = 0 then 1 else 0 end) as new_cards,
-            sum(case when c.queue in (1, 3) then 1 else 0 end) as learning_cards,
-            sum(case when c.queue = 2 and c.ivl >= 21 then 1 else 0 end) as mature_cards,
-            sum(case when c.queue = 2 and c.ivl < 21 then 1 else 0 end) as young_cards,
-            sum(case when c.queue = 1 or (c.queue = 2 and c.due <= ?) then 1 else 0 end) as due_cards,
-            avg(case when c.factor > 0 then c.factor else null end) as avg_factor,
-            sum(case when c.queue in (1, 2, 3) or c.reps > 0 then 1 else 0 end) as cards_studied
-        FROM cards c
-        GROUP BY c.did
-    """
-    card_data = {r[0]: r for r in cur.execute(card_sql, (today_anki_day,)).fetchall()}
+        # 2. Card stats per deck
+        card_sql = """
+            SELECT 
+                c.did,
+                count(c.id) as total_cards,
+                sum(case when c.queue = 0 then 1 else 0 end) as new_cards,
+                sum(case when c.queue in (1, 3) then 1 else 0 end) as learning_cards,
+                sum(case when c.queue = 2 and c.ivl >= 21 then 1 else 0 end) as mature_cards,
+                sum(case when c.queue = 2 and c.ivl < 21 then 1 else 0 end) as young_cards,
+                sum(case when c.queue = 1 or (c.queue = 2 and c.due <= ?) then 1 else 0 end) as due_cards,
+                avg(case when c.factor > 0 then c.factor else null end) as avg_factor,
+                sum(case when c.queue in (1, 2, 3) or c.reps > 0 then 1 else 0 end) as cards_studied
+            FROM cards c
+            GROUP BY c.did
+        """
+        card_data = {r[0]: r for r in cur.execute(card_sql, (today_anki_day,)).fetchall()}
 
-    # 3. Revlog stats per deck (scoped strictly to active semester, excluding card resets type=4)
-    now_dt = datetime.now()
-    today_midnight = datetime(now_dt.year, now_dt.month, now_dt.day)
-    today_start_ts = int(today_midnight.timestamp() * 1000)
-    seven_days_ts = int((today_midnight - timedelta(days=7)).timestamp() * 1000)
-    fourteen_days_ts = int((today_midnight - timedelta(days=14)).timestamp() * 1000)
+        # 3. Revlog stats per deck (scoped strictly to active semester, excluding card resets type=4)
+        now_dt = datetime.now()
+        today_midnight = datetime(now_dt.year, now_dt.month, now_dt.day)
+        today_start_ts = int(today_midnight.timestamp() * 1000)
+        seven_days_ts = int((today_midnight - timedelta(days=7)).timestamp() * 1000)
+        fourteen_days_ts = int((today_midnight - timedelta(days=14)).timestamp() * 1000)
 
-    rev_sql = """
-        SELECT 
-            c.did,
-            count(r.id) as total_reviews,
-            sum(case when r.ease in (2, 3, 4) then 1 else 0 end) as pass_reviews,
-            sum(case when r.ease = 1 then 1 else 0 end) as fail_reviews,
-            -- Semester true reviews (type 1=Review, 2=Relearn, 3=Cram)
-            sum(case when r.type in (1, 2, 3) then 1 else 0 end) as rep_reviews,
-            sum(case when r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as rep_passes,
-            -- Learn steps (type 0)
-            sum(case when r.type = 0 then 1 else 0 end) as learn_reviews,
-            sum(case when r.type = 0 and r.ease in (2, 3, 4) then 1 else 0 end) as learn_passes,
-            max(r.id) as last_rev_ts,
-            sum(r.time) as total_time_ms,
-            -- Today (since 00:00)
-            sum(case when r.id >= ? then 1 else 0 end) as today_reviews,
-            sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as today_passes,
-            sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as today_rep_reviews,
-            sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as today_rep_passes,
-            -- Last 7 days
-            sum(case when r.id >= ? then 1 else 0 end) as week_reviews,
-            sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as week_passes,
-            sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as week_rep_reviews,
-            sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as week_rep_passes,
-            -- Last 14 days (2 weeks)
-            sum(case when r.id >= ? then 1 else 0 end) as two_weeks_reviews,
-            sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as two_weeks_passes,
-            sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as two_weeks_rep_reviews,
-            sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as two_weeks_rep_passes
-        FROM revlog r
-        JOIN cards c ON r.cid = c.id
-        WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
-        GROUP BY c.did
-    """
-    rev_params = (
-        today_start_ts, today_start_ts, today_start_ts, today_start_ts,
-        seven_days_ts, seven_days_ts, seven_days_ts, seven_days_ts,
-        fourteen_days_ts, fourteen_days_ts, fourteen_days_ts, fourteen_days_ts,
-        SEMESTER_START_TS,
-    )
-    rev_data = {r[0]: r for r in cur.execute(rev_sql, rev_params).fetchall()}
-    conn.close()
+        rev_sql = """
+            SELECT 
+                c.did,
+                count(r.id) as total_reviews,
+                sum(case when r.ease in (2, 3, 4) then 1 else 0 end) as pass_reviews,
+                sum(case when r.ease = 1 then 1 else 0 end) as fail_reviews,
+                -- Semester true reviews (type 1=Review, 2=Relearn, 3=Cram)
+                sum(case when r.type in (1, 2, 3) then 1 else 0 end) as rep_reviews,
+                sum(case when r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as rep_passes,
+                -- Learn steps (type 0)
+                sum(case when r.type = 0 then 1 else 0 end) as learn_reviews,
+                sum(case when r.type = 0 and r.ease in (2, 3, 4) then 1 else 0 end) as learn_passes,
+                max(r.id) as last_rev_ts,
+                sum(r.time) as total_time_ms,
+                -- Today (since 00:00)
+                sum(case when r.id >= ? then 1 else 0 end) as today_reviews,
+                sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as today_passes,
+                sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as today_rep_reviews,
+                sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as today_rep_passes,
+                -- Last 7 days
+                sum(case when r.id >= ? then 1 else 0 end) as week_reviews,
+                sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as week_passes,
+                sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as week_rep_reviews,
+                sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as week_rep_passes,
+                -- Last 14 days (2 weeks)
+                sum(case when r.id >= ? then 1 else 0 end) as two_weeks_reviews,
+                sum(case when r.id >= ? and r.ease in (2, 3, 4) then 1 else 0 end) as two_weeks_passes,
+                sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as two_weeks_rep_reviews,
+                sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as two_weeks_rep_passes
+            FROM revlog r
+            JOIN cards c ON r.cid = c.id
+            WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
+            GROUP BY c.did
+        """
+        rev_params = (
+            today_start_ts, today_start_ts, today_start_ts, today_start_ts,
+            seven_days_ts, seven_days_ts, seven_days_ts, seven_days_ts,
+            fourteen_days_ts, fourteen_days_ts, fourteen_days_ts, fourteen_days_ts,
+            SEMESTER_START_TS,
+        )
+        rev_data = {r[0]: r for r in cur.execute(rev_sql, rev_params).fetchall()}
 
     all_decks = []
     total_reviews_all = 0

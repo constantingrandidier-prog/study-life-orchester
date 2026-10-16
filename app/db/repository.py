@@ -524,12 +524,23 @@ def save_daily_progress(
 
 
 def get_total_cards_completed_all_time(user_id: str = "student") -> int:
-    """Sum of all completed cards across historical progress logs."""
+    """Sum of all completed cards across historical progress logs or actual Anki curriculum state."""
+    db_total = 0
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT COALESCE(SUM(cards_completed), 0) FROM daily_progress_logs WHERE user_id = ?", (user_id,))
         row = cursor.fetchone()
-        return row[0] if row else 0
+        db_total = row[0] if row else 0
+
+    if user_id == "student":
+        try:
+            from app.services.curriculum_roadmap_service import get_actual_curriculum_cards_learned
+            actual = get_actual_curriculum_cards_learned()
+            if actual > 0:
+                return max(db_total, actual)
+        except Exception:
+            pass
+    return db_total
 
 
 # ============================================================================

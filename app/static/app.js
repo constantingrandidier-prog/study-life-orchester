@@ -1802,7 +1802,7 @@ function updateMissionKpiStrip() {
   }
 
   if (timeSpentSub) {
-    if (mins > 0 || repsDone > 0 || newDone > 0) {
+    if (totalDone > 0 && mins > 0) {
       timeSpentSub.style.display = 'block';
       const hours = Math.floor(mins / 60);
       const remMins = Math.round(mins % 60);
@@ -1812,7 +1812,15 @@ function updateMissionKpiStrip() {
       } else {
         timeSpentSub.textContent = `⏱️ ${timeFormatted} Lernzeit • ${repsDone} Repetitionen + ${newDone} neue (${totalReviews} Reviews)`;
       }
+    } else {
+      timeSpentSub.style.display = 'none';
     }
+  }
+
+  // Dynamic sync of sub-headline advice when 0 completed today
+  const adviceEl = document.getElementById('pacingAdviceText');
+  if (adviceEl && totalDone === 0 && baseNew > 0 && !(pacing && pacing.is_rest_day)) {
+    adviceEl.textContent = `Heutiges Soll: ${baseNew} neue Karten + ${repsDue} Wiederholungen (${totalTarget} gesamt). Exakt im Plan für den 19.01.2027!`;
   }
 
   // 3. Box 3: Fällig in Anki
@@ -1885,8 +1893,10 @@ function renderExamPacing(data) {
   }
 
   const readinessVal = document.getElementById('pacingReadinessVal');
+  const bufferDays = document.getElementById('pacingBufferDays');
   const bufferSub = document.getElementById('pacingBufferSub');
   if (readinessVal) readinessVal.textContent = `${data.exam_readiness_score}%`;
+  if (bufferDays && data.revision_buffer_days != null) bufferDays.textContent = data.revision_buffer_days;
   if (bufferSub) bufferSub.textContent = `${data.revision_buffer_days} Tage Puffer ab ${data.revision_start_date}`;
 
   // 4. Progress Bar & Advice
@@ -6475,6 +6485,8 @@ window.toggleTopicDetails = toggleTopicDetails;
 // Auto-sync Anki desktop periodically every 30 seconds
 setInterval(() => {
   loadAnkiDesktopStatus(false);
+  if (typeof loadExamPacing === 'function') loadExamPacing();
+  if (typeof loadCurriculumToday === 'function') loadCurriculumToday(false);
   loadWorkloadForecast(false);
   loadAnkiWeaknesses();
   if (typeof loadDeckStats === 'function') loadDeckStats(false);
@@ -6484,11 +6496,15 @@ setInterval(() => {
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     loadAnkiDesktopStatus(false);
+    if (typeof loadExamPacing === 'function') loadExamPacing();
+    if (typeof loadCurriculumToday === 'function') loadCurriculumToday(false);
     if (typeof loadDeckStats === 'function') loadDeckStats(false);
   }
 });
 window.addEventListener('focus', () => {
   loadAnkiDesktopStatus(false);
+  if (typeof loadExamPacing === 'function') loadExamPacing();
+  if (typeof loadCurriculumToday === 'function') loadCurriculumToday(false);
   if (typeof loadDeckStats === 'function') loadDeckStats(false);
 });
 

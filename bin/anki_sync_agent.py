@@ -7,23 +7,17 @@ import urllib.request
 import subprocess
 from pathlib import Path
 
-# Redirect stdout and stderr for pythonw.exe (windowless mode on Windows)
+import ctypes
+import traceback
+
+# Unconditionally redirect stdout and stderr to log file for background execution
 _log_p = Path(__file__).resolve().parent / "anki_sync.log"
 try:
-    if sys.stdout is None:
-        sys.stdout = open(_log_p, "a", encoding="utf-8", buffering=1)
-    else:
-        sys.stdout.write("")
+    _log_file = open(_log_p, "a", encoding="utf-8", buffering=1)
+    sys.stdout = _log_file
+    sys.stderr = _log_file
 except Exception:
-    sys.stdout = open(_log_p, "a", encoding="utf-8", buffering=1)
-
-try:
-    if sys.stderr is None:
-        sys.stderr = sys.stdout
-    else:
-        sys.stderr.write("")
-except Exception:
-    sys.stderr = sys.stdout
+    pass
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.services.anki_desktop_sync import read_live_anki_desktop_state, find_local_anki_collection
@@ -160,29 +154,25 @@ def sync_now(trigger_anki_sync: bool = True):
         if synced:
             time.sleep(0.5)  # Wait for SQLite file lock/write buffers to settle
 
-    # 1. Sync all past days since semester start (once per day to keep sync fast)
+    # 1. Sync yesterday once per day to ensure rollover from iPad/midnight is clean
     today = date.today()
     if _last_history_sync_date != today:
         try:
-            sem_start = date(2026, 9, 14)
-            curr = sem_start
-            while curr < today:
-                past_str = curr.isoformat()
-                past_state = read_live_anki_desktop_state(target_date_str=past_str)
-                for base in targets:
-                    post_json(f"{base}/desktop-sync", past_state, timeout=10.0)
-                curr += timedelta(days=1)
+            yesterday_str = (today - timedelta(days=1)).isoformat()
+            yesterday_state = read_live_anki_desktop_state(target_date_str=yesterday_str)
+            for base in targets:
+                post_json(f"{base}/desktop-sync", yesterday_state, timeout=10.0)
             _last_history_sync_date = today
         except Exception as e:
-            print("Semester history sync error:", e, flush=True)
+            log_msg(f"[WARN] Yesterday sync note: {e}")
 
-    # 2. Sync today's state
+    # 2. Sync today's live state
     try:
         state = read_live_anki_desktop_state()
         for base in targets:
             post_json(f"{base}/desktop-sync", state)
     except Exception as e:
-        print("Today sync error:", e, flush=True)
+        log_msg(f"[ERROR] Today sync error: {e}")
         state = {}
 
     # 3. Sync 14-day workload forecast
@@ -191,7 +181,7 @@ def sync_now(trigger_anki_sync: bool = True):
         for base in targets:
             post_json(f"{base}/workload-sync", forecast)
     except Exception as e:
-        print("Forecast sync error:", e, flush=True)
+        log_msg(f"[ERROR] Forecast sync error: {e}")
         forecast = {}
 
     # 4. Sync topic triage
@@ -200,7 +190,7 @@ def sync_now(trigger_anki_sync: bool = True):
         for base in targets:
             post_json(f"{base}/triage-sync", triage)
     except Exception as e:
-        print("Triage sync error:", e, flush=True)
+        log_msg(f"[ERROR] Triage sync error: {e}")
 
     # 5. Sync weaknesses & full deck tree
     try:
@@ -209,7 +199,7 @@ def sync_now(trigger_anki_sync: bool = True):
         for base in targets:
             post_json(f"{base}/weaknesses-sync", weaknesses)
     except Exception as e:
-        print("Weakness sync error:", e, flush=True)
+        log_msg(f"[ERROR] Weakness sync error: {e}")
 
     # 6. Sync comprehensive deck stats & retention
     try:
@@ -235,79 +225,85 @@ def log_msg(msg: str):
     now_str = time.strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{now_str}] {msg}\n"
     try:
-        if sys.stdout and hasattr(sys.stdout, "write"):
-            sys.stdout.write(line)
-            sys.stdout.flush()
-    except Exception:
-        pass
-    try:
         with open(_log_p, "a", encoding="utf-8") as f:
             f.write(line)
     except Exception:
         pass
 
 
-_INSTANCE_LOCK = None
+_INSTANCE_MUTEX = None
+ERROR_ALREADY_EXISTS = 183
 
 def acquire_single_instance_lock():
-    """Ensure only one instance of anki_sync_agent runs concurrently."""
-    global _INSTANCE_LOCK
-    lock_path = Path(__file__).resolve().parent / ".anki_sync.lock"
+    """Ensure only one instance of anki_sync_agent runs concurrently using Windows Named Mutex."""
+    global _INSTANCE_MUTEX
     try:
-        import msvcrt
-        f = open(lock_path, "a+")
-        try:
-            msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
-            _INSTANCE_LOCK = f
-            return f
-        except (IOError, OSError):
+        mutex_name = "Global\\StudyLifeAnkiSyncAgentMutex"
+        mutex = ctypes.windll.kernel32.CreateMutexW(None, False, mutex_name)
+        last_error = ctypes.windll.kernel32.GetLastError()
+        if last_error == ERROR_ALREADY_EXISTS:
+            if mutex:
+                ctypes.windll.kernel32.CloseHandle(mutex)
             return None
-    except Exception:
-        return None
+        _INSTANCE_MUTEX = mutex
+        return mutex
+    except Exception as e:
+        log_msg(f"[WARN] Mutex creation note: {e}")
+        return True
 
 
 if __name__ == "__main__":
-    if "--once" in sys.argv:
-        sync_now(trigger_anki_sync=True)
-    else:
-        lock = acquire_single_instance_lock()
-        if lock is None:
-            # Another instance is already running silently in background
-            sys.exit(0)
-
-        col = find_local_anki_collection()
-        last_mtime = 0
-        last_periodic = 0
-        log_msg("[START] Anki Live Sync Agent running (Silent background AnkiWeb & Render data sync)...")
-        try:
+    try:
+        if "--once" in sys.argv:
             sync_now(trigger_anki_sync=True)
-            last_periodic = time.time()
-        except Exception:
-            pass
+        else:
+            lock = acquire_single_instance_lock()
+            if lock is None:
+                # Another instance is already running silently in background
+                sys.exit(0)
 
-        while True:
+            col = find_local_anki_collection()
+            last_mtime = 0
+            last_periodic = 0
+            log_msg("[START] Anki Live Sync Agent running (Silent background AnkiWeb & Render data sync)...")
             try:
-                now = time.time()
-                file_changed = False
-                if not col or not col.exists():
-                    col = find_local_anki_collection()
+                sync_now(trigger_anki_sync=True)
+                last_periodic = time.time()
+            except Exception as e:
+                log_msg(f"[WARN] Initial sync note: {e}")
 
-                if col and col.exists():
-                    m = col.stat().st_mtime
-                    if m != last_mtime:
-                        last_mtime = m
-                        file_changed = True
+            while True:
+                try:
+                    now = time.time()
+                    file_changed = False
+                    if not col or not col.exists():
+                        col = find_local_anki_collection()
 
-                # Every 60s: trigger AnkiWeb sync (pulls iPad progress) + push metrics to cloud
-                # If local file changed outside periodic sync: push immediately without extra AnkiWeb trigger
-                if now - last_periodic >= 60:
-                    sync_now(trigger_anki_sync=True)
-                    last_periodic = now
                     if col and col.exists():
-                        last_mtime = col.stat().st_mtime
-                elif file_changed:
-                    sync_now(trigger_anki_sync=False)
-                    last_periodic = now
-            except Exception as exc:
-                print(f"Sync loop note: {exc}", flush=True)
-            time.sleep(2)
+                        wal = col.with_name(col.name + "-wal")
+                        wal_m = wal.stat().st_mtime if wal.exists() else 0
+                        m = max(col.stat().st_mtime, wal_m)
+                        if last_mtime == 0:
+                            last_mtime = m
+                        elif m != last_mtime:
+                            last_mtime = m
+                            file_changed = True
+
+                    # Every 60s: trigger AnkiWeb sync (pulls iPad progress) + push metrics to cloud
+                    # If local file changed (WAL updated from reviews): push immediately without extra AnkiWeb trigger
+                    if now - last_periodic >= 60:
+                        sync_now(trigger_anki_sync=True)
+                        last_periodic = now
+                        if col and col.exists():
+                            wal = col.with_name(col.name + "-wal")
+                            wal_m = wal.stat().st_mtime if wal.exists() else 0
+                            last_mtime = max(col.stat().st_mtime, wal_m)
+                    elif file_changed:
+                        log_msg("[LIVE-TRIGGER] Lokale Anki-Aktivitaet (WAL) erkannt -> Synchronisiere sofort...")
+                        sync_now(trigger_anki_sync=False)
+                        last_periodic = now
+                except Exception as exc:
+                    log_msg(f"[ERROR] Sync loop exception: {exc}")
+                time.sleep(2)
+    except Exception as fatal:
+        log_msg(f"[FATAL] Sync agent crashed: {fatal}\n{traceback.format_exc()}")

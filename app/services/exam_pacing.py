@@ -130,73 +130,16 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
             elapsed_learning_days += 1
         e_day += timedelta(days=1)
 
-    # Cards completed strictly before curr_date
-    from app.db.repository import get_db_connection
-    cards_completed_prior = 0
-    try:
-        with get_db_connection() as conn:
-            cur = conn.cursor()
-            cur.execute(
-                "SELECT COALESCE(SUM(cards_completed), 0) FROM daily_progress_logs WHERE user_id = ? AND log_date < ?",
-                (user_id, curr_date.isoformat())
-            )
-            cards_completed_prior = cur.fetchone()[0] or 0
-    except Exception:
-        cards_completed_prior = 0
-
-    expected_cards_prior = elapsed_learning_days * base_daily_quota
-    cumulative_backlog = max(0, expected_cards_prior - cards_completed_prior)
-    backlog_spread_per_day = math.ceil(cumulative_backlog / max(1, learning_days_remaining)) if (cumulative_backlog > 0 and learning_days_remaining > 0) else 0
-
-    # Remaining cards to complete across remaining learning days
-    remaining_curriculum_cards_for_quota = max(0, total_curriculum_cards - cards_completed_prior)
-
-    # Calculate daily target
-    if is_rest_day or is_revision_phase:
-        daily_target_cards = 0
-    else:
-        daily_target_cards = math.ceil(remaining_curriculum_cards_for_quota / max(1, learning_days_remaining))
-        try:
-            from app.services.curriculum_roadmap_service import generate_curriculum_roadmap
-            rdm = generate_curriculum_roadmap(target_date=curr_date, sync_active_day=False, user_id=user_id)
-            date_iso = curr_date.isoformat()
-            for d in rdm.get("schedule", []):
-                if d.get("date") == date_iso:
-                    if not d.get("is_rest_day") and d.get("target_cards", 0) > 0:
-                        daily_target_cards = d["target_cards"]
-                    break
-        except Exception:
-            pass
-
-    # Detailed backlog explanation
-    if is_rest_day:
-        backlog_explanation = f"Eingeplanter Ruhetag: {rest_day_reason}"
-    elif cumulative_backlog > 0:
-        theoretical_target = base_daily_quota + backlog_spread_per_day
-        if daily_target_cards != theoretical_target:
-            backlog_explanation = (
-                f"⚖️ +{backlog_spread_per_day} Karten/Tag Richtwert aus kumulativem Rückstand "
-                f"({cumulative_backlog} Karten Rückstand aus {elapsed_learning_days} Tagen über {learning_days_remaining} verbleibende Lerntage verteilt: "
-                f"Soll-Schnitt {base_daily_quota} + {backlog_spread_per_day} = {theoretical_target} Karten/Tag; "
-                f"heute didaktisch zugeteilt: {daily_target_cards} neue Karten aus ganzen Vorlesungs-Decks)."
-            )
-        else:
-            backlog_explanation = (
-                f"⚖️ +{backlog_spread_per_day} Karten/Tag aus kumulativem Rückstand "
-                f"({cumulative_backlog} Karten Rückstand aus {elapsed_learning_days} Tagen über {learning_days_remaining} verbleibende Lerntage verteilt: "
-                f"Basis {base_daily_quota} + {backlog_spread_per_day} = {daily_target_cards} neue Karten heute)."
-            )
-    elif cards_completed_prior > expected_cards_prior:
-        surplus = cards_completed_prior - expected_cards_prior
-        backlog_explanation = (
-            f"🎉 {surplus} Karten Vorsprung erarbeitet! Dein Tagespensum ist entlastet "
-            f"({daily_target_cards} statt Basis {base_daily_quota} neue Karten heute)."
-        )
-    else:
-        backlog_explanation = f"Standard-Tagesziel von {daily_target_cards} neuen Karten (Voll im Soll)."
-
     # All-time card progress metrics (including today)
     total_cards_completed = get_total_cards_completed_all_time(user_id=user_id)
+    if user_id == "student":
+        try:
+            from app.services.curriculum_roadmap_service import get_actual_curriculum_cards_learned
+            actual_curr_learned = get_actual_curriculum_cards_learned()
+            if actual_curr_learned > 0:
+                total_cards_completed = max(total_cards_completed, actual_curr_learned)
+        except Exception:
+            pass
     remaining_curriculum_cards = max(0, total_curriculum_cards - total_cards_completed)
 
     # Today's actual logged cards (auto-synchronized with Anki Desktop - ONLY NEW CARDS)
@@ -218,6 +161,96 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
 
     if cards_completed_today == 0 and today_log:
         cards_completed_today = today_log.get("cards_completed", 0)
+
+    # Cards completed strictly before curr_date
+    from app.db.repository import get_db_connection
+    cards_completed_prior = 0
+    try:
+        with get_db_connection() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT COALESCE(SUM(cards_completed), 0) FROM daily_progress_logs WHERE user_id = ? AND log_date < ?",
+                (user_id, curr_date.isoformat())
+            )
+            cards_completed_prior = cur.fetchone()[0] or 0
+    except Exception:
+        cards_completed_prior = 0
+
+    if user_id == "student":
+        cards_completed_prior = max(0, total_cards_completed - cards_completed_today)
+
+    expected_cards_prior = elapsed_learning_days * base_daily_quota
+    prior_backlog = max(0, expected_cards_prior - cards_completed_prior)
+
+    # Remaining cards to complete across remaining learning days
+    remaining_curriculum_cards_for_quota = max(0, total_curriculum_cards - cards_completed_prior)
+
+    # Calculate daily target
+    if is_rest_day or is_revision_phase:
+        daily_target_cards = 0
+    else:
+        daily_target_cards = math.ceil(remaining_curriculum_cards_for_quota / max(1, learning_days_remaining))
+        try:
+            from app.services.curriculum_roadmap_service import generate_curriculum_roadmap
+            rdm = generate_curriculum_roadmap(target_date=curr_date, sync_active_day=False, user_id=user_id)
+            date_iso = curr_date.isoformat()
+            for d in rdm.get("schedule", []):
+                if d.get("date") == date_iso:
+                    if not d.get("is_rest_day") and d.get("target_cards", 0) > 0:
+                        daily_target_cards = d["target_cards"]
+                    break
+        except Exception:
+            pass
+
+    if is_rest_day:
+        cumulative_backlog = max(0, prior_backlog - cards_completed_today)
+        effective_rem_days = max(1, learning_days_remaining)
+        backlog_spread_per_day = math.ceil(cumulative_backlog / effective_rem_days) if (cumulative_backlog > 0 and effective_rem_days > 0) else 0
+    else:
+        # On an active learning day:
+        # Today's baseline is base_daily_quota.
+        # Any cards completed today beyond base_daily_quota directly reduce the cumulative backlog!
+        if cards_completed_today > base_daily_quota:
+            surplus_today = cards_completed_today - base_daily_quota
+            cumulative_backlog = max(0, prior_backlog - surplus_today)
+        else:
+            cumulative_backlog = prior_backlog
+
+        # If today's target is already completed, the spread applies to the remaining days after today
+        if cards_completed_today >= daily_target_cards and daily_target_cards > 0:
+            effective_rem_days = max(1, learning_days_remaining - 1)
+        else:
+            effective_rem_days = max(1, learning_days_remaining)
+
+        backlog_spread_per_day = math.ceil(cumulative_backlog / effective_rem_days) if (cumulative_backlog > 0 and effective_rem_days > 0) else 0
+
+    # Detailed backlog explanation
+    if is_rest_day:
+        backlog_explanation = f"Eingeplanter Ruhetag: {rest_day_reason}"
+    elif cumulative_backlog > 0:
+        theoretical_target = base_daily_quota + backlog_spread_per_day
+        evaluated_days = elapsed_learning_days + 1 if (cards_completed_today >= daily_target_cards and daily_target_cards > 0) else elapsed_learning_days
+        if daily_target_cards != theoretical_target:
+            backlog_explanation = (
+                f"⚖️ +{backlog_spread_per_day} Karten/Tag Richtwert aus kumulativem Rückstand "
+                f"({cumulative_backlog} Karten Rückstand aus {evaluated_days} Tagen über {effective_rem_days} verbleibende Lerntage verteilt: "
+                f"Soll-Schnitt {base_daily_quota} + {backlog_spread_per_day} = {theoretical_target} Karten/Tag; "
+                f"heute didaktisch zugeteilt: {daily_target_cards} neue Karten aus ganzen Vorlesungs-Decks)."
+            )
+        else:
+            backlog_explanation = (
+                f"⚖️ +{backlog_spread_per_day} Karten/Tag aus kumulativem Rückstand "
+                f"({cumulative_backlog} Karten Rückstand aus {evaluated_days} Tagen über {effective_rem_days} verbleibende Lerntage verteilt: "
+                f"Basis {base_daily_quota} + {backlog_spread_per_day} = {daily_target_cards} neue Karten heute)."
+            )
+    elif cards_completed_prior > expected_cards_prior:
+        surplus = cards_completed_prior - expected_cards_prior
+        backlog_explanation = (
+            f"🎉 {surplus} Karten Vorsprung erarbeitet! Dein Tagespensum ist entlastet "
+            f"({daily_target_cards} statt Basis {base_daily_quota} neue Karten heute)."
+        )
+    else:
+        backlog_explanation = f"Standard-Tagesziel von {daily_target_cards} neuen Karten (Voll im Soll)."
 
     cards_remaining_today = max(0, daily_target_cards - cards_completed_today)
 
@@ -250,15 +283,30 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
     due_reviews = 0
     weakness_summary = None
     try:
+        from app.services.anki_desktop_sync import get_cached_desktop_sync_state
+        cached_sync = get_cached_desktop_sync_state(target_date_str=curr_date_str)
+        if cached_sync and cached_sync.get("due_today_count") is not None:
+            due_reviews = int(cached_sync.get("due_today_count", 0))
+    except Exception:
+        pass
+
+    if due_reviews == 0:
+        try:
+            from app.services.anki_weakness_service import get_anki_due_and_weaknesses
+            anki_info = get_anki_due_and_weaknesses()
+            due_reviews = anki_info.get("due_reviews_count", 0)
+        except Exception:
+            due_reviews = 0
+
+    try:
         from app.services.anki_weakness_service import get_anki_due_and_weaknesses
         anki_info = get_anki_due_and_weaknesses()
-        due_reviews = anki_info.get("due_reviews_count", 0)
         weaks = anki_info.get("weakness_topics", [])
         if weaks:
             top_w = weaks[0]
             weakness_summary = f"⚠️ Schwachstelle: {top_w['deck_name']} ({top_w['fail_rate']}% Fehler)"
     except Exception:
-        due_reviews = 0
+        pass
 
     total_daily_cards_needed = daily_target_cards + due_reviews
 

@@ -25,10 +25,10 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschleunigt die gesamte Glykolyse da: F-6-P → F-1,6-BP beschleunigt wird und F-1,6-BP ein allosterischer Aktivator der Pyruvat",
       "hy_terms_detected": [
-        "glykolyse",
-        "pfk-1",
         "pfk-2",
-        "phosphat"
+        "phosphat",
+        "pfk-1",
+        "glykolyse"
       ]
     },
     {
@@ -52,9 +52,9 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase, PFK-1, Pyruvatkinase & PFK-2/ FBPase-2",
       "hy_terms_detected": [
-        "glykolyse",
+        "pfk-2",
         "pfk-1",
-        "pfk-2"
+        "glykolyse"
       ]
     },
     {
@@ -78,9 +78,9 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Wie ist die Wirkung von ChREBP?",
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
-        "glykolyse",
+        "pfk-2",
         "pfk-1",
-        "pfk-2"
+        "glykolyse"
       ]
     },
     {
@@ -104,9 +104,9 @@
       "front_snippet": "Hypothalamus-HVL-Nebennierenrinden-Achse (glandotrop) Was läuft ab? Feedback Mechanismus?",
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona glomerulosa ⇒ Wirkung Feed-Back Mechanismus ➢ Cortisol hemmt im Hypothalamus und in der Adenohypophyse die Freisetzung ",
       "hy_terms_detected": [
-        "aldosteron",
         "cortisol",
-        "acth"
+        "acth",
+        "aldosteron"
       ]
     },
     {
@@ -154,8 +154,8 @@
       "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
       "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
       "hy_terms_detected": [
-        "aldosteron",
-        "cortisol"
+        "cortisol",
+        "aldosteron"
       ]
     },
     {
@@ -423,11 +423,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "hämoglobin",
-        "epo",
         "po2",
         "thrombose",
-        "hypoxie"
+        "hämoglobin",
+        "hypoxie",
+        "epo"
       ]
     },
     {
@@ -451,11 +451,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "hämoglobin",
-        "epo",
         "po2",
         "thrombose",
-        "hypoxie"
+        "hämoglobin",
+        "hypoxie",
+        "epo"
       ]
     },
     {
@@ -480,10 +480,10 @@
       "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intraz",
       "hy_terms_detected": [
         "adrenalin",
-        "noradrenalin",
-        "glykolyse",
         "insulin",
-        "t4"
+        "t4",
+        "glykolyse",
+        "noradrenalin"
       ]
     },
     {
@@ -507,10 +507,10 @@
       "front_snippet": "Wie wirkt Kortisol?",
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
-        "tsh",
+        "insulin",
         "inr",
         "glykolyse",
-        "insulin"
+        "tsh"
       ]
     },
     {
@@ -534,11 +534,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "hämoglobin",
-        "epo",
-        "po2",
         "sauerstoffbindung",
-        "hypoxie"
+        "po2",
+        "hämoglobin",
+        "hypoxie",
+        "epo"
       ]
     },
     {
@@ -562,11 +562,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "hämoglobin",
-        "epo",
-        "po2",
         "sauerstoffbindung",
-        "hypoxie"
+        "po2",
+        "hämoglobin",
+        "hypoxie",
+        "epo"
       ]
     },
     {
@@ -590,11 +590,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "hämoglobin",
-        "epo",
-        "po2",
         "sauerstoffbindung",
-        "hypoxie"
+        "po2",
+        "hämoglobin",
+        "hypoxie",
+        "epo"
       ]
     },
     {
@@ -618,11 +618,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "hämoglobin",
-        "epo",
-        "po2",
         "sauerstoffbindung",
-        "hypoxie"
+        "po2",
+        "hämoglobin",
+        "hypoxie",
+        "epo"
       ]
     }
   ],
@@ -667,9 +667,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 2,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 26,
+          "interval_days": 108,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -689,9 +689,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 2,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 27,
+          "interval_days": 106,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -729,9 +729,9 @@
           "back_snippet": "Funktion: - Adhäsion , Aggregation & Freisetzung . - Wichtig für Blutgerinnung -> Sehr formvariabel im Blut in inaktivem Zustand, bei Oberflächenkontakt (z.B. Verletzung eines Gefässes) werden sie aktiviert. Durchmesser: - 2.5 μm . Vorkommen: - 150'000-350'000",
           "hy_terms_detected": [
             "blutgerinnung",
-            "thrombozyt",
             "calcium",
-            "fibrinogen"
+            "fibrinogen",
+            "thrombozyt"
           ]
         }
       ]
@@ -752,9 +752,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 30,
+          "reps": 31,
           "lapses": 9,
-          "interval_days": 2,
+          "interval_days": 6,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -776,9 +776,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 1,
-          "interval_days": 13,
+          "interval_days": 32,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -798,9 +798,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
+          "reps": 11,
           "lapses": 2,
-          "interval_days": 5,
+          "interval_days": 11,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -853,9 +853,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 17,
+          "interval_days": 59,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -877,9 +877,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 12,
+          "reps": 13,
           "lapses": 2,
-          "interval_days": 13,
+          "interval_days": 24,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -902,9 +902,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 14,
+          "interval_days": 42,
           "card_yield_score": 77.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -917,8 +917,8 @@
           "back_snippet": "Dort kann nur ein T-Cell Receptor (TCR) mit dem Molekülkomplex interagieren, stabilisiert und ermöglicht durch CD4. Falls das Antigen als körperfremd anerkannt wird, wird die T-Zelle wird aktiviert",
           "hy_terms_detected": [
             "mhc-i",
-            "t-zell",
-            "mhc-ii"
+            "mhc-ii",
+            "t-zell"
           ]
         }
       ]
@@ -939,9 +939,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 15,
+          "interval_days": 35,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -961,9 +961,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 19,
+          "interval_days": 65,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -998,8 +998,8 @@
           "back_snippet": "Ein LFA-1 Molekül der T-Zelle interagiert mit geringer Affinität mit einem ICAM-1 der APC Nachdem der TCR dann gebunden hat, erhöht sich durch eine Konformationsänderung die Affiniät der Bindung und der Kontakt zwischen den zwei Zellen verlängert sich wenn Ant",
           "hy_terms_detected": [
             "mhc-i",
-            "t-zell",
-            "mhc-ii"
+            "mhc-ii",
+            "t-zell"
           ]
         },
         {
@@ -1068,9 +1068,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
+          "reps": 11,
           "lapses": 2,
-          "interval_days": 5,
+          "interval_days": 15,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1163,8 +1163,8 @@
           "front_snippet": "Welche sind die Unterschiede zwischen dem Blutplasma und dem Serum?",
           "back_snippet": "Das Serum ist der Überstand von geronnenem Blut (Nach Gerinnung zentrifugiert) und enthält kein Fribrinogen . Im Serum sind die Thrombozyten aktiviert ! Das Blutplasma ist aus direkt zentrifugiertem Blut und enthält Fibrinogen. —> Serum = Plasma - Gerinnungsfa",
           "hy_terms_detected": [
-            "thrombozyt",
-            "fibrinogen"
+            "fibrinogen",
+            "thrombozyt"
           ]
         },
         {
@@ -1229,9 +1229,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 13,
+          "reps": 14,
           "lapses": 3,
-          "interval_days": 12,
+          "interval_days": 29,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1251,9 +1251,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 15,
-          "lapses": 4,
-          "interval_days": 14,
+          "reps": 17,
+          "lapses": 5,
+          "interval_days": 3,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1350,9 +1350,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 13,
+          "interval_days": 49,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1383,9 +1383,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 11,
+          "reps": 12,
           "lapses": 2,
-          "interval_days": 9,
+          "interval_days": 14,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1407,9 +1407,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 4,
-          "interval_days": 3,
+          "interval_days": 9,
           "card_yield_score": 77.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1421,9 +1421,9 @@
           "front_snippet": "Was versteht man unter negativer Selektion? Wo findet sie statt?",
           "back_snippet": "Vermeidung von Autoreaktivität und Erzeugung von zentraler Toleranz gegenüber körpereigenem Gewebe (damit sie nur fremdes angreiffen) --> DP-Zellen werden durch dendritische Zellen/ mTEC an der Kortex/Mark-Grenze auf TCRs mit zu hoher Affinität für körpereigen",
           "hy_terms_detected": [
-            "t-zell",
+            "thymus",
             "negative selektion",
-            "thymus"
+            "t-zell"
           ]
         },
         {
@@ -1492,9 +1492,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
-          "lapses": 1,
-          "interval_days": 15,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 4,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1506,8 +1506,8 @@
           "front_snippet": "Was kann man über aktivierte Thrombozyten aussagen?",
           "back_snippet": "Gestaltänderung , klebrig , bilden Propfen , Membranen verschmelzen (irreversibler Prozess) sollte nur am Ort einer Blutung passieren (dürfen nicht in Venen gelangen -> Lunge -> Embolie) (passiert zu schluss der primären hämostase)",
           "hy_terms_detected": [
-            "thrombozyt",
-            "hämostase"
+            "hämostase",
+            "thrombozyt"
           ]
         },
         {
@@ -1541,9 +1541,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 16,
+          "interval_days": 46,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1610,10 +1610,10 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "3. Aktivierung : Signaltransduktion führt zu Pseudopodien und Phosphatidylserin-Präsentation an der Membran. 4. GPIIb/IIIa-Aktivierung : Der Rezeptor wechselt in seine hochaffine Form. 5. Verstärkung & Aggregation : Aktiviertes GPIIb/IIIa bindet an vWF (feste ",
           "hy_terms_detected": [
-            "thrombozyt",
-            "von-willebrand",
+            "phosphat",
             "fibrinogen",
-            "phosphat"
+            "von-willebrand",
+            "thrombozyt"
           ]
         },
         {
@@ -1637,8 +1637,8 @@
           "front_snippet": "Über welches System wird aus dem nicht-kovalenten Thrombozytenaggregat ein kovalent-verknüpfter Thrombus?",
           "back_snippet": "Über ein doppelt enzymatisches Kaskadensystem Ein extravaskuläres (exogenes) (extrinsisch) System -> aktiviert Thrombin in Sekunden ein intravaskuläres (endogenes) (intrinsisch) System -> läuft erst nach einigen Minuten an",
           "hy_terms_detected": [
-            "thrombozyt",
-            "thrombin"
+            "thrombin",
+            "thrombozyt"
           ]
         },
         {
@@ -1648,9 +1648,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
-          "lapses": 0,
-          "interval_days": 13,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 4,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1705,9 +1705,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1727,9 +1727,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1749,9 +1749,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 5,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1759,9 +1759,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Welches kommt im Herz vor: Hypertrophie oder Hyperplasie?",
-          "back": "Nur Hypertrophie der Muskelfasern, die Zahl der Kardiomyozyten ist relativ unveränderlich (auch keine Regeneration!)",
+          "back": "Nur Hypertrophie der Muskelfasern, die Zahl der Kardiomyozyten ist relativ unveränderlich (auch keine Regeneration! )",
           "front_snippet": "Welches kommt im Herz vor: Hypertrophie oder Hyperplasie?",
-          "back_snippet": "Nur Hypertrophie der Muskelfasern, die Zahl der Kardiomyozyten ist relativ unveränderlich (auch keine Regeneration!)",
+          "back_snippet": "Nur Hypertrophie der Muskelfasern, die Zahl der Kardiomyozyten ist relativ unveränderlich (auch keine Regeneration! )",
           "hy_terms_detected": []
         }
       ]
@@ -1802,9 +1802,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 4,
+          "interval_days": 14,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1826,9 +1826,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 3,
+          "interval_days": 9,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1859,9 +1859,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 4,
+          "lapses": 1,
+          "interval_days": 1,
           "card_yield_score": 49.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1869,9 +1869,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Auf welche Strukturen wirken Sympathicus/Parasympathicus hauptsächlich?",
-          "back": "Parasympathicus: Nur Sinus- und AV-Knoten, nicht aber Ventrikel Sympathicus: Sinus-, AV-Knoten und Ventrikelmuskulatur",
+          "back": "Parasympathicus: Nur Sinus - und AV -Knoten, nicht aber Ventrikel Sympathicus: Sinus -, AV-Knoten und Ventrikelmuskulatur",
           "front_snippet": "Auf welche Strukturen wirken Sympathicus/Parasympathicus hauptsächlich?",
-          "back_snippet": "Parasympathicus: Nur Sinus- und AV-Knoten, nicht aber Ventrikel Sympathicus: Sinus-, AV-Knoten und Ventrikelmuskulatur",
+          "back_snippet": "Parasympathicus: Nur Sinus - und AV -Knoten, nicht aber Ventrikel Sympathicus: Sinus -, AV-Knoten und Ventrikelmuskulatur",
           "hy_terms_detected": [
             "av-knoten"
           ]
@@ -1883,9 +1883,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1893,9 +1893,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Was versteht man unter KHK? Pathogenese?",
-          "back": "Koronare Herzkrankheit Entsteht bei arteriosklerotisch veränderten Koronargefässen, sodass besonders die inneren Herzschichten (subendokardiale Region) nicht zureichend mit Sauerstoff versorgt werden können. --> Angina Pectoris: Kein kompletter Verschluss, Symptome kommen und gehen --> Im Extremfall kommt es durch Isch",
+          "back": "Koronare Herzkrankheit Entsteht bei arteriosklerotisch veränderten Koronargefässen, sodass besonders die inneren Herzschichten ( subendokardiale Region) nicht zureichend mit Sauerstoff versorgt werden können. --> Angina Pectoris : Kein kompletter Verschluss, Symptome kommen und gehen --> Im Extremfall kommt es durch Is",
           "front_snippet": "Was versteht man unter KHK? Pathogenese?",
-          "back_snippet": "Koronare Herzkrankheit Entsteht bei arteriosklerotisch veränderten Koronargefässen, sodass besonders die inneren Herzschichten (subendokardiale Region) nicht zureichend mit Sauerstoff versorgt werden können. --> Angina Pectoris: Kein kompletter Verschluss, Sym",
+          "back_snippet": "Koronare Herzkrankheit Entsteht bei arteriosklerotisch veränderten Koronargefässen, sodass besonders die inneren Herzschichten ( subendokardiale Region) nicht zureichend mit Sauerstoff versorgt werden können. --> Angina Pectoris : Kein kompletter Verschluss, S",
           "hy_terms_detected": []
         }
       ]
@@ -1938,9 +1938,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 9,
+          "reps": 10,
           "lapses": 2,
-          "interval_days": 1,
+          "interval_days": 4,
           "card_yield_score": 78.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1994,9 +1994,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 10,
+          "interval_days": 29,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2008,8 +2008,8 @@
           "front_snippet": "Was geschieht wenn die Atrien vollständig depolarisiert sind?",
           "back_snippet": "Isoelektrische Strecke (PQ) —> Kein Signal das wirklich ausgedrückt wird (Ladungsunterschiede werden durch den Körper ausgeglichen). Weiterleitung über AV-Knoten ist nicht sichtbar, da dieser zu klein ist. Durch elektrische Isolation der Ventilebene kann nur ü",
           "hy_terms_detected": [
-            "epo",
-            "av-knoten"
+            "av-knoten",
+            "epo"
           ]
         },
         {
@@ -2019,9 +2019,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 0,
-          "interval_days": 9,
+          "interval_days": 24,
           "card_yield_score": 86.0,
           "is_kprim_trap": true,
           "trap_type": "high_yield_core",
@@ -2033,10 +2033,10 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "epo",
-            "ekg",
             "depolarisation",
-            "repolarisation"
+            "repolarisation",
+            "ekg",
+            "epo"
           ]
         },
         {
@@ -2081,9 +2081,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 1,
-          "interval_days": 4,
+          "interval_days": 8,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2125,9 +2125,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 4,
+          "reps": 8,
+          "lapses": 1,
+          "interval_days": 5,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2147,9 +2147,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 1,
-          "interval_days": 3,
+          "interval_days": 8,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2180,9 +2180,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 5,
+          "interval_days": 21,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2246,9 +2246,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 4,
+          "interval_days": 20,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2323,9 +2323,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 1,
+          "interval_days": 4,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2345,9 +2345,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 2,
-          "lapses": 0,
-          "interval_days": 1,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 4,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2367,7 +2367,7 @@
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
       "total_cards": 63,
       "high_yield_cards_count": 5,
-      "kprim_traps_count": 14,
+      "kprim_traps_count": 13,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 59.0,
       "sample_kprim_traps": [
@@ -2402,9 +2402,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 5,
+          "reps": 6,
           "lapses": 1,
-          "interval_days": 2,
+          "interval_days": 10,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2448,9 +2448,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
-          "lapses": 1,
-          "interval_days": 1,
+          "reps": 7,
+          "lapses": 2,
+          "interval_days": 4,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2770,8 +2770,8 @@
           "front_snippet": "Was ist die Fallot-Tetralogie?",
           "back_snippet": "Tetralogie: häufige Kombination von 4 Fehlern Zugrundeliegender Defekt: Verengter rechter Kammerausfluss aufgrund einer Verlagerung des Conusseptums. Kinder sind oft zyanotisch, da zu wenig Blut durch den Lungenkreislauf fliesst. Conusseptum trifft nicht genau",
           "hy_terms_detected": [
-            "tsh",
-            "ductus arteriosus"
+            "ductus arteriosus",
+            "tsh"
           ]
         },
         {
@@ -2917,9 +2917,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 1,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 2,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2938,10 +2938,10 @@
       "deck_id": 1789378222993,
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
       "total_cards": 24,
-      "high_yield_cards_count": 1,
-      "kprim_traps_count": 4,
+      "high_yield_cards_count": 2,
+      "kprim_traps_count": 5,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 51.3,
+      "avg_card_yield_score": 52.1,
       "sample_kprim_traps": [
         {
           "card_id": 1605004521050,
@@ -2950,9 +2950,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 5,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2966,15 +2966,37 @@
           "hy_terms_detected": []
         },
         {
+          "card_id": 1605004522358,
+          "note_id": 1605004522358,
+          "deck_id": 1789378222993,
+          "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+          "professor_name": "Dr. Selma Tuzlak",
+          "professor_institute": "Institut für Experimentelle Immunologie UZH",
+          "reps": 6,
+          "lapses": 2,
+          "interval_days": 1,
+          "card_yield_score": 50.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Wie sieht die Abhängigkeit des Cardiac output vom Blutvolumen aus? (Unter Ruhebedingungen)",
+          "back": "- Cardiac Output (CO): Bleibt bei normalen Bedingungen recht stabil, steigt bei mehr Blut und sinkt bei weniger Blut. - Schlagvolumen (SV): Steigt linear mit mehr Blut ( Frank-Starling -Mechanismus). - Herzfrequenz (HF): V-förmig (minimal bei Normalvolumen). Steigt bei zu wenig Blut ( Barorezeptorreflex ) und bei zu vi",
+          "front_snippet": "Wie sieht die Abhängigkeit des Cardiac output vom Blutvolumen aus? (Unter Ruhebedingungen)",
+          "back_snippet": "- Cardiac Output (CO): Bleibt bei normalen Bedingungen recht stabil, steigt bei mehr Blut und sinkt bei weniger Blut. - Schlagvolumen (SV): Steigt linear mit mehr Blut ( Frank-Starling -Mechanismus). - Herzfrequenz (HF): V-förmig (minimal bei Normalvolumen). S",
+          "hy_terms_detected": []
+        },
+        {
           "card_id": 1605004522961,
           "note_id": 1605004522961,
           "deck_id": 1789378222993,
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 6,
+          "lapses": 2,
+          "interval_days": 1,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2982,9 +3004,9 @@
           "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
           "card_type": "kprim_mechanism",
           "front": "Welchen Einfluss haben die Rezeptorenreflexe auf den Blutdruck-Blutvolumen-Regelkreis?",
-          "back": "Tragen zur kurzfristigen Regulation des MAP bei: Bainbridge-Effekt aktiviert Sympathikus, Baroreflex hemmt ihn",
+          "back": "Tragen zur kurzfristigen Regulation des MAP bei: Bainbridge-Effekt* aktiviert Sympathikus, Baroreflex** hemmt ihn * In Hohlvene/ Atrium -> Rückstau in Venen -> Füllungsdruck zu hoch ** In Arterien nach Herz -> zu hoher Druck aus dem Herz -> CO muss runter",
           "front_snippet": "Welchen Einfluss haben die Rezeptorenreflexe auf den Blutdruck-Blutvolumen-Regelkreis?",
-          "back_snippet": "Tragen zur kurzfristigen Regulation des MAP bei: Bainbridge-Effekt aktiviert Sympathikus, Baroreflex hemmt ihn",
+          "back_snippet": "Tragen zur kurzfristigen Regulation des MAP bei: Bainbridge-Effekt* aktiviert Sympathikus, Baroreflex** hemmt ihn * In Hohlvene/ Atrium -> Rückstau in Venen -> Füllungsdruck zu hoch ** In Arterien nach Herz -> zu hoher Druck aus dem Herz -> CO muss runter",
           "hy_terms_detected": []
         },
         {
@@ -2994,9 +3016,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 4,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3004,36 +3026,10 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Wie reagiert das Gehirn auf eine Erhöhung des arteriellen CO2 im Blut? Und was hat die Bluthirnschranke damit zu tun?",
-          "back": "CO2 kann die Blut-Hirn-Schranke passieren, nicht aber die Ionen H+ und HCO3-, sodass sich die [CO2] schnell verändert, nicht aber der pH",
+          "back": "CO2 kann die Blut-Hirn-Schranke passieren, nicht aber die Ionen H+ und HCO3-, sodass sich die [CO2] schnell verändert, nicht aber der pH -> so kann Hirn CO2 Haushalt messen ohne kurzfristige H+ Erhöhung zb durch Sprint",
           "front_snippet": "Wie reagiert das Gehirn auf eine Erhöhung des arteriellen CO2 im Blut? Und was hat die Bluthirnschranke damit zu tun?",
-          "back_snippet": "CO2 kann die Blut-Hirn-Schranke passieren, nicht aber die Ionen H+ und HCO3-, sodass sich die [CO2] schnell verändert, nicht aber der pH",
+          "back_snippet": "CO2 kann die Blut-Hirn-Schranke passieren, nicht aber die Ionen H+ und HCO3-, sodass sich die [CO2] schnell verändert, nicht aber der pH -> so kann Hirn CO2 Haushalt messen ohne kurzfristige H+ Erhöhung zb durch Sprint",
           "hy_terms_detected": []
-        },
-        {
-          "card_id": 1605019868766,
-          "note_id": 1605019868765,
-          "deck_id": 1789378222993,
-          "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
-          "professor_name": "Prof. Dr. Philipp Sommer",
-          "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 77.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Welcher nicht neuronal vermittelte Effekt wird durch Volumenrezeptoren im Niederdrucksystem ausgelöst?",
-          "back": "Dehnung von Vorhofmyozyten führt zur Freisetzung von ANP --> Blutdruckreduktion durch Vasodilatation, Hemmung der Reninsekretion der Niere (Hemmt Angiotensin- und Aldosteronproduktion), erhöhte Diurese",
-          "front_snippet": "Welcher nicht neuronal vermittelte Effekt wird durch Volumenrezeptoren im Niederdrucksystem ausgelöst?",
-          "back_snippet": "Dehnung von Vorhofmyozyten führt zur Freisetzung von ANP --> Blutdruckreduktion durch Vasodilatation, Hemmung der Reninsekretion der Niere (Hemmt Angiotensin- und Aldosteronproduktion), erhöhte Diurese",
-          "hy_terms_detected": [
-            "angiotensin",
-            "aldosteron",
-            "renin"
-          ]
         }
       ]
     },
@@ -3407,11 +3403,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
+            "t3",
+            "t4",
             "hämoglobin",
             "angiotensin",
-            "t3",
-            "erythropoietin",
-            "t4"
+            "erythropoietin"
           ]
         },
         {
@@ -4043,10 +4039,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroidea stimulierendes Hormung = Thyreotropin ) Regt in der Schilddrüse die Bildung von Thyroxin= T4 und Trijodothyronin= T3",
           "hy_terms_detected": [
-            "tsh",
-            "t3",
             "schilddrüse",
-            "t4"
+            "t3",
+            "t4",
+            "tsh"
           ]
         },
         {
@@ -4070,12 +4066,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
-            "peroxidase",
-            "inr",
-            "t3",
             "thyreoglobulin",
+            "peroxidase",
             "schilddrüse",
-            "t4"
+            "t3",
+            "t4",
+            "inr"
           ]
         },
         {
@@ -4243,10 +4239,10 @@
           "front_snippet": "Hypophosphatämie: Def, Ursachen, Symptome, Therapie?",
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
-            "inr",
-            "azidose",
+            "phosphat",
             "insulin",
-            "phosphat"
+            "azidose",
+            "inr"
           ]
         },
         {
@@ -4270,8 +4266,8 @@
           "front_snippet": "Was sind die nicht klassischen Wirkungen von Vit. D?",
           "back_snippet": "- Immunsystem! --> Calcitriol scheint die Pathogenaufnahme und -abtötung von Makrophagen zu verbessern - Hemmt Reninfreisetzung - Stimuliert Bildung von bakteriziden Substanzen",
           "hy_terms_detected": [
-            "calcitriol",
-            "renin"
+            "renin",
+            "calcitriol"
           ]
         },
         {
@@ -4629,10 +4625,10 @@
           "front_snippet": "Wie wirkt Kortisol?",
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
-            "tsh",
+            "insulin",
             "inr",
             "glykolyse",
-            "insulin"
+            "tsh"
           ]
         },
         {
@@ -4678,11 +4674,11 @@
           "front_snippet": "Wie funktioniert die Aldosteronfreisetzung über Angiotensin II?",
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
-            "epo",
+            "depolarisation",
+            "renin",
             "angiotensin",
             "aldosteron",
-            "depolarisation",
-            "renin"
+            "epo"
           ]
         }
       ]
@@ -4723,9 +4719,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 2,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 17,
+          "interval_days": 64,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4745,9 +4741,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 9,
+          "reps": 10,
           "lapses": 2,
-          "interval_days": 10,
+          "interval_days": 21,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5589,11 +5585,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
-            "calcitonin",
-            "tsh",
-            "t3",
             "schilddrüse",
-            "t4"
+            "t3",
+            "calcitonin",
+            "t4",
+            "tsh"
           ]
         }
       ]
@@ -5774,8 +5770,8 @@
           "front_snippet": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: erhöhte hepatische Cholesterin konzentration, Cholesterinhaushalt und Gallensäuresynthese und - Export ?",
           "back_snippet": "HEMMUNG von SREBP-2 ⇒ ↓ HMG-CoA-Red und ↓ LDL-Rezeptor ⟹ HEMMUNG von Synthese und Aufnahme von Cholesterin aber auch: da viel Cholesterin → Oxysterine ↑ → LXR/RXR → ↑ Synthese und Export von Gallensäuren Info am Rande: LXR erhöht auch die Transkription von SRE",
           "hy_terms_detected": [
-            "glykolyse",
-            "insulin"
+            "insulin",
+            "glykolyse"
           ]
         },
         {
@@ -5945,10 +5941,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin",
             "katecholamin",
-            "insulin"
+            "adrenalin",
+            "insulin",
+            "noradrenalin"
           ]
         },
         {
@@ -5972,10 +5968,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin",
             "katecholamin",
-            "insulin"
+            "adrenalin",
+            "insulin",
+            "noradrenalin"
           ]
         },
         {
@@ -5999,10 +5995,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin",
             "katecholamin",
-            "insulin"
+            "adrenalin",
+            "insulin",
+            "noradrenalin"
           ]
         },
         {
@@ -6026,10 +6022,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen Wie wirkt Sympathikus (über Katecholamine) auf Insulinsekretion? Beschreibe Mechanismus",
           "back_snippet": "➢ α2 → cAMP ↓ → Kalium Kanal wird nicht durch PKA/EPAC2 phosphoryliert und geschlossen ⇒ keine Depolarisation, kein Ca 2+ Einstrom, keine Insulinausschüttung ➢ β2 → cAMP ↑ → PKA und EPAC2 ↑ → K+ Kanal wird phosphoryliert & schliesst ⇒ Depolarisation ⇒ Ca 2+ Ei",
           "hy_terms_detected": [
-            "epo",
             "depolarisation",
             "katecholamin",
-            "insulin"
+            "insulin",
+            "epo"
           ]
         }
       ]
@@ -6185,9 +6181,9 @@
           "front_snippet": "Nebenniere Zona Glomerulosa: Eigenschaften evt. auslassen, kommt bei jele schon vor. hier mehr als repetition",
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Cortisol nicht bilden • Produzieren Aldosteron von Corticosteron • Aldosteron wird stimuliert von Angiotensin II (z.B. tie",
           "hy_terms_detected": [
+            "cortisol",
             "angiotensin",
-            "aldosteron",
-            "cortisol"
+            "aldosteron"
           ]
         },
         {
@@ -6233,8 +6229,8 @@
           "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
           "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         }
       ]
@@ -6293,8 +6289,8 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt Insulin auf die Glycerophosphat-Acyltransferase (GPAT)?",
           "back_snippet": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt",
           "hy_terms_detected": [
-            "insulin",
-            "phosphat"
+            "phosphat",
+            "insulin"
           ]
         },
         {
@@ -6419,8 +6415,8 @@
           "front_snippet": "Somatotropin-Wirkungsweise Was ist der GH-Rezeptor für ein Typ Rezeptor und was rekrutiert seine aktive Form? (7 P.)",
           "back_snippet": "Cyto k inrezeptor , hat keine intrinsische Tyr-Kinase-Aktivität (nicht wie Insulin-Rezeptor). nach GH-Bindung ⇒ dimerisierte Rezeptor rekrutiert JAK2-Kinase JAK2 phosphoryliert : - benachbarte JAK2 Moleküle (Transphosphorylation) - sich selbst ( Auto phosphory",
           "hy_terms_detected": [
-            "inr",
-            "insulin"
+            "insulin",
+            "inr"
           ]
         },
         {
@@ -6728,8 +6724,8 @@
           "front_snippet": "Haben Cortisol- und Aldosteron-Synthese dieselben Enzyme?",
           "back_snippet": "einige ja, aber nicht alle Cortisol-Synthese teilt fast alle Enzyme mit Aldosteron-Synthese. Das letzte Enzym der Cortisol-Synthese hat in der z.fasciculata aber nur 1 Aktivität (z. glomerulosa 3 Aktivitäten) → Cortisol-spezifisch Aldosteron hat einige zusätzl",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         },
         {
@@ -6934,11 +6930,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Was stimuliert die Synthese von: Dopamin und Noradrenalin? Was von Adrenalin?",
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
-            "adrenalin",
             "cortisol",
-            "noradrenalin",
             "katecholamin",
-            "acth"
+            "adrenalin",
+            "acth",
+            "noradrenalin"
           ]
         },
         {
@@ -6962,11 +6958,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Die Synthese von Adrenalin aus Noradrenalin wird hauptsächlich von Cortisol (← ACTH) (und unterstützend von ACh (sympath).) angeregt.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
             "cortisol",
-            "noradrenalin",
             "katecholamin",
-            "acth"
+            "adrenalin",
+            "acth",
+            "noradrenalin"
           ]
         }
       ]
@@ -7001,11 +6997,11 @@
           "front_snippet": "Aldosteronfreisetzung wird durch was stimuliert? (3)",
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II → hemmt K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Azidose",
           "hy_terms_detected": [
-            "epo",
+            "depolarisation",
+            "azidose",
             "angiotensin",
             "aldosteron",
-            "depolarisation",
-            "azidose"
+            "epo"
           ]
         },
         {
@@ -7029,8 +7025,8 @@
           "front_snippet": "Wieso bekommt man einen Bluthockdruck wenn man Lakritze isst?",
           "back_snippet": "Weil Lakrize 11βHSD 2 hemmt → Cortisol kann nicht zu in aktivem Cortiso n gemacht werden. Folge: → Mineralokortikoidrezeptor (MR) kann Cortisol nciht mehr selber \"abbauen/deaktivieren\" und wird deshalb auch durch Cortisol aktiviert. ⇒ MR bindet dann also an Co",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         },
         {
@@ -7922,8 +7918,8 @@
           "front_snippet": "Sauerstoffbindungskurve für Hämoglobin: - Was für eine Form hat die O2-Bindungskurve? - Warum nimmt sie diese Form an? - Wie bezeichnet man diese Form des Bindungsverhaltens?",
           "back_snippet": "- Die Sauerstoffbindungskurve für Hämoglobin ähnelt einem \"S\", die aufgrund ihrer S-Form als sigmoid bezeichnet wird (Abb. 4). - Dies bedeutet, dass die Bindung von Sauerstoff an einer Hämgruppe im Hb-Tetramer die Wahrscheinlichkeit erhöht, dass Sauerstoff auc",
           "hy_terms_detected": [
-            "hämoglobin",
-            "sauerstoffbindung"
+            "sauerstoffbindung",
+            "hämoglobin"
           ]
         },
         {
@@ -7947,8 +7943,8 @@
           "front_snippet": "Wer ist für den Bohr-Effekt verantwortlich? Beschreibe, wie dieser Effekt die Sauerstoffbindung reguliert:",
           "back_snippet": "- Für den Bohr-Effekt sind die alpha-Aminogruppen am aminoterminalen Ende der alpha-Ketten und die Seitenketten der Histidine verantwortlich. - Diese Gruppen besitzen pKS-Werte, die nahe bei pH 7 liegen. - So ist zum Beispiel bei tiefem pH-Wert die Imidazolgru",
           "hy_terms_detected": [
-            "sauerstoffbindung",
-            "bohr-effekt"
+            "bohr-effekt",
+            "sauerstoffbindung"
           ]
         },
         {
@@ -8580,8 +8576,8 @@
           "front_snippet": "MHC-Moleküle Klasse 1 und 2 Erkennung und Exprimierung",
           "back_snippet": "1. Präsentierte Peptide werden von Cytotoxischen T-Zellen erkannt; von allen Zellen des Körpers ausser roten BK exprimiert 2. Präsentierte Peptide werden von T-Helfer-Zellen erkannt; nur von Makrophagen , dendritischen Zellen, B-Zellen und Epithelzellen des Th",
           "hy_terms_detected": [
-            "t-zell",
-            "thymus"
+            "thymus",
+            "t-zell"
           ]
         },
         {
@@ -8591,9 +8587,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 1,
+          "reps": 2,
           "lapses": 0,
-          "interval_days": 15,
+          "interval_days": 36,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -8649,8 +8645,8 @@
           "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle ",
           "hy_terms_detected": [
             "mhc-i",
-            "t-zell",
-            "mhc-ii"
+            "mhc-ii",
+            "t-zell"
           ]
         },
         {
@@ -8660,9 +8656,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 13,
+          "reps": 14,
           "lapses": 3,
-          "interval_days": 4,
+          "interval_days": 12,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8739,9 +8735,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 15,
+          "reps": 16,
           "lapses": 4,
-          "interval_days": 6,
+          "interval_days": 13,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8840,8 +8836,8 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 9,
-          "lapses": 1,
+          "reps": 12,
+          "lapses": 2,
           "interval_days": 6,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
@@ -8875,9 +8871,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 13,
+          "reps": 14,
           "lapses": 3,
-          "interval_days": 2,
+          "interval_days": 5,
           "card_yield_score": 24.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8895,5 +8891,5 @@
       ]
     }
   },
-  "updated_at": 1791815430.0750403
+  "updated_at": 1792169524.171518
 }

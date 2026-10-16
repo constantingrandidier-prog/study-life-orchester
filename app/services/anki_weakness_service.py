@@ -115,78 +115,76 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
             "summary": "Lokale Anki-Sammlung nicht gefunden (Warte auf Daemon-Sync).",
         }
 
-    uri = f"file:///{target_path.as_posix()}?mode=ro&immutable=1"
-    conn = sqlite3.connect(uri, uri=True)
-    cur = conn.cursor()
+    from app.db.anki_db import open_anki_db_readonly
+    with open_anki_db_readonly(target_path) as conn:
+        cur = conn.cursor()
 
-    # 1. Total queues count — only count cards that are actually due TODAY
-    # Anki stores due as days since collection creation (crt field)
-    import time as _time
-    crt = cur.execute("SELECT crt FROM col").fetchone()[0]
-    today_anki_day = int((_time.time() - crt) / 86400)
+        # 1. Total queues count — only count cards that are actually due TODAY
+        # Anki stores due as days since collection creation (crt field)
+        import time as _time
+        crt = cur.execute("SELECT crt FROM col").fetchone()[0]
+        today_anki_day = int((_time.time() - crt) / 86400)
 
-    queue_counts = dict(cur.execute("SELECT queue, count(*) FROM cards GROUP BY queue").fetchall())
-    new_cards = queue_counts.get(0, 0)
-    learning_cards = queue_counts.get(1, 0)
-    day_learning_cards = cur.execute("SELECT count(*) FROM cards WHERE queue=3 AND due <= ?", (today_anki_day,)).fetchone()[0]
-    review_cards_due_today = cur.execute(
-        "SELECT count(*) FROM cards WHERE queue=2 AND due <= ?", (today_anki_day,)
-    ).fetchone()[0]
-    review_cards = review_cards_due_today
-    total_due = learning_cards + day_learning_cards + review_cards_due_today
+        queue_counts = dict(cur.execute("SELECT queue, count(*) FROM cards GROUP BY queue").fetchall())
+        new_cards = queue_counts.get(0, 0)
+        learning_cards = queue_counts.get(1, 0)
+        day_learning_cards = cur.execute("SELECT count(*) FROM cards WHERE queue=3 AND due <= ?", (today_anki_day,)).fetchone()[0]
+        review_cards_due_today = cur.execute(
+            "SELECT count(*) FROM cards WHERE queue=2 AND due <= ?", (today_anki_day,)
+        ).fetchone()[0]
+        review_cards = review_cards_due_today
+        total_due = learning_cards + day_learning_cards + review_cards_due_today
 
-    # 2. Decks map
-    decks_map: Dict[int, str] = {}
-    for did, dname in cur.execute("SELECT id, name FROM decks").fetchall():
-        clean = dname.replace("\x1f", " :: ")
-        # Strip common prefixes for high readability
-        clean = clean.replace("1year :: 1. Semester :: ", "").replace("1year :: 2.Semester :: ", "")
-        clean = clean.replace("1year :: ", "")
-        decks_map[did] = clean
+        # 2. Decks map
+        decks_map: Dict[int, str] = {}
+        for did, dname in cur.execute("SELECT id, name FROM decks").fetchall():
+            clean = dname.replace("\x1f", " :: ")
+            # Strip common prefixes for high readability
+            clean = clean.replace("1year :: 1. Semester :: ", "").replace("1year :: 2.Semester :: ", "")
+            clean = clean.replace("1year :: ", "")
+            decks_map[did] = clean
 
-    # 3. Cards by deck — only queue=2 cards due today + all queue=1
-    deck_card_stats = {}
-    sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+        # 3. Cards by deck — only queue=2 cards due today + all queue=1
+        deck_card_stats = {}
+        sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
 
-    for did, total, due, studied in cur.execute("""
-        SELECT did, count(id),
-               sum(case when queue=1 OR (queue=2 AND due <= ?) then 1 else 0 end),
-               sum(case when queue in (1, 2, 3) or reps > 0 then 1 else 0 end)
-        FROM cards
-        GROUP BY did
-    """, (today_anki_day,)).fetchall():
-        deck_card_stats[did] = {"total": total, "due": due or 0, "studied": studied or 0}
+        for did, total, due, studied in cur.execute("""
+            SELECT did, count(id),
+                   sum(case when queue=1 OR (queue=2 AND due <= ?) then 1 else 0 end),
+                   sum(case when queue in (1, 2, 3) or reps > 0 then 1 else 0 end)
+            FROM cards
+            GROUP BY did
+        """, (today_anki_day,)).fetchall():
+            deck_card_stats[did] = {"total": total, "due": due or 0, "studied": studied or 0}
 
-    # 4. Review history by deck (Revlog) strictly for active semester
-    now = datetime.now()
-    deck_rev_stats = {}
-    revlog_rows = cur.execute("""
-        SELECT c.did,
-               count(r.id) as rev_count,
-               avg(r.ease) as avg_ease,
-               sum(case when r.ease = 1 then 1 else 0 end) as again_count,
-               max(r.id) as last_rev_ms
-        FROM revlog r
-        JOIN cards c ON r.cid = c.id
-        WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
-        GROUP BY c.did
-    """, (sem_start_ts,)).fetchall()
+        # 4. Review history by deck (Revlog) strictly for active semester
+        now = datetime.now()
+        deck_rev_stats = {}
+        revlog_rows = cur.execute("""
+            SELECT c.did,
+                   count(r.id) as rev_count,
+                   avg(r.ease) as avg_ease,
+                   sum(case when r.ease = 1 then 1 else 0 end) as again_count,
+                   max(r.id) as last_rev_ms
+            FROM revlog r
+            JOIN cards c ON r.cid = c.id
+            WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
+            GROUP BY c.did
+        """, (sem_start_ts,)).fetchall()
 
-    for did, rev_count, avg_ease, again_count, last_rev_ms in revlog_rows:
-        if deck_card_stats.get(did, {}).get("studied", 0) == 0:
-            continue
-        fail_rate = round((again_count / rev_count) * 100, 1) if rev_count > 0 else 0.0
-        last_dt = datetime.fromtimestamp(last_rev_ms / 1000) if last_rev_ms else None
-        days_ago = (now - last_dt).days if last_dt else 999
-        deck_rev_stats[did] = {
-            "review_count": rev_count,
-            "avg_ease": round(avg_ease, 2) if avg_ease else 2.5,
-            "fail_rate": fail_rate,
-            "last_review_date": last_dt.strftime("%Y-%m-%d") if last_dt else None,
-            "days_since_last_review": days_ago,
-        }
-
-    conn.close()
+        for did, rev_count, avg_ease, again_count, last_rev_ms in revlog_rows:
+            if deck_card_stats.get(did, {}).get("studied", 0) == 0:
+                continue
+            fail_rate = round((again_count / rev_count) * 100, 1) if rev_count > 0 else 0.0
+            last_dt = datetime.fromtimestamp(last_rev_ms / 1000) if last_rev_ms else None
+            days_ago = (now - last_dt).days if last_dt else 999
+            deck_rev_stats[did] = {
+                "review_count": rev_count,
+                "avg_ease": round(avg_ease, 2) if avg_ease else 2.5,
+                "fail_rate": fail_rate,
+                "last_review_date": last_dt.strftime("%Y-%m-%d") if last_dt else None,
+                "days_since_last_review": days_ago,
+            }
 
     # 5. Assemble and classify topics
     all_topics: List[Dict[str, Any]] = []

@@ -39,30 +39,29 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
                 "smoothing_advice": "Keine Anki-Datenbank für Prognose gefunden.",
             }
 
-    uri = f"file:///{target_path.as_posix()}?mode=ro&immutable=1"
-    conn = sqlite3.connect(uri, uri=True)
-    cur = conn.cursor()
+    from app.db.anki_db import open_anki_db_readonly
+    with open_anki_db_readonly(target_path) as conn:
+        cur = conn.cursor()
+        crt = cur.execute("SELECT crt FROM col").fetchone()[0]
+        curr_day = int((now.timestamp() - crt) // 86400)
+        end_day = curr_day + days_ahead
 
-    crt = cur.execute("SELECT crt FROM col").fetchone()[0]
-    curr_day = int((now.timestamp() - crt) // 86400)
-    end_day = curr_day + days_ahead
+        decks = {}
+        for did, dname in cur.execute("SELECT id, name FROM decks").fetchall():
+            decks[did] = clean_deck_name(dname)
 
-    decks = {}
-    for did, dname in cur.execute("SELECT id, name FROM decks").fetchall():
-        decks[did] = clean_deck_name(dname)
-
-    # Fetch daily due sums and deck breakdown for the next N days.
-    # Group any overdue cards (due <= curr_day) and active learning cards (queue=1) into today's bucket.
-    sql_due = """
-    SELECT CASE WHEN c.due <= ? THEN ? ELSE c.due END as effective_due,
-           c.did,
-           COUNT(*) as card_count
-    FROM cards c
-    WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1)
-    GROUP BY effective_due, c.did
-    ORDER BY effective_due ASC, card_count DESC
-    """
-    rows = cur.execute(sql_due, (curr_day, curr_day, end_day)).fetchall()
+        # Fetch daily due sums and deck breakdown for the next N days.
+        # Group any overdue cards (due <= curr_day) and active learning cards (queue=1) into today's bucket.
+        sql_due = """
+        SELECT CASE WHEN c.due <= ? THEN ? ELSE c.due END as effective_due,
+               c.did,
+               COUNT(*) as card_count
+        FROM cards c
+        WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1)
+        GROUP BY effective_due, c.did
+        ORDER BY effective_due ASC, card_count DESC
+        """
+        rows = cur.execute(sql_due, (curr_day, curr_day, end_day)).fetchall()
 
     day_data: Dict[int, Dict[str, Any]] = {}
     for offset in range(days_ahead + 1):

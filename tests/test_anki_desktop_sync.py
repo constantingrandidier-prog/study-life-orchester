@@ -87,3 +87,74 @@ def test_anki_graduation_logic_in_sqlite(tmp_path):
     assert result['repetition_cards_count'] == 1
     assert result['today_reviewed_count'] == 1
 
+
+def test_anki_wal_mode_active_uncheckpointed_reviews_replayed(tmp_path):
+    """
+    Simulates real-world Anki Desktop running in WAL mode on Windows.
+    Verifies that open_anki_db_readonly replays uncheckpointed reviews from .anki2-wal
+    instead of bypassing them with immutable=1.
+    """
+    import sqlite3
+    from datetime import datetime, date
+    from app.services.anki_desktop_sync import read_live_anki_desktop_state
+    from app.db.anki_db import open_anki_db_readonly
+
+    db_file = tmp_path / "collection.anki2"
+    conn = sqlite3.connect(str(db_file))
+    cur = conn.cursor()
+    cur.execute("PRAGMA journal_mode = WAL;")
+
+    cur.execute("CREATE TABLE col (id integer primary key, crt integer)")
+    cur.execute("CREATE TABLE decks (id integer primary key, name text)")
+    cur.execute("CREATE TABLE cards (id integer primary key, nid integer, did integer, ord integer, mod integer, usn integer, type integer, queue integer, due integer, ivl integer, factor integer, reps integer, lapses integer, left integer, odue integer, odid integer, flags integer, data text)")
+    cur.execute("CREATE TABLE notes (id integer primary key, guid text, mid integer, mod integer, usn integer, tags text, flds text, sfld text, csum integer, flags integer, data text)")
+    cur.execute("CREATE TABLE revlog (id integer primary key, cid integer, usn integer, ease integer, ivl integer, lastIvl integer, factor integer, time integer, type integer)")
+
+    cur.execute("INSERT INTO col VALUES (1, 1700000000)")
+    cur.execute("INSERT INTO decks VALUES (1, 'TB Herz')")
+    cur.execute("INSERT INTO notes VALUES (10, 'g1', 1, 0, 0, '', 'Card front', 'Card front', 0, 0, '')")
+    cur.execute("INSERT INTO cards VALUES (101, 10, 1, 0, 0, 0, 2, 2, 100, 15, 2500, 5, 0, 0, 0, 0, 0, '')")
+
+    # Insert review into WAL
+    now_ms = int(datetime.now().timestamp() * 1000)
+    cur.execute("INSERT INTO revlog VALUES (?, 101, -1, 3, 15, 7, 2500, 5000, 1)", (now_ms,))
+    conn.commit()
+
+    # Ensure WAL file exists on disk with content
+    wal_file = tmp_path / "collection.anki2-wal"
+    assert wal_file.exists() and wal_file.stat().st_size > 0
+
+    # With open_anki_db_readonly, WAL is cleanly replayed:
+    with open_anki_db_readonly(db_file) as reader_conn:
+        rev_cnt = reader_conn.cursor().execute("SELECT count(*) FROM revlog").fetchone()[0]
+        assert rev_cnt == 1
+
+    # End-to-end sync state must see the review:
+    result = read_live_anki_desktop_state(col_path=str(db_file), target_date_str=date.today().isoformat())
+    assert result["connected"] is True
+    assert result["total_reviews_count"] == 1
+    assert result["repetition_cards_count"] == 1
+
+    conn.close()
+
+
+def test_real_anki_collection_live_sync_telemetry():
+    """
+    If running locally on Constantin's Windows PC with real Anki collection,
+    verify that live Anki state captures all real reviews and does not report false zeros.
+    """
+    import os
+    from app.services.anki_desktop_sync import read_live_anki_desktop_state, find_local_anki_collection
+
+    col = find_local_anki_collection()
+    if not col or not col.exists() or os.environ.get("APPDATA") is None:
+        return  # Skip in headless CI environments
+
+    state = read_live_anki_desktop_state(col_path=str(col))
+    assert state["connected"] is True
+    # If today's collection has reviews, they must not be 0:
+    if state["total_reviews_count"] > 0:
+        assert state["repetition_cards_count"] > 0 or state["new_cards_count"] > 0
+        assert state["effective_study_minutes"] > 0.0
+
+

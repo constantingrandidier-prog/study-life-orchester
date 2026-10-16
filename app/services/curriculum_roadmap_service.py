@@ -1871,7 +1871,7 @@ def _sync_active_day_assignment(
         tom_slot_names = [f"{s['cards_to_learn']}× {s.get('clean_title') or s['short_title']}" for s in tom_slots]
         all_tom_topics = " + ".join(leftover_note + tom_slot_names) if (leftover_note or tom_slot_names) else f"{tomorrow_day.get('target_cards', day['target_cards'])} Karten"
 
-        tom_lec_title = primary_tom.get("display_title_with_date") or primary_tom.get("clean_title") or primary_tom.get("short_title") or "Morgige Vorlesung"
+        tom_lec_title = primary_tom.get("clean_title") or primary_tom.get("short_title") or primary_tom.get("display_title_with_date") or "Morgige Vorlesung"
         tomorrow_preview = {
             "date": next_date.strftime("%Y-%m-%d"),
             "day_of_week": GERMAN_WEEKDAYS.get(next_date.weekday(), "Morgen"),

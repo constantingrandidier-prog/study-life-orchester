@@ -87,7 +87,7 @@ def test_pacing_rest_api_endpoints(client):
     # 2. POST Log Progress
     log_resp = client.post(
         "/api/v1/schedule/exam/log-progress",
-        json={"cards_completed": 60, "minutes_spent": 35, "log_date": "2026-09-14"}
+        json={"cards_completed": 60, "minutes_spent": 35, "log_date": "2026-08-30"}
     )
     assert log_resp.status_code == 200
     log_data = log_resp.json()
@@ -110,6 +110,6 @@ def test_pacing_rest_api_endpoints(client):
     # Cleanup test data for student to keep production DB clean
     from app.db.database import get_db_connection
     with get_db_connection() as conn:
-        conn.execute("DELETE FROM daily_progress_logs WHERE user_id = 'student'")
+        conn.execute("DELETE FROM daily_progress_logs WHERE user_id = 'student' AND log_date = '2026-08-30'")
     # Toggle back joker day outside DB transaction lock
     client.post("/api/v1/schedule/exam/toggle-joker", json={"date_str": "2026-09-18"})

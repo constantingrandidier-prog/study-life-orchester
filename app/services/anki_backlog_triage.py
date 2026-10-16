@@ -9,29 +9,92 @@ from app.db.repository import get_db_connection
 
 BACKLOG_TRIAGE_SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "cached_backlog_triage.json"
 
+import re
+
+def clean_tb_name(raw: str) -> str:
+    low = raw.lower()
+    if "blut" in low or "immun" in low:
+        return "TB Blut & Immunsystem"
+    if "herz" in low or "kreislauf" in low:
+        return "TB Herz-Kreislauf"
+    if "atmung" in low or "lunge" in low:
+        return "TB Atmung"
+    if "verdauung" in low or "ernährung" in low or "ernaehrung" in low:
+        return "TB Verdauung"
+    if "stoffwechsel" in low:
+        return "TB Stoffwechsel"
+    if "endokrin" in low:
+        return "TB Endokrinologie"
+    return raw.strip()
+
+def clean_prof_name(raw: str) -> str:
+    p = raw.strip()
+    p = re.sub(r"^[0-9]+[\.\s_]+", "", p)
+    p = p.replace("+", "").strip()
+    low = p.lower()
+    if "wenger" in low:
+        return "Wenger"
+    if "sommer" in low:
+        return "Sommer"
+    if "loffing" in low:
+        return "Loffing"
+    if "stockmann" in low:
+        return "Stockmann"
+    if "schneider" in low:
+        return "Schneider"
+    if "manatschal" in low:
+        return "Manatschal"
+    if "tuzlak" in low or "becher" in low:
+        return "Tuzlak / Becher"
+    if "kurtcuoglu" in low:
+        return "Kurtcuoglu"
+    if "dutzler" in low:
+        return "Dutzler"
+    if "lukic" in low:
+        return "Lukic"
+    if "rogler" in low:
+        return "Rogler"
+    if "wagner" in low:
+        return "Wagner"
+    if "emmert" in low:
+        return "Emmert"
+    if "hersberger" in low:
+        return "Hersberger"
+    if "robert" in low:
+        return "Robert"
+    if "jelezarov" in low:
+        return "Jelezarov"
+    if "hall" in low:
+        return "Hall"
+    if "einf" in low or "abschluss" in low:
+        return "Einführung & Abschluss"
+    return p
+
 def parse_curriculum_deck(raw_name: str):
     """
     Extracts the university module (Themenblock) and lecturer (Dozent) from an Anki deck name.
     Ignores non-2. SJ decks and oral exam decks.
     """
     low = raw_name.lower()
-    if ('2. sj' not in low and 'hs 2021' not in low) or 'mündlich' in low or 'muendlich' in low:
+    if ("2. sj" not in low and "hs 2021" not in low) or "mündlich" in low or "muendlich" in low:
         return None, None
-    parts = [p.strip() for p in (raw_name.split('\x1f') if '\x1f' in raw_name else raw_name.split('::'))]
+    parts = [p.strip() for p in (raw_name.split("\x1f") if "\x1f" in raw_name else raw_name.split("::"))]
     tb_part = None
     prof_part = None
     for i, p in enumerate(parts):
-        if p.startswith('TB ') or 'themenblock' in p.lower():
+        if p.startswith("TB ") or "themenblock" in p.lower():
             tb_part = p
             if i + 1 < len(parts):
-                prof_part = parts[i+1]
+                prof_part = parts[i + 1]
             break
     if not tb_part:
         for p in parts:
-            if any(k in p.lower() for k in ['blut', 'herz', 'atmung', 'verdauung', 'stoffwechsel', 'endokrin']):
+            if any(k in p.lower() for k in ["blut", "herz", "atmung", "verdauung", "stoffwechsel", "endokrin"]):
                 tb_part = p
                 break
-    return tb_part, prof_part or 'Allgemein'
+    if not tb_part:
+        return None, None
+    return clean_tb_name(tb_part), clean_prof_name(prof_part or "Allgemein")
 
 
 def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 300) -> Dict[str, Any]:
@@ -67,65 +130,65 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 300) -
                 "summary_advice": "Keine Anki-Datenbank gefunden.",
             }
 
-    uri = f"file:///{target_path.as_posix()}?mode=ro&immutable=1"
-    conn = sqlite3.connect(uri, uri=True)
-    cur = conn.cursor()
+    from app.db.anki_db import open_anki_db_readonly
+    with open_anki_db_readonly(target_path) as conn:
+        cur = conn.cursor()
 
-    crt = cur.execute("SELECT crt FROM col").fetchone()[0]
-    current_day = int((now.timestamp() - crt) // 86400)
-    next_day = current_day + 1
-    now_ms = now.timestamp() * 1000
+        crt = cur.execute("SELECT crt FROM col").fetchone()[0]
+        current_day = int((now.timestamp() - crt) // 86400)
+        next_day = current_day + 1
+        now_ms = now.timestamp() * 1000
 
-    raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
-    deck_map = {}
-    for did, dname in raw_decks:
-        tb, prof = parse_curriculum_deck(dname)
-        if tb:
-            deck_map[did] = (tb, prof, clean_deck_name(dname))
+        raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
+        deck_map = {}
+        for did, dname in raw_decks:
+            tb, prof = parse_curriculum_deck(dname)
+            if tb:
+                deck_map[did] = (tb, prof, clean_deck_name(dname))
 
-    if not deck_map:
-        return {
-            "connected": True,
-            "total_due_today": 0,
-            "total_due_tomorrow": 0,
-            "is_overloaded": False,
-            "themenbloecke": [],
-            "topics": [],
-            "urgent_topics": [],
-            "deferrable_topics": [],
-            "summary_advice": "Keine relevanten 2. SJ Decks gefunden.",
-        }
+        if not deck_map:
+            return {
+                "connected": True,
+                "total_due_today": 0,
+                "total_due_tomorrow": 0,
+                "is_overloaded": False,
+                "themenbloecke": [],
+                "topics": [],
+                "urgent_topics": [],
+                "deferrable_topics": [],
+                "summary_advice": "Keine relevanten 2. SJ Decks gefunden.",
+            }
 
-    placeholders = ','.join('?' * len(deck_map))
-    dids = list(deck_map.keys())
+        placeholders = ','.join('?' * len(deck_map))
+        dids = list(deck_map.keys())
 
-    sql_cards = f"""
-    SELECT 
-        c.did,
-        COUNT(*) as total_cards,
-        SUM(CASE WHEN (c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?) THEN 1 ELSE 0 END) as due_now,
-        SUM(CASE WHEN (c.queue = 2 AND c.due = ?) OR (c.queue = 3 AND c.due = ?) THEN 1 ELSE 0 END) as due_tomorrow,
-        SUM(CASE WHEN c.queue = 2 THEN 1 ELSE 0 END) as active_review_cards,
-        SUM(CASE WHEN c.queue = 2 AND c.factor > 0 THEN c.factor ELSE 0 END) as sum_factor,
-        SUM(CASE WHEN c.queue = 2 AND c.factor > 0 THEN 1 ELSE 0 END) as count_factor,
-        SUM(c.lapses) as total_lapses,
-        SUM(c.reps) as total_reps
-    FROM cards c
-    WHERE c.did IN ({placeholders}) AND c.queue != -1
-    GROUP BY c.did
-    """
-    cards_stats = cur.execute(sql_cards, [current_day, current_day, next_day, next_day] + dids).fetchall()
+        sql_cards = f"""
+        SELECT 
+            c.did,
+            COUNT(*) as total_cards,
+            SUM(CASE WHEN (c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?) THEN 1 ELSE 0 END) as due_now,
+            SUM(CASE WHEN (c.queue = 2 AND c.due = ?) OR (c.queue = 3 AND c.due = ?) THEN 1 ELSE 0 END) as due_tomorrow,
+            SUM(CASE WHEN c.queue = 2 THEN 1 ELSE 0 END) as active_review_cards,
+            SUM(CASE WHEN c.queue = 2 AND c.factor > 0 THEN c.factor ELSE 0 END) as sum_factor,
+            SUM(CASE WHEN c.queue = 2 AND c.factor > 0 THEN 1 ELSE 0 END) as count_factor,
+            SUM(c.lapses) as total_lapses,
+            SUM(c.reps) as total_reps
+        FROM cards c
+        WHERE c.did IN ({placeholders}) AND c.queue != -1
+        GROUP BY c.did
+        """
+        cards_stats = cur.execute(sql_cards, [current_day, current_day, next_day, next_day] + dids).fetchall()
 
-    sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
-    sql_revs = f"""
-    SELECT c.did, MAX(r.id) as last_ms, COUNT(*) as total_revs,
-           SUM(CASE WHEN r.ease = 1 THEN 1 ELSE 0 END) as fail_count
-    FROM revlog r
-    JOIN cards c ON r.cid = c.id
-    WHERE c.did IN ({placeholders}) AND r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
-    GROUP BY c.did
-    """
-    rev_stats = {r[0]: {"last_ms": r[1], "revs": r[2], "fails": r[3]} for r in cur.execute(sql_revs, dids + [sem_start_ts]).fetchall()}
+        sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+        sql_revs = f"""
+        SELECT c.did, MAX(r.id) as last_ms, COUNT(*) as total_revs,
+               SUM(CASE WHEN r.ease = 1 THEN 1 ELSE 0 END) as fail_count
+        FROM revlog r
+        JOIN cards c ON r.cid = c.id
+        WHERE c.did IN ({placeholders}) AND r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
+        GROUP BY c.did
+        """
+        rev_stats = {r[0]: {"last_ms": r[1], "revs": r[2], "fails": r[3]} for r in cur.execute(sql_revs, dids + [sem_start_ts]).fetchall()}
 
     from collections import defaultdict
     prof_groups = defaultdict(lambda: {
@@ -161,8 +224,30 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 300) -
     total_due_tomorrow = 0
 
     for (tb, prof), g in prof_groups.items():
-        # Include topics that either have cards in active rotation or have reviews done
         if g["active_reviews"] == 0 and g["due_today"] == 0 and g["due_tomorrow"] == 0 and g["total_revs"] == 0:
+            topics.append({
+                "themenblock": tb,
+                "dozent": prof,
+                "deck_name": f"{tb} › {prof}",
+                "total_cards": g["total_cards"],
+                "due_today": 0,
+                "due_tomorrow": 0,
+                "active_reviews": 0,
+                "days_since_last_review": None,
+                "days_since_last_review_str": "Noch nicht im Umlauf",
+                "avg_ease_pct": 250.0,
+                "fail_rate_pct": 0.0,
+                "retention_rate_pct": 100.0,
+                "total_fails": 0,
+                "total_reviews": 0,
+                "urgency_score": 0.0,
+                "urgency_level": "NEU",
+                "level_badge": "🌱 Noch kein Backlog",
+                "color": "#8b949e",
+                "action_recommendation": f"Noch nicht gestartet. {g['total_cards']} neue Karten im Lehrplan.",
+                "anki_filter_query": f'deck:"*2. SJ*{tb}*{prof}*" is:new',
+                "anki_hard_query": f'deck:"*2. SJ*{tb}*{prof}*" is:new',
+            })
             continue
 
         total_due_today += g["due_today"]
@@ -311,28 +396,39 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 300) -
 def _apply_budget(result: Dict[str, Any], budget: int):
     """
     Greedy knapsack packing up to budget (e.g. 300 cards).
-    Selects the most urgent decks with due cards first.
+    Packs the most urgent decks with due cards today first.
+    If today is complete or under budget, packs tomorrow's most urgent cards.
     """
     selected = []
     accumulated = 0
     deferred = []
 
-    # Filter decks that have due cards today first, then tomorrow
-    candidates = [t for t in result.get("topics", []) if t.get("due_today", 0) > 0]
-    if not candidates:
-        candidates = [t for t in result.get("topics", []) if t.get("due_tomorrow", 0) > 0]
+    # Priority 1: Due cards today, sorted by urgency score descending
+    today_candidates = [t for t in result.get("topics", []) if t.get("due_today", 0) > 0]
+    today_candidates.sort(key=lambda x: x.get("urgency_score", 0), reverse=True)
 
-    for t in candidates:
-        needed = t.get("due_today", 0) or t.get("due_tomorrow", 0)
-        if needed == 0:
-            continue
+    for t in today_candidates:
+        needed = t.get("due_today", 0)
         if accumulated + needed <= budget or not selected:
             selected.append(t)
             accumulated += needed
         else:
             deferred.append(t)
 
-    # Any remaining candidates that weren't selected
+    # Priority 2: If under budget, pack upcoming cards due tomorrow
+    if accumulated < budget:
+        tom_candidates = [t for t in result.get("topics", []) if t.get("due_tomorrow", 0) > 0 and t not in selected]
+        tom_candidates.sort(key=lambda x: x.get("urgency_score", 0), reverse=True)
+
+        for t in tom_candidates:
+            needed = t.get("due_tomorrow", 0)
+            if accumulated + needed <= budget or not selected:
+                selected.append(t)
+                accumulated += needed
+            else:
+                deferred.append(t)
+
+    # Any remaining candidates
     for t in result.get("topics", []):
         if t not in selected and t not in deferred:
             deferred.append(t)

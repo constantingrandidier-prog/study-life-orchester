@@ -11,15 +11,15 @@ def setup_autostart():
     pythonw = root_dir / ".venv" / "Scripts" / "pythonw.exe"
     agent = root_dir / "bin" / "anki_sync_agent.py"
     
-    vbs_content = f'''Set WshShell = CreateObject("WScript.Shell")
-rootDir = "{root_dir}"
-pythonwPath = "{pythonw}"
-agentPath = "{agent}"
+    vbs_content = '''Set WshShell = CreateObject("WScript.Shell")
+rootDir = "C:\\Users\\Constantin Grandidie\\OneDrive - Universit" & ChrW(228) & "t Z" & ChrW(252) & "rich UZH\\Desktop\\Study-life-orcherster"
+pythonwPath = rootDir & "\\.venv\\Scripts\\pythonw.exe"
+agentPath = rootDir & "\\bin\\anki_sync_agent.py"
 WshShell.CurrentDirectory = rootDir
 WshShell.Run """" & pythonwPath & """ """ & agentPath & """", 0, False
 '''
-    vbs_path.write_text(vbs_content, encoding="utf-8")
-    print("Startup folder VBS created successfully.")
+    vbs_path.write_text(vbs_content, encoding="ascii")
+    print("Startup folder VBS created successfully with clean ChrW encoding.")
 
     # 2. Also register a Windows Scheduled Task as a watchdog
     cmd = [

@@ -89,17 +89,17 @@
       "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 1,
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 263,
     "due_reviews_count": 263,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -187,13 +187,13 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:08.047433",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:15.955366",
+    "current_day_index": 389,
     "target_day_index": 381,
     "next_day_index": 382
   },
-  "_latest_target_date": "2026-10-12",
-  "_updated_at": "2026-10-12T16:50:27.536778",
+  "_latest_target_date": "2026-10-16",
+  "_updated_at": "2026-10-16T19:08:53.025829",
   "2026-09-14": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -230,17 +230,17 @@
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 22
     },
     "rep_by_deck": {},
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 306,
     "due_reviews_count": 306,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -328,8 +328,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:10.513935",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:38.484667",
+    "current_day_index": 389,
     "target_day_index": 357,
     "next_day_index": 358
   },
@@ -372,17 +372,17 @@
       "TB Blut/Immunsystem :: Einführung und Abschluss": 23,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 12
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 85,
     "due_reviews_count": 85,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -470,8 +470,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:21.572346",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:49.810738",
+    "current_day_index": 389,
     "target_day_index": 358,
     "next_day_index": 359
   },
@@ -513,17 +513,17 @@
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 26,
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 39
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 102,
     "due_reviews_count": 102,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -611,8 +611,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:16.863192",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:45.639044",
+    "current_day_index": 389,
     "target_day_index": 359,
     "next_day_index": 360
   },
@@ -660,17 +660,17 @@
       "TB Blut/Immunsystem :: Einführung und Abschluss": 4,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 16
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 70,
     "due_reviews_count": 70,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -758,8 +758,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:09.639261",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:36.559412",
+    "current_day_index": 389,
     "target_day_index": 360,
     "next_day_index": 361
   },
@@ -807,17 +807,17 @@
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 20,
       "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 146,
     "due_reviews_count": 146,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -905,8 +905,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:10.832022",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:39.035471",
+    "current_day_index": 389,
     "target_day_index": 361,
     "next_day_index": 362
   },
@@ -934,25 +934,25 @@
     "new_by_deck": {},
     "new_opened_by_deck": {},
     "rep_by_deck": {},
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 0,
     "due_reviews_count": 0,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:45.118091",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:08.351198",
+    "current_day_index": 389,
     "target_day_index": 362,
     "next_day_index": 363
   },
@@ -980,25 +980,25 @@
     "new_by_deck": {},
     "new_opened_by_deck": {},
     "rep_by_deck": {},
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 0,
     "due_reviews_count": 0,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:45.369829",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:08.750262",
+    "current_day_index": 389,
     "target_day_index": 363,
     "next_day_index": 364
   },
@@ -1048,17 +1048,17 @@
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 70,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 25
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 250,
     "due_reviews_count": 250,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1146,8 +1146,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:45.568896",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:09.146762",
+    "current_day_index": 389,
     "target_day_index": 364,
     "next_day_index": 365
   },
@@ -1200,17 +1200,17 @@
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 11,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 2
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 233,
     "due_reviews_count": 233,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1298,8 +1298,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:45.814346",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:09.568122",
+    "current_day_index": 389,
     "target_day_index": 365,
     "next_day_index": 366
   },
@@ -1355,17 +1355,17 @@
       "TB Blut/Immunsystem :: Einführung und Abschluss": 4,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 5
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 239,
     "due_reviews_count": 239,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1453,8 +1453,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:17.122812",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:45.952887",
+    "current_day_index": 389,
     "target_day_index": 366,
     "next_day_index": 367
   },
@@ -1512,17 +1512,17 @@
       "TB Blut/Immunsystem :: Einführung und Abschluss": 4,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 10
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 222,
     "due_reviews_count": 222,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1610,8 +1610,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:46.418630",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:10.385224",
+    "current_day_index": 389,
     "target_day_index": 367,
     "next_day_index": 368
   },
@@ -1639,25 +1639,25 @@
     "new_by_deck": {},
     "new_opened_by_deck": {},
     "rep_by_deck": {},
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 0,
     "due_reviews_count": 0,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2116,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 24.2,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:50:08.588964",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T18:41:34.442898",
+    "current_day_index": 389,
     "target_day_index": 368,
     "next_day_index": 369
   },
@@ -1718,17 +1718,17 @@
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 10,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 6
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 428,
     "due_reviews_count": 428,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1816,8 +1816,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:46.995531",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:11.155847",
+    "current_day_index": 389,
     "target_day_index": 369,
     "next_day_index": 370
   },
@@ -1879,17 +1879,17 @@
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 169,
     "due_reviews_count": 169,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1977,8 +1977,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:47.249490",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:11.641412",
+    "current_day_index": 389,
     "target_day_index": 370,
     "next_day_index": 371
   },
@@ -2048,17 +2048,17 @@
       "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 51,
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 226,
     "due_reviews_count": 226,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -2146,8 +2146,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:47.497830",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:12.035350",
+    "current_day_index": 389,
     "target_day_index": 371,
     "next_day_index": 372
   },
@@ -2217,17 +2217,17 @@
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 6,
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 269,
     "due_reviews_count": 269,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -2315,8 +2315,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:47.783942",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:12.459386",
+    "current_day_index": 389,
     "target_day_index": 372,
     "next_day_index": 373
   },
@@ -2384,17 +2384,17 @@
       "TB Blut/Immunsystem :: Einführung und Abschluss": 1,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 291,
     "due_reviews_count": 291,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -2482,8 +2482,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:48.272809",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:12.817160",
+    "current_day_index": 389,
     "target_day_index": 373,
     "next_day_index": 374
   },
@@ -2560,17 +2560,17 @@
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 12,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 243,
     "due_reviews_count": 243,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -2658,8 +2658,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:48.565165",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:13.092696",
+    "current_day_index": 389,
     "target_day_index": 374,
     "next_day_index": 375
   },
@@ -2725,17 +2725,17 @@
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 18,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 7
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 328,
     "due_reviews_count": 328,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -2823,8 +2823,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:48.819924",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:13.490644",
+    "current_day_index": 389,
     "target_day_index": 375,
     "next_day_index": 376
   },
@@ -2905,17 +2905,17 @@
       "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 6,
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 12
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 240,
     "due_reviews_count": 240,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -3003,8 +3003,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:49:49.144971",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:13.850743",
+    "current_day_index": 389,
     "target_day_index": 376,
     "next_day_index": 377
   },
@@ -3074,17 +3074,17 @@
       "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 2,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 173,
     "due_reviews_count": 173,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -3172,8 +3172,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:07.415044",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:14.264949",
+    "current_day_index": 389,
     "target_day_index": 377,
     "next_day_index": 378
   },
@@ -3261,17 +3261,17 @@
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 3,
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 5
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 265,
     "due_reviews_count": 265,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -3359,8 +3359,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:07.564188",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:14.658995",
+    "current_day_index": 389,
     "target_day_index": 378,
     "next_day_index": 379
   },
@@ -3442,17 +3442,17 @@
       "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 2,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 3
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 272,
     "due_reviews_count": 272,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -3540,8 +3540,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:07.730311",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:15.159317",
+    "current_day_index": 389,
     "target_day_index": 379,
     "next_day_index": 380
   },
@@ -3629,17 +3629,17 @@
       "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 2
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 247,
     "due_reviews_count": 247,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -3727,8 +3727,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:07.914612",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:15.485850",
+    "current_day_index": 389,
     "target_day_index": 380,
     "next_day_index": 381
   },
@@ -3844,17 +3844,17 @@
       "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 21,
       "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 2
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 296,
     "due_reviews_count": 296,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -3942,8 +3942,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:08.214553",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:16.276536",
+    "current_day_index": 389,
     "target_day_index": 382,
     "next_day_index": 383
   },
@@ -4019,17 +4019,17 @@
       "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 2,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 2
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 185,
     "due_reviews_count": 185,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -4117,8 +4117,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:08.364930",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:16.707743",
+    "current_day_index": 389,
     "target_day_index": 383,
     "next_day_index": 384
   },
@@ -4146,25 +4146,25 @@
     "new_by_deck": {},
     "new_opened_by_deck": {},
     "rep_by_deck": {},
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
     "due_today_count": 0,
     "due_reviews_count": 0,
-    "cumulative_cards_learned": 1786,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-10-12T16:46:08.531993",
-    "current_day_index": 385,
+    "last_sync_timestamp": "2026-10-16T10:35:17.777566",
+    "current_day_index": 389,
     "target_day_index": 384,
     "next_day_index": 385
   },
@@ -4172,7 +4172,7 @@
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
     "target_date": "2026-10-12",
-    "is_today": true,
+    "is_today": false,
     "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
     "first_review_time": "09:26",
     "last_review_time": "15:52",
@@ -4262,173 +4262,21 @@
       "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 1
     },
-    "yesterday_reviewed_count": 0,
-    "yesterday_new_cards_count": 0,
-    "yesterday_new_opened_count": 0,
-    "yesterday_repetition_cards_count": 0,
-    "yesterday_total_reviews_count": 0,
-    "yesterday_time_minutes": 0.0,
-    "due_today_count": 0,
-    "due_reviews_count": 0,
-    "cumulative_cards_learned": 1786,
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
+    "due_today_count": 365,
+    "due_reviews_count": 365,
+    "cumulative_cards_learned": 2015,
     "total_curriculum_cards": 8736,
-    "curriculum_progress_pct": 20.4,
+    "curriculum_progress_pct": 23.1,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 299,
-    "due_tomorrow_deck_breakdown": {
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 29,
-      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
-      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 11,
-      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 7,
-      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 9,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 36,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 37,
-      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 4,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 20,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 10,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 3,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 17,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 24,
-      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 10,
-      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 19,
-      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 5,
-      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 7,
-      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 6,
-      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 2,
-      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 7,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 5,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 6,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 6,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 2,
-      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
-      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
-      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
-      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 2,
-      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 3
-    },
-    "due_tomorrow_topics": [
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
-        "count": 37
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
-        "count": 36
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "count": 29
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
-        "count": 24
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
-        "count": 20
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
-        "count": 19
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
-        "count": 17
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
-        "count": 11
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
-        "count": 10
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu",
-        "count": 10
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
-        "count": 9
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
-        "count": 7
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
-        "count": 7
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
-        "count": 7
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
-        "count": 6
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
-        "count": 6
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
-        "count": 6
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
-        "count": 5
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
-        "count": 5
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
-        "count": 4
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
-        "count": 4
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
-        "count": 3
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
-        "count": 3
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
-        "count": 3
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
-        "count": 2
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
-        "count": 2
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
-        "count": 2
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
-        "count": 2
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
-        "count": 2
-      },
-      {
-        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
-        "count": 1
-      }
-    ],
+    "due_tomorrow_count": 0,
+    "due_tomorrow_deck_breakdown": {},
+    "due_tomorrow_topics": [],
     "recent_reviews_sample": [
       {
         "time": "15:52:20",
@@ -4511,11 +4359,988 @@
         "front": "Karte"
       }
     ],
+    "due_tomorrow_sample": [],
+    "last_sync_timestamp": "2026-10-16T10:35:18.060348",
+    "current_day_index": 389,
+    "target_day_index": 385,
+    "next_day_index": 386
+  },
+  "2026-10-13": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-10-13",
+    "is_today": false,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": "08:20",
+    "last_review_time": "15:17",
+    "today_reviewed_count": 0,
+    "new_cards_count": 0,
+    "new_cards_opened_count": 0,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 255,
+    "total_reviews_count": 323,
+    "today_time_minutes": 94.5,
+    "today_session_time_minutes": 112.5,
+    "effective_study_minutes": 112.5,
+    "today_lapses_count": 72,
+    "today_new_count": 0,
+    "today_review_count": 255,
+    "today_deck_breakdown": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 11,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 41,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 59,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 12,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 22,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 27,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 12,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 20,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 5,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 7,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 10,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 7,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 6,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 13,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 5,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 8,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 7,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 11,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 8,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 5,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 5,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 2
+    },
+    "new_by_deck": {},
+    "new_opened_by_deck": {},
+    "rep_by_deck": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 37,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 10,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 6,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 10,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 24,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 17,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 7,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 5,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 20,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 11,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 2,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 5,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 8,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 9,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 10,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 29,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 4,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 3
+    },
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
+    "due_today_count": 255,
+    "due_reviews_count": 255,
+    "cumulative_cards_learned": 2015,
+    "total_curriculum_cards": 8736,
+    "curriculum_progress_pct": 23.1,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 0,
+    "due_tomorrow_deck_breakdown": {},
+    "due_tomorrow_topics": [],
+    "recent_reviews_sample": [
+      {
+        "time": "15:17:58",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Warum ist die Durchblutung der Niere wichtig? Und was sind die Funktionen der Niere?"
+      },
+      {
+        "time": "15:17:40",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederholung",
+        "front": "Wie erfolgt die „Regelung\" des Butdrucks in der Lunge?"
+      },
+      {
+        "time": "15:16:19",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Was sind die Unterschiede in Bezug auf den pulmonalen Blutflusswiderstand zwischen den alv"
+      },
+      {
+        "time": "15:15:41",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederholung",
+        "front": "In welchem DruckBereich erfolgt die Autoregulation der Niere?"
+      },
+      {
+        "time": "15:15:14",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederholung",
+        "front": "Wie sieht die Atemmechanik im Überblick aus?"
+      },
+      {
+        "time": "15:14:51",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederholung",
+        "front": "Wie erfolgt die Autoregulation der Niere? Welche zwei Mechanismen gibt es und wie funktion"
+      },
+      {
+        "time": "15:14:37",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Was ist die lokale hypoxische Vasokonstriktion?"
+      },
+      {
+        "time": "15:12:31",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederholung",
+        "front": "Was entscheidet beim Skelettmuskel über die Blutzufuhr? Was ist der dominante Regulator?"
+      },
+      {
+        "time": "14:45:08",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 2,
+        "ease_label": "Schwer",
+        "type_label": "Wiederholung",
+        "front": "Karte"
+      },
+      {
+        "time": "14:45:04",
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederholung",
+        "front": "Was ist die lokale hypoxische Vasokonstriktion?"
+      }
+    ],
+    "due_tomorrow_sample": [],
+    "last_sync_timestamp": "2026-10-16T10:35:18.460607",
+    "current_day_index": 389,
+    "target_day_index": 386,
+    "next_day_index": 387
+  },
+  "2026-10-14": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-10-14",
+    "is_today": false,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": "08:50",
+    "last_review_time": "18:16",
+    "today_reviewed_count": 98,
+    "new_cards_count": 98,
+    "new_cards_opened_count": 98,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 246,
+    "total_reviews_count": 536,
+    "today_time_minutes": 189.6,
+    "today_session_time_minutes": 287.6,
+    "effective_study_minutes": 287.6,
+    "today_lapses_count": 183,
+    "today_new_count": 98,
+    "today_review_count": 246,
+    "today_deck_breakdown": {
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 176,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 54,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 73,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 39,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 10,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 7,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 10,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 19,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 22,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 17,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 3,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 5,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 13,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 7,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 7,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 4,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 9,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 7,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 3,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 13,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 10,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 2
+    },
+    "new_by_deck": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 10,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 60,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 24,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 1
+    },
+    "new_opened_by_deck": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 10,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 60,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 24,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 1
+    },
+    "rep_by_deck": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 36,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 27,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 20,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 21,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 9,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 14,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 10,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 15,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 5,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 8,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 8,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 6,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 9,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 9,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 5,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 5,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 3,
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 1
+    },
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
+    "due_today_count": 246,
+    "due_reviews_count": 246,
+    "cumulative_cards_learned": 2015,
+    "total_curriculum_cards": 8736,
+    "curriculum_progress_pct": 23.1,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 0,
+    "due_tomorrow_deck_breakdown": {},
+    "due_tomorrow_topics": [],
+    "recent_reviews_sample": [
+      {
+        "time": "18:16:58",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was versteht man unter disjunkten Endothelien?"
+      },
+      {
+        "time": "18:16:56",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wo kommen fenestrierte Endothelien vor?"
+      },
+      {
+        "time": "18:16:55",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was versteht man unter perforierten Endothelien?"
+      },
+      {
+        "time": "18:16:51",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was sind die Merkmale diskontinuierlicher Endothelien?"
+      },
+      {
+        "time": "18:16:45",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wie sind Kapillaren aufgebaut?"
+      },
+      {
+        "time": "18:16:41",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was sind die Merkmale von kontinuierlichen Endothelien?"
+      },
+      {
+        "time": "18:16:40",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was sind die Merkmale von fenestrierten Endothelien?"
+      },
+      {
+        "time": "18:16:36",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was sind die Aufgaben von Endothelzellen? (7)"
+      },
+      {
+        "time": "18:16:32",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wie ist die Tunica adventitia von Arterien aufgebaut?"
+      },
+      {
+        "time": "18:16:23",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Was sind Metarteriolen?"
+      }
+    ],
+    "due_tomorrow_sample": [],
+    "last_sync_timestamp": "2026-10-16T10:35:18.945699",
+    "current_day_index": 389,
+    "target_day_index": 387,
+    "next_day_index": 388
+  },
+  "2026-10-15": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-10-15",
+    "is_today": false,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": "09:08",
+    "last_review_time": "16:13",
+    "today_reviewed_count": 131,
+    "new_cards_count": 131,
+    "new_cards_opened_count": 131,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 276,
+    "total_reviews_count": 604,
+    "today_time_minutes": 217.7,
+    "today_session_time_minutes": 314.3,
+    "effective_study_minutes": 314.3,
+    "today_lapses_count": 186,
+    "today_new_count": 131,
+    "today_review_count": 276,
+    "today_deck_breakdown": {
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 125,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 108,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 120,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 12,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 9,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 9,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 7,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 7,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 5,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 8,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 2,
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 8,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 7,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 3,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 1,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 36,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 35,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 9,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 23,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 11,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 9,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 12,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 11,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 2
+    },
+    "new_by_deck": {
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 50,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 62,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 18,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 1
+    },
+    "new_opened_by_deck": {
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 50,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 62,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 18,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 1
+    },
+    "rep_by_deck": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 30,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 22,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 2,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 57,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 10,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 10,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 24,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 5,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 11,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 7,
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 8,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 9,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 8,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 8,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 7,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 3,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 9,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 1
+    },
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
+    "due_today_count": 276,
+    "due_reviews_count": 276,
+    "cumulative_cards_learned": 2116,
+    "total_curriculum_cards": 8736,
+    "curriculum_progress_pct": 24.2,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 0,
+    "due_tomorrow_deck_breakdown": {},
+    "due_tomorrow_topics": [],
+    "recent_reviews_sample": [
+      {
+        "time": "16:13:13",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:13:11",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:13:08",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:13:06",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:13:00",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:12:57",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:12:54",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:12:50",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:12:46",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "16:12:42",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wieso verlaufen die Muskelfasern des Herzens nicht einfach ringförmig?"
+      }
+    ],
+    "due_tomorrow_sample": [],
+    "last_sync_timestamp": "2026-10-16T18:59:02.987214",
+    "current_day_index": 389,
+    "target_day_index": 388,
+    "next_day_index": 389
+  },
+  "2026-10-16": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-10-16",
+    "is_today": true,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": "09:16",
+    "last_review_time": "18:12",
+    "today_reviewed_count": 101,
+    "new_cards_count": 101,
+    "new_cards_opened_count": 101,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 329,
+    "total_reviews_count": 624,
+    "today_time_minutes": 191.1,
+    "today_session_time_minutes": 292.7,
+    "effective_study_minutes": 292.7,
+    "today_lapses_count": 184,
+    "today_new_count": 101,
+    "today_review_count": 329,
+    "today_deck_breakdown": {
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 271,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 8,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 65,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 71,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 14,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 10,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 17,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 15,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 7,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 4,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 10,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 9,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 4,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 16,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 14,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 14,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 14,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 9,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 6,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 11,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 4
+    },
+    "new_by_deck": {
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 100,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 1
+    },
+    "new_opened_by_deck": {
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 100,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 1
+    },
+    "rep_by_deck": {
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 4,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 49,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 13,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 6,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 13,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 50,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 9,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 11,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 48,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 12,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 4,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 11,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 13,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 8,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 9,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 7,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 13,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 2,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 3
+    },
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
+    "due_today_count": 0,
+    "due_reviews_count": 0,
+    "cumulative_cards_learned": 2116,
+    "total_curriculum_cards": 8736,
+    "curriculum_progress_pct": 24.2,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 339,
+    "due_tomorrow_deck_breakdown": {
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 15,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 101,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 9,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 8,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 14,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 9,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 16,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 24,
+      "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 12,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 41,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 17,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 4,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 2,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 5,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 4,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 1,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 3,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 11,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 4
+    },
+    "due_tomorrow_topics": [
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "count": 101
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "count": 41
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+        "count": 24
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
+        "count": 17
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "count": 16
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "count": 15
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "count": 14
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
+        "count": 12
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
+        "count": 11
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
+        "count": 9
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "count": 9
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "count": 8
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
+        "count": 6
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
+        "count": 3
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "count": 3
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
+        "count": 3
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Einführung und Abschluss",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
+        "count": 1
+      }
+    ],
+    "recent_reviews_sample": [
+      {
+        "time": "18:12:25",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:22",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:19",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:16",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:12",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:10",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:07",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:12:05",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:11:52",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "18:11:48",
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wo befindet sich der Auskultationspunkt für die Trikuspidalklappe?"
+      }
+    ],
     "due_tomorrow_sample": [
       {
-        "card_id": 1603645567900,
+        "card_id": 1757968792288,
+        "deck": "TB Blut/Immunsystem :: Einführung und Abschluss",
+        "front": "Thrombozytopenie"
+      },
+      {
+        "card_id": 1603645567894,
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Erkläre die Blut- und Flüssigkeitsrückführung"
+        "front": "Was gehört alles zum Niederdruck-System (NDS)?"
+      },
+      {
+        "card_id": 1603645567903,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Wie wird der Nettodiffusionsstrom entlang des Konzentrationsgradienten berechnet?"
+      },
+      {
+        "card_id": 1603645567905,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Was limitiert den Stoffaustausch? Was ist der Unterschied zwischen durchblutungslimitiert "
       },
       {
         "card_id": 1603645567907,
@@ -4523,39 +5348,9 @@
         "front": "Beschreibe den osmotischen Druck über einer semipermeablen Membran"
       },
       {
-        "card_id": 1603645567910,
+        "card_id": 1603645567911,
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Aus was setzt sich der effektive Filtrationsdruck zusammen?"
-      },
-      {
-        "card_id": 1603645567912,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Erkläre die Funktion des Lymphgefässsystems"
-      },
-      {
-        "card_id": 1603645567913,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Wie wird Flüssigkeit in die Lymphkapillare aufgenommen?"
-      },
-      {
-        "card_id": 1603645567914,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Wie wird die Lymphe in den Blutkreislauf rückgeführt?"
-      },
-      {
-        "card_id": 1603645567915,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Was sind mögliche Ursachen für Ungleichgewichte der Starlingkräfte?"
-      },
-      {
-        "card_id": 1603645567916,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Wie entsteht ein Lungenödem?"
-      },
-      {
-        "card_id": 1603645567917,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Was versteht man unter Kwashiorkor?"
+        "front": "Nettofiltration von Wasser nach Starling"
       },
       {
         "card_id": 1603645567918,
@@ -4578,19 +5373,238 @@
         "front": "Welche Compliance besitzen Venen & Arterien?"
       },
       {
+        "card_id": 1603645567941,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Was versteht man unter Ventilebenenmechanismus?"
+      },
+      {
+        "card_id": 1603645567942,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Nenne Einflüsse welche den ZVD erhöhen (6)"
+      },
+      {
+        "card_id": 1603645567947,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Erläutere den Begriff \"hydrostatischer Indifferenzpunkt\""
+      },
+      {
+        "card_id": 1603645567952,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Welche 5 Mechanismen regulieren den venösen Rückstrom zum Herzen?"
+      },
+      {
+        "card_id": 1603645567953,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "front": "Nenne die Funktion der Venenklappen"
+      }
+    ],
+    "last_sync_timestamp": "2026-10-16T19:08:52.965377",
+    "current_day_index": 389,
+    "target_day_index": 389,
+    "next_day_index": 390
+  },
+  "2026-10-17": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-10-17",
+    "is_today": false,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": null,
+    "last_review_time": null,
+    "today_reviewed_count": 0,
+    "new_cards_count": 0,
+    "new_cards_opened_count": 0,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 0,
+    "total_reviews_count": 0,
+    "today_time_minutes": 0.0,
+    "today_session_time_minutes": 0.0,
+    "effective_study_minutes": 0.0,
+    "today_lapses_count": 0,
+    "today_new_count": 0,
+    "today_review_count": 0,
+    "today_deck_breakdown": {},
+    "new_by_deck": {},
+    "new_opened_by_deck": {},
+    "rep_by_deck": {},
+    "yesterday_reviewed_count": 131,
+    "yesterday_new_cards_count": 131,
+    "yesterday_new_opened_count": 131,
+    "yesterday_repetition_cards_count": 276,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 217,
+    "due_today_count": 339,
+    "due_reviews_count": 339,
+    "cumulative_cards_learned": 2116,
+    "total_curriculum_cards": 8736,
+    "curriculum_progress_pct": 24.2,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 65,
+    "due_tomorrow_deck_breakdown": {
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 17,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 1,
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 5,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 5,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 7,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 15,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 1,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 1,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 2
+    },
+    "due_tomorrow_topics": [
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "count": 17
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
+        "count": 15
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "count": 7
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "count": 5
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "count": 5
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
+        "count": 1
+      }
+    ],
+    "recent_reviews_sample": [],
+    "due_tomorrow_sample": [
+      {
         "card_id": 1603645567928,
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
         "front": "Was ist der ZVD?"
       },
       {
-        "card_id": 1603645567930,
+        "card_id": 1605009437967,
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
-        "front": "Welche Konsequenzen hat ein erhöhter ZVD?"
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602493995449,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Welcher Nerv verläuft beidseits des Herzens?"
+      },
+      {
+        "card_id": 1602569920108,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Was ist der Unterschied zwischen Rückfläche und Hinterwand des Herzens?"
+      },
+      {
+        "card_id": 1602573398342,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602573606474,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602573606483,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602574086612,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Wo befinden sich Herzklappen? Wo nicht?"
+      },
+      {
+        "card_id": 1602574820235,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Wie verlaufen die Fasern des Myokards?"
+      },
+      {
+        "card_id": 1602576259559,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602576811645,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602576811648,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1602576857809,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Welche Arten von Herzklappen gibt es?"
+      },
+      {
+        "card_id": 1602577334265,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Wie lautet die Merkhilfe für Klappenabschnitte?"
+      },
+      {
+        "card_id": 1602578977366,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "front": "Karte"
       }
     ],
-    "last_sync_timestamp": "2026-10-12T16:50:27.483481",
-    "current_day_index": 385,
-    "target_day_index": 385,
-    "next_day_index": 386
+    "last_sync_timestamp": "2026-10-16T18:38:31.654205",
+    "current_day_index": 389,
+    "target_day_index": 390,
+    "next_day_index": 391
   }
 }

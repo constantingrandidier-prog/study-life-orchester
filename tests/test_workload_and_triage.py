@@ -51,7 +51,7 @@ def test_parse_curriculum_deck():
 
     # Stockmann in TB Blut/Immunsystem
     tb3, prof3 = parse_curriculum_deck("2. SJ - 1::TB Blut/Immunsystem::Stockmann::Hämatopoese")
-    assert tb3 == "TB Blut/Immunsystem"
+    assert tb3 == "TB Blut & Immunsystem"
     assert prof3 == "Stockmann"
 
     # Non-curriculum or oral exam decks ignored

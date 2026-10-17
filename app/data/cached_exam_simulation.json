@@ -1,6 +1,6 @@
 {
   "available": true,
-  "average_predicted_score": 39.8,
+  "average_predicted_score": 40.0,
   "overall_safe": false,
   "modulpruefung_1": {
     "exam_name": "Modulprüfung 1 (Theorie)",
@@ -9,16 +9,16 @@
     "duration_min": 150,
     "angoff_cutoff": 60.0,
     "safety_target": 75.0,
-    "predicted_score": 59.5,
-    "potential_score": 81.7,
+    "predicted_score": 60.1,
+    "potential_score": 82.5,
     "coverage_pct": 55.4,
     "studied_cards": 2184,
     "total_cards": 3939,
-    "safety_margin": -0.5,
-    "safety_margin_text": "-0.5% Lücke",
-    "pass_status": "in_progress",
-    "status_label": "⏳ In Erarbeitung (55.4% Stoff gelernt)",
-    "status_color": "#ff7b72",
+    "safety_margin": 0.1,
+    "safety_margin_text": "+0.1% Puffer",
+    "pass_status": "borderline_pass",
+    "status_label": "⚠️ Knapp im Bestehensbereich (Gefahr bei Kprim-Fallen!)",
+    "status_color": "#d29922",
     "topic_breakdown": [
       {
         "topic_id": "blut_immun",
@@ -27,10 +27,10 @@
         "total_cards": 1159,
         "studied_cards": 1159,
         "coverage_pct": 100.0,
-        "retention_rate": 84.3,
-        "real_score": 84.3,
-        "potential_score": 84.3,
-        "contribution_points": 23.6,
+        "retention_rate": 84.5,
+        "real_score": 84.5,
+        "potential_score": 84.5,
+        "contribution_points": 23.7,
         "status": "safe",
         "status_color": "#3fb950",
         "matched_decks_count": 19,
@@ -43,10 +43,10 @@
         "total_cards": 1229,
         "studied_cards": 1025,
         "coverage_pct": 83.4,
-        "retention_rate": 81.3,
-        "real_score": 71.1,
-        "potential_score": 81.3,
-        "contribution_points": 29.9,
+        "retention_rate": 82.8,
+        "real_score": 72.4,
+        "potential_score": 82.8,
+        "contribution_points": 30.4,
         "status": "safe",
         "status_color": "#3fb950",
         "matched_decks_count": 20,
@@ -139,5 +139,5 @@
     ]
   },
   "total_ects": 30,
-  "summary_recommendation": "Fokus auf die schwächere Modulprüfung legen (MP1: 59.5% vs MP2: 20.0%)."
+  "summary_recommendation": "Fokus auf die schwächere Modulprüfung legen (MP1: 60.1% vs MP2: 20.0%)."
 }

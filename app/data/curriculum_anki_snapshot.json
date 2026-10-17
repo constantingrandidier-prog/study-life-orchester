@@ -50,7 +50,7 @@
     "new_cards": 0,
     "mastered_cards": 41,
     "learning_cards": 0,
-    "avg_card_chars": 537.8,
+    "avg_card_chars": 538.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -226,7 +226,7 @@
     "new_cards": 0,
     "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 229.6,
+    "avg_card_chars": 230.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -237,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 123,
     "learning_cards": 0,
-    "avg_card_chars": 250.7,
+    "avg_card_chars": 250.8,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -336,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 274.4,
+    "avg_card_chars": 276.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -355,12 +355,12 @@
     "deck_id": 1789378222996,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
     "card_count": 63,
-    "new_cards": 0,
+    "new_cards": 4,
     "mastered_cards": 59,
     "learning_cards": 0,
-    "avg_card_chars": 548.5,
-    "is_completed": true,
-    "is_in_progress": false
+    "avg_card_chars": 548.9,
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222997,
@@ -388,12 +388,12 @@
     "deck_id": 1789378222999,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
     "card_count": 71,
-    "new_cards": 0,
+    "new_cards": 2,
     "mastered_cards": 69,
     "learning_cards": 0,
     "avg_card_chars": 418.8,
-    "is_completed": true,
-    "is_in_progress": false
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223000,
@@ -402,7 +402,7 @@
     "new_cards": 0,
     "mastered_cards": 53,
     "learning_cards": 0,
-    "avg_card_chars": 329.0,
+    "avg_card_chars": 331.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -490,7 +490,7 @@
     "new_cards": 0,
     "mastered_cards": 104,
     "learning_cards": 0,
-    "avg_card_chars": 309.8,
+    "avg_card_chars": 309.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -501,7 +501,7 @@
     "new_cards": 0,
     "mastered_cards": 50,
     "learning_cards": 0,
-    "avg_card_chars": 262.2,
+    "avg_card_chars": 262.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -600,7 +600,7 @@
     "new_cards": 0,
     "mastered_cards": 73,
     "learning_cards": 0,
-    "avg_card_chars": 595.8,
+    "avg_card_chars": 596.0,
     "is_completed": true,
     "is_in_progress": false
   },

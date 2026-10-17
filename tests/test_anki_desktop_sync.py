@@ -158,3 +158,33 @@ def test_real_anki_collection_live_sync_telemetry():
         assert state["effective_study_minutes"] > 0.0
 
 
+def test_anki_sync_agent_conflict_and_barrier_recovery():
+    """Verify that trigger_anki_desktop_sync correctly handles multi responses and recovers from editor conflicts."""
+    from unittest.mock import patch, MagicMock
+    import bin.anki_sync_agent as agent
+
+    # 1. Normal successful sync via multi action
+    mock_resp_ok = MagicMock()
+    mock_resp_ok.__enter__.return_value.read.return_value = b'{"result": [null], "error": null}'
+    with patch("bin.anki_sync_agent.is_ankiconnect_alive", return_value=True), \
+         patch("urllib.request.urlopen", return_value=mock_resp_ok):
+        res = agent.trigger_anki_desktop_sync()
+        assert res is True
+
+    # 2. Conflict handling: Close editors error triggers graceful restart and retries
+    mock_resp_conflict = MagicMock()
+    mock_resp_conflict.__enter__.return_value.read.return_value = b'{"result": [{"result": null, "error": "Close editors before changing collection lifecycle."}], "error": null}'
+    mock_resp_exit = MagicMock()
+    mock_resp_exit.__enter__.return_value.read.return_value = b'{"result": null, "error": null}'
+    mock_resp_retry_ok = MagicMock()
+    mock_resp_retry_ok.__enter__.return_value.read.return_value = b'{"result": [null], "error": null}'
+
+    side_effects = [mock_resp_conflict, mock_resp_exit, mock_resp_retry_ok]
+    with patch("bin.anki_sync_agent.is_ankiconnect_alive", return_value=True), \
+         patch("bin.anki_sync_agent.ensure_anki_desktop_running", return_value=True), \
+         patch("time.sleep", return_value=None), \
+         patch("urllib.request.urlopen", side_effect=side_effects):
+        res = agent.trigger_anki_desktop_sync()
+        assert res is True
+
+

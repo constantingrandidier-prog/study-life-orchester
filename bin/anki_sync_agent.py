@@ -64,9 +64,17 @@ def ensure_anki_desktop_running():
 
     # Check if anki.exe process is already active
     try:
-        res = subprocess.run(["tasklist", "/FI", "IMAGENAME eq anki.exe"], capture_output=True, text=True)
+        res = subprocess.run(["tasklist", "/FI", "IMAGENAME eq anki.exe"], capture_output=True, text=True, errors="ignore")
         if "anki.exe" in res.stdout.lower():
-            return True
+            # Process is running; wait briefly for AnkiConnect to respond
+            for _ in range(5):
+                time.sleep(1.0)
+                if is_ankiconnect_alive():
+                    return True
+            # If anki.exe is running but AnkiConnect never responds, process is frozen/zombie -> kill and restart
+            log_msg("[AUTO-START] Anki-Prozess antwortet nicht (Zombie/Freeze) -> erzwinge Neustart...")
+            subprocess.run(["taskkill", "/F", "/IM", "anki.exe"], capture_output=True, errors="ignore")
+            time.sleep(1.0)
     except Exception:
         pass
 
@@ -92,33 +100,77 @@ def ensure_anki_desktop_running():
     return False
 
 
-def trigger_anki_desktop_sync(timeout: float = 25.0) -> bool:
+def trigger_anki_desktop_sync(timeout: float = 30.0) -> bool:
     """
     Trigger Anki Desktop's native synchronization with AnkiWeb via AnkiConnect.
     This pulls the latest card reviews/progress from the iPad/AnkiWeb down into the
     local collection.anki2 SQLite database completely silently without any popups!
+    Uses 'multi' with barrier so that the true sync status is waited for and verified.
+    If an editorConflict or blocking dialog is detected, gracefully restarts Anki Desktop.
     """
     if not is_ankiconnect_alive():
         ensure_anki_desktop_running()
-        time.sleep(1.0)
+        time.sleep(2.0)
         if not is_ankiconnect_alive():
             return False
 
-    try:
+    def _call_sync():
         req = urllib.request.Request(
             "http://127.0.0.1:8765",
-            data=json.dumps({"action": "sync", "version": 6}).encode("utf-8"),
+            data=json.dumps({
+                "action": "multi",
+                "version": 6,
+                "params": {"actions": [{"action": "sync"}]}
+            }).encode("utf-8"),
             headers={"Content-Type": "application/json"},
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            if not data.get("error"):
-                log_msg("[ANKI-SYNC] Anki Desktop mit AnkiWeb synchronisiert (iPad-Reviews geladen).")
-                return True
-            else:
-                log_msg(f"[ANKI-SYNC] AnkiConnect sync warning: {data.get('error')}")
-                return False
+            return json.loads(resp.read().decode("utf-8"))
+
+    try:
+        data = _call_sync()
+        top_err = data.get("error")
+        results = data.get("result") or []
+        first_err = results[0].get("error") if (results and isinstance(results[0], dict)) else None
+        err = top_err or first_err
+
+        if not err:
+            log_msg("[ANKI-SYNC] Anki Desktop mit AnkiWeb synchronisiert (iPad-Reviews geladen).")
+            return True
+
+        err_str = str(err).lower()
+        if "close editors" in err_str or "editorconflict" in err_str:
+            log_msg(f"[ANKI-SYNC] Editor-Konflikt in Anki Desktop ({err}) -> Starte Anki Desktop sauber neu...")
+            try:
+                exit_req = urllib.request.Request(
+                    "http://127.0.0.1:8765",
+                    data=json.dumps({"action": "guiExitAnki", "version": 6}).encode("utf-8"),
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(exit_req, timeout=5.0):
+                    pass
+            except Exception:
+                subprocess.run(["taskkill", "/F", "/IM", "anki.exe"], capture_output=True, errors="ignore")
+
+            time.sleep(2.0)
+            ensure_anki_desktop_running()
+            time.sleep(2.5)
+
+            if is_ankiconnect_alive():
+                retry_data = _call_sync()
+                retry_res = retry_data.get("result") or []
+                retry_err = retry_data.get("error") or (retry_res[0].get("error") if (retry_res and isinstance(retry_res[0], dict)) else None)
+                if not retry_err:
+                    log_msg("[ANKI-SYNC] Nach Neustart: Anki Desktop erfolgreich mit AnkiWeb synchronisiert.")
+                    return True
+                else:
+                    log_msg(f"[ANKI-SYNC] Nach Neustart Sync-Warnung: {retry_err}")
+                    return False
+        else:
+            log_msg(f"[ANKI-SYNC] AnkiConnect sync warning: {err}")
+            return False
     except Exception as exc:
         log_msg(f"[ANKI-SYNC] Sync note: {exc}")
         return False

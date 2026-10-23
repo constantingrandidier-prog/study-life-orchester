@@ -1303,6 +1303,7 @@ def get_daily_rhythm_endpoint(
             due_today = 0
         reps_reviewed = 0
         anki_first_rev = None
+        anki_last_rev = None
     else:
         anki_st = read_live_anki_desktop_state(target_date_str=t_date_iso)
         due_val = anki_st.get("due_today_count")
@@ -1319,6 +1320,7 @@ def get_daily_rhythm_endpoint(
         due_today = int(due_val) if due_val is not None else 0
         reps_reviewed = int(anki_st.get("repetition_cards_count", 0))
         anki_first_rev = anki_st.get("first_review_time")
+        anki_last_rev = anki_st.get("last_review_time")
 
     # Freeze and preserve planned daily baseline so reviews done during the day never shrink block duration or shift Feierabend
     planned_due = repository.get_or_set_daily_baseline_due(
@@ -1353,6 +1355,7 @@ def get_daily_rhythm_endpoint(
         removed_block_ids=rem_list,
         custom_block_order=order_list,
         anki_first_review_time=anki_first_rev,
+        anki_last_review_time=anki_last_rev,
         is_manual_start=is_manual_start,
     )
 

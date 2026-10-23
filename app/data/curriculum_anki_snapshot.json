@@ -3,22 +3,33 @@
     "deck_id": 1789378222942,
     "deck_name": "2. SJ - 1 :: TB Atmung :: Einführung und Abschluss Atmung",
     "card_count": 40,
-    "new_cards": 40,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 40,
     "learning_cards": 0,
-    "avg_card_chars": 259.9,
-    "is_completed": false,
+    "avg_card_chars": 290.4,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378222950,
     "deck_name": "2. SJ - 1 :: TB Atmung :: Atmung_Physiologie_Wenger",
     "card_count": 292,
-    "new_cards": 292,
-    "mastered_cards": 0,
+    "new_cards": 244,
+    "mastered_cards": 48,
     "learning_cards": 0,
-    "avg_card_chars": 793.1,
+    "avg_card_chars": 803.3,
     "is_completed": false,
+    "is_in_progress": true
+  },
+  {
+    "deck_id": 1789378222963,
+    "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu",
+    "card_count": 1,
+    "new_cards": 0,
+    "mastered_cards": 1,
+    "learning_cards": 0,
+    "avg_card_chars": 1125.0,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -69,12 +80,12 @@
     "deck_id": 1789378222970,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
     "card_count": 165,
-    "new_cards": 3,
-    "mastered_cards": 162,
+    "new_cards": 0,
+    "mastered_cards": 165,
     "learning_cards": 0,
-    "avg_card_chars": 247.4,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 252.7,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222971,
@@ -226,7 +237,7 @@
     "new_cards": 0,
     "mastered_cards": 51,
     "learning_cards": 0,
-    "avg_card_chars": 230.8,
+    "avg_card_chars": 230.9,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -278,22 +289,22 @@
     "deck_id": 1789378222989,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
     "card_count": 132,
-    "new_cards": 0,
+    "new_cards": 1,
     "mastered_cards": 131,
     "learning_cards": 0,
-    "avg_card_chars": 439.2,
-    "is_completed": true,
-    "is_in_progress": false
+    "avg_card_chars": 440.6,
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222990,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Sommer :: Gefässentwicklung / Sommer",
     "card_count": 25,
-    "new_cards": 25,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 25,
     "learning_cards": 0,
-    "avg_card_chars": 424.9,
-    "is_completed": false,
+    "avg_card_chars": 437.9,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -311,12 +322,12 @@
     "deck_id": 1789378222992,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Sommer :: Herzentwicklung / Sommer",
     "card_count": 37,
-    "new_cards": 37,
-    "mastered_cards": 0,
+    "new_cards": 12,
+    "mastered_cards": 25,
     "learning_cards": 0,
-    "avg_card_chars": 493.4,
+    "avg_card_chars": 497.5,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378222993,
@@ -325,7 +336,7 @@
     "new_cards": 0,
     "mastered_cards": 24,
     "learning_cards": 0,
-    "avg_card_chars": 511.5,
+    "avg_card_chars": 520.4,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -336,7 +347,7 @@
     "new_cards": 0,
     "mastered_cards": 76,
     "learning_cards": 0,
-    "avg_card_chars": 276.2,
+    "avg_card_chars": 277.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -347,7 +358,7 @@
     "new_cards": 0,
     "mastered_cards": 79,
     "learning_cards": 0,
-    "avg_card_chars": 312.7,
+    "avg_card_chars": 313.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -355,12 +366,12 @@
     "deck_id": 1789378222996,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
     "card_count": 63,
-    "new_cards": 4,
-    "mastered_cards": 59,
+    "new_cards": 0,
+    "mastered_cards": 61,
     "learning_cards": 0,
-    "avg_card_chars": 548.9,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 555.0,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378222997,
@@ -388,12 +399,12 @@
     "deck_id": 1789378222999,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
     "card_count": 71,
-    "new_cards": 2,
-    "mastered_cards": 69,
+    "new_cards": 0,
+    "mastered_cards": 71,
     "learning_cards": 0,
     "avg_card_chars": 418.8,
-    "is_completed": false,
-    "is_in_progress": true
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223000,
@@ -402,7 +413,7 @@
     "new_cards": 0,
     "mastered_cards": 53,
     "learning_cards": 0,
-    "avg_card_chars": 331.0,
+    "avg_card_chars": 335.6,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -413,7 +424,7 @@
     "new_cards": 0,
     "mastered_cards": 54,
     "learning_cards": 0,
-    "avg_card_chars": 307.5,
+    "avg_card_chars": 307.7,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -424,7 +435,7 @@
     "new_cards": 0,
     "mastered_cards": 105,
     "learning_cards": 0,
-    "avg_card_chars": 296.9,
+    "avg_card_chars": 298.5,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -454,33 +465,33 @@
     "deck_id": 1789378223005,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Lymphsystem / Loffing",
     "card_count": 19,
-    "new_cards": 19,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 19,
     "learning_cards": 0,
-    "avg_card_chars": 256.9,
-    "is_completed": false,
+    "avg_card_chars": 270.7,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378223006,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Mediastinum und Perikard / Loffing",
     "card_count": 61,
-    "new_cards": 61,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 61,
     "learning_cards": 0,
-    "avg_card_chars": 252.6,
-    "is_completed": false,
+    "avg_card_chars": 270.1,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378223007,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing",
     "card_count": 62,
-    "new_cards": 62,
-    "mastered_cards": 0,
+    "new_cards": 0,
+    "mastered_cards": 60,
     "learning_cards": 0,
-    "avg_card_chars": 231.2,
-    "is_completed": false,
+    "avg_card_chars": 263.0,
+    "is_completed": true,
     "is_in_progress": false
   },
   {
@@ -490,7 +501,7 @@
     "new_cards": 0,
     "mastered_cards": 104,
     "learning_cards": 0,
-    "avg_card_chars": 309.9,
+    "avg_card_chars": 312.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -501,7 +512,7 @@
     "new_cards": 0,
     "mastered_cards": 50,
     "learning_cards": 0,
-    "avg_card_chars": 262.0,
+    "avg_card_chars": 265.3,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -622,7 +633,7 @@
     "new_cards": 0,
     "mastered_cards": 97,
     "learning_cards": 0,
-    "avg_card_chars": 354.8,
+    "avg_card_chars": 355.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -666,7 +677,7 @@
     "new_cards": 0,
     "mastered_cards": 42,
     "learning_cards": 0,
-    "avg_card_chars": 225.8,
+    "avg_card_chars": 227.1,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -688,7 +699,7 @@
     "new_cards": 0,
     "mastered_cards": 59,
     "learning_cards": 0,
-    "avg_card_chars": 261.6,
+    "avg_card_chars": 264.0,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -729,23 +740,23 @@
     "deck_id": 1789378223032,
     "deck_name": "2. SJ - 1 :: TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing",
     "card_count": 222,
-    "new_cards": 222,
-    "mastered_cards": 0,
+    "new_cards": 113,
+    "mastered_cards": 109,
     "learning_cards": 0,
-    "avg_card_chars": 240.4,
+    "avg_card_chars": 250.6,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223033,
     "deck_name": "2. SJ - 1 :: TB Atmung :: Atmung_Physiologie_Wenger :: Energieumsatz & Thermoregulation ⚫",
     "card_count": 93,
-    "new_cards": 93,
-    "mastered_cards": 0,
+    "new_cards": 5,
+    "mastered_cards": 88,
     "learning_cards": 0,
-    "avg_card_chars": 334.7,
+    "avg_card_chars": 354.5,
     "is_completed": false,
-    "is_in_progress": false
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223034,
@@ -773,12 +784,12 @@
     "deck_id": 1789378223036,
     "deck_name": "2. SJ - 1 :: TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
     "card_count": 50,
-    "new_cards": 37,
-    "mastered_cards": 13,
+    "new_cards": 0,
+    "mastered_cards": 40,
     "learning_cards": 0,
-    "avg_card_chars": 324.9,
-    "is_completed": false,
-    "is_in_progress": true
+    "avg_card_chars": 351.8,
+    "is_completed": true,
+    "is_in_progress": false
   },
   {
     "deck_id": 1789378223037,
@@ -820,7 +831,7 @@
     "new_cards": 0,
     "mastered_cards": 120,
     "learning_cards": 0,
-    "avg_card_chars": 271.2,
+    "avg_card_chars": 274.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -985,7 +996,7 @@
     "new_cards": 0,
     "mastered_cards": 48,
     "learning_cards": 0,
-    "avg_card_chars": 410.8,
+    "avg_card_chars": 414.5,
     "is_completed": true,
     "is_in_progress": false
   },

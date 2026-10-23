@@ -4921,6 +4921,7 @@ async function toggleRhythmBlockDone(dateStr, blockId) {
   localStorage.setItem(key, String(nextState));
 
   try {
+    const nowStr = new Date().toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit', hour12: false });
     await fetch('/api/v1/schedule/rhythm-action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -4928,6 +4929,7 @@ async function toggleRhythmBlockDone(dateStr, blockId) {
         source_date: dateStr,
         action: nextState ? 'complete' : 'uncomplete',
         block_id: blockId,
+        block_payload: nextState ? { completed_at: nowStr, is_completed: true } : null,
       }),
     });
   } catch (err) {

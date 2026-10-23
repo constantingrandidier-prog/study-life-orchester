@@ -96,6 +96,7 @@ def generate_daily_science_rhythm(
     postponed_blocks: Optional[List[Dict[str, Any]]] = None,
     custom_block_order: Optional[List[str]] = None,
     anki_first_review_time: Optional[str] = None,
+    anki_last_review_time: Optional[str] = None,
     inserted_blocks: Optional[List[Dict[str, Any]]] = None,
     split_blocks: Optional[Dict[str, Any]] = None,
     is_manual_start: bool = False,
@@ -226,6 +227,7 @@ def generate_daily_science_rhythm(
         used_anki_start = False
 
     cur_m = _parse_time_to_minutes(effective_start_str)
+    cur_m_orig = cur_m
     blocks: List[Dict[str, Any]] = []
     total_study_mins = 0
     total_pause_mins = 0
@@ -283,17 +285,57 @@ def generate_daily_science_rhythm(
         calc_reps_mins = 0
         dur_reps = 0
 
+    planned_reps_dur = dur_reps
+    reps_completed_early = False
+
+    reps_inter_mins = sum(
+        item.get("duration_minutes", 0)
+        for item in interrupted_blocks.get("block_morning_reps", [])
+    )
+
+    has_explicit_early_signal = (
+        ("block_morning_reps" in completed_set)
+        or bool(custom_blocks.get("block_morning_reps", {}).get("is_completed"))
+        or bool(custom_blocks.get("block_morning_reps", {}).get("completed_at"))
+        or (anki_last_review_time is not None and remaining_due == 0)
+    )
+
     if is_today_date:
         done_cards = max(0, planned_due - remaining_due)
-        is_reps_completed = (remaining_due == 0 and planned_due > 0)
-        # Wenn heute alle Repetitionen erledigt sind, soll der Block nicht künstlich über 12:30 hinausragen
-        if is_reps_completed and cur_m < (12 * 60 + 30) and (cur_m + dur_reps) > (12 * 60 + 30):
-            dur_reps = max(30, (12 * 60 + 30) - cur_m)
+        is_reps_completed = (
+            (remaining_due == 0 and planned_due > 0)
+            or ("block_morning_reps" in completed_set)
+            or bool(custom_blocks.get("block_morning_reps", {}).get("is_completed"))
+            or bool(custom_blocks.get("block_morning_reps", {}).get("completed"))
+        )
+
+        comp_time_str = (
+            custom_blocks.get("block_morning_reps", {}).get("completed_at")
+            or anki_last_review_time
+        )
+
+        if is_reps_completed and has_explicit_early_signal:
+            if comp_time_str:
+                comp_m = _parse_time_to_minutes(comp_time_str)
+            elif now_minutes > cur_m:
+                comp_m = min(now_minutes, cur_m + dur_reps)
+            else:
+                comp_m = cur_m + dur_reps
+
+            if comp_m > cur_m:
+                actual_work_mins = max(20, comp_m - cur_m - reps_inter_mins)
+                if actual_work_mins < (dur_reps - 10):
+                    dur_reps = int(round(actual_work_mins / 5.0) * 5)
+                    reps_completed_early = True
 
         if planned_due == 0:
             reps_title = "Block 1: Keine Repetitionen fällig"
             reps_subtitle = "Keine Wiederholungen heute fällig · Fokus auf neue Karten"
             is_reps_completed = True
+        elif reps_completed_early:
+            finish_str = comp_time_str or _minutes_to_time(comp_m)
+            reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten) - Vorzeitig Erledigt"
+            reps_subtitle = f"Alle {planned_due} Wiederholungen um {finish_str} Uhr fertig! · Vormittag optimal genutzt"
         elif is_reps_completed:
             reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten) - Erledigt"
             reps_subtitle = f"Alle {planned_due} Wiederholungen erledigt! · Vormittag optimal genutzt"
@@ -304,9 +346,26 @@ def generate_daily_science_rhythm(
             reps_title = f"Block 1: Morgen-Repetitionen ({planned_due} Karten)"
             reps_subtitle = f"{planned_due} fällig · ~{calc_reps_mins} Min. benötigt"
     else:
-        # Für zukünftige Tage: niemals vorab als 'Erledigt' markieren! Volle Zeit einplanen.
+        # Für vergangene oder zukünftige Tage
         effective_due = max(0, planned_due)
-        if effective_due > 0:
+        is_past = (t_date < now.date())
+        if is_past and ("block_morning_reps" in completed_set or remaining_due == 0):
+            is_reps_completed = True
+            comp_time_str = (
+                custom_blocks.get("block_morning_reps", {}).get("completed_at")
+                or anki_last_review_time
+            )
+            if comp_time_str:
+                comp_m = _parse_time_to_minutes(comp_time_str)
+                if comp_m > cur_m:
+                    actual_work_mins = max(20, comp_m - cur_m - reps_inter_mins)
+                    if actual_work_mins < (dur_reps - 10):
+                        dur_reps = int(round(actual_work_mins / 5.0) * 5)
+                        reps_completed_early = True
+            finish_str = comp_time_str or ""
+            reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten) - Erledigt"
+            reps_subtitle = f"Alle {effective_due} Wiederholungen erledigt!"
+        elif effective_due > 0:
             calc_reps_mins = max(30, min(240, round((effective_due * SECS_PER_REVIEW) / 60.0)))
             dur_reps = int(round(calc_reps_mins / 15.0) * 15)
             is_reps_completed = False
@@ -447,6 +506,26 @@ def generate_daily_science_rhythm(
     if lec_block:
         morning_items.append((lec_block, None))
 
+    active_mandatory_events = [
+        m for m in mandatory_events
+        if f"mandatory_event_{m.id or 0}" not in removed_set
+        and str(m.id) not in removed_set
+        and f"event_{m.id}" not in removed_set
+    ]
+
+    # Calculate planned midday break anchor
+    if planned_reps_dur >= 180:
+        raw_target = cur_m_orig + planned_reps_dur + reps_inter_mins + 15
+        planned_midday_target = max(12 * 60 + 30, min(13 * 60 + 15, raw_target))
+    else:
+        planned_midday_target = 13 * 60
+
+    # If any mandatory event is scheduled around midday, morning work must stop before it!
+    for m in active_mandatory_events:
+        m_s = _parse_time_to_minutes(m.start_time.strftime("%H:%M"))
+        if 12 * 60 <= m_s <= 13 * 60 + 30:
+            planned_midday_target = min(planned_midday_target, m_s)
+
     LUNCH_START_MIN = 12 * 60 + 30   # 12:30
     LUNCH_START_MAX = 13 * 60 + 30   # 13:30
     lunch_placed = False
@@ -472,6 +551,11 @@ def generate_daily_science_rhythm(
         is_last_item = (idx == len(morning_items) - 1)
 
         if lunch_placed:
+            for m in active_mandatory_events:
+                m_s = _parse_time_to_minutes(m.start_time.strftime("%H:%M"))
+                m_e = _parse_time_to_minutes(m.end_time.strftime("%H:%M"))
+                if m_s <= cur_m < m_e:
+                    cur_m = m_e
             add_block_if_active(b)
             if p_after and (p_after.get("id") not in removed_set):
                 add_block_if_active(p_after)
@@ -479,6 +563,72 @@ def generate_daily_science_rhythm(
 
         # Mittagspause noch nicht platziert:
         b_end = cur_m + b_dur
+
+        # Vorzeitiges Vorziehen von Lernblöcken (z.B. Block 2: Neue Karten) vor die Mittagspause:
+        # Falls der Block vor dem Mittagsziel startet und über das Mittagsziel hinausgehen würde:
+        if cur_m < planned_midday_target and b_end > planned_midday_target:
+            avail = planned_midday_target - cur_m
+            if avail >= 25 and not b.get("is_break"):
+                p1_dur = avail
+                p2_dur = b_dur - p1_dur
+
+                import re
+                clean_title = re.sub(r'\s*\((?:Teil\s*\d+|vor|nach)[^)]*\)', '', b.get('title', 'Lernblock')).strip()
+
+                # Teil 1 vor Mittagspause
+                part1_dict = dict(b)
+                part1_dict["id"] = f"{bid}_part1"
+                part1_dict["parent_id"] = bid
+                part1_dict["duration_minutes"] = p1_dur
+                if bid == "block_new_cards" and "target_cards" in b:
+                    p1_cards = max(10, round(b["target_cards"] * (p1_dur / float(b_dur))))
+                    part1_dict["target_cards"] = p1_cards
+                    part1_dict["title"] = f"Block 2: {p1_cards} Neue Karten (Teil 1, vor Mittagspause)"
+                elif bid == "block_morning_reps":
+                    p1_reps = max(10, round(planned_due * (p1_dur / float(b_dur))))
+                    part1_dict["cards_due"] = p1_reps
+                    part1_dict["title"] = f"Block 1: Morgen-Repetitionen (~{p1_reps} Karten) (Teil 1, vor Mittagspause)"
+                else:
+                    part1_dict["title"] = f"{clean_title} (Teil 1, vor Mittagspause)"
+
+                if "badge" in part1_dict and isinstance(part1_dict["badge"], str):
+                    part1_dict["badge"] = re.sub(r'\(\d+m\)', f'({p1_dur}m)', part1_dict["badge"])
+                add_block_if_active(part1_dict)
+
+                # Mittagspause exakt am Mittagsziel platzieren
+                add_block_if_active(lunch_block)
+                lunch_placed = True
+
+                # Vor Teil 2: prüfen, ob cur_m in einen aktiven Pflichttermin fällt
+                for m in active_mandatory_events:
+                    m_s = _parse_time_to_minutes(m.start_time.strftime("%H:%M"))
+                    m_e = _parse_time_to_minutes(m.end_time.strftime("%H:%M"))
+                    if m_s <= cur_m < m_e:
+                        cur_m = m_e
+
+                # Teil 2 nach Mittagspause / Pflichttermin
+                part2_dict = dict(b)
+                part2_dict["id"] = f"{bid}_part2"
+                part2_dict["parent_id"] = bid
+                part2_dict["duration_minutes"] = p2_dur
+                if bid == "block_new_cards" and "target_cards" in b:
+                    p2_cards = max(5, b["target_cards"] - part1_dict.get("target_cards", 0))
+                    part2_dict["target_cards"] = p2_cards
+                    part2_dict["title"] = f"Block 2: {p2_cards} Neue Karten (Teil 2, nach Mittagspause)"
+                elif bid == "block_morning_reps":
+                    p2_reps = max(5, planned_due - part1_dict.get("cards_due", 0))
+                    part2_dict["cards_due"] = p2_reps
+                    part2_dict["title"] = f"Block 1: Morgen-Repetitionen (~{p2_reps} Karten) (Teil 2, nach Mittagspause)"
+                else:
+                    part2_dict["title"] = f"{clean_title} (Teil 2, nach Mittagspause)"
+
+                if "badge" in part2_dict and isinstance(part2_dict["badge"], str):
+                    part2_dict["badge"] = re.sub(r'\(\d+m\)', f'({p2_dur}m)', part2_dict["badge"])
+                add_block_if_active(part2_dict)
+
+                if p_after and (p_after.get("id") not in removed_set):
+                    add_block_if_active(p_after)
+                continue
 
         # Option A: Die aktuelle Uhrzeit liegt bereits im/nach dem Mittagsfenster (>= 12:28)
         if cur_m >= (12 * 60 + 28):
@@ -861,6 +1011,71 @@ def generate_daily_science_rhythm(
 
             if lunch_block and not lunch_placed and c_m < LUNCH_MAX:
                 b_end = c_m + dur
+
+                # Case 0: Early pull-forward split before locked midday target
+                if c_m < planned_midday_target and b_end > planned_midday_target:
+                    avail = planned_midday_target - c_m
+                    if avail >= 25 and not b.get("is_break"):
+                        p1_dur = avail
+                        p2_dur = dur - p1_dur
+                        import re
+                        clean_title = re.sub(r'\s*\((?:Teil\s*\d+|vor|nach)[^)]*\)', '', b.get('title', 'Lernblock')).strip()
+
+                        # Part 1
+                        part1 = dict(b)
+                        bid = b.get("id", "study_block")
+                        part1["id"] = f"{bid}_part1" if not bid.endswith("_part1") else bid
+                        part1["parent_id"] = bid
+                        part1["duration_minutes"] = p1_dur
+                        if bid == "block_new_cards" and "target_cards" in b:
+                            p1_cards = max(10, round(b["target_cards"] * (p1_dur / float(dur))))
+                            part1["target_cards"] = p1_cards
+                            part1["title"] = f"Block 2: {p1_cards} Neue Karten (Teil 1, vor Mittagspause)"
+                        else:
+                            part1["title"] = f"{clean_title} (Teil 1, vor Mittagspause)"
+                        if "badge" in part1 and isinstance(part1["badge"], str):
+                            part1["badge"] = re.sub(r'\(\d+m\)', f'({p1_dur}m)', part1["badge"])
+                        part1["start_time"] = _minutes_to_time(c_m)
+                        c_m += p1_dur
+                        part1["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(part1)
+                        calc_study += p1_dur
+
+                        # Lunch
+                        l_dur = lunch_block.get("duration_minutes", 60)
+                        lunch_block["start_time"] = _minutes_to_time(c_m)
+                        c_m += l_dur
+                        lunch_block["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(lunch_block)
+                        calc_pause += l_dur
+                        lunch_placed = True
+
+                        for m in active_mandatory_events:
+                            m_s = _parse_time_to_minutes(m.start_time.strftime("%H:%M"))
+                            m_e = _parse_time_to_minutes(m.end_time.strftime("%H:%M"))
+                            if m_s <= c_m < m_e:
+                                c_m = m_e
+
+                        # Part 2
+                        part2 = dict(b)
+                        part2["id"] = f"{bid}_part2" if not bid.endswith("_part2") else f"{bid}_p2"
+                        part2["parent_id"] = bid
+                        part2["duration_minutes"] = p2_dur
+                        if bid == "block_new_cards" and "target_cards" in b:
+                            p2_cards = max(5, b["target_cards"] - part1.get("target_cards", 0))
+                            part2["target_cards"] = p2_cards
+                            part2["title"] = f"Block 2: {p2_cards} Neue Karten (Teil 2, nach Mittagspause)"
+                        else:
+                            part2["title"] = f"{clean_title} (Teil 2, nach Mittagspause)"
+                        if "badge" in part2 and isinstance(part2["badge"], str):
+                            part2["badge"] = re.sub(r'\(\d+m\)', f'({p2_dur}m)', part2["badge"])
+                        part2["start_time"] = _minutes_to_time(c_m)
+                        c_m += p2_dur
+                        part2["end_time"] = _minutes_to_time(c_m)
+                        final_ordered.append(part2)
+                        calc_study += p2_dur
+                        continue
+
                 # Case 1: c_m already in lunch window (>= 12:25)
                 if c_m >= (12 * 60 + 25):
                     l_dur = lunch_block.get("duration_minutes", 60)

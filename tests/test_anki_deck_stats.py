@@ -90,15 +90,15 @@ def test_untouched_decks_and_topics_have_zero_reviews_and_no_retention():
     if not stats.get("available"):
         pytest.skip("Local Anki DB not available")
     
-    # Verify that TB Atmung has 0 reviews and retention None because the student hasn't touched it yet
-    atmung = next((t for t in stats["topics"] if "atmung" in t["topic_name"].lower()), None)
-    if atmung:
-        assert atmung["total_reviews"] == 0, f"Expected 0 reviews in Atmung, got {atmung['total_reviews']}"
-        assert atmung["retention_rate"] is None
-        assert atmung["last_reviewed_text"] == "Noch nicht gestartet"
-        assert atmung["weak_decks_count"] == 0
-        assert atmung["neglected_decks_count"] == 0
-        for sd in atmung["subdecks"]:
+    # Find any topic that has not been started yet
+    untouched = next((t for t in stats.get("topics", []) if t.get("total_reviews", 0) == 0), None)
+    if untouched:
+        assert untouched["total_reviews"] == 0
+        assert untouched["retention_rate"] is None
+        assert untouched["last_reviewed_text"] == "Noch nicht gestartet"
+        assert untouched["weak_decks_count"] == 0
+        assert untouched["neglected_decks_count"] == 0
+        for sd in untouched["subdecks"]:
             assert sd["status"] == "unreviewed"
             assert sd["retention_rate"] is None
             assert sd["total_reviews"] == 0

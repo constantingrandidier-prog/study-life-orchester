@@ -296,5 +296,70 @@ def test_new_cards_splits_across_lunch_window():
     assert idx_p1 < idx_lunch < idx_p2
 
 
+def test_early_repetition_completion_pulls_new_cards_forward_before_lunch():
+    from app.models import CalendarEvent
+    from datetime import datetime
 
+    # Scenario: 348 reviews planned (~240m), started at 08:55.
+    # User finishes reps early at 11:30.
+    # Mandatory practical session at 13:00 - 14:45 locks midday at 13:00.
+    practikum = CalendarEvent(
+        id=2800,
+        title="Praktikum Histologie II",
+        start_time=datetime(2026, 10, 23, 13, 0),
+        end_time=datetime(2026, 10, 23, 14, 45),
+        is_mandatory=True,
+    )
 
+    res = generate_daily_science_rhythm(
+        target_date=date(2026, 10, 23),
+        events=[practikum],
+        cards_due_today=348,
+        cards_remaining_due=0,
+        new_cards_target=95,
+        start_time_str="08:55",
+        lunch_duration_mins=75,
+        include_lecture=True,
+        anki_first_review_time="08:55",
+        anki_last_review_time="11:30",
+        is_manual_start=True,
+    )
+
+    blocks = res["blocks"]
+    b_map = {b["id"]: b for b in blocks}
+
+    # 1. Block 1 finishes at 11:30
+    assert "block_morning_reps" in b_map
+    reps_b = b_map["block_morning_reps"]
+    assert reps_b["start_time"] == "08:55"
+    assert reps_b["end_time"] == "11:30"
+    assert reps_b["is_completed"] is True
+    assert "Vorzeitig Erledigt" in reps_b["title"]
+
+    # 2. Pause 1 is 11:30 - 11:45
+    assert "pause_1" in b_map
+    assert b_map["pause_1"]["start_time"] == "11:30"
+    assert b_map["pause_1"]["end_time"] == "11:45"
+
+    # 3. Block 2 Part 1 is pulled forward before lunch: 11:45 - 13:00
+    assert "block_new_cards_part1" in b_map
+    p1 = b_map["block_new_cards_part1"]
+    assert p1["start_time"] == "11:45"
+    assert p1["end_time"] == "13:00"
+    assert p1["duration_minutes"] == 75
+    assert p1["target_cards"] == 68
+
+    # 4. Mittagspause is anchored at 13:00 (NOT shifted to morning!)
+    assert "pause_lunch" in b_map
+    assert b_map["pause_lunch"]["start_time"] == "13:00"
+
+    # 5. Block 2 Part 2 takes the remaining 27 cards after midday event
+    assert "block_new_cards_part2" in b_map
+    p2 = b_map["block_new_cards_part2"]
+    assert p2["start_time"] == "14:45"
+    assert p2["end_time"] == "15:15"
+    assert p2["duration_minutes"] == 30
+    assert p2["target_cards"] == 27
+
+    # 6. Feierabend is accurately shifted earlier due to early efficiency
+    assert res["feierabend_time"] == "17:00"

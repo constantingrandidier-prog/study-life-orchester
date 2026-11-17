@@ -89,9 +89,14 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14, daily_budget: Opt
         curr_day = int((now.timestamp() - crt) // 86400)
         end_day = curr_day + days_ahead
 
+        from app.services.anki_backlog_triage import parse_curriculum_deck
         decks = {}
+        valid_curr_dids = set()
         for did, dname in cur.execute("SELECT id, name FROM decks").fetchall():
             decks[did] = clean_deck_name(dname)
+            tb, prof = parse_curriculum_deck(dname)
+            if tb and prof:
+                valid_curr_dids.add(did)
 
         # Fetch daily due sums and deck breakdown for the next N days.
         # Group any overdue cards (due <= curr_day) and active learning cards (queue=1) into today's bucket.
@@ -100,11 +105,15 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14, daily_budget: Opt
                c.did,
                COUNT(*) as card_count
         FROM cards c
-        WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1)
+        WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?)) AND c.queue != -1
         GROUP BY effective_due, c.did
         ORDER BY effective_due ASC, card_count DESC
         """
-        rows = cur.execute(sql_due, (curr_day, curr_day, end_day)).fetchall()
+        raw_rows = cur.execute(sql_due, (curr_day, curr_day, end_day, end_day)).fetchall()
+        if valid_curr_dids:
+            rows = [r for r in raw_rows if r[1] in valid_curr_dids]
+        else:
+            rows = raw_rows
 
     day_data: Dict[int, Dict[str, Any]] = {}
     for offset in range(days_ahead + 1):

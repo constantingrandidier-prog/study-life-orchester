@@ -56,13 +56,17 @@ def test_parse_curriculum_deck():
     assert tb3 == "TB Blut & Immunsystem"
     assert prof3 == "Stockmann"
 
-    # Non-curriculum or oral exam decks ignored
+    # Non-curriculum, oral exam, and Wenger/Sommer decks ignored
     assert parse_curriculum_deck("1. SJ - 1\x1fAnatomie") == (None, None)
     assert parse_curriculum_deck("2. SJ - 1\x1fMündliche Prüfung") == (None, None)
     assert parse_curriculum_deck("Englisch Vokabeln") == (None, None)
+    assert parse_curriculum_deck("2. SJ - 1\x1fTB Atmung\x1fAtmung_Physiologie_Wenger") == (None, None)
+    assert parse_curriculum_deck("2. SJ - 1\x1fTB Herz-Kreislauf\x1fSommer\x1fHerzentwicklung") == (None, None)
 
 def test_backlog_triage_factors_and_structure():
-    triage = calculate_backlog_triage(max_capacity=300)
+    triage = calculate_backlog_triage(max_capacity=350)
+    for t in triage.get("topics", []):
+        assert t["dozent"] not in ("Wenger", "Sommer")
     assert triage["connected"] in (True, False)
     assert "themenbloecke" in triage
     for tb in triage["themenbloecke"]:

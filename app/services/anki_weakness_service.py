@@ -192,6 +192,9 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
     overdue_topics: List[Dict[str, Any]] = []
 
     for did, dname in decks_map.items():
+        low_dn = dname.lower()
+        if "atmung_physiologie_wenger" in low_dn or ":: sommer" in low_dn or "/ sommer" in low_dn or "4 sommer" in low_dn:
+            continue
         card_info = deck_card_stats.get(did, {"total": 0, "due": 0})
         total_c = card_info["total"]
         due_c = card_info["due"]

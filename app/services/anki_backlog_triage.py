@@ -97,7 +97,12 @@ def parse_curriculum_deck(raw_name: str):
                 break
     if not tb_part:
         return None, None
-    return clean_tb_name(tb_part), clean_prof_name(prof_part or "Allgemein")
+    tb_clean = clean_tb_name(tb_part)
+    prof_clean = clean_prof_name(prof_part or "Allgemein")
+    # Exclude Wenger and Sommer as requested (learned via summaries, not Anki repetitions)
+    if prof_clean in ("Wenger", "Sommer"):
+        return None, None
+    return tb_clean, prof_clean
 
 
 def _extract_real_anki_prof_prefix(raw_name: str) -> str:

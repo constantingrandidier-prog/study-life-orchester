@@ -1,6 +1,6 @@
 {
   "available": true,
-  "average_predicted_score": 56.5,
+  "average_predicted_score": 56.6,
   "overall_safe": false,
   "modulpruefung_1": {
     "exam_name": "Modulprüfung 1 (Theorie)",
@@ -77,13 +77,13 @@
     "duration_min": 150,
     "angoff_cutoff": 60.0,
     "safety_target": 75.0,
-    "predicted_score": 30.9,
-    "potential_score": 77.5,
+    "predicted_score": 31.0,
+    "potential_score": 78.0,
     "coverage_pct": 20.7,
     "studied_cards": 1188,
     "total_cards": 5746,
-    "safety_margin": -29.1,
-    "safety_margin_text": "-29.1% Lücke",
+    "safety_margin": -29.0,
+    "safety_margin_text": "-29.0% Lücke",
     "pass_status": "in_progress",
     "status_label": "⏳ In Erarbeitung (20.7% Stoff gelernt)",
     "status_color": "#ff7b72",
@@ -95,10 +95,10 @@
         "total_cards": 2919,
         "studied_cards": 554,
         "coverage_pct": 19.0,
-        "retention_rate": 72.6,
-        "real_score": 30.0,
-        "potential_score": 72.6,
-        "contribution_points": 9.6,
+        "retention_rate": 74.1,
+        "real_score": 30.3,
+        "potential_score": 74.1,
+        "contribution_points": 9.7,
         "status": "in_progress",
         "status_color": "#ff7b72",
         "matched_decks_count": 28,
@@ -139,5 +139,5 @@
     ]
   },
   "total_ects": 30,
-  "summary_recommendation": "Fokus auf die schwächere Modulprüfung legen (MP1: 82.2% vs MP2: 30.9%)."
+  "summary_recommendation": "Fokus auf die schwächere Modulprüfung legen (MP1: 82.2% vs MP2: 31.0%)."
 }

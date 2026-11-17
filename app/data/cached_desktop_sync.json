@@ -304,7 +304,7 @@
     "next_day_index": 394
   },
   "_latest_target_date": "2026-11-17",
-  "_updated_at": "2026-11-17T09:28:34.663835",
+  "_updated_at": "2026-11-17T09:32:57.411174",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -1608,7 +1608,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-17T09:27:24.486756",
+    "last_sync_timestamp": "2026-11-17T09:32:49.162264",
     "current_day_index": 421,
     "target_day_index": 358,
     "next_day_index": 359
@@ -7786,13 +7786,12 @@
     "total_curriculum_cards": 8740,
     "curriculum_progress_pct": 54.3,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 425,
+    "due_tomorrow_count": 322,
     "due_tomorrow_deck_breakdown": {
       "TB Atmung :: Einführung und Abschluss Atmung": 3,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 1,
       "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 2,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 3,
-      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 10,
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 2,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 3,
       "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 4,
@@ -7818,7 +7817,6 @@
       "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 3,
       "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 2,
       "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 7,
-      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 93,
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 3,
       "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 4,
       "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing": 3,
@@ -7839,10 +7837,6 @@
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 10
     },
     "due_tomorrow_topics": [
-      {
-        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
-        "count": 93
-      },
       {
         "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
         "count": 35
@@ -7878,10 +7872,6 @@
       {
         "deck": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
         "count": 11
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "count": 10
       },
       {
         "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
@@ -8165,37 +8155,37 @@
         "front": "Was sind Normoblasten?"
       },
       {
-        "card_id": 1607967503571,
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "front": "Aufgaben der Ernährung?"
+        "card_id": 1598803349759,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Erläutere den Begriff Extravasation"
       },
       {
-        "card_id": 1607967534115,
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "front": "Wie kann der durchschnittliche Nährstoffbedarf bestimmt werden?"
+        "card_id": 1598814257960,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Stufen der Myelopoiese- 1. {{c1::Myeoloblast}}.- 2. {{c1::Promyelozyt}}.- 3. {{c1::Myeoloz"
       },
       {
-        "card_id": 1607967579087,
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "front": "Welche Organisationen beschäftigen sich mit dem Nährstoffbedarf?"
+        "card_id": 1605004521418,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "front": "Welchen Einfluss hat der Sympathikus auf die Kopplung des venösen Rückfluss und das Herzze"
       },
       {
-        "card_id": 1607967631163,
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "front": "Was ist das DACH-2000?"
+        "card_id": 1605004522243,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "front": "Welches sind die Elemente der kurzfristigen Blutdruckregulation im Blutvolumen-Blutdruck R"
       },
       {
-        "card_id": 1607967660827,
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "front": "Wie wird der Nährstoffbedarf nach FAO/WHO definiert?"
+        "card_id": 1605004522814,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "front": "Welchen Einfluss hat der Sympathikus auf Blutdruck-Blutvolumen-Regelkreis"
       },
       {
-        "card_id": 1607967715053,
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "front": "Wie sind die Referenzbereiche für Nährstoffbedarf definiert?"
+        "card_id": 1601036762866,
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "front": "Worauf weist ein erhöhter Hk hin?"
       }
     ],
-    "last_sync_timestamp": "2026-11-17T09:28:31.191056",
+    "last_sync_timestamp": "2026-11-17T09:32:53.137791",
     "current_day_index": 421,
     "target_day_index": 420,
     "next_day_index": 421
@@ -8617,41 +8607,48 @@
     "target_date": "2026-11-17",
     "is_today": true,
     "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
-    "first_review_time": null,
-    "last_review_time": null,
+    "first_review_time": "08:29",
+    "last_review_time": "09:30",
     "today_reviewed_count": 0,
     "new_cards_count": 0,
     "new_cards_opened_count": 0,
     "new_cards_in_learning_count": 0,
-    "repetition_cards_count": 0,
-    "total_reviews_count": 0,
-    "today_time_minutes": 0.0,
-    "today_session_time_minutes": 0.0,
-    "effective_study_minutes": 0.0,
-    "today_lapses_count": 0,
+    "repetition_cards_count": 103,
+    "total_reviews_count": 146,
+    "today_time_minutes": 39.6,
+    "today_session_time_minutes": 61.6,
+    "effective_study_minutes": 61.6,
+    "today_lapses_count": 43,
     "today_new_count": 0,
-    "today_review_count": 0,
-    "today_deck_breakdown": {},
+    "today_review_count": 103,
+    "today_deck_breakdown": {
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 135,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 11
+    },
     "new_by_deck": {},
     "new_opened_by_deck": {},
-    "rep_by_deck": {},
+    "rep_by_deck": {
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 93,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 10
+    },
     "yesterday_reviewed_count": 100,
     "yesterday_new_cards_count": 100,
     "yesterday_new_opened_count": 100,
     "yesterday_repetition_cards_count": 248,
     "yesterday_total_reviews_count": 539,
     "yesterday_time_minutes": 159,
-    "due_today_count": 1337,
-    "due_reviews_count": 1337,
+    "due_today_count": 1094,
+    "due_reviews_count": 1094,
     "cumulative_cards_learned": 4747,
     "total_curriculum_cards": 8740,
     "curriculum_progress_pct": 54.3,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 273,
+    "due_tomorrow_count": 312,
     "due_tomorrow_deck_breakdown": {
       "TB Atmung :: Einführung und Abschluss Atmung": 2,
       "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 2,
       "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 1,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 1,
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 4,
       "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 4,
       "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 3,
@@ -8675,7 +8672,7 @@
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 2,
       "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 1,
       "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 1,
-      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 10,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 48,
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 2,
       "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 6,
       "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing": 3,
@@ -8693,6 +8690,10 @@
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 9
     },
     "due_tomorrow_topics": [
+      {
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "count": 48
+      },
       {
         "deck": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
         "count": 25
@@ -8728,10 +8729,6 @@
       {
         "deck": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
         "count": 12
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
-        "count": 10
       },
       {
         "deck": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
@@ -8838,6 +8835,10 @@
         "count": 1
       },
       {
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "count": 1
+      },
+      {
         "deck": "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
         "count": 1
       },
@@ -8862,7 +8863,88 @@
         "count": 1
       }
     ],
-    "recent_reviews_sample": [],
+    "recent_reviews_sample": [
+      {
+        "time": "09:30:31",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Lipidverdauung im DünndarmDas Pankreas sezerniert auch die {{c1::Cholesterol-Esterase}}, w"
+      },
+      {
+        "time": "09:30:24",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Wasserresorption im DünndarmWo und wie wird NaCl im Dünndarm aufgenommen?"
+      },
+      {
+        "time": "09:30:14",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "wann wird α-amylase inaktiviert"
+      },
+      {
+        "time": "09:30:10",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Wie werden im Magen Lipide verdaut?"
+      },
+      {
+        "time": "09:29:48",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Was machen Gallensalze?"
+      },
+      {
+        "time": "09:29:40",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Was ist der Auslöser für akute Pankreatitis?"
+      },
+      {
+        "time": "09:29:32",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "was für AS passen in die Bindungstasche der jeweiligen Enzyme?"
+      },
+      {
+        "time": "09:29:28",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Wo wird Cobalamin aufgenommen?"
+      },
+      {
+        "time": "09:29:26",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Wiederlernen",
+        "front": "Lipidverdauung im DünndarmDas Pankreas sezerniert auch die {{c1::Cholesterol-Esterase}}, w"
+      },
+      {
+        "time": "09:25:11",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "was passiert bei vererbter Fructoseintoleranz? "
+      }
+    ],
     "due_tomorrow_sample": [
       {
         "card_id": 1673130738154,
@@ -8888,6 +8970,11 @@
         "card_id": 1601369703198,
         "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
         "front": "Karte"
+      },
+      {
+        "card_id": 1607968017562,
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "front": "Wie setzt sich die Ernährung idealerweise/tatsächlich zusammen?"
       },
       {
         "card_id": 1598803349736,
@@ -8933,14 +9020,9 @@
         "card_id": 1605004441697,
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
         "front": "Was ist die primäre Funktion des Gehirns? Wie wird die Durchblutung reguliert?"
-      },
-      {
-        "card_id": 1605004441931,
-        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
-        "front": "Was ist die primäre Funktion der Nieren? Wie wird die Durchblutung reguliert?"
       }
     ],
-    "last_sync_timestamp": "2026-11-17T09:28:34.568026",
+    "last_sync_timestamp": "2026-11-17T09:32:57.313612",
     "current_day_index": 421,
     "target_day_index": 421,
     "next_day_index": 422

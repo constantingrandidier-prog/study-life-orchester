@@ -186,17 +186,25 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     
         if is_today:
             due_today_cnt = cur.execute("""
-                SELECT count(*) FROM cards 
-                WHERE (queue = 2 AND due <= ?) 
-                   OR queue = 1 
-                   OR (queue = 3 AND due <= ?)
+                SELECT count(*) FROM cards c
+                JOIN decks d ON c.did = d.id
+                WHERE ((c.queue = 2 AND c.due <= ?) 
+                   OR c.queue = 1 
+                   OR (c.queue = 3 AND c.due <= ?))
+                   AND c.queue != -1
+                   AND lower(d.name) NOT LIKE '%atmung_physiologie_wenger%'
+                   AND lower(d.name) NOT LIKE '%sommer%'
             """, (current_day, current_day)).fetchone()[0]
         elif query_date > date.today():
             # Future date: cards scheduled specifically for target_day!
             future_cnt = cur.execute("""
-                SELECT count(*) FROM cards 
-                WHERE (queue = 2 AND due = ?) 
-                   OR (queue = 3 AND due = ?)
+                SELECT count(*) FROM cards c
+                JOIN decks d ON c.did = d.id
+                WHERE ((c.queue = 2 AND c.due = ?) 
+                   OR (c.queue = 3 AND c.due = ?))
+                   AND c.queue != -1
+                   AND lower(d.name) NOT LIKE '%atmung_physiologie_wenger%'
+                   AND lower(d.name) NOT LIKE '%sommer%'
             """, (target_day, target_day)).fetchone()[0]
             if future_cnt > 0:
                 due_today_cnt = future_cnt

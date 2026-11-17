@@ -1,15 +1,26 @@
 import os
 import json
+import math
 import sqlite3
 import re
+import time
 from collections import defaultdict
 from datetime import datetime, date, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from app.services.anki_desktop_sync import find_local_anki_collection, clean_deck_name
+from app.services.semester_config import (
+    SEMESTER_START_TS,
+    IGNORED_DOZENTEN,
+    is_ignored_dozent,
+    is_ignored_topic_entry as _is_ignored_topic_entry,
+    build_anki_deck_clause,
+)
 from app.db.repository import get_db_connection
 
 BACKLOG_TRIAGE_SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "cached_backlog_triage.json"
+_MEM_TRIAGE_CACHE: Dict[str, Any] = {"mtime": 0.0, "ts": 0.0, "data": None}
+
 
 
 def clean_tb_name(raw: str) -> str:
@@ -100,7 +111,7 @@ def parse_curriculum_deck(raw_name: str):
     tb_clean = clean_tb_name(tb_part)
     prof_clean = clean_prof_name(prof_part or "Allgemein")
     # Exclude Wenger and Sommer as requested (learned via summaries, not Anki repetitions)
-    if prof_clean in ("Wenger", "Sommer"):
+    if is_ignored_dozent(prof_clean):
         return None, None
     return tb_clean, prof_clean
 
@@ -120,6 +131,15 @@ def _extract_subdeck_short_title(raw_name: str) -> str:
     """Returns the human-readable lecture/subdeck leaf name."""
     parts = [p.strip() for p in (raw_name.split("\x1f") if "\x1f" in raw_name else raw_name.split("::"))]
     return parts[-1] if parts else raw_name
+
+
+def _get_anki_collection_mtime(target_path: Path) -> float:
+    try:
+        wal = target_path.with_name(target_path.name + "-wal")
+        wal_m = wal.stat().st_mtime if wal.exists() else 0.0
+        return max(target_path.stat().st_mtime, wal_m)
+    except Exception:
+        return 0.0
 
 
 def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -> Dict[str, Any]:
@@ -161,6 +181,20 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
                 "multi_day_rollover": [],
                 "summary_advice": "Keine Anki-Datenbank gefunden.",
             }
+
+    # Fast in-memory mtime cache: avoid heavy SQLite WAL copy & revlog scan when Anki hasn't changed
+    cur_mtime = _get_anki_collection_mtime(target_path)
+    if (
+        col_path is None
+        and _MEM_TRIAGE_CACHE.get("data") is not None
+        and cur_mtime > 0
+        and cur_mtime == _MEM_TRIAGE_CACHE.get("mtime")
+        and (time.time() - _MEM_TRIAGE_CACHE.get("ts", 0.0)) < 45.0
+    ):
+        cached_copy = json.loads(json.dumps(_MEM_TRIAGE_CACHE["data"]))
+        cached_copy["max_capacity"] = effective_budget
+        _apply_budget(cached_copy, effective_budget)
+        return cached_copy
 
     # Anki day rollover at 04:00 AM local time
     today_4am = now.replace(hour=4, minute=0, second=0, microsecond=0)
@@ -237,7 +271,7 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
             [current_day, current_day, next_day, next_day, current_day, current_day] + dids
         ).fetchall()
 
-        sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+        sem_start_ts = SEMESTER_START_TS
         sql_revs = f"""
         SELECT c.did, MAX(r.id) as last_ms, COUNT(*) as total_revs,
                SUM(CASE WHEN r.ease = 1 THEN 1 ELSE 0 END) as fail_count
@@ -380,21 +414,16 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
         total_already_repeated_today += rep_today_cnt
 
         real_prefixes = sorted(g["real_prefixes"])
-        exact_clauses = [f'deck:"{pfx}*"' for pfx in real_prefixes]
-        fallback_clause = f'deck:"*2. SJ*{tb}*{prof}*"'
-        if exact_clauses:
-            combined_deck_clause = " or ".join(exact_clauses + [fallback_clause])
-            anki_filter_query = f"({combined_deck_clause}) is:due"
-            anki_hard_query = f"({combined_deck_clause}) is:due (prop:ease<2.3 or lapses>1)"
-        else:
-            anki_filter_query = f"{fallback_clause} is:due"
-            anki_hard_query = f"{fallback_clause} is:due (prop:ease<2.3 or lapses>1)"
+        deck_clause = build_anki_deck_clause(real_prefixes, tb, prof)
+        anki_filter_query = f"{deck_clause} is:due"
+        anki_hard_query = f"{deck_clause} is:due (prop:ease<2.3 or lapses>1)"
 
         if g["active_reviews"] == 0 and g["due_today"] == 0 and g["due_tomorrow"] == 0 and g["total_revs"] == 0:
             topics.append({
                 "themenblock": tb,
                 "dozent": prof,
                 "deck_name": f"{tb} › {prof}",
+                "real_anki_prefixes": real_prefixes,
                 "total_cards": g["total_cards"],
                 "due_today": 0,
                 "due_tomorrow": 0,
@@ -419,8 +448,8 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
                 "level_badge": "🌱 Noch kein Backlog",
                 "color": "#8b949e",
                 "action_recommendation": f"Noch nicht gestartet. {g['total_cards']} neue Karten im Lehrplan.",
-                "anki_filter_query": f'deck:"*2. SJ*{tb}*{prof}*" is:new',
-                "anki_hard_query": f'deck:"*2. SJ*{tb}*{prof}*" is:new',
+                "anki_filter_query": f"{deck_clause} is:new",
+                "anki_hard_query": f"{deck_clause} is:new",
             })
             continue
 
@@ -538,6 +567,7 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
             "themenblock": tb,
             "dozent": prof,
             "deck_name": f"{tb} › {prof}",
+            "real_anki_prefixes": real_prefixes,
             "total_cards": g["total_cards"],
             "due_today": g["due_today"],
             "due_tomorrow": g["due_tomorrow"],
@@ -612,8 +642,12 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
 
     top_urgent = [t for t in topics if t["due_today"] > 0][:4] or topics[:3]
     if top_urgent:
-        clauses = " or ".join([f'deck:"*2. SJ*{t["themenblock"]}*{t["dozent"]}*"' for t in top_urgent])
-        urgent_combined_anki_query = f"({clauses}) is:due"
+        urgent_clauses = []
+        for t in top_urgent:
+            for pfx in t.get("real_anki_prefixes", []):
+                urgent_clauses.append(f'deck:"{pfx}*"')
+            urgent_clauses.append(f'deck:"*2. SJ*{t["themenblock"]}*{t["dozent"]}*"')
+        urgent_combined_anki_query = f"({' or '.join(dict.fromkeys(urgent_clauses))}) is:due"
     else:
         urgent_combined_anki_query = "is:due"
 
@@ -636,23 +670,13 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
 
     _apply_budget(result, effective_budget)
 
+    if col_path is None and cur_mtime > 0:
+        _MEM_TRIAGE_CACHE["mtime"] = cur_mtime
+        _MEM_TRIAGE_CACHE["ts"] = time.time()
+        _MEM_TRIAGE_CACHE["data"] = json.loads(json.dumps(result))
+
     cache_triage(result)
     return result
-
-
-IGNORED_DOZENTEN = {"wenger", "sommer"}
-
-
-def _is_ignored_topic_entry(entry: Dict[str, Any]) -> bool:
-    doz = str(entry.get("dozent", "")).strip().lower()
-    dname = str(entry.get("deck_name", "")).strip().lower()
-    if doz in IGNORED_DOZENTEN:
-        return True
-    if "wenger" in doz or "sommer" in doz:
-        return True
-    if "› wenger" in dname or "› sommer" in dname or ":: wenger" in dname or ":: sommer" in dname:
-        return True
-    return False
 
 
 def _sanitize_triage_payload(result: Dict[str, Any]) -> Dict[str, Any]:
@@ -842,7 +866,6 @@ def _apply_budget(result: Dict[str, Any], budget: int):
     deferred_topics = [t for (t, _) in leftover_queue]
     effective_today_target = min(budget, total_workload_today) if total_workload_today > 0 else 0
     coverage_pct = round(min(100.0, (effective_today_target / max(1, total_workload_today)) * 100.0), 1)
-    deferred_cards_count = max(0, total_due_today - len(focus_plan_open) and (total_due_today - sum(x["assigned_cards"] for x in focus_plan_open)))
     if remaining_budget_for_today > 0:
         deferred_cards_count = max(0, total_due_today - sum(x["assigned_cards"] for x in focus_plan_open))
     else:
@@ -881,13 +904,13 @@ def _apply_budget(result: Dict[str, Any], budget: int):
     if selected:
         clauses = []
         for t in selected:
+            for pfx in t.get("real_anki_prefixes", []):
+                clauses.append(f'deck:"{pfx}*"')
             clauses.append(f'deck:"*2. SJ*{t["themenblock"]}*{t["dozent"]}*"')
-        result["budget_combined_anki_query"] = f'({" or ".join(clauses)}) is:due'
+        result["budget_combined_anki_query"] = f'({" or ".join(dict.fromkeys(clauses))}) is:due'
     else:
         result["budget_combined_anki_query"] = "is:due"
 
-
-import math
 
 
 def cache_triage(data: Dict[str, Any]):

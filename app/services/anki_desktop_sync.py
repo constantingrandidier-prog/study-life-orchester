@@ -221,8 +221,17 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             due_today_cnt = len(unique_rep_cids) if unique_rep_cids else total_reviews_count
     
         # Dynamically select cards due tomorrow relative to target query date!
-        tom_sql = 'SELECT c.id, c.did, n.sfld FROM cards c JOIN notes n ON c.nid = n.id WHERE c.queue = 2 AND c.due = ?'
+        tom_sql = """
+            SELECT c.id, c.did, n.sfld
+            FROM cards c
+            JOIN notes n ON c.nid = n.id
+            JOIN decks d ON c.did = d.id
+            WHERE c.queue = 2 AND c.due = ?
+              AND lower(d.name) NOT LIKE '%atmung_physiologie_wenger%'
+              AND lower(d.name) NOT LIKE '%sommer%'
+        """
         due_tomorrow_rows = cur.execute(tom_sql, (next_day,)).fetchall()
+
     
         tomorrow_breakdown = {}
         tomorrow_sample = []

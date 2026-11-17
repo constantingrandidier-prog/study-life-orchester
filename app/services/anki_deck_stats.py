@@ -18,10 +18,11 @@ from app.services.uzh_exam_intelligence import (
     calculate_uzh_exam_risk_score,
     classify_deck_yield,
 )
+from app.services.semester_config import SEMESTER_START_TS, is_ignored_deck_name
 
-# Current semester start: 2026-09-14 00:00:00 (ignore previous semester logs and card resets)
-SEMESTER_START_TS = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
 DECK_STATS_SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "cached_deck_stats.json"
+_MEM_DECK_STATS_CACHE: Dict[str, Any] = {"mtime": 0.0, "ts": 0.0, "data": None}
+
 
 
 def clean_display_name(raw_name: str) -> str:
@@ -131,6 +132,27 @@ def cache_deck_stats(stats: Dict[str, Any]):
         pass
 
 
+def _sanitize_deck_stats_payload(data: Any) -> Any:
+    if not isinstance(data, dict):
+        return data
+    if "all_decks" in data and isinstance(data["all_decks"], list):
+        data["all_decks"] = [d for d in data["all_decks"] if not is_ignored_deck_name(d.get("anki_name"))]
+    if "all_decks_anki_order" in data and isinstance(data["all_decks_anki_order"], list):
+        data["all_decks_anki_order"] = [d for d in data["all_decks_anki_order"] if not is_ignored_deck_name(d.get("anki_name"))]
+    if "topics" in data and isinstance(data["topics"], list):
+        cleaned_topics = []
+        for t in data["topics"]:
+            subs = [s for s in t.get("subdecks", []) if not is_ignored_deck_name(s.get("anki_name"))]
+            if subs:
+                t_copy = dict(t)
+                t_copy["subdecks"] = subs
+                t_copy["decks_count"] = len(subs)
+                t_copy["due_cards"] = sum(s.get("due_count", 0) for s in subs)
+                cleaned_topics.append(t_copy)
+        data["topics"] = cleaned_topics
+    return _normalize_deck_stats_payload(data)
+
+
 def get_cached_deck_stats() -> Optional[Dict[str, Any]]:
     # 1. Try DB cache first
     try:
@@ -139,7 +161,7 @@ def get_cached_deck_stats() -> Optional[Dict[str, Any]]:
             cur = conn.cursor()
             row = cur.execute("SELECT payload_json FROM anki_deck_stats_cache WHERE id = 1").fetchone()
             if row and row[0]:
-                return _normalize_deck_stats_payload(json.loads(row[0]))
+                return _sanitize_deck_stats_payload(json.loads(row[0]))
     except Exception:
         pass
 
@@ -148,11 +170,12 @@ def get_cached_deck_stats() -> Optional[Dict[str, Any]]:
         if DECK_STATS_SNAPSHOT_PATH.exists():
             content = DECK_STATS_SNAPSHOT_PATH.read_text(encoding="utf-8")
             if content.strip():
-                return _normalize_deck_stats_payload(json.loads(content))
+                return _sanitize_deck_stats_payload(json.loads(content))
     except Exception:
         pass
 
     return None
+
 
 
 def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
@@ -188,6 +211,21 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             }
         }
 
+    try:
+        wal = target_path.with_name(target_path.name + "-wal")
+        cur_mtime = max(target_path.stat().st_mtime, wal.stat().st_mtime if wal.exists() else 0.0)
+    except Exception:
+        cur_mtime = 0.0
+
+    if (
+        col_path is None
+        and _MEM_DECK_STATS_CACHE.get("data") is not None
+        and cur_mtime > 0
+        and cur_mtime == _MEM_DECK_STATS_CACHE.get("mtime")
+        and (time.time() - _MEM_DECK_STATS_CACHE.get("ts", 0.0)) < 45.0
+    ):
+        return _MEM_DECK_STATS_CACHE["data"]
+
     from app.db.anki_db import open_anki_db_readonly
     with open_anki_db_readonly(target_path) as conn:
         cur = conn.cursor()
@@ -201,6 +239,8 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         decks_info = {}
         for did, dname in raw_decks:
             clean_name = clean_display_name(dname)
+            if is_ignored_deck_name(clean_name):
+                continue
             parent_topic = extract_parent_topic(dname)
             decks_info[did] = {
                 "deck_id": did,
@@ -208,6 +248,7 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
                 "anki_name": clean_name,
                 "parent_topic": parent_topic,
             }
+
 
         # 2. Card stats per deck
         card_sql = """
@@ -760,5 +801,11 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         }
     }
 
+    if col_path is None and cur_mtime > 0:
+        _MEM_DECK_STATS_CACHE["mtime"] = cur_mtime
+        _MEM_DECK_STATS_CACHE["ts"] = time.time()
+        _MEM_DECK_STATS_CACHE["data"] = result
+
     cache_deck_stats(result)
     return result
+

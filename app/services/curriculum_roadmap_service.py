@@ -17,11 +17,11 @@ from typing import Any, Dict, List, Optional
 from app.services.olat_connector import scan_local_uzh_slides
 from app.services.lecture_advisor_service import search_lecture_advisor
 from app.services.uzh_exam_intelligence import match_professor_for_topic
+from app.services.semester_config import SEMESTER_START_DATE, TARGET_EXAM_DATE
 
 # Semester milestone constants
-SEMESTER_START_DATE = date(2026, 9, 14)  # Monday
-TARGET_EXAM_DATE = date(2027, 1, 19)     # Tuesday
 DAILY_CARD_QUOTA = 95
+
 
 # Didactic medical module progression for 2. Studienjahr
 DIDACTIC_MODULES = [

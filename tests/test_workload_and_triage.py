@@ -196,3 +196,46 @@ def test_triage_custom_budget_and_forecast_rollover():
         assert fc["days"][0]["planned_due"] <= 350
 
 
+def test_real_anki_prefix_queries_and_central_ignore():
+    """Verify that budget_combined_anki_query and topic queries include exact Anki hierarchy prefixes and exclude Wenger/Sommer everywhere."""
+    from app.services.semester_config import (
+        SEMESTER_START_DATE,
+        TARGET_EXAM_DATE,
+        is_ignored_dozent,
+        is_ignored_deck_name,
+        build_anki_deck_clause,
+    )
+    from app.services.anki_deck_stats import get_detailed_deck_stats
+
+    assert str(SEMESTER_START_DATE) == "2026-09-14"
+    assert str(TARGET_EXAM_DATE) == "2027-01-19"
+    assert is_ignored_dozent("Wenger") is True
+    assert is_ignored_dozent("Sommer") is True
+    assert is_ignored_dozent("Stockmann") is False
+
+    # Schneider subdeck mentioning '/ Wenger' must NOT be ignored!
+    assert is_ignored_deck_name("2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger") is False
+    assert is_ignored_deck_name("2. SJ - 1 :: TB Atmung :: Atmung_Physiologie_Wenger") is True
+    assert is_ignored_deck_name("2. SJ - 1 :: TB Herz-Kreislauf :: Sommer :: Herzentwicklung") is True
+
+    clause = build_anki_deck_clause(
+        ["2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)"],
+        "TB Blut & Immunsystem",
+        "Tuzlak / Becher",
+    )
+    assert 'deck:"2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)*"' in clause
+
+    triage = calculate_backlog_triage(max_capacity=350)
+    bq = triage.get("budget_combined_anki_query", "")
+    selected = triage.get("budget_selected_topics", [])
+    for sel in selected:
+        for pfx in sel.get("real_anki_prefixes", []):
+            assert f'deck:"{pfx}*"' in bq
+
+    # Verify deck stats also exclude Wenger and Sommer
+    dstats = get_detailed_deck_stats()
+    for d in dstats.get("all_decks", []):
+        assert not is_ignored_deck_name(d.get("anki_name"))
+
+
+

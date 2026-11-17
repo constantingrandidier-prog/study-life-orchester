@@ -1820,8 +1820,16 @@ function updateMissionKpiStrip() {
   // Dynamic sync of sub-headline advice when 0 completed today
   const adviceEl = document.getElementById('pacingAdviceText');
   if (adviceEl && totalDone === 0 && baseNew > 0 && !(pacing && pacing.is_rest_day)) {
-    adviceEl.textContent = `Heutiges Soll: ${baseNew} neue Karten + ${repsDue} Wiederholungen (${totalTarget} gesamt). Exakt im Plan für den 19.01.2027!`;
+    if (pacing && pacing.cumulative_backlog > 0) {
+      adviceEl.textContent = `Heutiges Soll: ${baseNew} neue Karten + ${repsDue} Wiederholungen (${totalTarget} gesamt). Inklusive +${pacing.backlog_spread_per_day || 1}/Tag Aufhol-Richtwert (${pacing.cumulative_backlog} Karten Rückstand bis Pufferstart).`;
+    } else if (pacing && pacing.cards_completed_prior > pacing.expected_cards_prior) {
+      const surp = pacing.cards_completed_prior - pacing.expected_cards_prior;
+      adviceEl.textContent = `Heutiges Soll: ${baseNew} neue Karten + ${repsDue} Wiederholungen (${totalTarget} gesamt). 🎉 ${surp} Karten Vorsprung auf den Semesterplan!`;
+    } else {
+      adviceEl.textContent = `Heutiges Soll: ${baseNew} neue Karten + ${repsDue} Wiederholungen (${totalTarget} gesamt). Exakt im Plan für den 19.01.2027!`;
+    }
   }
+
 
   // 3. Box 3: Fällig in Anki
   const dueDisp = document.getElementById('pacingDueReviewsDisplay');
@@ -2703,11 +2711,12 @@ function renderCurriculumToday(data) {
       dayBadge.style.color = '#d29922';
       dayBadge.style.borderColor = 'rgba(210, 153, 34, 0.3)';
     } else if (data.day_number) {
-      dayBadge.textContent = `Tag ${data.day_number} von ${data.total_active_days}`;
+      dayBadge.textContent = `Paket ${data.day_number} von ${data.total_active_days} (97 Lerntage bis Puffer)`;
       dayBadge.style.background = 'linear-gradient(135deg, rgba(31, 111, 235, 0.2), rgba(35, 134, 54, 0.2))';
       dayBadge.style.color = '#58a6ff';
       dayBadge.style.borderColor = 'rgba(88, 166, 255, 0.3)';
     } else {
+
       dayBadge.textContent = data.current_module || 'Semester-Plan';
     }
   }
@@ -3169,8 +3178,9 @@ function renderCurriculumRoadmap(data) {
   const footerText = document.getElementById('roadmapFooterText');
 
   if (headerSub) {
-    headerSub.textContent = `${data.total_cards.toLocaleString()} Karten • 6 Module • ${data.total_active_days} aktive Lerntage • Examen: ${data.exam_date}`;
+    headerSub.textContent = `${data.total_cards.toLocaleString()} Karten • 6 Module • ${data.total_active_days} Stoff-Pakete (97 Lerntage bis Pufferstart) • Examen: ${data.exam_date}`;
   }
+
 
   if (footerText) {
     footerText.textContent = `Fertigstellung aller Karten: ${data.completion_date} • Garantierter Revisionspuffer: ${data.revision_buffer_days} Tage vor der Prüfung am ${data.exam_date}`;
@@ -6794,8 +6804,10 @@ if (document.readyState === 'loading') {
   init();
   loadAnkiDesktopStatus(false);
   loadWorkloadForecast(false);
+  if (typeof loadBacklogTriage === 'function') loadBacklogTriage(currentTriageBudget);
   loadScienceRhythm();
 }
+
 
 
 // ============================================================================

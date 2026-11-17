@@ -146,7 +146,8 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
 
         # 3. Cards by deck — only queue=2 cards due today + all queue=1
         deck_card_stats = {}
-        sem_start_ts = int(datetime(2026, 9, 14, 0, 0, 0).timestamp() * 1000)
+        from app.services.semester_config import SEMESTER_START_TS, is_ignored_deck_name
+        sem_start_ts = SEMESTER_START_TS
 
         for did, total, due, studied in cur.execute("""
             SELECT did, count(id),
@@ -192,8 +193,7 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
     overdue_topics: List[Dict[str, Any]] = []
 
     for did, dname in decks_map.items():
-        low_dn = dname.lower()
-        if "atmung_physiologie_wenger" in low_dn or ":: sommer" in low_dn or "/ sommer" in low_dn or "4 sommer" in low_dn:
+        if is_ignored_deck_name(dname):
             continue
         card_info = deck_card_stats.get(did, {"total": 0, "due": 0})
         total_c = card_info["total"]

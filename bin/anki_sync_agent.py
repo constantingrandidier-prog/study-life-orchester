@@ -228,6 +228,12 @@ def sync_now(trigger_anki_sync: bool = True):
         state = {}
 
     import importlib
+    try:
+        import app.services.semester_config as _sc_mod
+        importlib.reload(_sc_mod)
+    except Exception:
+        pass
+
     # 3. Sync 14-day workload forecast
     try:
         import app.services.workload_forecast as _wf_mod
@@ -261,14 +267,16 @@ def sync_now(trigger_anki_sync: bool = True):
 
     # 6. Sync comprehensive deck stats & retention
     try:
-        from app.services.anki_deck_stats import get_detailed_deck_stats
-        deck_stats = get_detailed_deck_stats()
+        import app.services.anki_deck_stats as _ads_mod
+        importlib.reload(_ads_mod)
+        deck_stats = _ads_mod.get_detailed_deck_stats()
         for base in targets:
             ok = post_json(f"{base}/deck-retention-sync", deck_stats, timeout=25.0)
             if not ok:
                 log_msg(f"[WARN] deck-retention-sync failed to {base}")
     except Exception as e:
         log_msg(f"[ERROR] Deck stats sync error: {e}")
+
 
     revs = state.get("today_reviewed_count", 0)
     opened = state.get("new_cards_opened_count", revs)

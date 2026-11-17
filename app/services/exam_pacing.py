@@ -15,6 +15,8 @@ from app.db.repository import (
     save_exam,
     save_pacing_config,
 )
+from app.services.semester_config import SEMESTER_START_DATE
+
 
 
 WEEKDAY_NAMES_DE = [
@@ -110,8 +112,6 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
         rest_day_reason = "14-Tage Revisionsphase (Reines Wiederholen, keine neuen Karten)"
 
     # 5. Semester Timeline & Cumulative Backlog Metrics
-    SEMESTER_START_DATE = date(2026, 9, 14)
-
     # Total active learning days across the whole semester (before revision buffer)
     total_semester_learning_days = 0
     s_day = SEMESTER_START_DATE
@@ -310,13 +310,24 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
 
     total_daily_cards_needed = daily_target_cards + due_reviews
 
-    # Tailored Advice
+    # Dynamic Tailored Advice reflecting actual backlog or surplus
     if is_rest_day:
         advice = f"Genieße deine Pause! {rest_day_reason}. Deine tägliche Pacing-Kurve hat diesen Ruhetag bereits eingerechnet."
     elif cards_completed_today >= daily_target_cards and daily_target_cards > 0:
-        advice = f"🎉 Exzellent! Du hast {cards_completed_today} Karten in Anki gemeistert (Tagesziel von {daily_target_cards} zu {round(cards_completed_today/daily_target_cards*100)}% übererfüllt). Voll auf Kurs!"
+        advice = f"🎉 Exzellent! Du hast {cards_completed_today} neue Karten in Anki gemeistert (Tagesziel von {daily_target_cards} zu {round(cards_completed_today/daily_target_cards*100)}% erfüllt). Voll auf Kurs!"
     elif cards_completed_today > 0:
-        advice = f"🟢 Live aus Anki: {cards_completed_today} Karten erledigt – noch {cards_remaining_today} Karten bis zum Tagesziel ({daily_target_cards} Karten)."
+        advice = f"🟢 Live aus Anki: {cards_completed_today} neue Karten erledigt – noch {cards_remaining_today} Karten bis zum Tagesziel ({daily_target_cards} Karten)."
+    elif cumulative_backlog > 0:
+        advice = (
+            f"Heutiges Soll: {daily_target_cards} neue Karten + {due_reviews} Wiederholungen ({total_daily_cards_needed} gesamt). "
+            f"Inklusive +{backlog_spread_per_day}/Tag Aufhol-Richtwert ({cumulative_backlog} Karten Rückstand bis Pufferstart)."
+        )
+    elif cards_completed_prior > expected_cards_prior:
+        surplus = cards_completed_prior - expected_cards_prior
+        advice = (
+            f"Heutiges Soll: {daily_target_cards} neue Karten + {due_reviews} Wiederholungen ({total_daily_cards_needed} gesamt). "
+            f"🎉 {surplus} Karten Vorsprung auf den Semesterplan!"
+        )
     else:
         advice = f"Heutiges Soll: {daily_target_cards} neue Karten + {due_reviews} Wiederholungen ({total_daily_cards_needed} gesamt). Exakt im Plan für den 19.01.2027!"
 
@@ -328,6 +339,7 @@ def calculate_exam_pacing(target_date: Optional[date] = None, user_id: str = "st
         "all_exams": formatted_exams,
         "calendar_days_to_exam": calendar_days_to_exam,
         "learning_days_remaining": learning_days_remaining,
+        "total_semester_learning_days": total_semester_learning_days,
         "revision_buffer_days": revision_buffer_days,
         "revision_start_date": revision_start_date.isoformat(),
         "total_curriculum_cards": total_curriculum_cards,

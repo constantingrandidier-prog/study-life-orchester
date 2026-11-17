@@ -1,9 +1,63 @@
 {
   "available": true,
-  "total_cards_scanned": 9684,
-  "total_kprim_traps": 631,
-  "kprim_trap_percentage": 6.5,
+  "total_cards_scanned": 9687,
+  "total_kprim_traps": 655,
+  "kprim_trap_percentage": 6.8,
   "top_25_todesfallen": [
+    {
+      "card_id": 1605021871210,
+      "note_id": 1605021871210,
+      "deck_id": 1789378222993,
+      "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+      "professor_name": "Prof. Dr. Philipp Sommer",
+      "professor_institute": "Kardiologie / Anatomisches Institut UZH",
+      "reps": 19,
+      "lapses": 5,
+      "interval_days": 2,
+      "card_yield_score": 100.0,
+      "is_kprim_trap": true,
+      "trap_type": "confusable_pair",
+      "trap_label": "Kprim-Verwechslungsfalle: Aldosteron vs. Adh",
+      "trap_warning": "Kprim-Falle: ADH senkt die Plasmaosmolarität, Aldosteron hält sie konstant.",
+      "card_type": "kprim_mechanism",
+      "front": "Was sind die Komponenten der langfristigen Regulation des MAP?",
+      "back": "Vasopressin (ADH) , Aldosteron , Angiotensin (durch Renin Akt.) modulieren die Sympathikuswirkung , Reninsezernierung und Nierenfunktion Also RAA & Vasopresin über Blutvolumen (Angiotensin: Vasokonstriktion & Aldosteron bild. In Niere) (Aldosteron: Weniger Na-Ausscheidung) -> ANP: Gegensieler von RAAs, hemmt Renin, Ald",
+      "front_snippet": "Was sind die Komponenten der langfristigen Regulation des MAP?",
+      "back_snippet": "Vasopressin (ADH) , Aldosteron , Angiotensin (durch Renin Akt.) modulieren die Sympathikuswirkung , Reninsezernierung und Nierenfunktion Also RAA & Vasopresin über Blutvolumen (Angiotensin: Vasokonstriktion & Aldosteron bild. In Niere) (Aldosteron: Weniger Na-",
+      "hy_terms_detected": [
+        "raas",
+        "renin",
+        "angiotensin",
+        "aldosteron"
+      ]
+    },
+    {
+      "card_id": 1639259581852,
+      "note_id": 1639259581852,
+      "deck_id": 1789378223010,
+      "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+      "professor_name": "Prof. Dr. Heimo Emmert",
+      "professor_institute": "Institut für Biochemie UZH",
+      "reps": 7,
+      "lapses": 1,
+      "interval_days": 16,
+      "card_yield_score": 100.0,
+      "is_kprim_trap": true,
+      "trap_type": "confusable_pair",
+      "trap_label": "Kprim-Verwechslungsfalle: Pfk-1 vs. Pfk-2",
+      "trap_warning": "Kprim-Falle: Verwechslung von Schrittmacherenzym (PFK-1) und regulatorischem Enzym (PFK-2).",
+      "card_type": "kprim_mechanism",
+      "front": "Allosterische Regulation von Glykolyse und Gluconeogenese Was ist die Funktion von PFK-2/FBP-2?",
+      "back": "Synthese/Abbau von Fructose-2,6-Biphosphat und somit Regulation der Glykolyse/GNG Reguliert über: - Phosphofructokinase-1 (PFK-1) - Fructose-1,6-bisphosphatase-1 (FBPase-1)",
+      "front_snippet": "Allosterische Regulation von Glykolyse und Gluconeogenese Was ist die Funktion von PFK-2/FBP-2?",
+      "back_snippet": "Synthese/Abbau von Fructose-2,6-Biphosphat und somit Regulation der Glykolyse/GNG Reguliert über: - Phosphofructokinase-1 (PFK-1) - Fructose-1,6-bisphosphatase-1 (FBPase-1)",
+      "hy_terms_detected": [
+        "pfk-2",
+        "phosphat",
+        "pfk-1",
+        "glykolyse"
+      ]
+    },
     {
       "card_id": 1639260617639,
       "note_id": 1639260617639,
@@ -11,9 +65,9 @@
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
       "professor_name": "Prof. Dr. Carsten Wagner",
       "professor_institute": "Physiologisches Institut UZH",
-      "reps": 0,
-      "lapses": 0,
-      "interval_days": 0,
+      "reps": 6,
+      "lapses": 1,
+      "interval_days": 8,
       "card_yield_score": 100.0,
       "is_kprim_trap": true,
       "trap_type": "confusable_pair",
@@ -25,8 +79,8 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschleunigt die gesamte Glykolyse da: F-6-P → F-1,6-BP beschleunigt wird und F-1,6-BP ein allosterischer Aktivator der Pyruvat",
       "hy_terms_detected": [
-        "phosphat",
         "pfk-2",
+        "phosphat",
         "pfk-1",
         "glykolyse"
       ]
@@ -38,9 +92,9 @@
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
       "professor_name": "Prof. Dr. Christian Stockmann",
       "professor_institute": "Anatomisches Institut UZH",
-      "reps": 0,
-      "lapses": 0,
-      "interval_days": 0,
+      "reps": 10,
+      "lapses": 2,
+      "interval_days": 6,
       "card_yield_score": 92.0,
       "is_kprim_trap": true,
       "trap_type": "confusable_pair",
@@ -48,9 +102,9 @@
       "trap_warning": "Kprim-Falle: Verwechslung von Schrittmacherenzym (PFK-1) und regulatorischem Enzym (PFK-2).",
       "card_type": "kprim_mechanism",
       "front": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
-      "back": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase, PFK-1, Pyruvatkinase & PFK-2/ FBPase-2",
+      "back": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase , PFK-1, Pyruvatkinase & PFK-2/ FBPase-2 -> Hexokinase ausserhalb der Leber nihct durch SREBP-1c transkribiert",
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
-      "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase, PFK-1, Pyruvatkinase & PFK-2/ FBPase-2",
+      "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase , PFK-1, Pyruvatkinase & PFK-2/ FBPase-2 -> Hexokinase ausserhalb der Leber nihct durch SREBP-1c transkribiert",
       "hy_terms_detected": [
         "pfk-2",
         "pfk-1",
@@ -64,9 +118,9 @@
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
       "professor_name": "Prof. Dr. Christian Stockmann",
       "professor_institute": "Anatomisches Institut UZH",
-      "reps": 0,
+      "reps": 4,
       "lapses": 0,
-      "interval_days": 0,
+      "interval_days": 10,
       "card_yield_score": 92.0,
       "is_kprim_trap": true,
       "trap_type": "confusable_pair",
@@ -104,9 +158,9 @@
       "front_snippet": "Hypothalamus-HVL-Nebennierenrinden-Achse (glandotrop) Was läuft ab? Feedback Mechanismus?",
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona glomerulosa ⇒ Wirkung Feed-Back Mechanismus ➢ Cortisol hemmt im Hypothalamus und in der Adenohypophyse die Freisetzung ",
       "hy_terms_detected": [
+        "cortisol",
         "acth",
-        "aldosteron",
-        "cortisol"
+        "aldosteron"
       ]
     },
     {
@@ -154,8 +208,8 @@
       "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
       "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
       "hy_terms_detected": [
-        "aldosteron",
-        "cortisol"
+        "cortisol",
+        "aldosteron"
       ]
     },
     {
@@ -423,11 +477,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "epo",
-        "po2",
-        "thrombose",
+        "hämoglobin",
         "hypoxie",
-        "hämoglobin"
+        "epo",
+        "thrombose",
+        "po2"
       ]
     },
     {
@@ -451,11 +505,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "epo",
-        "po2",
-        "thrombose",
+        "hämoglobin",
         "hypoxie",
-        "hämoglobin"
+        "epo",
+        "thrombose",
+        "po2"
       ]
     },
     {
@@ -465,9 +519,9 @@
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
       "professor_name": "Prof. Dr. Heimo Emmert",
       "professor_institute": "Institut für Biochemie UZH",
-      "reps": 0,
+      "reps": 3,
       "lapses": 0,
-      "interval_days": 0,
+      "interval_days": 7,
       "card_yield_score": 100.0,
       "is_kprim_trap": true,
       "trap_type": "negation_directional",
@@ -481,8 +535,8 @@
       "hy_terms_detected": [
         "insulin",
         "t4",
-        "noradrenalin",
         "adrenalin",
+        "noradrenalin",
         "glykolyse"
       ]
     },
@@ -507,9 +561,9 @@
       "front_snippet": "Wie wirkt Kortisol?",
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
+        "insulin",
         "tsh",
         "inr",
-        "insulin",
         "glykolyse"
       ]
     },
@@ -534,11 +588,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "epo",
-        "po2",
-        "hypoxie",
+        "hämoglobin",
         "sauerstoffbindung",
-        "hämoglobin"
+        "hypoxie",
+        "epo",
+        "po2"
       ]
     },
     {
@@ -562,67 +616,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "epo",
-        "po2",
-        "hypoxie",
+        "hämoglobin",
         "sauerstoffbindung",
-        "hämoglobin"
-      ]
-    },
-    {
-      "card_id": 1638633691991,
-      "note_id": 1638633691987,
-      "deck_id": 1789378222950,
-      "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger",
-      "professor_name": "Prof. Dr. Roland Wenger",
-      "professor_institute": "Physiologisches Institut UZH",
-      "reps": 0,
-      "lapses": 0,
-      "interval_days": 0,
-      "card_yield_score": 95.0,
-      "is_kprim_trap": true,
-      "trap_type": "negation_directional",
-      "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-      "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-      "card_type": "kprim_mechanism",
-      "front": "Hypoxie",
-      "back": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur Hämgruppe COCl2 (Cobalt): Funktion umgekehrt zu EPO Fe3+-Ch",
-      "front_snippet": "Hypoxie",
-      "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
-      "hy_terms_detected": [
-        "epo",
-        "po2",
         "hypoxie",
-        "sauerstoffbindung",
-        "hämoglobin"
-      ]
-    },
-    {
-      "card_id": 1638633691992,
-      "note_id": 1638633691987,
-      "deck_id": 1789378222950,
-      "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger",
-      "professor_name": "Prof. Dr. Roland Wenger",
-      "professor_institute": "Physiologisches Institut UZH",
-      "reps": 0,
-      "lapses": 0,
-      "interval_days": 0,
-      "card_yield_score": 95.0,
-      "is_kprim_trap": true,
-      "trap_type": "negation_directional",
-      "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-      "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-      "card_type": "kprim_mechanism",
-      "front": "Hypoxie",
-      "back": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur Hämgruppe COCl2 (Cobalt): Funktion umgekehrt zu EPO Fe3+-Ch",
-      "front_snippet": "Hypoxie",
-      "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
-      "hy_terms_detected": [
         "epo",
-        "po2",
-        "hypoxie",
-        "sauerstoffbindung",
-        "hämoglobin"
+        "po2"
       ]
     }
   ],
@@ -632,7 +630,7 @@
       "deck_name": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
       "total_cards": 132,
       "high_yield_cards_count": 5,
-      "kprim_traps_count": 14,
+      "kprim_traps_count": 15,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 53.9,
       "sample_kprim_traps": [
@@ -728,10 +726,10 @@
           "front_snippet": "Welche Merkmale haben Thrombozyten? Funktion, Grösse, Vorkommen, Lebensdauer, Besonderheiten",
           "back_snippet": "Funktion: - Adhäsion , Aggregation & Freisetzung . - Wichtig für Blutgerinnung -> Sehr formvariabel im Blut in inaktivem Zustand, bei Oberflächenkontakt (z.B. Verletzung eines Gefässes) werden sie aktiviert. Durchmesser: - 2.5 μm . Vorkommen: - 150'000-350'000",
           "hy_terms_detected": [
+            "thrombozyt",
             "calcium",
             "blutgerinnung",
-            "fibrinogen",
-            "thrombozyt"
+            "fibrinogen"
           ]
         }
       ]
@@ -752,9 +750,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 32,
-          "lapses": 9,
-          "interval_days": 7,
+          "reps": 40,
+          "lapses": 11,
+          "interval_days": 5,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -798,9 +796,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 11,
+          "reps": 12,
           "lapses": 2,
-          "interval_days": 11,
+          "interval_days": 22,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -831,9 +829,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 23,
+          "interval_days": 52,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -916,8 +914,8 @@
           "front_snippet": "Was kann mit dem MHC-II/Antigen-Komplex an der Zelloberfläche geschehen bei einer Antigenpräsentation mit MHC-II Molekülen?",
           "back_snippet": "Dort kann nur ein T-Cell Receptor (TCR) mit dem Molekülkomplex interagieren, stabilisiert und ermöglicht durch CD4. Falls das Antigen als körperfremd anerkannt wird, wird die T-Zelle wird aktiviert",
           "hy_terms_detected": [
-            "t-zell",
             "mhc-ii",
+            "t-zell",
             "mhc-i"
           ]
         }
@@ -997,8 +995,8 @@
           "front_snippet": "Was muss passieren damit der TCR mit dem MHC-II Komplex interagieren kann? Was passiert nachdem der TCR gebunden hat? (bis&mit affinität erhöht)",
           "back_snippet": "Ein LFA-1 Molekül der T-Zelle interagiert mit geringer Affinität mit einem ICAM-1 der APC Nachdem der TCR dann gebunden hat, erhöht sich durch eine Konformationsänderung die Affiniät der Bindung und der Kontakt zwischen den zwei Zellen verlängert sich wenn Ant",
           "hy_terms_detected": [
-            "t-zell",
             "mhc-ii",
+            "t-zell",
             "mhc-i"
           ]
         },
@@ -1009,9 +1007,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 3,
-          "interval_days": 7,
+          "interval_days": 19,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1032,10 +1030,10 @@
       "deck_id": 1789378223022,
       "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
       "total_cards": 97,
-      "high_yield_cards_count": 3,
-      "kprim_traps_count": 6,
+      "high_yield_cards_count": 4,
+      "kprim_traps_count": 7,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 53.3,
+      "avg_card_yield_score": 53.5,
       "sample_kprim_traps": [
         {
           "card_id": 1600932843096,
@@ -1044,9 +1042,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
-          "lapses": 0,
-          "interval_days": 20,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 11,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1068,9 +1066,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 11,
+          "reps": 12,
           "lapses": 2,
-          "interval_days": 15,
+          "interval_days": 29,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1092,9 +1090,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
-          "lapses": 0,
-          "interval_days": 21,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 4,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1114,9 +1112,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 1,
-          "interval_days": 14,
+          "interval_days": 28,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -1149,9 +1147,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 14,
-          "lapses": 2,
-          "interval_days": 25,
+          "reps": 17,
+          "lapses": 3,
+          "interval_days": 10,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1163,8 +1161,8 @@
           "front_snippet": "Welche sind die Unterschiede zwischen dem Blutplasma und dem Serum?",
           "back_snippet": "Das Serum ist der Überstand von geronnenem Blut (Nach Gerinnung zentrifugiert) und enthält kein Fribrinogen . Im Serum sind die Thrombozyten aktiviert ! Das Blutplasma ist aus direkt zentrifugiertem Blut und enthält Fibrinogen. —> Serum = Plasma - Gerinnungsfa",
           "hy_terms_detected": [
-            "fibrinogen",
-            "thrombozyt"
+            "thrombozyt",
+            "fibrinogen"
           ]
         },
         {
@@ -1196,9 +1194,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 40,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 6,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1229,9 +1227,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 3,
-          "interval_days": 29,
+          "interval_days": 32,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1251,8 +1249,8 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 20,
-          "lapses": 6,
+          "reps": 25,
+          "lapses": 7,
           "interval_days": 6,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
@@ -1273,9 +1271,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 17,
+          "reps": 20,
           "lapses": 5,
-          "interval_days": 2,
+          "interval_days": 13,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1383,9 +1381,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 12,
-          "lapses": 2,
-          "interval_days": 14,
+          "reps": 19,
+          "lapses": 5,
+          "interval_days": 1,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1407,9 +1405,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 15,
-          "lapses": 4,
-          "interval_days": 9,
+          "reps": 21,
+          "lapses": 6,
+          "interval_days": 8,
           "card_yield_score": 77.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1421,9 +1419,9 @@
           "front_snippet": "Was versteht man unter negativer Selektion? Wo findet sie statt?",
           "back_snippet": "Vermeidung von Autoreaktivität und Erzeugung von zentraler Toleranz gegenüber körpereigenem Gewebe (damit sie nur fremdes angreiffen) --> DP-Zellen werden durch dendritische Zellen/ mTEC an der Kortex/Mark-Grenze auf TCRs mit zu hoher Affinität für körpereigen",
           "hy_terms_detected": [
+            "t-zell",
             "thymus",
-            "negative selektion",
-            "t-zell"
+            "negative selektion"
           ]
         },
         {
@@ -1433,9 +1431,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 15,
+          "reps": 16,
           "lapses": 4,
-          "interval_days": 13,
+          "interval_days": 32,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1492,9 +1490,9 @@
           "deck_name": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
+          "reps": 11,
           "lapses": 2,
-          "interval_days": 8,
+          "interval_days": 20,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1506,8 +1504,8 @@
           "front_snippet": "Was kann man über aktivierte Thrombozyten aussagen?",
           "back_snippet": "Gestaltänderung , klebrig , bilden Propfen , Membranen verschmelzen (irreversibler Prozess) sollte nur am Ort einer Blutung passieren (dürfen nicht in Venen gelangen -> Lunge -> Embolie) (passiert zu schluss der primären hämostase)",
           "hy_terms_detected": [
-            "hämostase",
-            "thrombozyt"
+            "thrombozyt",
+            "hämostase"
           ]
         },
         {
@@ -1596,9 +1594,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 0,
-          "interval_days": 19,
+          "interval_days": 39,
           "card_yield_score": 96.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -1610,10 +1608,10 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "3. Aktivierung : Signaltransduktion führt zu Pseudopodien und Phosphatidylserin-Präsentation an der Membran. 4. GPIIb/IIIa-Aktivierung : Der Rezeptor wechselt in seine hochaffine Form. 5. Verstärkung & Aggregation : Aktiviertes GPIIb/IIIa bindet an vWF (feste ",
           "hy_terms_detected": [
-            "phosphat",
+            "thrombozyt",
             "von-willebrand",
-            "fibrinogen",
-            "thrombozyt"
+            "phosphat",
+            "fibrinogen"
           ]
         },
         {
@@ -1637,8 +1635,8 @@
           "front_snippet": "Über welches System wird aus dem nicht-kovalenten Thrombozytenaggregat ein kovalent-verknüpfter Thrombus?",
           "back_snippet": "Über ein doppelt enzymatisches Kaskadensystem Ein extravaskuläres (exogenes) (extrinsisch) System -> aktiviert Thrombin in Sekunden ein intravaskuläres (endogenes) (intrinsisch) System -> läuft erst nach einigen Minuten an",
           "hy_terms_detected": [
-            "thrombin",
-            "thrombozyt"
+            "thrombozyt",
+            "thrombin"
           ]
         },
         {
@@ -1648,9 +1646,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 11,
+          "interval_days": 26,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1705,9 +1703,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 14,
+          "reps": 16,
           "lapses": 4,
-          "interval_days": 2,
+          "interval_days": 14,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1727,9 +1725,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 10,
+          "interval_days": 20,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1749,9 +1747,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 22,
+          "interval_days": 35,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1802,9 +1800,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 1,
-          "interval_days": 14,
+          "interval_days": 26,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1826,9 +1824,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 0,
-          "interval_days": 9,
+          "interval_days": 20,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1859,9 +1857,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 6,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 5,
+          "interval_days": 21,
           "card_yield_score": 49.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1883,9 +1881,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 9,
+          "reps": 13,
+          "lapses": 3,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1916,9 +1914,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 21,
+          "interval_days": 69,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1938,9 +1936,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 16,
-          "lapses": 4,
-          "interval_days": 3,
+          "reps": 29,
+          "lapses": 8,
+          "interval_days": 10,
           "card_yield_score": 78.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1952,8 +1950,8 @@
           "front_snippet": "Was bewirkt Phospholamban? Wie wird es reguliert?",
           "back_snippet": "PLB hemmt im dephosphorylierten Zustand SERCA (Ca-ATPase) Ausschüttung von Noradrenalin durch Sympathikus aktiviert Beta1-Rezeptoren : --> aktiviert Adenylylcyclase --> erhöht cAMP --> erhöht Aktivität PKA --> Phosphorylierung von PLB --> Keine Hemmung von SER",
           "hy_terms_detected": [
-            "noradrenalin",
-            "adrenalin"
+            "adrenalin",
+            "noradrenalin"
           ]
         }
       ]
@@ -1983,9 +1981,9 @@
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
       "total_cards": 54,
       "high_yield_cards_count": 6,
-      "kprim_traps_count": 3,
+      "kprim_traps_count": 5,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 55.3,
+      "avg_card_yield_score": 55.7,
       "sample_kprim_traps": [
         {
           "card_id": 1603644152073,
@@ -1994,9 +1992,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 29,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 5,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2019,9 +2017,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 0,
-          "interval_days": 24,
+          "interval_days": 33,
           "card_yield_score": 86.0,
           "is_kprim_trap": true,
           "trap_type": "high_yield_core",
@@ -2033,10 +2031,35 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "epo",
-            "ekg",
             "depolarisation",
-            "repolarisation"
+            "repolarisation",
+            "epo",
+            "ekg"
+          ]
+        },
+        {
+          "card_id": 1603644153898,
+          "note_id": 1603644153898,
+          "deck_id": 1789378223001,
+          "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+          "professor_name": "Prof. Dr. Philipp Sommer",
+          "professor_institute": "Kardiologie / Anatomisches Institut UZH",
+          "reps": 12,
+          "lapses": 3,
+          "interval_days": 2,
+          "card_yield_score": 68.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Was ist die ST-Strecke? Was ist besonders zu beachten?",
+          "back": "Ein STEMI* ist ein schwerer Infarkt, der im EKG gut mitverfolgbar ist. Eine Evaluation des Stadiums ist für die Behandlung wichtig --> Stadium 2-3/3 müssen nicht unbedingt vorkommen * vollständiger Verschluss einer Koronararterie. Kein ATP durch unzureichende Durchblutung. -> Na/K-ATPasen funktionieren nicht führt zu D",
+          "front_snippet": "Was ist die ST-Strecke? Was ist besonders zu beachten?",
+          "back_snippet": "Ein STEMI* ist ein schwerer Infarkt, der im EKG gut mitverfolgbar ist. Eine Evaluation des Stadiums ist für die Behandlung wichtig --> Stadium 2-3/3 müssen nicht unbedingt vorkommen * vollständiger Verschluss einer Koronararterie. Kein ATP durch unzureichende ",
+          "hy_terms_detected": [
+            "epo",
+            "ekg"
           ]
         },
         {
@@ -2046,9 +2069,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 6,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 5,
+          "interval_days": 25,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2072,7 +2095,7 @@
       "high_yield_cards_count": 0,
       "kprim_traps_count": 4,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 50.2,
+      "avg_card_yield_score": 50.5,
       "sample_kprim_traps": [
         {
           "card_id": 1603644211407,
@@ -2081,9 +2104,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 1,
-          "interval_days": 20,
+          "interval_days": 33,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2103,9 +2126,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 4,
-          "lapses": 0,
-          "interval_days": 23,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 12,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2125,9 +2148,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 11,
-          "lapses": 2,
-          "interval_days": 5,
+          "reps": 16,
+          "lapses": 3,
+          "interval_days": 8,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2147,9 +2170,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 1,
-          "interval_days": 20,
+          "interval_days": 33,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2180,9 +2203,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 21,
+          "interval_days": 34,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2224,9 +2247,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 15,
+          "interval_days": 48,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2246,9 +2269,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 20,
+          "interval_days": 67,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2279,9 +2302,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 24,
+          "interval_days": 77,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2301,9 +2324,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 1,
+          "reps": 2,
           "lapses": 0,
-          "interval_days": 15,
+          "interval_days": 68,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2323,9 +2346,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 9,
+          "interval_days": 21,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2345,9 +2368,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 8,
+          "interval_days": 25,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2366,10 +2389,10 @@
       "deck_id": 1789378222996,
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
       "total_cards": 63,
-      "high_yield_cards_count": 6,
-      "kprim_traps_count": 13,
+      "high_yield_cards_count": 7,
+      "kprim_traps_count": 14,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 59.3,
+      "avg_card_yield_score": 59.9,
       "sample_kprim_traps": [
         {
           "card_id": 1603645710856,
@@ -2378,9 +2401,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 5,
+          "reps": 6,
           "lapses": 0,
-          "interval_days": 18,
+          "interval_days": 19,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2402,9 +2425,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 1,
-          "interval_days": 10,
+          "interval_days": 25,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2424,9 +2447,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 5,
+          "reps": 7,
           "lapses": 2,
-          "interval_days": 2,
+          "interval_days": 16,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2448,9 +2471,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 20,
-          "lapses": 7,
-          "interval_days": 1,
+          "reps": 29,
+          "lapses": 9,
+          "interval_days": 8,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2493,9 +2516,9 @@
           "deck_name": "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 28,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2515,9 +2538,9 @@
           "deck_name": "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 21,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2548,9 +2571,9 @@
           "deck_name": "TB Atmung :: Loffing :: Lunge / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 19,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2570,9 +2593,9 @@
           "deck_name": "TB Atmung :: Loffing :: Lunge / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 11,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2592,9 +2615,9 @@
           "deck_name": "TB Atmung :: Loffing :: Lunge / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 10,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2612,9 +2635,9 @@
     "1789378223016": {
       "deck_id": 1789378223016,
       "deck_name": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
-      "total_cards": 233,
+      "total_cards": 234,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 14,
+      "kprim_traps_count": 11,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 40.0,
       "sample_kprim_traps": [
@@ -2625,9 +2648,9 @@
           "deck_name": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 13,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2647,9 +2670,9 @@
           "deck_name": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 15,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2669,9 +2692,9 @@
           "deck_name": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 6,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 16,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2679,9 +2702,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Wie verhalten sich die kranialen Abschnitte der Rippe bei Bewegung der Thoraxgelenke bei der Atmung? (Übersicht)",
-          "back": "Kraniale Abschnitte - Bewegungsachse eher frontal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae , dies bewirkt bei den Sternocostalgelenken Rotationskräfte und es kommt zu einer Kippung des Sternums nac",
+          "back": "Kraniale Abschnitte -> Kraniale Rippen: Sagital -> kaudale Rippen: Transversale - Bewegungsachse eher frontal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae , dies bewirkt bei den Sternocostalgelenken Ro",
           "front_snippet": "Wie verhalten sich die kranialen Abschnitte der Rippe bei Bewegung der Thoraxgelenke bei der Atmung? (Übersicht)",
-          "back_snippet": "Kraniale Abschnitte - Bewegungsachse eher frontal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae , dies bewirkt bei den Sternocostalgelenken Ro",
+          "back_snippet": "Kraniale Abschnitte -> Kraniale Rippen: Sagital -> kaudale Rippen: Transversale - Bewegungsachse eher frontal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des ",
           "hy_terms_detected": []
         },
         {
@@ -2691,9 +2714,9 @@
           "deck_name": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 19,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2701,9 +2724,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Wie ist die Bewegungsachse der kranialen Abschnitte ausgerichtet? Was folgt daraus? (Bewegung in den Thorakalgelenken)",
-          "back": "Kraniale Abschnitte - Bewegungsachse eher frontal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae, dies bewirkt bei den Sternocostalgelenken Rotationskräfte und es kommt zu einer Kippung des Sternums nach",
+          "back": "Kraniale Abschnitte - Bewegungsachse eher Transversal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae, dies bewirkt bei den Sternocostalgelenken Rotationskräfte und es kommt zu einer Kippung des Sternums ",
           "front_snippet": "Wie ist die Bewegungsachse der kranialen Abschnitte ausgerichtet? Was folgt daraus? (Bewegung in den Thorakalgelenken)",
-          "back_snippet": "Kraniale Abschnitte - Bewegungsachse eher frontal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae, dies bewirkt bei den Sternocostalgelenken Rot",
+          "back_snippet": "Kraniale Abschnitte - Bewegungsachse eher Transversal ausgerichtet -> eher eine Rotation - Die kranialen Rippen flachen nur leicht nach kaudal ab - Bei der Inspiration drehen sich Rippen um die Achse des Collum costae, dies bewirkt bei den Sternocostalgelenken",
           "hy_terms_detected": []
         }
       ]
@@ -2917,8 +2940,8 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 9,
-          "lapses": 2,
+          "reps": 13,
+          "lapses": 3,
           "interval_days": 2,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
@@ -2939,9 +2962,9 @@
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
       "total_cards": 24,
       "high_yield_cards_count": 3,
-      "kprim_traps_count": 5,
-      "confusable_pairs_count": 0,
-      "avg_card_yield_score": 52.5,
+      "kprim_traps_count": 7,
+      "confusable_pairs_count": 1,
+      "avg_card_yield_score": 53.8,
       "sample_kprim_traps": [
         {
           "card_id": 1605004521050,
@@ -2950,9 +2973,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 23,
+          "interval_days": 68,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2972,9 +2995,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
-          "lapses": 3,
-          "interval_days": 2,
+          "reps": 15,
+          "lapses": 4,
+          "interval_days": 18,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2994,9 +3017,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 10,
-          "lapses": 3,
-          "interval_days": 3,
+          "reps": 14,
+          "lapses": 4,
+          "interval_days": 2,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -3016,9 +3039,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 18,
+          "interval_days": 64,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3049,9 +3072,9 @@
           "deck_name": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 5,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3081,7 +3104,7 @@
       "deck_name": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
       "total_cards": 324,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 1,
+      "kprim_traps_count": 2,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 40.0,
       "sample_kprim_traps": [
@@ -3092,9 +3115,9 @@
           "deck_name": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 19,
+          "lapses": 5,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3102,9 +3125,31 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Was innerviert der N. laryngeus inferior (reccurens)?",
-          "back": "Motorisch: Alle Kehlkopfmuskeln ausser M. cricothyroideus Sensibel: Subglottischer Raum, unter Plica vocalis",
+          "back": "Motorisch : Alle Kehlkopfmuskeln ausser M. cricothyroideus * Sensibel : Subglottischer Raum , unter Plica vocalis * (Anticus) Grobspanner der Stimmlippen (hohe Töne) (macht nicht mit Rima Glottis) —> entspringt von N. Vagus -> N. Laryngeus inf.",
           "front_snippet": "Was innerviert der N. laryngeus inferior (reccurens)?",
-          "back_snippet": "Motorisch: Alle Kehlkopfmuskeln ausser M. cricothyroideus Sensibel: Subglottischer Raum, unter Plica vocalis",
+          "back_snippet": "Motorisch : Alle Kehlkopfmuskeln ausser M. cricothyroideus * Sensibel : Subglottischer Raum , unter Plica vocalis * (Anticus) Grobspanner der Stimmlippen (hohe Töne) (macht nicht mit Rima Glottis) —> entspringt von N. Vagus -> N. Laryngeus inf.",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1605804016075,
+          "note_id": 1605804016074,
+          "deck_id": 1789378222998,
+          "deck_name": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
+          "professor_name": "Prof. Dr. Johannes Loffing",
+          "professor_institute": "Anatomisches Institut UZH",
+          "reps": 11,
+          "lapses": 3,
+          "interval_days": 5,
+          "card_yield_score": 40.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Wie ist der Pharynx motorisch innerviert?",
+          "back": "- N. vagus (X) (fast nur) - N. glossopharyngeus (IX) (nur M. Stylopharyngeus) --> Plexus pharyngeus : Nervengeflecht -> wie sensibel ausser Maxilaris",
+          "front_snippet": "Wie ist der Pharynx motorisch innerviert?",
+          "back_snippet": "- N. vagus (X) (fast nur) - N. glossopharyngeus (IX) (nur M. Stylopharyngeus) --> Plexus pharyngeus : Nervengeflecht -> wie sensibel ausser Maxilaris",
           "hy_terms_detected": []
         }
       ]
@@ -3403,9 +3448,9 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
+            "hämoglobin",
             "erythropoietin",
             "t4",
-            "hämoglobin",
             "t3",
             "angiotensin"
           ]
@@ -4039,10 +4084,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroidea stimulierendes Hormung = Thyreotropin ) Regt in der Schilddrüse die Bildung von Thyroxin= T4 und Trijodothyronin= T3",
           "hy_terms_detected": [
-            "schilddrüse",
             "tsh",
             "t4",
-            "t3"
+            "t3",
+            "schilddrüse"
           ]
         },
         {
@@ -4066,12 +4111,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
-            "schilddrüse",
-            "peroxidase",
-            "inr",
-            "t4",
             "thyreoglobulin",
-            "t3"
+            "t4",
+            "peroxidase",
+            "t3",
+            "inr",
+            "schilddrüse"
           ]
         },
         {
@@ -4239,10 +4284,10 @@
           "front_snippet": "Hypophosphatämie: Def, Ursachen, Symptome, Therapie?",
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
-            "phosphat",
+            "insulin",
             "azidose",
-            "inr",
-            "insulin"
+            "phosphat",
+            "inr"
           ]
         },
         {
@@ -4266,8 +4311,8 @@
           "front_snippet": "Was sind die nicht klassischen Wirkungen von Vit. D?",
           "back_snippet": "- Immunsystem! --> Calcitriol scheint die Pathogenaufnahme und -abtötung von Makrophagen zu verbessern - Hemmt Reninfreisetzung - Stimuliert Bildung von bakteriziden Substanzen",
           "hy_terms_detected": [
-            "calcitriol",
-            "renin"
+            "renin",
+            "calcitriol"
           ]
         },
         {
@@ -4625,9 +4670,9 @@
           "front_snippet": "Wie wirkt Kortisol?",
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
+            "insulin",
             "tsh",
             "inr",
-            "insulin",
             "glykolyse"
           ]
         },
@@ -4674,11 +4719,11 @@
           "front_snippet": "Wie funktioniert die Aldosteronfreisetzung über Angiotensin II?",
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
-            "epo",
-            "renin",
-            "aldosteron",
             "depolarisation",
-            "angiotensin"
+            "renin",
+            "epo",
+            "angiotensin",
+            "aldosteron"
           ]
         }
       ]
@@ -4741,9 +4786,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
-          "lapses": 2,
-          "interval_days": 21,
+          "reps": 13,
+          "lapses": 3,
+          "interval_days": 12,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4787,9 +4832,9 @@
           "deck_name": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 25,
+          "interval_days": 83,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4820,9 +4865,9 @@
           "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger :: Energieumsatz & Thermoregulation ⚫",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 3,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 2,
+          "interval_days": 30,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4842,9 +4887,9 @@
           "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger :: Energieumsatz & Thermoregulation ⚫",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 5,
+          "reps": 7,
           "lapses": 1,
-          "interval_days": 2,
+          "interval_days": 24,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -4864,9 +4909,9 @@
           "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger :: Energieumsatz & Thermoregulation ⚫",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 3,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 4,
+          "interval_days": 58,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4886,9 +4931,9 @@
           "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger :: Energieumsatz & Thermoregulation ⚫",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 4,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 2,
+          "interval_days": 16,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4896,7 +4941,7 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Fieber Wieso ist Fieber gut? Wie entsteht es?",
-          "back": "weiss man nicht so genau Hypothese: Bakterien kommen nicht so gut mit Hitze klar und sterben bzw. werden geschwächt Entsteht : Hypothalamus erhöht Sollwert aufgrund von Entzündungsmediatoren (bzw. pyrogene ( fiberinduzierende) Zytokine ⇒ IL-6). PGE2 induziert dann lokal eine Temperaturerhöhung",
+          "back": "weiss man nicht so genau Hypothese: Bakterien kommen nicht so gut mit Hitze klar und sterben bzw. werden geschwächt Entsteht : Hypothalamus erhöht Sollwert aufgrund von Entzündungsmediatoren (bzw. pyrogene ( fiberinduzierende) Zytokine ⇒ IL-6). PGE2 induziert dann lokal eine Temperaturerhöhung (Am Hypothalamus darum sy",
           "front_snippet": "Fieber Wieso ist Fieber gut? Wie entsteht es?",
           "back_snippet": "weiss man nicht so genau Hypothese: Bakterien kommen nicht so gut mit Hitze klar und sterben bzw. werden geschwächt Entsteht : Hypothalamus erhöht Sollwert aufgrund von Entzündungsmediatoren (bzw. pyrogene ( fiberinduzierende) Zytokine ⇒ IL-6). PGE2 induziert ",
           "hy_terms_detected": []
@@ -4919,9 +4964,9 @@
           "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 6,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4941,9 +4986,9 @@
           "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
           "professor_name": "Dozententeam UZH",
           "professor_institute": "Medizinische Fakultät UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 7,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4951,9 +4996,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Lipoproteinklassen Welches Lipoprotein ist das einzige, welches KEIN Apo B als Apolipoprotein hat?",
-          "back": "HDL ⇒ ist das einzige Lipoprotein, welches kein Apo B hat",
+          "back": "HDL ⇒ ist das einzige Lipoprotein, welches kein Apo B hat -> hat Apo A1",
           "front_snippet": "Lipoproteinklassen Welches Lipoprotein ist das einzige, welches KEIN Apo B als Apolipoprotein hat?",
-          "back_snippet": "HDL ⇒ ist das einzige Lipoprotein, welches kein Apo B hat",
+          "back_snippet": "HDL ⇒ ist das einzige Lipoprotein, welches kein Apo B hat -> hat Apo A1",
           "hy_terms_detected": []
         },
         {
@@ -4963,9 +5008,9 @@
           "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
           "professor_name": "Dozententeam UZH",
           "professor_institute": "Medizinische Fakultät UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 8,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4987,9 +5032,9 @@
           "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
           "professor_name": "Dozententeam UZH",
           "professor_institute": "Medizinische Fakultät UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 9,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5108,11 +5153,11 @@
     "1789378223010": {
       "deck_id": 1789378223010,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
-      "total_cards": 212,
-      "high_yield_cards_count": 29,
-      "kprim_traps_count": 41,
-      "confusable_pairs_count": 3,
-      "avg_card_yield_score": 61.8,
+      "total_cards": 213,
+      "high_yield_cards_count": 34,
+      "kprim_traps_count": 45,
+      "confusable_pairs_count": 4,
+      "avg_card_yield_score": 62.7,
       "sample_kprim_traps": [
         {
           "card_id": 1638126348933,
@@ -5121,9 +5166,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 24,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5145,9 +5190,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 1,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 13,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5167,9 +5212,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
           "professor_name": "PD Dr. med. Milena Sokolowska",
           "professor_institute": "SIAF Davos & UZH Medizinische Fakultät",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 12,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5191,9 +5236,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
           "professor_name": "PD Dr. med. Milena Sokolowska",
           "professor_institute": "SIAF Davos & UZH Medizinische Fakultät",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 25,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5201,9 +5246,9 @@
           "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
           "card_type": "kprim_mechanism",
           "front": "grober Überblick: beschreibe Wirkung von Adrenalin",
-          "back": "• «Stresshormon» • steigert die Leistungsbereitschaft • steigert die Glucose Konzentration im Blut •schnelle Effekte",
+          "back": "• «Stresshormon» • steigert die Leistungsbereitschaft • steigert die Glucose Konzentration im Blut •schnelle Effekte -> cAMP",
           "front_snippet": "grober Überblick: beschreibe Wirkung von Adrenalin",
-          "back_snippet": "• «Stresshormon» • steigert die Leistungsbereitschaft • steigert die Glucose Konzentration im Blut •schnelle Effekte",
+          "back_snippet": "• «Stresshormon» • steigert die Leistungsbereitschaft • steigert die Glucose Konzentration im Blut •schnelle Effekte -> cAMP",
           "hy_terms_detected": [
             "adrenalin"
           ]
@@ -5387,11 +5432,11 @@
     "1789378223064": {
       "deck_id": 1789378223064,
       "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
-      "total_cards": 131,
+      "total_cards": 132,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 8,
+      "kprim_traps_count": 14,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 42.1,
+      "avg_card_yield_score": 42.3,
       "sample_kprim_traps": [
         {
           "card_id": 1639303425701,
@@ -5400,9 +5445,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 4,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5416,69 +5461,71 @@
           "hy_terms_detected": []
         },
         {
-          "card_id": 1639303428341,
-          "note_id": 1639303428341,
+          "card_id": 1639303425707,
+          "note_id": 1639303425707,
           "deck_id": 1789378223064,
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 11,
+          "lapses": 3,
+          "interval_days": 1,
+          "card_yield_score": 49.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Mangelsymptome bei Vit B2? (Vit B2 = Riboflavin)",
+          "back": "Rhagaden, seborrhoische Dermatitis, hyp o chrome Anämie, Trübung Augenlinse Durch Mangel an ATP, Zellteilung nicht mehr so gut möglich. B2 nötig um Eisen aus Ferritin zu befreien. B2 aktiviert B6 das dann für Häm-Synthese verantwortlich Rhagaden = spaltförmige kleine Risse seborrhische Dermatitis = Art der Entzündung d",
+          "front_snippet": "Mangelsymptome bei Vit B2? (Vit B2 = Riboflavin)",
+          "back_snippet": "Rhagaden, seborrhoische Dermatitis, hyp o chrome Anämie, Trübung Augenlinse Durch Mangel an ATP, Zellteilung nicht mehr so gut möglich. B2 nötig um Eisen aus Ferritin zu befreien. B2 aktiviert B6 das dann für Häm-Synthese verantwortlich Rhagaden = spaltförmige",
+          "hy_terms_detected": [
+            "hämoglobin"
+          ]
+        },
+        {
+          "card_id": 1639303426735,
+          "note_id": 1639303426735,
+          "deck_id": 1789378223064,
+          "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+          "professor_name": "Prof. Dr. Raimund Dutzler",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Wann sinkt Verfügbarkeit von Vitamin B9 ?",
-          "back": "Sinkt bei Vit B12 Mangel (Methyl-THF kann nicht zu THF regeneriert werden!) Methyl-THF entstand ja in der Darmmukosa bei der Absorption. Jetzt will man wieder THF → geht aber nicht so gut bei Mangel von VItB12",
-          "front_snippet": "Wann sinkt Verfügbarkeit von Vitamin B9 ?",
-          "back_snippet": "Sinkt bei Vit B12 Mangel (Methyl-THF kann nicht zu THF regeneriert werden!) Methyl-THF entstand ja in der Darmmukosa bei der Absorption. Jetzt will man wieder THF → geht aber nicht so gut bei Mangel von VItB12",
+          "front": "Mangelerscheinungen bei Niacin (Vitamin B3) ?",
+          "back": "frühe Mangelerscheinungen: Appetitlosigkeit, erbrechen, schwindel Chronisch: ⇒ Pellagra - NAD+: Mangel kein ATP, Energiefressene Organe intakt. + keine DNA-Reparatur - NADP+: Mangel kein Schutz vor Radikalen + kein Aufbau Zellmembran",
+          "front_snippet": "Mangelerscheinungen bei Niacin (Vitamin B3) ?",
+          "back_snippet": "frühe Mangelerscheinungen: Appetitlosigkeit, erbrechen, schwindel Chronisch: ⇒ Pellagra - NAD+: Mangel kein ATP, Energiefressene Organe intakt. + keine DNA-Reparatur - NADP+: Mangel kein Schutz vor Radikalen + kein Aufbau Zellmembran",
           "hy_terms_detected": []
         },
         {
-          "card_id": 1639303429050,
-          "note_id": 1639303429050,
+          "card_id": 1639303426736,
+          "note_id": 1639303426736,
           "deck_id": 1789378223064,
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 8,
+          "lapses": 2,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Interaktionen von B6, B12, Folsäure (B9) ? Mangel? Therapie? (Verlinkung zu Mittls Vorlesung! Schau dir das gut an!)",
-          "back": "Homocysteinmetabolismus (= Methylzyklus (nach Mittl)) Vit 6: Cofaktor bei folgenden Reaktionen: Produktion von Methylen-THF und Abbau von Homocystein Vit B12 Cofaktor bei folgender Reaktion: ⇒ Übertragung von -CH 3 Gruppe von Methyl-THF auf Homocystein ⇒ Methionin entsteht Folsäure (Vit B9) → THF ist der Träger der -CH",
-          "front_snippet": "Interaktionen von B6, B12, Folsäure (B9) ? Mangel? Therapie? (Verlinkung zu Mittls Vorlesung! Schau dir das gut an!)",
-          "back_snippet": "Homocysteinmetabolismus (= Methylzyklus (nach Mittl)) Vit 6: Cofaktor bei folgenden Reaktionen: Produktion von Methylen-THF und Abbau von Homocystein Vit B12 Cofaktor bei folgender Reaktion: ⇒ Übertragung von -CH 3 Gruppe von Methyl-THF auf Homocystein ⇒ Methi",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1639303429335,
-          "note_id": 1639303429335,
-          "deck_id": 1789378223064,
-          "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
-          "professor_name": "Prof. Dr. Raimund Dutzler",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Vit C → kann es selbst produziert werden? Quellen?",
-          "back": "NEIN → ist also essentiell; Aufnahme aus Kartoffeln, Obest, Gemüse (Kohlgewächse) Weil das Enzym: L-Gulonolacton-Oxidase fehlt beim Mensch 100mg/Tag empfohlen Achtung: Allgemein ist es kein Vitamin im Tierreich . Nur Menschen, Menschenaffen und Meerschweinchen können es nicht produzieren (keine L-Gulonolacton-Oxidase)",
-          "front_snippet": "Vit C → kann es selbst produziert werden? Quellen?",
-          "back_snippet": "NEIN → ist also essentiell; Aufnahme aus Kartoffeln, Obest, Gemüse (Kohlgewächse) Weil das Enzym: L-Gulonolacton-Oxidase fehlt beim Mensch 100mg/Tag empfohlen Achtung: Allgemein ist es kein Vitamin im Tierreich . Nur Menschen, Menschenaffen und Meerschweinchen",
+          "front": "Was ist Pellagra? Leitsymptome?",
+          "back": "durch Mangel an Vitamin B3 (Niacin) ausgelöst Leitsymptome: D ermatitis, D urchfall, D emenz - NAD + -Mangel = Kein ATP (Gehirn & Darm streiken —> Schwindel, Erbrechen, Demenz ) + keine DNA-Reparatur über PARP (Haut stirbt bei UV-Licht ab —> Dermatitis). - NADP + -Mangel = Kein Schutz vor freien Radikalen & kein Aufbau",
+          "front_snippet": "Was ist Pellagra? Leitsymptome?",
+          "back_snippet": "durch Mangel an Vitamin B3 (Niacin) ausgelöst Leitsymptome: D ermatitis, D urchfall, D emenz - NAD + -Mangel = Kein ATP (Gehirn & Darm streiken —> Schwindel, Erbrechen, Demenz ) + keine DNA-Reparatur über PARP (Haut stirbt bei UV-Licht ab —> Dermatitis). - NAD",
           "hy_terms_detected": []
         }
       ]
@@ -5585,11 +5632,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
-            "schilddrüse",
             "tsh",
-            "calcitonin",
             "t4",
-            "t3"
+            "t3",
+            "calcitonin",
+            "schilddrüse"
           ]
         }
       ]
@@ -5668,8 +5715,8 @@
           "front_snippet": "Was passiert wenn ACTH von der Hypophyse ausgeschüttet wird? Beschreibe Feedbackloop",
           "back_snippet": "- es stimmuliert die poduktion von Cortisol in den Nebennieren - Cortisol hemmt CRH (corticotropin releasing hormone) - CRH gehemmt -> weniger/kein ACTH mehr ⇒ negativer Feedbackloop",
           "hy_terms_detected": [
-            "acth",
-            "cortisol"
+            "cortisol",
+            "acth"
           ]
         },
         {
@@ -5700,10 +5747,10 @@
       "deck_id": 1789378223013,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
       "total_cards": 133,
-      "high_yield_cards_count": 3,
+      "high_yield_cards_count": 4,
       "kprim_traps_count": 12,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 52.5,
+      "avg_card_yield_score": 52.6,
       "sample_kprim_traps": [
         {
           "card_id": 1639578101813,
@@ -5712,9 +5759,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 4,
+          "lapses": 1,
+          "interval_days": 2,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5722,9 +5769,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Welche Nährstoffe gelangen über Pfortader in die Leber? welche nicht?",
-          "back": "via Leber: -praktisch \"alle\" Nährstoffe, die im Darm resorbiert werden, gelangen über die Leber in den Körperkreislauf nicht via Leber : -Lipide: werden im Darm in Chylomikronen verpackt und über die Lymphe (Ductus Thoracicus) im Körperkreislauf verteilt",
+          "back": "via Leber: -praktisch \"alle\" Nährstoffe, die im Darm resorbiert werden, gelangen über die Leber in den Körperkreislauf nicht via Leber : - Lipide : werden im Darm in Chylomikronen verpackt und über die Lymphe (Ductus Thoracicus) im Körperkreislauf verteilt",
           "front_snippet": "Welche Nährstoffe gelangen über Pfortader in die Leber? welche nicht?",
-          "back_snippet": "via Leber: -praktisch \"alle\" Nährstoffe, die im Darm resorbiert werden, gelangen über die Leber in den Körperkreislauf nicht via Leber : -Lipide: werden im Darm in Chylomikronen verpackt und über die Lymphe (Ductus Thoracicus) im Körperkreislauf verteilt",
+          "back_snippet": "via Leber: -praktisch \"alle\" Nährstoffe, die im Darm resorbiert werden, gelangen über die Leber in den Körperkreislauf nicht via Leber : - Lipide : werden im Darm in Chylomikronen verpackt und über die Lymphe (Ductus Thoracicus) im Körperkreislauf verteilt",
           "hy_terms_detected": []
         },
         {
@@ -5734,9 +5781,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 12,
+          "lapses": 3,
+          "interval_days": 4,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5744,9 +5791,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: Abfall hepatische Gallensäure konzentration und Gallensäuresynthese und Export ?",
-          "back": "INaktivierung von FXR* Fazit : ⇒ Gallensäuresynthese wird gesteigert und der Export gehemmt ⟹ Steigerung der intrazellulären Gallensäurekonzentration *dadurch: KEINE erhöhte Transkription von ABCB11 und KEINE verminderte Transkription von CYP7A1",
+          "back": "InAktivierung von FXR* Fazit : ⇒ Gallensäuresynthese wird induziert und der Export gehemmt ⟹ Steigerung der intrazellulären Gallensäurekonzentration * keine Hemmung von CYP7A1 und keine Indizierung von ABCA11",
           "front_snippet": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: Abfall hepatische Gallensäure konzentration und Gallensäuresynthese und Export ?",
-          "back_snippet": "INaktivierung von FXR* Fazit : ⇒ Gallensäuresynthese wird gesteigert und der Export gehemmt ⟹ Steigerung der intrazellulären Gallensäurekonzentration *dadurch: KEINE erhöhte Transkription von ABCB11 und KEINE verminderte Transkription von CYP7A1",
+          "back_snippet": "InAktivierung von FXR* Fazit : ⇒ Gallensäuresynthese wird induziert und der Export gehemmt ⟹ Steigerung der intrazellulären Gallensäurekonzentration * keine Hemmung von CYP7A1 und keine Indizierung von ABCA11",
           "hy_terms_detected": []
         },
         {
@@ -5756,9 +5803,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 13,
+          "lapses": 4,
+          "interval_days": 1,
           "card_yield_score": 78.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5781,9 +5828,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 7,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5805,9 +5852,9 @@
       "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
       "total_cards": 57,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 7,
+      "kprim_traps_count": 8,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 52.6,
+      "avg_card_yield_score": 53.1,
       "sample_kprim_traps": [
         {
           "card_id": 1640006577221,
@@ -5816,9 +5863,9 @@
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 7,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5832,15 +5879,39 @@
           "hy_terms_detected": []
         },
         {
+          "card_id": 1640006732478,
+          "note_id": 1640006732478,
+          "deck_id": 1789378223041,
+          "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
+          "professor_name": "Prof. Dr. Carsten Wagner",
+          "professor_institute": "Physiologisches Institut UZH",
+          "reps": 5,
+          "lapses": 0,
+          "interval_days": 6,
+          "card_yield_score": 59.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Acetyl-CoA-Carboxylase: Wie funktioniert Regulation durch Phosphorylierung?",
+          "back": "viel AMP → AMP-Kinase aktiv AMPK phosphoryliert ACC → ACC inaktiv —> PKA mit Glucagon hemmt ACC nur so halb weil wenig Energie → keine Fettsäure-Synthese nötig! —> Akt. Durch Insulin: PP2A und PP1",
+          "front_snippet": "Acetyl-CoA-Carboxylase: Wie funktioniert Regulation durch Phosphorylierung?",
+          "back_snippet": "viel AMP → AMP-Kinase aktiv AMPK phosphoryliert ACC → ACC inaktiv —> PKA mit Glucagon hemmt ACC nur so halb weil wenig Energie → keine Fettsäure-Synthese nötig! —> Akt. Durch Insulin: PP2A und PP1",
+          "hy_terms_detected": [
+            "insulin"
+          ]
+        },
+        {
           "card_id": 1640010617469,
           "note_id": 1640010617469,
           "deck_id": 1789378223041,
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 6,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5860,9 +5931,9 @@
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 9,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5876,28 +5947,6 @@
           "hy_terms_detected": [
             "phosphat"
           ]
-        },
-        {
-          "card_id": 1640011239585,
-          "note_id": 1640011239584,
-          "deck_id": 1789378223041,
-          "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
-          "professor_name": "Prof. Dr. Carsten Wagner",
-          "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 60.0,
-          "is_kprim_trap": true,
-          "trap_type": "causal_chain",
-          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
-          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
-          "card_type": "kprim_mechanism",
-          "front": "Wie wirkt ChREBP auf die Fettsäure-synthese?",
-          "back": "aktiviert ATP-CL, ACC und FAS = aktiviert FS-Synthese ATP-CL = ATP-Citratlyase ACC = Acetyl-CoA-Carboxylase FAS = FS-Synthase",
-          "front_snippet": "Wie wirkt ChREBP auf die Fettsäure-synthese?",
-          "back_snippet": "aktiviert ATP-CL, ACC und FAS = aktiviert FS-Synthese ATP-CL = ATP-Citratlyase ACC = Acetyl-CoA-Carboxylase FAS = FS-Synthase",
-          "hy_terms_detected": []
         }
       ]
     },
@@ -5941,10 +5990,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
             "insulin",
+            "adrenalin",
             "noradrenalin",
-            "adrenalin"
+            "katecholamin"
           ]
         },
         {
@@ -5968,10 +6017,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
             "insulin",
+            "adrenalin",
             "noradrenalin",
-            "adrenalin"
+            "katecholamin"
           ]
         },
         {
@@ -5995,10 +6044,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
             "insulin",
+            "adrenalin",
             "noradrenalin",
-            "adrenalin"
+            "katecholamin"
           ]
         },
         {
@@ -6022,10 +6071,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen Wie wirkt Sympathikus (über Katecholamine) auf Insulinsekretion? Beschreibe Mechanismus",
           "back_snippet": "➢ α2 → cAMP ↓ → Kalium Kanal wird nicht durch PKA/EPAC2 phosphoryliert und geschlossen ⇒ keine Depolarisation, kein Ca 2+ Einstrom, keine Insulinausschüttung ➢ β2 → cAMP ↑ → PKA und EPAC2 ↑ → K+ Kanal wird phosphoryliert & schliesst ⇒ Depolarisation ⇒ Ca 2+ Ei",
           "hy_terms_detected": [
-            "epo",
-            "katecholamin",
             "depolarisation",
-            "insulin"
+            "insulin",
+            "epo",
+            "katecholamin"
           ]
         }
       ]
@@ -6181,9 +6230,9 @@
           "front_snippet": "Nebenniere Zona Glomerulosa: Eigenschaften evt. auslassen, kommt bei jele schon vor. hier mehr als repetition",
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Cortisol nicht bilden • Produzieren Aldosteron von Corticosteron • Aldosteron wird stimuliert von Angiotensin II (z.B. tie",
           "hy_terms_detected": [
-            "aldosteron",
             "cortisol",
-            "angiotensin"
+            "angiotensin",
+            "aldosteron"
           ]
         },
         {
@@ -6229,8 +6278,8 @@
           "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
           "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         }
       ]
@@ -6239,11 +6288,35 @@
       "deck_id": 1789378223045,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
       "total_cards": 130,
-      "high_yield_cards_count": 8,
-      "kprim_traps_count": 19,
+      "high_yield_cards_count": 10,
+      "kprim_traps_count": 24,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 57.0,
+      "avg_card_yield_score": 57.7,
       "sample_kprim_traps": [
+        {
+          "card_id": 1640032041897,
+          "note_id": 1640032041897,
+          "deck_id": 1789378223045,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+          "professor_name": "Prof. Dr. Heimo Emmert",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 5,
+          "lapses": 0,
+          "interval_days": 10,
+          "card_yield_score": 59.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Die Resorptionsphase Wie kommt es zu einer Umschaltung auf Glykogensynthese? (grob!) (nenne 3 Punkte)",
+          "back": "➢ Steigende Konzentrationen von Produkten der Glykolyse verlangsamen den Abbau von Glucose ➢ Die Glykogensynthese wird durch Aktivierung der Glykogensynthase beschleunigt. ➢ Die Glykogenolyse wird reziprok gehemmt -> entweder oder Prinzip (nie Glykogen Abbau und Aufbau gleichzeitig)",
+          "front_snippet": "Die Resorptionsphase Wie kommt es zu einer Umschaltung auf Glykogensynthese? (grob!) (nenne 3 Punkte)",
+          "back_snippet": "➢ Steigende Konzentrationen von Produkten der Glykolyse verlangsamen den Abbau von Glucose ➢ Die Glykogensynthese wird durch Aktivierung der Glykogensynthase beschleunigt. ➢ Die Glykogenolyse wird reziprok gehemmt -> entweder oder Prinzip (nie Glykogen Abbau u",
+          "hy_terms_detected": [
+            "glykolyse"
+          ]
+        },
         {
           "card_id": 1640034071941,
           "note_id": 1640034071940,
@@ -6251,9 +6324,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 19,
+          "lapses": 7,
+          "interval_days": 3,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6261,10 +6334,35 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt sich die Fähigkeit von Insulin im Lipidstoffwechsel aus, indirekt cAMP zu senken? (via PDE-3B)",
-          "back": "cAMP ↓ → PKA ↓ ➢ → HSL und Perilipin werden NICHT phosphoryliert ⇒ Lipolyse ↓ ➢ → GPAT wird weniger/nicht phosphoryliert* ⇒ GPAT aktiv ⇒ Lipogenese ↑",
+          "back": "cAMP ↓ → PKA ↓ ➢ → HSL und Perilipin werden NICHT phosphoryliert ⇒ Lipolyse ↓ ➢ → GPAT * wird weniger/nicht phosphoryliert* ⇒ GPAT aktiv ⇒ Lipogenese ↑ * speichert Nährstoffe als Fett (macht erster Schritt der TAG-Prod.)",
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt sich die Fähigkeit von Insulin im Lipidstoffwechsel aus, indirekt cAMP zu senken? (via PDE-3B)",
-          "back_snippet": "cAMP ↓ → PKA ↓ ➢ → HSL und Perilipin werden NICHT phosphoryliert ⇒ Lipolyse ↓ ➢ → GPAT wird weniger/nicht phosphoryliert* ⇒ GPAT aktiv ⇒ Lipogenese ↑",
+          "back_snippet": "cAMP ↓ → PKA ↓ ➢ → HSL und Perilipin werden NICHT phosphoryliert ⇒ Lipolyse ↓ ➢ → GPAT * wird weniger/nicht phosphoryliert* ⇒ GPAT aktiv ⇒ Lipogenese ↑ * speichert Nährstoffe als Fett (macht erster Schritt der TAG-Prod.)",
           "hy_terms_detected": [
+            "insulin"
+          ]
+        },
+        {
+          "card_id": 1640034371301,
+          "note_id": 1640034371301,
+          "deck_id": 1789378223045,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+          "professor_name": "Prof. Dr. Heimo Emmert",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 8,
+          "lapses": 2,
+          "interval_days": 8,
+          "card_yield_score": 78.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Die Resorptionsphase - Lipidstoffwechsel Ist die Aktivität der LPL, welche durch Insulin induziert wurde, sofort maximal ?",
+          "back": "Nein, sondern zeitlich verzögert -> weil durch Transkription (SREBP-1c) Grund : Re-Synthese von TAGs und CM Bildung in den Darm Mukosazellen braucht ein bissl Zeit ⇒ also steigt Konzentrationen von Chylomikronen im Plasma auch langsam an -> LPL nimmt Chylomikron und VLDL auf und macht TAG daraus ⇒ ist also biochemisch ",
+          "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Ist die Aktivität der LPL, welche durch Insulin induziert wurde, sofort maximal ?",
+          "back_snippet": "Nein, sondern zeitlich verzögert -> weil durch Transkription (SREBP-1c) Grund : Re-Synthese von TAGs und CM Bildung in den Darm Mukosazellen braucht ein bissl Zeit ⇒ also steigt Konzentrationen von Chylomikronen im Plasma auch langsam an -> LPL nimmt Chylomikr",
+          "hy_terms_detected": [
+            "ags",
             "insulin"
           ]
         },
@@ -6275,9 +6373,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 7,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6285,58 +6383,12 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt Insulin auf die Glycerophosphat-Acyltransferase (GPAT)?",
-          "back": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt",
+          "back": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt Lipogenese (vor allem Leber und Fett)",
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt Insulin auf die Glycerophosphat-Acyltransferase (GPAT)?",
-          "back_snippet": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt",
+          "back_snippet": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt Lipogenese (vor allem Leber und Fett)",
           "hy_terms_detected": [
-            "phosphat",
-            "insulin"
-          ]
-        },
-        {
-          "card_id": 1640034870019,
-          "note_id": 1640034870019,
-          "deck_id": 1789378223045,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
-          "professor_name": "Prof. Dr. Heimo Emmert",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Die Resorptionsphase - Lipidstoffwechsel bevorzugte Energiequelle des Muskels ?",
-          "back": "Glucose und nicht Fett!! ← wird nicht bevorzugt",
-          "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel bevorzugte Energiequelle des Muskels ?",
-          "back_snippet": "Glucose und nicht Fett!! ← wird nicht bevorzugt",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1640631247099,
-          "note_id": 1640631247099,
-          "deck_id": 1789378223045,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
-          "professor_name": "Prof. Dr. Roland Wenger",
-          "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 59.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Aminosäure- und Proteinstoffwechsel in der Resorptionsphase werden Proteinspeicherdepots angelegt?",
-          "back": "NEIN Es werden keine Proteinspeicherdepots angelegt Im Unterschied zu Kohlenhydrat- und Lipidspeicher zeigt die Proteinmasse des Organismus keine grossen Schwankungen. = Ein Überangebot an Aminosäuren führt nicht zu einer Überproduktion von Proteinspeicher",
-          "front_snippet": "Aminosäure- und Proteinstoffwechsel in der Resorptionsphase werden Proteinspeicherdepots angelegt?",
-          "back_snippet": "NEIN Es werden keine Proteinspeicherdepots angelegt Im Unterschied zu Kohlenhydrat- und Lipidspeicher zeigt die Proteinmasse des Organismus keine grossen Schwankungen. = Ein Überangebot an Aminosäuren führt nicht zu einer Überproduktion von Proteinspeicher",
-          "hy_terms_detected": [
-            "epo"
+            "insulin",
+            "phosphat"
           ]
         }
       ]
@@ -6415,8 +6467,8 @@
           "front_snippet": "Somatotropin-Wirkungsweise Was ist der GH-Rezeptor für ein Typ Rezeptor und was rekrutiert seine aktive Form? (7 P.)",
           "back_snippet": "Cyto k inrezeptor , hat keine intrinsische Tyr-Kinase-Aktivität (nicht wie Insulin-Rezeptor). nach GH-Bindung ⇒ dimerisierte Rezeptor rekrutiert JAK2-Kinase JAK2 phosphoryliert : - benachbarte JAK2 Moleküle (Transphosphorylation) - sich selbst ( Auto phosphory",
           "hy_terms_detected": [
-            "inr",
-            "insulin"
+            "insulin",
+            "inr"
           ]
         },
         {
@@ -6452,7 +6504,7 @@
       "high_yield_cards_count": 1,
       "kprim_traps_count": 4,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 42.8,
+      "avg_card_yield_score": 43.0,
       "sample_kprim_traps": [
         {
           "card_id": 1640625335746,
@@ -6461,9 +6513,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 4,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6483,9 +6535,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6493,9 +6545,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Osteomalazie",
-          "back": "bei Erwachsenen: • Mangelnde Zufuhr an Vitamin D • Mineralisationsstörung • ( Alle Wachstumsfugen schon geschlossen , weil Erwachsen) • Unterschied zur Osteoporose: nur Mineralgehalt erniedrigt, nicht Knochenmatrix Looser Umbauzone → Frakturen",
+          "back": "bei Erwachsenen: • Mangelnde Zufuhr an Vitamin D • Mineralisationsstörung • ( Alle Wachstumsfugen schon geschlossen , weil Erwachsen) • Unterschied zur Osteoporose: nur Mineralgehalt erniedrigt, nicht Knochenmatrix Looser Umbauzone → Frakturen —> gleich wie Rachitis, einfach bei Erwachsenen",
           "front_snippet": "Osteomalazie",
-          "back_snippet": "bei Erwachsenen: • Mangelnde Zufuhr an Vitamin D • Mineralisationsstörung • ( Alle Wachstumsfugen schon geschlossen , weil Erwachsen) • Unterschied zur Osteoporose: nur Mineralgehalt erniedrigt, nicht Knochenmatrix Looser Umbauzone → Frakturen",
+          "back_snippet": "bei Erwachsenen: • Mangelnde Zufuhr an Vitamin D • Mineralisationsstörung • ( Alle Wachstumsfugen schon geschlossen , weil Erwachsen) • Unterschied zur Osteoporose: nur Mineralgehalt erniedrigt, nicht Knochenmatrix Looser Umbauzone → Frakturen —> gleich wie Ra",
           "hy_terms_detected": []
         },
         {
@@ -6505,9 +6557,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 7,
           "card_yield_score": 58.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6530,9 +6582,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 7,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6552,7 +6604,7 @@
       "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
       "total_cards": 197,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 18,
+      "kprim_traps_count": 19,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 40.9,
       "sample_kprim_traps": [
@@ -6563,9 +6615,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6573,10 +6625,34 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Wo wird Cobalamin aufgenommen?",
-          "back": "nur im Ileum !! Cobalamin wird nur im Ileum als Komplex mit dem Intrinsic-Faktor an einen spezifischen Rezeptor der Mukosazellen gebunden und absorbiert.",
+          "back": "nur im Ileum !! -> Vit. B12 Cobalamin wird nur im Ileum als Komplex mit dem Intrinsic-Faktor an einen spezifischen Rezeptor der Mukosazellen gebunden und absorbiert.",
           "front_snippet": "Wo wird Cobalamin aufgenommen?",
-          "back_snippet": "nur im Ileum !! Cobalamin wird nur im Ileum als Komplex mit dem Intrinsic-Faktor an einen spezifischen Rezeptor der Mukosazellen gebunden und absorbiert.",
+          "back_snippet": "nur im Ileum !! -> Vit. B12 Cobalamin wird nur im Ileum als Komplex mit dem Intrinsic-Faktor an einen spezifischen Rezeptor der Mukosazellen gebunden und absorbiert.",
           "hy_terms_detected": []
+        },
+        {
+          "card_id": 1640724648288,
+          "note_id": 1640724648287,
+          "deck_id": 1789378223021,
+          "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+          "professor_name": "Prof. Dr. Raimund Dutzler",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 3,
+          "lapses": 0,
+          "interval_days": 3,
+          "card_yield_score": 49.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Aus was besteht der Pankreassaft (exokrin)?",
+          "back": "Wasser, Bicarbonat Proteinverdauungsenzyme (alle als Zymogene sezerniert): Trypsin * Chymotrypsin * Elastase * Carboxypeptidasen * Kohlenhydratverdauungsenzym : α-Amylase Fettverdauungsenzyme: Triacylglycerol-Lipase Co-Lipase * Phospholipase A2 * Cholesterol-Esterase Ribonuclease Desoxyribonuclease —> enthält alle Verd",
+          "front_snippet": "Aus was besteht der Pankreassaft (exokrin)?",
+          "back_snippet": "Wasser, Bicarbonat Proteinverdauungsenzyme (alle als Zymogene sezerniert): Trypsin * Chymotrypsin * Elastase * Carboxypeptidasen * Kohlenhydratverdauungsenzym : α-Amylase Fettverdauungsenzyme: Triacylglycerol-Lipase Co-Lipase * Phospholipase A2 * Cholesterol-E",
+          "hy_terms_detected": [
+            "bicarbonat"
+          ]
         },
         {
           "card_id": 1640724805438,
@@ -6585,9 +6661,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 10,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6607,9 +6683,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 2,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6619,28 +6695,6 @@
           "front": "41298caa272b446b88951910393bc0b3-ao-2",
           "back": "Würde ich auslassen, da diese Funktionen nur in seinem Skript vorkommen, nicht in Vorlesung.",
           "front_snippet": "41298caa272b446b88951910393bc0b3-ao-2",
-          "back_snippet": "Würde ich auslassen, da diese Funktionen nur in seinem Skript vorkommen, nicht in Vorlesung.",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1640724805442,
-          "note_id": 1640724805441,
-          "deck_id": 1789378223021,
-          "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
-          "professor_name": "Prof. Dr. Raimund Dutzler",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "41298caa272b446b88951910393bc0b3-ao-3",
-          "back": "Würde ich auslassen, da diese Funktionen nur in seinem Skript vorkommen, nicht in Vorlesung.",
-          "front_snippet": "41298caa272b446b88951910393bc0b3-ao-3",
           "back_snippet": "Würde ich auslassen, da diese Funktionen nur in seinem Skript vorkommen, nicht in Vorlesung.",
           "hy_terms_detected": []
         }
@@ -6724,8 +6778,8 @@
           "front_snippet": "Haben Cortisol- und Aldosteron-Synthese dieselben Enzyme?",
           "back_snippet": "einige ja, aber nicht alle Cortisol-Synthese teilt fast alle Enzyme mit Aldosteron-Synthese. Das letzte Enzym der Cortisol-Synthese hat in der z.fasciculata aber nur 1 Aktivität (z. glomerulosa 3 Aktivitäten) → Cortisol-spezifisch Aldosteron hat einige zusätzl",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         },
         {
@@ -6749,8 +6803,8 @@
           "front_snippet": "Regulation der Cortisol-Synthese long feedback?",
           "back_snippet": "Cortisol: negative Rückkopplung auf - Hypophyse → hemmt ACTH-Freisetzung - Hypothalamus → hemmt CRH-Freisetzung",
           "hy_terms_detected": [
-            "acth",
-            "cortisol"
+            "cortisol",
+            "acth"
           ]
         }
       ]
@@ -6760,9 +6814,9 @@
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
       "total_cards": 109,
       "high_yield_cards_count": 3,
-      "kprim_traps_count": 16,
+      "kprim_traps_count": 18,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 56.1,
+      "avg_card_yield_score": 56.5,
       "sample_kprim_traps": [
         {
           "card_id": 1640871933346,
@@ -6771,9 +6825,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 7,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6781,9 +6835,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Was ist bemerkenswert im Bezug auf O2 Verbrauch des Gehirns bei Arbeit vs Ruhe?",
-          "back": "-konstanter O2 Verbrauch, keine Steigerung bei Arbeit -grösster O2 Verbrauch pro Gewicht -leistet keine Arbeit, also keine Umstellung bei Umstellung auf Arbeit",
+          "back": "- konstanter O2 Verbrauch , keine Steigerung bei Arbeit -grösster O2 Verbrauch pro Gewicht -leistet keine Arbeit, also keine Umstellung bei Umstellung auf Arbeit",
           "front_snippet": "Was ist bemerkenswert im Bezug auf O2 Verbrauch des Gehirns bei Arbeit vs Ruhe?",
-          "back_snippet": "-konstanter O2 Verbrauch, keine Steigerung bei Arbeit -grösster O2 Verbrauch pro Gewicht -leistet keine Arbeit, also keine Umstellung bei Umstellung auf Arbeit",
+          "back_snippet": "- konstanter O2 Verbrauch , keine Steigerung bei Arbeit -grösster O2 Verbrauch pro Gewicht -leistet keine Arbeit, also keine Umstellung bei Umstellung auf Arbeit",
           "hy_terms_detected": []
         },
         {
@@ -6793,9 +6847,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 8,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -6817,9 +6871,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 7,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -6839,9 +6893,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 6,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6849,9 +6903,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Metabolische Regulation während Anaerober Belastung Führt Laktat selber zu Ansäuerung der Muskelzelle?",
-          "back": "Nein nicht das Laktat sondern die Hydrolyse von ATP senkt den pH ⇒ bei ATP Hydrolyse netsteht auch H +",
+          "back": "Nein nicht das Laktat sondern die Hydrolyse von ATP senkt den pH ⇒ bei ATP Hydrolyse netsteht auch H + -> laktatprod. Als puffersystem",
           "front_snippet": "Metabolische Regulation während Anaerober Belastung Führt Laktat selber zu Ansäuerung der Muskelzelle?",
-          "back_snippet": "Nein nicht das Laktat sondern die Hydrolyse von ATP senkt den pH ⇒ bei ATP Hydrolyse netsteht auch H +",
+          "back_snippet": "Nein nicht das Laktat sondern die Hydrolyse von ATP senkt den pH ⇒ bei ATP Hydrolyse netsteht auch H + -> laktatprod. Als puffersystem",
           "hy_terms_detected": []
         }
       ]
@@ -6930,11 +6984,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Was stimuliert die Synthese von: Dopamin und Noradrenalin? Was von Adrenalin?",
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
-            "katecholamin",
-            "acth",
-            "noradrenalin",
+            "cortisol",
             "adrenalin",
-            "cortisol"
+            "noradrenalin",
+            "acth",
+            "katecholamin"
           ]
         },
         {
@@ -6958,11 +7012,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Die Synthese von Adrenalin aus Noradrenalin wird hauptsächlich von Cortisol (← ACTH) (und unterstützend von ACh (sympath).) angeregt.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
-            "acth",
-            "noradrenalin",
+            "cortisol",
             "adrenalin",
-            "cortisol"
+            "noradrenalin",
+            "acth",
+            "katecholamin"
           ]
         }
       ]
@@ -6997,11 +7051,11 @@
           "front_snippet": "Aldosteronfreisetzung wird durch was stimuliert? (3)",
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II → hemmt K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Azidose",
           "hy_terms_detected": [
+            "depolarisation",
             "epo",
             "azidose",
-            "aldosteron",
-            "depolarisation",
-            "angiotensin"
+            "angiotensin",
+            "aldosteron"
           ]
         },
         {
@@ -7025,8 +7079,8 @@
           "front_snippet": "Wieso bekommt man einen Bluthockdruck wenn man Lakritze isst?",
           "back_snippet": "Weil Lakrize 11βHSD 2 hemmt → Cortisol kann nicht zu in aktivem Cortiso n gemacht werden. Folge: → Mineralokortikoidrezeptor (MR) kann Cortisol nciht mehr selber \"abbauen/deaktivieren\" und wird deshalb auch durch Cortisol aktiviert. ⇒ MR bindet dann also an Co",
           "hy_terms_detected": [
-            "aldosteron",
-            "cortisol"
+            "cortisol",
+            "aldosteron"
           ]
         },
         {
@@ -7072,8 +7126,8 @@
           "front_snippet": "Zweite sympathische Synapse: fast immer Noradrenalin Ausnahme: Nierenmark schüttet Adrenalin aus Schweissdrüsen werden über ACh aktiviert.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "noradrenalin",
-            "adrenalin"
+            "adrenalin",
+            "noradrenalin"
           ]
         }
       ]
@@ -7918,8 +7972,8 @@
           "front_snippet": "Sauerstoffbindungskurve für Hämoglobin: - Was für eine Form hat die O2-Bindungskurve? - Warum nimmt sie diese Form an? - Wie bezeichnet man diese Form des Bindungsverhaltens?",
           "back_snippet": "- Die Sauerstoffbindungskurve für Hämoglobin ähnelt einem \"S\", die aufgrund ihrer S-Form als sigmoid bezeichnet wird (Abb. 4). - Dies bedeutet, dass die Bindung von Sauerstoff an einer Hämgruppe im Hb-Tetramer die Wahrscheinlichkeit erhöht, dass Sauerstoff auc",
           "hy_terms_detected": [
-            "sauerstoffbindung",
-            "hämoglobin"
+            "hämoglobin",
+            "sauerstoffbindung"
           ]
         },
         {
@@ -7943,8 +7997,8 @@
           "front_snippet": "Wer ist für den Bohr-Effekt verantwortlich? Beschreibe, wie dieser Effekt die Sauerstoffbindung reguliert:",
           "back_snippet": "- Für den Bohr-Effekt sind die alpha-Aminogruppen am aminoterminalen Ende der alpha-Ketten und die Seitenketten der Histidine verantwortlich. - Diese Gruppen besitzen pKS-Werte, die nahe bei pH 7 liegen. - So ist zum Beispiel bei tiefem pH-Wert die Imidazolgru",
           "hy_terms_detected": [
-            "bohr-effekt",
-            "sauerstoffbindung"
+            "sauerstoffbindung",
+            "bohr-effekt"
           ]
         },
         {
@@ -8379,9 +8433,9 @@
           "deck_name": "TB Atmung :: Einführung und Abschluss Atmung",
           "professor_name": "Prof. Dr. Oliver Ullrich",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 5,
+          "reps": 8,
           "lapses": 0,
-          "interval_days": 2,
+          "interval_days": 25,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8401,9 +8455,9 @@
           "deck_name": "TB Atmung :: Einführung und Abschluss Atmung",
           "professor_name": "Prof. Dr. Oliver Ullrich",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 3,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 18,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8576,8 +8630,8 @@
           "front_snippet": "MHC-Moleküle Klasse 1 und 2 Erkennung und Exprimierung",
           "back_snippet": "1. Präsentierte Peptide werden von Cytotoxischen T-Zellen erkannt; von allen Zellen des Körpers ausser roten BK exprimiert 2. Präsentierte Peptide werden von T-Helfer-Zellen erkannt; nur von Makrophagen , dendritischen Zellen, B-Zellen und Epithelzellen des Th",
           "hy_terms_detected": [
-            "thymus",
-            "t-zell"
+            "t-zell",
+            "thymus"
           ]
         },
         {
@@ -8630,9 +8684,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 4,
-          "lapses": 0,
-          "interval_days": 21,
+          "reps": 8,
+          "lapses": 2,
+          "interval_days": 3,
           "card_yield_score": 87.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -8644,8 +8698,8 @@
           "front_snippet": "T-Zell abhängige B-Zell Aktivierung",
           "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle ",
           "hy_terms_detected": [
-            "t-zell",
             "mhc-ii",
+            "t-zell",
             "mhc-i"
           ]
         },
@@ -8656,9 +8710,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 3,
-          "interval_days": 12,
+          "interval_days": 17,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8678,9 +8732,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 15,
+          "interval_days": 28,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8711,9 +8765,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
-          "lapses": 1,
-          "interval_days": 21,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 4,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8721,9 +8775,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Selbst-Antigene werden nicht nur auf mTECs präsentiert, sondern auch auch Antigen-präsentierenden Immunzellen",
-          "back": "mTECs = medulläre Epithelzellen auf Thymus",
+          "back": "mTECs = medulläre Epithelzellen auf Thymus -> MHC1",
           "front_snippet": "Selbst-Antigene werden nicht nur auf mTECs präsentiert, sondern auch auch Antigen-präsentierenden Immunzellen",
-          "back_snippet": "mTECs = medulläre Epithelzellen auf Thymus",
+          "back_snippet": "mTECs = medulläre Epithelzellen auf Thymus -> MHC1",
           "hy_terms_detected": [
             "thymus"
           ]
@@ -8735,9 +8789,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 16,
+          "reps": 17,
           "lapses": 4,
-          "interval_days": 13,
+          "interval_days": 26,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8814,9 +8868,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 0,
-          "interval_days": 16,
+          "interval_days": 26,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8836,9 +8890,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 13,
-          "lapses": 2,
-          "interval_days": 10,
+          "reps": 16,
+          "lapses": 3,
+          "interval_days": 6,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8871,9 +8925,9 @@
           "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 15,
+          "reps": 16,
           "lapses": 3,
-          "interval_days": 9,
+          "interval_days": 24,
           "card_yield_score": 24.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -8901,5 +8955,5 @@
       "sample_kprim_traps": []
     }
   },
-  "updated_at": 1792749682.5197203
+  "updated_at": 1794900639.2063484
 }

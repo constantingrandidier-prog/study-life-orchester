@@ -290,7 +290,7 @@ def acquire_single_instance_lock():
     """Ensure only one instance of anki_sync_agent runs concurrently using Windows Named Mutex."""
     global _INSTANCE_MUTEX
     try:
-        mutex_name = "Global\\StudyLifeAnkiSyncAgentMutex"
+        mutex_name = "Local\\StudyLifeAnkiSyncAgentMutex"
         mutex = ctypes.windll.kernel32.CreateMutexW(None, False, mutex_name)
         last_error = ctypes.windll.kernel32.GetLastError()
         if last_error == ERROR_ALREADY_EXISTS:

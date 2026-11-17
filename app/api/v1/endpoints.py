@@ -1177,7 +1177,7 @@ def post_anki_desktop_sync_endpoint(payload: dict):
     summary="Get Anki Backlog Triage and Emergency Priority for Topics",
     description="Analyzes due review burden, lapse rates, and time since review to prioritize topics when daily reviews exceed capacity (>500 reviews).",
 )
-def get_anki_backlog_triage_endpoint(max_capacity: Optional[int] = Query(None, description="Max cards student can manage today")):
+def get_anki_backlog_triage_endpoint(max_capacity: Optional[int] = Query(350, description="Max cards student can manage today")):
     """Retrieve backlog triage and priority ranking for Anki topics."""
     return calculate_backlog_triage(max_capacity=max_capacity)
 
@@ -1203,9 +1203,12 @@ from app.services.workload_forecast import (
     summary="Get 14-day Anki workload forecast and spike warnings",
     description="Forecasts upcoming review volumes per day for the next 14 days, identifying load peaks and smoothing tips.",
 )
-def get_anki_workload_forecast_endpoint(days_ahead: int = Query(14, ge=1, le=30)):
+def get_anki_workload_forecast_endpoint(
+    days_ahead: int = Query(14, ge=1, le=30),
+    daily_budget: Optional[int] = Query(350, description="Daily repetition budget for rollover simulation"),
+):
     """Retrieve 14-day review forecast from local Anki collection or cloud cache."""
-    return get_workload_forecast(days_ahead=days_ahead)
+    return get_workload_forecast(days_ahead=days_ahead, daily_budget=daily_budget)
 
 
 @router.post(

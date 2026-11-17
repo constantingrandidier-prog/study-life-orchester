@@ -4022,6 +4022,7 @@ async function syncAnkiDesktopNow(showFeedback = true) {
   if (typeof loadCurriculumToday === 'function') await loadCurriculumToday(false);
   if (typeof loadExamPacing === 'function') await loadExamPacing();
   if (typeof loadWorkloadForecast === 'function') await loadWorkloadForecast(false);
+  if (typeof loadBacklogTriage === 'function') await loadBacklogTriage(currentTriageBudget);
   if (typeof loadDeckStats === 'function') await loadDeckStats(false);
   if (btn) btn.textContent = 'Aktualisieren';
 }
@@ -4114,7 +4115,7 @@ function toggleTomorrowAnkiDetails() {
   }
 }
 
-let currentTriageBudget = 300;
+let currentTriageBudget = 350;
 
 async function toggleBacklogTriageModal() {
   const box = document.getElementById('ankiBacklogTriageBox');
@@ -4127,7 +4128,14 @@ async function toggleBacklogTriageModal() {
 }
 
 async function setTriageBudget(capacity, btnElement) {
-  currentTriageBudget = capacity;
+  const effectiveCap = (capacity && capacity > 0) ? parseInt(capacity, 10) : 350;
+  currentTriageBudget = effectiveCap;
+
+  const customInput = document.getElementById('triageCustomBudgetInput');
+  if (customInput) {
+    customInput.value = effectiveCap >= 9000 ? 350 : effectiveCap;
+  }
+
   document.querySelectorAll('.btn-triage-cap').forEach(b => {
     b.style.background = 'transparent';
     b.style.color = '#8b949e';
@@ -4137,56 +4145,246 @@ async function setTriageBudget(capacity, btnElement) {
     btnElement.style.background = '#1f6feb';
     btnElement.style.color = '#fff';
     btnElement.classList.add('active');
+  } else {
+    document.querySelectorAll('.btn-triage-cap').forEach(b => {
+      if (parseInt(b.getAttribute('data-cap'), 10) === effectiveCap) {
+        b.style.background = '#1f6feb';
+        b.style.color = '#fff';
+        b.classList.add('active');
+      }
+    });
   }
+
   const badge = document.getElementById('triageActiveBudgetBadge');
   if (badge) {
-    badge.textContent = capacity ? `Ziel: ~${capacity} Karten` : 'Ziel: Alle fälligen Karten';
+    badge.textContent = effectiveCap >= 9000 ? 'Ziel: Alle fälligen Karten' : `Ziel: ~${effectiveCap} Karten`;
   }
-  await loadBacklogTriage(capacity);
+  await loadBacklogTriage(effectiveCap);
+  if (currentForecastData) {
+    renderWorkloadForecast(currentForecastData);
+  }
+}
+
+async function applyCustomTriageBudget() {
+  const customInput = document.getElementById('triageCustomBudgetInput');
+  let val = customInput ? parseInt(customInput.value, 10) : 350;
+  if (isNaN(val) || val < 10) {
+    val = 350;
+    if (customInput) customInput.value = 350;
+  }
+  await setTriageBudget(val, null);
 }
 
 let latestTriageData = null;
 
-async function loadBacklogTriage(maxCapacity = 300) {
+async function loadBacklogTriage(maxCapacity = 350) {
+  const effectiveCap = (maxCapacity && maxCapacity > 0) ? parseInt(maxCapacity, 10) : (currentTriageBudget || 350);
   const modalListEl = document.getElementById('triageTopicsList');
   const modalAdviceEl = document.getElementById('triageAdviceBanner');
   const pageContainer = document.getElementById('pageTriageThemenbloeckeList');
   const pageAdviceEl = document.getElementById('pageTriageAdviceBanner');
   const pageQueryPreview = document.getElementById('pageTriageQueryPreview');
   const pageBudgetText = document.getElementById('pageTriageBudgetText');
+  const pageCoveragePill = document.getElementById('pageTriageCoveragePill');
+  const topChecklistEl = document.getElementById('pageTriageTopChecklistContainer');
 
   try {
-    const url = maxCapacity 
-      ? `/api/v1/schedule/anki/backlog-triage?max_capacity=${maxCapacity}`
-      : '/api/v1/schedule/anki/backlog-triage';
+    const url = `/api/v1/schedule/anki/backlog-triage?max_capacity=${effectiveCap}&_t=${Date.now()}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     latestTriageData = data;
 
-    const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Wiederholungs-Fälligkeit und Fehlerquote.';
+    const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Vortag-Neukarten, Überfälligkeit und Fehlerquote.';
     if (modalAdviceEl) {
       modalAdviceEl.textContent = adviceText;
-      modalAdviceEl.style.borderColor = data.is_overloaded ? 'rgba(248,81,73,0.4)' : 'rgba(88,166,255,0.3)';
-      modalAdviceEl.style.background = data.is_overloaded ? 'rgba(248,81,73,0.12)' : 'rgba(56,139,253,0.1)';
-      modalAdviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
+      modalAdviceEl.style.borderColor = data.is_overloaded ? 'rgba(88,166,255,0.4)' : 'rgba(88,166,255,0.3)';
+      modalAdviceEl.style.background = 'rgba(56,139,253,0.1)';
+      modalAdviceEl.style.color = '#79c0ff';
     }
     if (pageAdviceEl) {
       pageAdviceEl.textContent = adviceText;
-      pageAdviceEl.style.borderColor = data.is_overloaded ? 'rgba(248,81,73,0.4)' : 'rgba(88,166,255,0.25)';
-      pageAdviceEl.style.background = data.is_overloaded ? 'rgba(248,81,73,0.12)' : 'rgba(56,139,253,0.08)';
-      pageAdviceEl.style.color = data.is_overloaded ? '#ff7b72' : '#79c0ff';
+      pageAdviceEl.style.borderColor = 'rgba(63,185,80,0.35)';
+      pageAdviceEl.style.background = 'rgba(63,185,80,0.08)';
+      pageAdviceEl.style.color = '#7ee787';
     }
 
     // Update 1-Click Anki query display
     const query = data.budget_combined_anki_query || data.urgent_combined_anki_query || 'is:due';
-    const selectedCount = data.budget_accumulated_cards || data.total_due_today || 0;
+    const totalDueToday = data.total_due_today || 0;
+    const alreadyRepeated = data.already_repeated_today || 0;
+    const totalWorkloadToday = totalDueToday + alreadyRepeated;
+    const effectiveTarget = data.effective_today_target != null ? data.effective_today_target : Math.min(effectiveCap, totalWorkloadToday);
+    const coveragePct = data.coverage_pct != null ? data.coverage_pct : 100.0;
+    const deferredCount = data.deferred_cards_count != null ? data.deferred_cards_count : Math.max(0, totalDueToday - effectiveTarget);
+
     if (pageQueryPreview) {
       pageQueryPreview.textContent = query;
       pageQueryPreview.setAttribute('title', query);
     }
+    if (pageCoveragePill) {
+      if (totalWorkloadToday > effectiveCap && effectiveCap < 9000) {
+        pageCoveragePill.textContent = `${effectiveTarget} / ${totalWorkloadToday} Karten (${coveragePct}% heute • ${deferredCount} verschoben)`;
+      } else {
+        pageCoveragePill.textContent = `${effectiveTarget} Karten heute (100% Abdeckung)`;
+      }
+    }
     if (pageBudgetText) {
-      pageBudgetText.innerHTML = `<strong>Kuriertes Paket (${selectedCount} Karten${maxCapacity ? ` / Budget ${maxCapacity}` : ''}):</strong> Sofort in Anki als gefilterter Stapel startbar`;
+      pageBudgetText.innerHTML = `Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • <strong>Vortag-Neukarten automatisch auf #1</strong> • Rotiert jeden Tag automatisch.`;
+    }
+
+    // Render TOP PRIORITY FOCUS BOX (#pageTriageTopChecklistContainer)
+    if (topChecklistEl) {
+      const openPlan = (data.focus_plan_open && data.focus_plan_open.length > 0)
+        ? data.focus_plan_open
+        : (data.budget_selected_topics || []);
+      const completedToday = data.focus_plan_completed_today || [];
+      const rolloverDays = data.multi_day_rollover || [];
+      const progressPct = effectiveTarget > 0 ? Math.min(100, Math.round((alreadyRepeated / effectiveTarget) * 100)) : (totalDueToday === 0 ? 100 : 0);
+
+      let checklistHtml = '';
+
+      // 1. Daily Goal & Proportional Relief Bar
+      checklistHtml += `
+        <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
+            <div style="font-size: 12px; color: #e6edf3;">
+              🎯 <strong>Dein Tagespensum heute: ${effectiveTarget} Wiederholungen</strong>
+              <span style="color: #8b949e; font-size: 11px; margin-left: 4px;">
+                (von ${totalWorkloadToday} fälligen = <strong>${coveragePct}%</strong> • Restliche <strong>${deferredCount} Karten</strong> automatisch auf Folgetage verschoben)
+              </span>
+            </div>
+            <div style="font-size: 11.5px; font-weight: 700; color: ${alreadyRepeated >= effectiveTarget && effectiveTarget > 0 ? '#3fb950' : '#58a6ff'};">
+              Heute erledigt: ${alreadyRepeated} / ${effectiveTarget} Karten (${progressPct}%)
+            </div>
+          </div>
+          <div style="width: 100%; height: 7px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden;">
+            <div style="width: ${progressPct}%; height: 100%; background: linear-gradient(90deg, #238636, #3fb950); transition: width 0.3s ease;"></div>
+          </div>
+        </div>
+      `;
+
+      // 2. Already repeated today (if any)
+      if (completedToday.length > 0) {
+        checklistHtml += `
+          <div style="background: rgba(46, 160, 67, 0.1); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 7px; padding: 0.5rem 0.75rem; margin-bottom: 0.75rem;">
+            <div style="font-size: 11px; font-weight: 700; color: #3fb950; margin-bottom: 0.3rem;">
+              ✅ HEUTE BEREITS IN ANKI WIEDERHOLT (${alreadyRepeated} Karten):
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.45rem;">
+              ${completedToday.map(c => `
+                <span style="font-size: 11px; background: rgba(63, 185, 80, 0.15); border: 1px solid rgba(63, 185, 80, 0.35); color: #e6edf3; padding: 0.15rem 0.55rem; border-radius: 5px;">
+                  ✅ <strong>${escapeHtml(c.themenblock)} › ${escapeHtml(c.dozent)}</strong>: ${c.repeated_today} erledigt ${c.due_remaining > 0 ? `<span style="color:#8b949e;">(${c.due_remaining} noch offen)</span>` : ''}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Numbered Priority Checklist (#1 to #N, most important to least important)
+      if (openPlan.length === 0) {
+        checklistHtml += `
+          <div style="background: rgba(46, 160, 67, 0.12); border: 1px solid rgba(63, 185, 80, 0.4); border-radius: 8px; padding: 0.85rem; text-align: center; color: #3fb950; font-weight: 700; font-size: 13px;">
+            🎉 Perfekt! Du hast dein heutiges Fokus-Ziel (${effectiveTarget} Wiederholungen) komplett erreicht!
+          </div>
+        `;
+      } else {
+        checklistHtml += `<div style="display: flex; flex-direction: column; gap: 0.55rem;">`;
+        openPlan.forEach((item, idx) => {
+          const rankNum = item.rank || (idx + 1);
+          const assigned = item.assigned_cards != null ? item.assigned_cards : item.due_today;
+          const isPartial = Boolean(item.is_partial);
+          const isVortagNew = Boolean(item.is_vortag_new);
+          const subdecks = item.yesterday_subdecks || [];
+          const rowBorder = isVortagNew
+            ? '1.5px solid rgba(248, 81, 73, 0.65)'
+            : (rankNum === 1 ? '1.5px solid rgba(88, 166, 255, 0.55)' : '1px solid rgba(255, 255, 255, 0.12)');
+          const rowBg = isVortagNew
+            ? 'linear-gradient(90deg, rgba(248, 81, 73, 0.14) 0%, rgba(22, 27, 34, 0.9) 100%)'
+            : 'rgba(22, 27, 34, 0.88)';
+
+          let subdeckHtml = '';
+          if (isVortagNew && subdecks.length > 0) {
+            const subList = subdecks.map(s => `<strong>${s.new_learned}×</strong> ${escapeHtml(s.subdeck)}`).join(' • ');
+            subdeckHtml = `
+              <div style="margin-top: 0.25rem; padding: 0.28rem 0.55rem; background: rgba(248, 81, 73, 0.15); border-left: 3px solid #f85149; border-radius: 4px; font-size: 11px; color: #ffa198;">
+                🔥 <strong>Am Vortag in Anki neu gelernt (Tag-1-Pflicht):</strong> ${subList}
+              </div>
+            `;
+          }
+
+          checklistHtml += `
+            <div style="border: ${rowBorder}; background: ${rowBg}; border-radius: 8px; padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 260px;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 24px; padding: 0 6px; border-radius: 6px; background: ${isVortagNew ? '#da3633' : '#1f6feb'}; color: #fff; font-weight: 800; font-size: 12px;">
+                    #${rankNum}
+                  </span>
+                  <span style="font-size: 10.5px; font-weight: 700; color: ${item.color}; background: ${item.color}18; border: 1px solid ${item.color}40; padding: 0.1rem 0.45rem; border-radius: 4px;">
+                    ${item.level_badge}
+                  </span>
+                  <strong style="font-size: 13.5px; color: #f0f6fc;">
+                    ${escapeHtml(item.themenblock)} › ${escapeHtml(item.dozent)}
+                  </strong>
+                </div>
+                ${subdeckHtml}
+                <div style="display: flex; gap: 0.85rem; flex-wrap: wrap; font-size: 11px; color: #8b949e; margin-top: 0.35rem;">
+                  <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${escapeHtml(item.days_since_last_review_str)}</strong></span>
+                  <span>🎯 Retention: <strong style="color: ${item.retention_rate_pct < 70 ? '#ff7b72' : '#3fb950'};">${item.retention_rate_pct}%</strong></span>
+                  <span>⚙️ Ease: <strong style="color: #c9d1d9;">${item.avg_ease_pct}%</strong></span>
+                  <span>📊 Dringlichkeit: <strong style="color: ${item.color};">${item.urgency_score}/100</strong></span>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                <div style="text-align: right; background: ${isPartial ? 'rgba(210, 153, 34, 0.14)' : 'rgba(46, 160, 67, 0.16)'}; border: 1px solid ${isPartial ? 'rgba(210, 153, 34, 0.45)' : 'rgba(63, 185, 80, 0.45)'}; padding: 0.38rem 0.75rem; border-radius: 7px;">
+                  <div style="font-size: 14px; font-weight: 800; color: ${isPartial ? '#e3b341' : '#3fb950'};">
+                    ${isPartial ? `${assigned} von ${item.due_today} Karten` : `${assigned} Karten komplett`}
+                  </div>
+                  <div style="font-size: 10px; color: #c9d1d9;">
+                    ${isPartial ? `Restliche ${item.deferred_from_deck} automatisch morgen` : `Ordner in Anki auf 0 bringen`}
+                  </div>
+                </div>
+                <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(item.anki_filter_query)}', this)" class="btn-secondary" style="font-size: 10.5px; padding: 0.35rem 0.6rem; color: #c9d1d9; border-radius: 5px; cursor: pointer;">
+                  📋 Filter
+                </button>
+              </div>
+            </div>
+          `;
+        });
+        checklistHtml += `</div>`;
+      }
+
+      // 4. Multi-Day Proportional Rollover Schedule (shows how remaining cards shift to Tomorrow & next days)
+      if (rolloverDays.length > 0) {
+        checklistHtml += `
+          <div style="margin-top: 0.85rem; padding-top: 0.7rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="font-size: 11px; font-weight: 700; color: #79c0ff; margin-bottom: 0.45rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem;">
+              <span>📅 AUTOMATISCHE VERSCHIEBUNG &amp; TÄGLICHE ROTATION DER RESTLICHEN ${deferredCount} KARTEN:</span>
+              <span style="font-size: 10.5px; color: #8b949e; font-weight: 500;">Jeden Tag rücken die nächsten Dozenten automatisch nach oben</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.5rem;">
+              ${rolloverDays.slice(0, 3).map(rDay => {
+                const deckPills = (rDay.decks || []).map(d =>
+                  `<span style="display:inline-block; font-size:10.5px; color:#c9d1d9; background:rgba(255,255,255,0.06); padding:0.1rem 0.4rem; border-radius:4px; margin:2px 3px 2px 0;"><strong>${escapeHtml(d.dozent)}</strong> (${d.cards})</span>`
+                ).join('');
+                return `
+                  <div style="background: rgba(13, 17, 23, 0.75); border: 1px solid rgba(88, 166, 255, 0.22); border-radius: 6px; padding: 0.5rem 0.65rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                      <strong style="font-size: 11px; color: #58a6ff;">${escapeHtml(rDay.day_label)}</strong>
+                      <span style="font-size: 10.5px; font-weight: 700; color: #e6edf3;">${rDay.planned_cards} Karten</span>
+                    </div>
+                    <div style="line-height: 1.4;">${deckPills}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      topChecklistEl.innerHTML = checklistHtml;
     }
 
     // Modal combined query bar
@@ -4334,6 +4532,7 @@ function copyAnkiQuery(encodedQuery, btn) {
 window.toggleBacklogTriageModal = toggleBacklogTriageModal;
 window.toggleAnkiBacklogTriage = toggleBacklogTriageModal;
 window.setTriageBudget = setTriageBudget;
+window.applyCustomTriageBudget = applyCustomTriageBudget;
 window.loadBacklogTriage = loadBacklogTriage;
 window.copyPageTriageQuery = copyPageTriageQuery;
 window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
@@ -4347,7 +4546,8 @@ let currentForecastData = null;
 
 async function loadWorkloadForecast(showFeedback = false) {
   try {
-    const res = await fetch(`/api/v1/schedule/anki/workload-forecast?_t=${Date.now()}`);
+    const budgetParam = currentTriageBudget || 350;
+    const res = await fetch(`/api/v1/schedule/anki/workload-forecast?daily_budget=${budgetParam}&_t=${Date.now()}`);
     if (!res.ok) return;
     const data = await res.json();
     currentForecastData = data;
@@ -4363,10 +4563,50 @@ async function loadWorkloadForecast(showFeedback = false) {
 function renderWorkloadForecast(data) {
   if (!data || !data.days) return;
 
+  const budget = (currentTriageBudget && currentTriageBudget > 0 && currentTriageBudget < 9000) ? currentTriageBudget : null;
+
+  // Dynamically simulate carryover rollover across the 14 days for the active budget
+  let carryover = 0;
+  let clearedDateStr = null;
+  const simulatedDays = data.days.map((day, idx) => {
+    const native = day.native_due != null ? day.native_due : (day.total_due || 0);
+    if (!budget) {
+      return Object.assign({}, day, {
+        display_due: native,
+        native_due: native,
+        carryover_in: 0,
+        carryover_out: 0
+      });
+    }
+    const pool = native + carryover;
+    const planned = Math.min(pool, budget);
+    const cIn = carryover;
+    carryover = Math.max(0, pool - planned);
+    if (idx > 0 && carryover === 0 && !clearedDateStr) {
+      clearedDateStr = day.formatted_date;
+    }
+    return Object.assign({}, day, {
+      display_due: planned,
+      native_due: native,
+      carryover_in: cIn,
+      carryover_out: carryover
+    });
+  });
+
   const totalText = `${data.total_due_14d || 0} Karten`;
   const avgText = `${Math.round(data.average_daily_due || 0)}`;
-  const peakText = `${data.max_day_cards || 0} max`;
-  const adviceText = data.smoothing_advice || 'Workload stabil.';
+  const maxDisplay = Math.max(...simulatedDays.map(d => d.display_due || 0), 0);
+  const peakText = budget ? `${maxDisplay} max (Ziel ${budget})` : `${data.max_day_cards || 0} max`;
+
+  let adviceText = data.smoothing_advice || 'Workload stabil.';
+  const todayNative = simulatedDays.length > 0 ? simulatedDays[0].native_due : 0;
+  if (budget && todayNative > budget) {
+    const pct = Math.round((budget / Math.max(1, todayNative)) * 1000) / 10;
+    const def = todayNative - budget;
+    adviceText = clearedDateStr
+      ? `⚖️ Automatische Verteilung (${budget} Karten/Tag): Heute machst du ${budget} von ${todayNative} Karten (${pct}%). Die restlichen ${def} Karten verschieben sich automatisch – am ${clearedDateStr} ist der Rückstau komplett auf 0 abgebaut!`
+      : `⚖️ Automatische Verteilung (${budget} Karten/Tag): Heute machst du ${budget} von ${todayNative} Karten (${pct}%). Die restlichen ${def} Karten werden gleichmäßig auf die Folgetage verschoben.`;
+  }
 
   ['forecastTotalVal', 'pageForecastTotalVal'].forEach(id => {
     const el = document.getElementById(id);
@@ -4389,23 +4629,28 @@ function renderWorkloadForecast(data) {
     if (el) el.textContent = adviceText;
   });
 
-  const maxVal = Math.max(data.max_day_cards || 1, 100);
+  const maxVal = Math.max(maxDisplay || 1, 100);
   const trackHeight = 55; // max height in pixels
 
   let html = '';
-  data.days.forEach((day, idx) => {
-    const cnt = day.total_due;
+  simulatedDays.forEach((day, idx) => {
+    const cnt = day.display_due;
     const pct = Math.max(6, Math.round((cnt / maxVal) * trackHeight));
     const isToday = (idx === 0);
     const isTomorrow = (idx === 1);
     const dayLabel = isToday ? 'Heute' : (isTomorrow ? 'Morgen' : day.day_name);
+    const hasCarry = day.carryover_in > 0;
+    const barColor = hasCarry ? '#58a6ff' : (cnt >= 350 ? '#d29922' : day.level_color);
+    const tooltipText = budget && (day.carryover_in > 0 || day.carryover_out > 0)
+      ? `${day.formatted_date}: ${cnt} geplant (${day.native_due} neu fällig + ${day.carryover_in} Übertrag vom Vortag)`
+      : `${day.formatted_date}: ${cnt} Wiederholungen`;
 
     html += `
-      <div onclick="selectForecastDay(${idx})" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; cursor: pointer; position: relative; height: 100%;" title="${day.formatted_date}: ${cnt} Wiederholungen">
+      <div onclick="selectForecastDay(${idx})" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; cursor: pointer; position: relative; height: 100%;" title="${tooltipText}">
         <span style="font-size: 9.5px; font-weight: 600; color: ${cnt > 0 ? '#e6edf3' : 'var(--text-muted)'}; margin-bottom: 2px;">
           ${cnt > 0 ? cnt : ''}
         </span>
-        <div style="width: 100%; max-width: 22px; height: ${pct}px; background: ${day.level_color}; border-radius: 3px 3px 1px 1px; transition: height 0.3s ease, opacity 0.2s; opacity: ${isToday ? '0.7' : '1'}; border: ${isToday ? '1px dashed #fff' : 'none'};"></div>
+        <div style="width: 100%; max-width: 22px; height: ${pct}px; background: ${barColor}; border-radius: 3px 3px 1px 1px; transition: height 0.3s ease, opacity 0.2s; opacity: ${isToday ? '0.85' : '1'}; border: ${isToday ? '1px dashed #fff' : 'none'};"></div>
         <span style="font-size: 9px; color: ${isToday ? '#58a6ff' : 'var(--text-muted)'}; margin-top: 3px; font-weight: ${isToday ? '700' : '400'};">
           ${dayLabel}
         </span>
@@ -6490,6 +6735,7 @@ setInterval(() => {
   if (typeof loadExamPacing === 'function') loadExamPacing();
   if (typeof loadCurriculumToday === 'function') loadCurriculumToday(false);
   loadWorkloadForecast(false);
+  if (typeof loadBacklogTriage === 'function') loadBacklogTriage(currentTriageBudget);
   loadAnkiWeaknesses();
   if (typeof loadDeckStats === 'function') loadDeckStats(false);
 }, 30000);
@@ -6500,6 +6746,7 @@ document.addEventListener('visibilitychange', () => {
     loadAnkiDesktopStatus(false);
     if (typeof loadExamPacing === 'function') loadExamPacing();
     if (typeof loadCurriculumToday === 'function') loadCurriculumToday(false);
+    if (typeof loadBacklogTriage === 'function') loadBacklogTriage(currentTriageBudget);
     if (typeof loadDeckStats === 'function') loadDeckStats(false);
   }
 });
@@ -6507,6 +6754,7 @@ window.addEventListener('focus', () => {
   loadAnkiDesktopStatus(false);
   if (typeof loadExamPacing === 'function') loadExamPacing();
   if (typeof loadCurriculumToday === 'function') loadCurriculumToday(false);
+  if (typeof loadBacklogTriage === 'function') loadBacklogTriage(currentTriageBudget);
   if (typeof loadDeckStats === 'function') loadDeckStats(false);
 });
 
@@ -6516,6 +6764,7 @@ if (document.readyState === 'loading') {
     init();
     loadAnkiDesktopStatus(false);
     loadWorkloadForecast(false);
+    if (typeof loadBacklogTriage === 'function') loadBacklogTriage(currentTriageBudget);
     loadScienceRhythm();
   });
 } else {

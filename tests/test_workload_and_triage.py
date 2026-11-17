@@ -26,6 +26,8 @@ def test_workload_forecast_caching():
     cached = get_cached_workload_forecast()
     assert cached is not None
     assert cached["smoothing_advice"] == "Test OK"
+    # Restore real forecast cache
+    get_workload_forecast(days_ahead=14, daily_budget=350)
 
 def test_backlog_triage_advanced_queries():
     triage = calculate_backlog_triage(max_capacity=150)
@@ -146,4 +148,47 @@ def test_api_daily_rhythm_endpoint():
     assert "start_time" in data
     assert "blocks" in data
     assert len(data["blocks"]) >= 6
+
+
+def test_triage_default_350_focus_and_rollover():
+    resp = client.get("/api/v1/schedule/anki/backlog-triage")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["max_capacity"] == 350
+    assert "focus_plan_open" in data
+    assert "multi_day_rollover" in data
+    assert "coverage_pct" in data
+    assert "deferred_cards_count" in data
+
+    total_due = data.get("total_due_today", 0)
+    already_rep = data.get("already_repeated_today", 0)
+    open_plan = data.get("focus_plan_open", [])
+    if total_due > 0 and already_rep < 350:
+        assigned_sum = sum(item["assigned_cards"] for item in open_plan)
+        expected_open = min(total_due, 350 - already_rep)
+        assert assigned_sum == expected_open
+        # Verify strict top-to-bottom urgency score ordering
+        scores = [item["urgency_score"] for item in open_plan]
+        assert scores == sorted(scores, reverse=True)
+        # If any topic has is_vortag_new=True and due_today>0, it must be Rank #1
+        has_vortag = any(t.get("is_vortag_new") and t.get("due_today", 0) > 0 for t in data.get("topics", []))
+        if has_vortag:
+            assert open_plan[0]["is_vortag_new"] is True
+            assert open_plan[0]["rank"] == 1
+
+
+def test_triage_custom_budget_and_forecast_rollover():
+    resp = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=250")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["max_capacity"] == 250
+
+    fc_resp = client.get("/api/v1/schedule/anki/workload-forecast?daily_budget=350")
+    assert fc_resp.status_code == 200
+    fc = fc_resp.json()
+    assert fc.get("daily_budget") == 350
+    if fc.get("days"):
+        assert "planned_due" in fc["days"][0]
+        assert fc["days"][0]["planned_due"] <= 350
+
 

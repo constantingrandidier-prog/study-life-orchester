@@ -9,10 +9,51 @@ from app.db.repository import get_db_connection
 
 WORKLOAD_FORECAST_SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "cached_workload_forecast.json"
 
-def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]:
+def _apply_forecast_budget_rollover(result: Dict[str, Any], daily_budget: Optional[int] = 350):
+    days_list = result.get("days", [])
+    if not days_list:
+        return
+    budget = int(daily_budget) if (daily_budget is not None and int(daily_budget) > 0) else 350
+    carryover = 0
+    cleared_day_idx = None
+    cleared_date_str = None
+
+    for idx, d in enumerate(days_list):
+        native = d.get("native_due", d.get("total_due", 0))
+        d["native_due"] = native
+        pool = native + carryover
+        planned = min(pool, budget)
+        d["carryover_in"] = carryover
+        d["planned_due"] = planned
+        carryover = max(0, pool - planned)
+        d["carryover_out"] = carryover
+        if idx > 0 and carryover == 0 and cleared_day_idx is None:
+            cleared_day_idx = idx
+            cleared_date_str = d.get("formatted_date")
+
+    result["daily_budget"] = budget
+    result["backlog_cleared_in_days"] = cleared_day_idx
+    result["backlog_cleared_date"] = cleared_date_str
+    today_native = days_list[0].get("native_due", 0)
+    if today_native > budget:
+        pct = round((budget / max(1, today_native)) * 100.0, 1)
+        deferred = today_native - budget
+        if cleared_date_str:
+            result["smoothing_advice"] = (
+                f"⚖️ Automatische Verteilung ({budget} Karten/Tag): Heute machst du {budget} von {today_native} Karten ({pct}%). "
+                f"Die restlichen {deferred} Karten verschieben sich automatisch – am {cleared_date_str} ist der gesamte Stau auf 0 abgebaut!"
+            )
+        else:
+            result["smoothing_advice"] = (
+                f"⚖️ Automatische Verteilung ({budget} Karten/Tag): Heute machst du {budget} von {today_native} Karten ({pct}%). "
+                f"Die restlichen {deferred} Karten werden gleichmäßig auf die Folgetage verschoben."
+            )
+
+
+def get_workload_forecast(col_path=None, days_ahead: int = 14, daily_budget: Optional[int] = 350) -> Dict[str, Any]:
     """
     Computes a 14-day forward-looking workload forecast from Anki's review queue.
-    Identifies workload spikes and generates smoothing tips for medical exam preparation.
+    Identifies workload spikes and simulates automatic carryover distribution based on daily_budget.
     """
     target_path = Path(col_path) if col_path else find_local_anki_collection()
     now = datetime.now()
@@ -24,6 +65,8 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
         if cached:
             cached_dates = {d.get("date") for d in cached.get("days", []) if isinstance(d, dict)}
             if today.isoformat() in cached_dates or (today + timedelta(days=1)).isoformat() in cached_dates:
+                if daily_budget is not None and "native_due" in (cached.get("days", [{}])[0] if cached.get("days") else {}):
+                    _apply_forecast_budget_rollover(cached, daily_budget)
                 return cached
             if not target_path or not target_path.exists():
                 return cached
@@ -75,6 +118,10 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
             "formatted_date": f"{day_name} {d_date.strftime('%d.%m')}",
             "day_name": day_name,
             "total_due": 0,
+            "native_due": 0,
+            "planned_due": 0,
+            "carryover_in": 0,
+            "carryover_out": 0,
             "deck_breakdown": [],
             "workload_level": "low",
             "level_color": "#3fb950",
@@ -84,6 +131,7 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
     for due_val, did, count in rows:
         if due_val in day_data:
             day_data[due_val]["total_due"] += count
+            day_data[due_val]["native_due"] += count
             dname = decks.get(did, f"Deck {did}")
             day_data[due_val]["deck_breakdown"].append({
                 "deck_name": dname,
@@ -135,6 +183,8 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14) -> Dict[str, Any]
         "spike_days": spike_days,
         "smoothing_advice": smoothing_advice,
     }
+
+    _apply_forecast_budget_rollover(result, daily_budget=daily_budget)
 
     cache_workload_forecast(result)
     return result

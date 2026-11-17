@@ -4193,6 +4193,29 @@ async function loadBacklogTriage(maxCapacity = 350) {
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    const isIgnoredProf = (p) => {
+      const doz = String((p && p.dozent) || '').trim().toLowerCase();
+      return doz === 'wenger' || doz === 'sommer' || doz.includes('wenger') || doz.includes('sommer');
+    };
+    if (Array.isArray(data.topics)) data.topics = data.topics.filter(t => !isIgnoredProf(t));
+    if (Array.isArray(data.focus_plan_open)) data.focus_plan_open = data.focus_plan_open.filter(t => !isIgnoredProf(t));
+    if (Array.isArray(data.budget_selected_topics)) data.budget_selected_topics = data.budget_selected_topics.filter(t => !isIgnoredProf(t));
+    if (Array.isArray(data.multi_day_rollover)) {
+      data.multi_day_rollover = data.multi_day_rollover.map(rDay => {
+        const decks = (rDay.decks || []).filter(d => !isIgnoredProf(d));
+        return Object.assign({}, rDay, { decks, planned_cards: decks.reduce((s, d) => s + (d.cards || 0), 0) });
+      }).filter(rDay => rDay.planned_cards > 0);
+    }
+    if (Array.isArray(data.themenbloecke)) {
+      data.themenbloecke = data.themenbloecke.map(tb => {
+        const profs = (tb.professors || []).filter(p => !isIgnoredProf(p));
+        return Object.assign({}, tb, {
+          professors: profs,
+          total_due_today: profs.reduce((s, p) => s + (p.due_today || 0), 0),
+          total_due_tomorrow: profs.reduce((s, p) => s + (p.due_tomorrow || 0), 0)
+        });
+      }).filter(tb => tb.professors.length > 0);
+    }
     latestTriageData = data;
 
     const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Vortag-Neukarten, Überfälligkeit und Fehlerquote.';

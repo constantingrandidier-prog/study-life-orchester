@@ -640,9 +640,62 @@ def calculate_backlog_triage(col_path=None, max_capacity: Optional[int] = 350) -
     return result
 
 
+IGNORED_DOZENTEN = {"wenger", "sommer"}
+
+
+def _is_ignored_topic_entry(entry: Dict[str, Any]) -> bool:
+    doz = str(entry.get("dozent", "")).strip().lower()
+    dname = str(entry.get("deck_name", "")).strip().lower()
+    if doz in IGNORED_DOZENTEN:
+        return True
+    if "wenger" in doz or "sommer" in doz:
+        return True
+    if "› wenger" in dname or "› sommer" in dname or ":: wenger" in dname or ":: sommer" in dname:
+        return True
+    return False
+
+
+def _sanitize_triage_payload(result: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Guarantees that Wenger and Sommer are completely removed from topics, themenbloecke,
+    urgent_topics, deferrable_topics, and recomputes total_due_today / total_due_tomorrow.
+    Protects against stale cache entries or older background sync daemons.
+    """
+    if not isinstance(result, dict):
+        return result
+
+    if "topics" in result and isinstance(result["topics"], list):
+        result["topics"] = [t for t in result["topics"] if not _is_ignored_topic_entry(t)]
+        result["topics_count"] = len(result["topics"])
+        result["total_due_today"] = sum(t.get("due_today", 0) for t in result["topics"])
+        result["total_due_tomorrow"] = sum(t.get("due_tomorrow", 0) for t in result["topics"])
+
+    if "urgent_topics" in result and isinstance(result["urgent_topics"], list):
+        result["urgent_topics"] = [t for t in result["urgent_topics"] if not _is_ignored_topic_entry(t)]
+
+    if "deferrable_topics" in result and isinstance(result["deferrable_topics"], list):
+        result["deferrable_topics"] = [t for t in result["deferrable_topics"] if not _is_ignored_topic_entry(t)]
+
+    if "themenbloecke" in result and isinstance(result["themenbloecke"], list):
+        cleaned_tbs = []
+        for tb in result["themenbloecke"]:
+            profs = [p for p in tb.get("professors", []) if not _is_ignored_topic_entry(p)]
+            if profs:
+                tb_copy = dict(tb)
+                tb_copy["professors"] = profs
+                tb_copy["total_due_today"] = sum(p.get("due_today", 0) for p in profs)
+                tb_copy["total_due_tomorrow"] = sum(p.get("due_tomorrow", 0) for p in profs)
+                cleaned_tbs.append(tb_copy)
+        result["themenbloecke"] = cleaned_tbs
+        result["themenbloecke_count"] = len(cleaned_tbs)
+
+    return result
+
+
 def _apply_budget(result: Dict[str, Any], budget: int):
     """
     Strict priority-ordered allocation from #1 (most important) downwards without skipping professors:
+      - First sanitizes payload to ensure Wenger & Sommer are strictly excluded.
       - Vortag newly learned cards always rank at #1.
       - Packs complete professors in strict rank order until the boundary professor reaches `budget`.
       - The boundary professor gets the exact remaining card count (`assigned_cards` of `due_today`)
@@ -650,6 +703,7 @@ def _apply_budget(result: Dict[str, Any], budget: int):
       - Automatically distributes all remaining due cards proportionally into Day +1 (Morgen),
         Day +2 (Übermorgen), etc.
     """
+    _sanitize_triage_payload(result)
     budget = max(1, int(budget or 350))
     all_topics = result.get("topics", [])
     total_due_today = sum(t.get("due_today", 0) for t in all_topics)
@@ -837,6 +891,27 @@ import math
 
 
 def cache_triage(data: Dict[str, Any]):
+    if not isinstance(data, dict):
+        return
+    _sanitize_triage_payload(data)
+
+    # Protect against legacy in-memory sync daemons overwriting v2 Vortag-Neu schema
+    topics = data.get("topics", [])
+    is_legacy_payload = bool(topics) and ("is_vortag_new" not in topics[0])
+    if is_legacy_payload:
+        try:
+            if BACKLOG_TRIAGE_SNAPSHOT_PATH.exists():
+                snap = json.loads(BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8"))
+                snap_topics = snap.get("topics", [])
+                if snap_topics and "is_vortag_new" in snap_topics[0]:
+                    data = snap
+                    _sanitize_triage_payload(data)
+        except Exception:
+            pass
+        _apply_budget(data, data.get("max_capacity") or 350)
+    elif "focus_plan_open" not in data:
+        _apply_budget(data, data.get("max_capacity") or 350)
+
     json_str = json.dumps(data, ensure_ascii=False)
     # 1. DB Cache
     try:
@@ -856,24 +931,36 @@ def cache_triage(data: Dict[str, Any]):
 
 
 def get_cached_triage() -> Optional[Dict[str, Any]]:
-    # 1. Try DB first
+    snap_data = None
+    try:
+        if BACKLOG_TRIAGE_SNAPSHOT_PATH.exists():
+            content = BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8")
+            if content.strip():
+                snap_data = json.loads(content)
+    except Exception:
+        snap_data = None
+
+    db_data = None
     try:
         with get_db_connection() as conn:
             cur = conn.cursor()
             cur.execute("CREATE TABLE IF NOT EXISTS anki_backlog_triage_cache (id INTEGER PRIMARY KEY CHECK (id = 1), data_json TEXT NOT NULL, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);")
             row = cur.execute("SELECT data_json FROM anki_backlog_triage_cache WHERE id = 1").fetchone()
             if row and row[0]:
-                return json.loads(row[0])
+                db_data = json.loads(row[0])
     except Exception:
-        pass
+        db_data = None
 
-    # 2. Fall back to JSON snapshot file
-    try:
-        if BACKLOG_TRIAGE_SNAPSHOT_PATH.exists():
-            content = BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8")
-            if content.strip():
-                return json.loads(content)
-    except Exception:
-        pass
+    # Prefer whichever has the v2 schema ("is_vortag_new")
+    chosen = db_data or snap_data
+    if db_data and snap_data:
+        db_topics = db_data.get("topics", [])
+        snap_topics = snap_data.get("topics", [])
+        db_has_v2 = bool(db_topics) and ("is_vortag_new" in db_topics[0])
+        snap_has_v2 = bool(snap_topics) and ("is_vortag_new" in snap_topics[0])
+        if snap_has_v2 and not db_has_v2:
+            chosen = snap_data
 
-    return None
+    if chosen:
+        _sanitize_triage_payload(chosen)
+    return chosen

@@ -26,9 +26,9 @@
       "back_snippet": "Vasopressin (ADH) , Aldosteron , Angiotensin (durch Renin Akt.) modulieren die Sympathikuswirkung , Reninsezernierung und Nierenfunktion Also RAA & Vasopresin über Blutvolumen (Angiotensin: Vasokonstriktion & Aldosteron bild. In Niere) (Aldosteron: Weniger Na-",
       "hy_terms_detected": [
         "renin",
-        "angiotensin",
         "raas",
-        "aldosteron"
+        "aldosteron",
+        "angiotensin"
       ]
     },
     {
@@ -52,9 +52,9 @@
       "front_snippet": "Allosterische Regulation von Glykolyse und Gluconeogenese Was ist die Funktion von PFK-2/FBP-2?",
       "back_snippet": "Synthese/Abbau von Fructose-2,6-Biphosphat und somit Regulation der Glykolyse/GNG Reguliert über: - Phosphofructokinase-1 (PFK-1) - Fructose-1,6-bisphosphatase-1 (FBPase-1)",
       "hy_terms_detected": [
-        "pfk-2",
         "pfk-1",
         "phosphat",
+        "pfk-2",
         "glykolyse"
       ]
     },
@@ -79,9 +79,9 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschleunigt die gesamte Glykolyse da: F-6-P → F-1,6-BP beschleunigt wird und F-1,6-BP ein allosterischer Aktivator der Pyruvat",
       "hy_terms_detected": [
-        "pfk-2",
         "pfk-1",
         "phosphat",
+        "pfk-2",
         "glykolyse"
       ]
     },
@@ -106,8 +106,8 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase , PFK-1, Pyruvatkinase & PFK-2/ FBPase-2 -> Hexokinase ausserhalb der Leber nihct durch SREBP-1c transkribiert",
       "hy_terms_detected": [
-        "pfk-2",
         "pfk-1",
+        "pfk-2",
         "glykolyse"
       ]
     },
@@ -132,8 +132,8 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Wie ist die Wirkung von ChREBP?",
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
-        "pfk-2",
         "pfk-1",
+        "pfk-2",
         "glykolyse"
       ]
     },
@@ -158,8 +158,8 @@
       "front_snippet": "Hypothalamus-HVL-Nebennierenrinden-Achse (glandotrop) Was läuft ab? Feedback Mechanismus?",
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona glomerulosa ⇒ Wirkung Feed-Back Mechanismus ➢ Cortisol hemmt im Hypothalamus und in der Adenohypophyse die Freisetzung ",
       "hy_terms_detected": [
-        "cortisol",
         "acth",
+        "cortisol",
         "aldosteron"
       ]
     },
@@ -478,10 +478,10 @@
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
         "thrombose",
+        "hypoxie",
         "hämoglobin",
-        "po2",
         "epo",
-        "hypoxie"
+        "po2"
       ]
     },
     {
@@ -506,10 +506,10 @@
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
         "thrombose",
+        "hypoxie",
         "hämoglobin",
-        "po2",
         "epo",
-        "hypoxie"
+        "po2"
       ]
     },
     {
@@ -533,10 +533,10 @@
       "front_snippet": "Metabolische Regulation während Aerober Belastung Glucoseaufnahme in arbeitenden Muskelzellen → von was hängt der Aufnahmemechanismus NICHT ab, und von was hängt er ab?",
       "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intraz",
       "hy_terms_detected": [
-        "t4",
         "adrenalin",
-        "noradrenalin",
+        "t4",
         "insulin",
+        "noradrenalin",
         "glykolyse"
       ]
     },
@@ -561,9 +561,9 @@
       "front_snippet": "Wie wirkt Kortisol?",
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
-        "inr",
         "tsh",
         "insulin",
+        "inr",
         "glykolyse"
       ]
     },
@@ -589,10 +589,10 @@
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
         "sauerstoffbindung",
+        "hypoxie",
         "hämoglobin",
-        "po2",
         "epo",
-        "hypoxie"
+        "po2"
       ]
     },
     {
@@ -617,10 +617,10 @@
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
         "sauerstoffbindung",
+        "hypoxie",
         "hämoglobin",
-        "po2",
         "epo",
-        "hypoxie"
+        "po2"
       ]
     }
   ],
@@ -726,10 +726,10 @@
           "front_snippet": "Welche Merkmale haben Thrombozyten? Funktion, Grösse, Vorkommen, Lebensdauer, Besonderheiten",
           "back_snippet": "Funktion: - Adhäsion , Aggregation & Freisetzung . - Wichtig für Blutgerinnung -> Sehr formvariabel im Blut in inaktivem Zustand, bei Oberflächenkontakt (z.B. Verletzung eines Gefässes) werden sie aktiviert. Durchmesser: - 2.5 μm . Vorkommen: - 150'000-350'000",
           "hy_terms_detected": [
+            "thrombozyt",
             "calcium",
-            "fibrinogen",
             "blutgerinnung",
-            "thrombozyt"
+            "fibrinogen"
           ]
         }
       ]
@@ -889,8 +889,8 @@
           "front_snippet": "Wann kommt es beispielsweise zur Phagozytose einer Zelle, welche MHC-I Moleküle auf ihrer Zellmembran hat?",
           "back_snippet": "Ist die Zelle gesund, werden nur körpereigene Antigene präsentiert -> dies wird vom IS toleriert Wird die Zelle zum Beispiel von einem Virus befallen , merken die cytotoxischen T-Zellen (CD8) , dass die präsentierten Antigene nicht körpereigen sind und die Zel",
           "hy_terms_detected": [
-            "mhc-i",
-            "t-zell"
+            "t-zell",
+            "mhc-i"
           ]
         },
         {
@@ -914,8 +914,8 @@
           "front_snippet": "Was kann mit dem MHC-II/Antigen-Komplex an der Zelloberfläche geschehen bei einer Antigenpräsentation mit MHC-II Molekülen?",
           "back_snippet": "Dort kann nur ein T-Cell Receptor (TCR) mit dem Molekülkomplex interagieren, stabilisiert und ermöglicht durch CD4. Falls das Antigen als körperfremd anerkannt wird, wird die T-Zelle wird aktiviert",
           "hy_terms_detected": [
-            "mhc-i",
             "t-zell",
+            "mhc-i",
             "mhc-ii"
           ]
         }
@@ -995,8 +995,8 @@
           "front_snippet": "Was muss passieren damit der TCR mit dem MHC-II Komplex interagieren kann? Was passiert nachdem der TCR gebunden hat? (bis&mit affinität erhöht)",
           "back_snippet": "Ein LFA-1 Molekül der T-Zelle interagiert mit geringer Affinität mit einem ICAM-1 der APC Nachdem der TCR dann gebunden hat, erhöht sich durch eine Konformationsänderung die Affiniät der Bindung und der Kontakt zwischen den zwei Zellen verlängert sich wenn Ant",
           "hy_terms_detected": [
-            "mhc-i",
             "t-zell",
+            "mhc-i",
             "mhc-ii"
           ]
         },
@@ -1161,8 +1161,8 @@
           "front_snippet": "Welche sind die Unterschiede zwischen dem Blutplasma und dem Serum?",
           "back_snippet": "Das Serum ist der Überstand von geronnenem Blut (Nach Gerinnung zentrifugiert) und enthält kein Fribrinogen . Im Serum sind die Thrombozyten aktiviert ! Das Blutplasma ist aus direkt zentrifugiertem Blut und enthält Fibrinogen. —> Serum = Plasma - Gerinnungsfa",
           "hy_terms_detected": [
-            "fibrinogen",
-            "thrombozyt"
+            "thrombozyt",
+            "fibrinogen"
           ]
         },
         {
@@ -1419,9 +1419,9 @@
           "front_snippet": "Was versteht man unter negativer Selektion? Wo findet sie statt?",
           "back_snippet": "Vermeidung von Autoreaktivität und Erzeugung von zentraler Toleranz gegenüber körpereigenem Gewebe (damit sie nur fremdes angreiffen) --> DP-Zellen werden durch dendritische Zellen/ mTEC an der Kortex/Mark-Grenze auf TCRs mit zu hoher Affinität für körpereigen",
           "hy_terms_detected": [
-            "thymus",
+            "negative selektion",
             "t-zell",
-            "negative selektion"
+            "thymus"
           ]
         },
         {
@@ -1504,8 +1504,8 @@
           "front_snippet": "Was kann man über aktivierte Thrombozyten aussagen?",
           "back_snippet": "Gestaltänderung , klebrig , bilden Propfen , Membranen verschmelzen (irreversibler Prozess) sollte nur am Ort einer Blutung passieren (dürfen nicht in Venen gelangen -> Lunge -> Embolie) (passiert zu schluss der primären hämostase)",
           "hy_terms_detected": [
-            "hämostase",
-            "thrombozyt"
+            "thrombozyt",
+            "hämostase"
           ]
         },
         {
@@ -1608,10 +1608,10 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "3. Aktivierung : Signaltransduktion führt zu Pseudopodien und Phosphatidylserin-Präsentation an der Membran. 4. GPIIb/IIIa-Aktivierung : Der Rezeptor wechselt in seine hochaffine Form. 5. Verstärkung & Aggregation : Aktiviertes GPIIb/IIIa bindet an vWF (feste ",
           "hy_terms_detected": [
-            "von-willebrand",
-            "fibrinogen",
+            "thrombozyt",
             "phosphat",
-            "thrombozyt"
+            "von-willebrand",
+            "fibrinogen"
           ]
         },
         {
@@ -1635,8 +1635,8 @@
           "front_snippet": "Über welches System wird aus dem nicht-kovalenten Thrombozytenaggregat ein kovalent-verknüpfter Thrombus?",
           "back_snippet": "Über ein doppelt enzymatisches Kaskadensystem Ein extravaskuläres (exogenes) (extrinsisch) System -> aktiviert Thrombin in Sekunden ein intravaskuläres (endogenes) (intrinsisch) System -> läuft erst nach einigen Minuten an",
           "hy_terms_detected": [
-            "thrombin",
-            "thrombozyt"
+            "thrombozyt",
+            "thrombin"
           ]
         },
         {
@@ -2006,8 +2006,8 @@
           "front_snippet": "Was geschieht wenn die Atrien vollständig depolarisiert sind?",
           "back_snippet": "Isoelektrische Strecke (PQ) —> Kein Signal das wirklich ausgedrückt wird (Ladungsunterschiede werden durch den Körper ausgeglichen). Weiterleitung über AV-Knoten ist nicht sichtbar, da dieser zu klein ist. Durch elektrische Isolation der Ventilebene kann nur ü",
           "hy_terms_detected": [
-            "epo",
-            "av-knoten"
+            "av-knoten",
+            "epo"
           ]
         },
         {
@@ -2031,10 +2031,10 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "repolarisation",
             "depolarisation",
             "epo",
-            "ekg"
+            "ekg",
+            "repolarisation"
           ]
         },
         {
@@ -3448,11 +3448,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
-            "hämoglobin",
-            "erythropoietin",
             "t4",
-            "angiotensin",
-            "t3"
+            "erythropoietin",
+            "hämoglobin",
+            "t3",
+            "angiotensin"
           ]
         },
         {
@@ -4086,8 +4086,8 @@
           "hy_terms_detected": [
             "tsh",
             "t4",
-            "t3",
-            "schilddrüse"
+            "schilddrüse",
+            "t3"
           ]
         },
         {
@@ -4111,12 +4111,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
-            "inr",
-            "thyreoglobulin",
             "t4",
-            "t3",
             "schilddrüse",
-            "peroxidase"
+            "inr",
+            "t3",
+            "peroxidase",
+            "thyreoglobulin"
           ]
         },
         {
@@ -4284,10 +4284,10 @@
           "front_snippet": "Hypophosphatämie: Def, Ursachen, Symptome, Therapie?",
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
-            "inr",
-            "azidose",
+            "phosphat",
             "insulin",
-            "phosphat"
+            "inr",
+            "azidose"
           ]
         },
         {
@@ -4311,8 +4311,8 @@
           "front_snippet": "Was sind die nicht klassischen Wirkungen von Vit. D?",
           "back_snippet": "- Immunsystem! --> Calcitriol scheint die Pathogenaufnahme und -abtötung von Makrophagen zu verbessern - Hemmt Reninfreisetzung - Stimuliert Bildung von bakteriziden Substanzen",
           "hy_terms_detected": [
-            "calcitriol",
-            "renin"
+            "renin",
+            "calcitriol"
           ]
         },
         {
@@ -4670,9 +4670,9 @@
           "front_snippet": "Wie wirkt Kortisol?",
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
-            "inr",
             "tsh",
             "insulin",
+            "inr",
             "glykolyse"
           ]
         },
@@ -4720,10 +4720,10 @@
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
             "renin",
-            "angiotensin",
             "depolarisation",
             "epo",
-            "aldosteron"
+            "aldosteron",
+            "angiotensin"
           ]
         }
       ]
@@ -5633,10 +5633,10 @@
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
             "tsh",
+            "calcitonin",
             "t4",
-            "t3",
             "schilddrüse",
-            "calcitonin"
+            "t3"
           ]
         }
       ]
@@ -5715,8 +5715,8 @@
           "front_snippet": "Was passiert wenn ACTH von der Hypophyse ausgeschüttet wird? Beschreibe Feedbackloop",
           "back_snippet": "- es stimmuliert die poduktion von Cortisol in den Nebennieren - Cortisol hemmt CRH (corticotropin releasing hormone) - CRH gehemmt -> weniger/kein ACTH mehr ⇒ negativer Feedbackloop",
           "hy_terms_detected": [
-            "cortisol",
-            "acth"
+            "acth",
+            "cortisol"
           ]
         },
         {
@@ -5991,9 +5991,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "noradrenalin",
             "insulin",
-            "katecholamin"
+            "katecholamin",
+            "noradrenalin"
           ]
         },
         {
@@ -6018,9 +6018,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "noradrenalin",
             "insulin",
-            "katecholamin"
+            "katecholamin",
+            "noradrenalin"
           ]
         },
         {
@@ -6045,9 +6045,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "noradrenalin",
             "insulin",
-            "katecholamin"
+            "katecholamin",
+            "noradrenalin"
           ]
         },
         {
@@ -6073,8 +6073,8 @@
           "hy_terms_detected": [
             "depolarisation",
             "insulin",
-            "epo",
-            "katecholamin"
+            "katecholamin",
+            "epo"
           ]
         }
       ]
@@ -6230,9 +6230,9 @@
           "front_snippet": "Nebenniere Zona Glomerulosa: Eigenschaften evt. auslassen, kommt bei jele schon vor. hier mehr als repetition",
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Cortisol nicht bilden • Produzieren Aldosteron von Corticosteron • Aldosteron wird stimuliert von Angiotensin II (z.B. tie",
           "hy_terms_detected": [
-            "angiotensin",
             "cortisol",
-            "aldosteron"
+            "aldosteron",
+            "angiotensin"
           ]
         },
         {
@@ -6387,8 +6387,8 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt Insulin auf die Glycerophosphat-Acyltransferase (GPAT)?",
           "back_snippet": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt Lipogenese (vor allem Leber und Fett)",
           "hy_terms_detected": [
-            "insulin",
-            "phosphat"
+            "phosphat",
+            "insulin"
           ]
         }
       ]
@@ -6467,8 +6467,8 @@
           "front_snippet": "Somatotropin-Wirkungsweise Was ist der GH-Rezeptor für ein Typ Rezeptor und was rekrutiert seine aktive Form? (7 P.)",
           "back_snippet": "Cyto k inrezeptor , hat keine intrinsische Tyr-Kinase-Aktivität (nicht wie Insulin-Rezeptor). nach GH-Bindung ⇒ dimerisierte Rezeptor rekrutiert JAK2-Kinase JAK2 phosphoryliert : - benachbarte JAK2 Moleküle (Transphosphorylation) - sich selbst ( Auto phosphory",
           "hy_terms_detected": [
-            "inr",
-            "insulin"
+            "insulin",
+            "inr"
           ]
         },
         {
@@ -6803,8 +6803,8 @@
           "front_snippet": "Regulation der Cortisol-Synthese long feedback?",
           "back_snippet": "Cortisol: negative Rückkopplung auf - Hypophyse → hemmt ACTH-Freisetzung - Hypothalamus → hemmt CRH-Freisetzung",
           "hy_terms_detected": [
-            "cortisol",
-            "acth"
+            "acth",
+            "cortisol"
           ]
         }
       ]
@@ -6985,10 +6985,10 @@
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
             "adrenalin",
-            "cortisol",
-            "noradrenalin",
             "acth",
-            "katecholamin"
+            "katecholamin",
+            "noradrenalin",
+            "cortisol"
           ]
         },
         {
@@ -7013,10 +7013,10 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "cortisol",
-            "noradrenalin",
             "acth",
-            "katecholamin"
+            "katecholamin",
+            "noradrenalin",
+            "cortisol"
           ]
         }
       ]
@@ -7051,11 +7051,11 @@
           "front_snippet": "Aldosteronfreisetzung wird durch was stimuliert? (3)",
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II → hemmt K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Azidose",
           "hy_terms_detected": [
-            "angiotensin",
-            "azidose",
             "depolarisation",
             "epo",
-            "aldosteron"
+            "azidose",
+            "aldosteron",
+            "angiotensin"
           ]
         },
         {
@@ -8630,8 +8630,8 @@
           "front_snippet": "MHC-Moleküle Klasse 1 und 2 Erkennung und Exprimierung",
           "back_snippet": "1. Präsentierte Peptide werden von Cytotoxischen T-Zellen erkannt; von allen Zellen des Körpers ausser roten BK exprimiert 2. Präsentierte Peptide werden von T-Helfer-Zellen erkannt; nur von Makrophagen , dendritischen Zellen, B-Zellen und Epithelzellen des Th",
           "hy_terms_detected": [
-            "thymus",
-            "t-zell"
+            "t-zell",
+            "thymus"
           ]
         },
         {
@@ -8698,8 +8698,8 @@
           "front_snippet": "T-Zell abhängige B-Zell Aktivierung",
           "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle ",
           "hy_terms_detected": [
-            "mhc-i",
             "t-zell",
+            "mhc-i",
             "mhc-ii"
           ]
         },

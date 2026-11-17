@@ -304,7 +304,7 @@
     "next_day_index": 394
   },
   "_latest_target_date": "2026-11-17",
-  "_updated_at": "2026-11-17T09:06:22.668993",
+  "_updated_at": "2026-11-17T09:28:34.663835",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -1608,7 +1608,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-17T09:06:01.254865",
+    "last_sync_timestamp": "2026-11-17T09:27:24.486756",
     "current_day_index": 421,
     "target_day_index": 358,
     "next_day_index": 359
@@ -8195,7 +8195,7 @@
         "front": "Wie sind die Referenzbereiche für Nährstoffbedarf definiert?"
       }
     ],
-    "last_sync_timestamp": "2026-11-17T08:59:03.484857",
+    "last_sync_timestamp": "2026-11-17T09:28:31.191056",
     "current_day_index": 421,
     "target_day_index": 420,
     "next_day_index": 421
@@ -8940,7 +8940,7 @@
         "front": "Was ist die primäre Funktion der Nieren? Wie wird die Durchblutung reguliert?"
       }
     ],
-    "last_sync_timestamp": "2026-11-17T09:06:22.591157",
+    "last_sync_timestamp": "2026-11-17T09:28:34.568026",
     "current_day_index": 421,
     "target_day_index": 421,
     "next_day_index": 422

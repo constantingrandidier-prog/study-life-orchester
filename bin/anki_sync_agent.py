@@ -227,9 +227,12 @@ def sync_now(trigger_anki_sync: bool = True):
         log_msg(f"[ERROR] Today sync error: {e}")
         state = {}
 
+    import importlib
     # 3. Sync 14-day workload forecast
     try:
-        forecast = get_workload_forecast()
+        import app.services.workload_forecast as _wf_mod
+        importlib.reload(_wf_mod)
+        forecast = _wf_mod.get_workload_forecast()
         for base in targets:
             post_json(f"{base}/workload-sync", forecast)
     except Exception as e:
@@ -238,7 +241,9 @@ def sync_now(trigger_anki_sync: bool = True):
 
     # 4. Sync topic triage
     try:
-        triage = calculate_backlog_triage()
+        import app.services.anki_backlog_triage as _abt_mod
+        importlib.reload(_abt_mod)
+        triage = _abt_mod.calculate_backlog_triage()
         for base in targets:
             post_json(f"{base}/triage-sync", triage)
     except Exception as e:
@@ -246,8 +251,9 @@ def sync_now(trigger_anki_sync: bool = True):
 
     # 5. Sync weaknesses & full deck tree
     try:
-        from app.services.anki_weakness_service import get_anki_due_and_weaknesses
-        weaknesses = get_anki_due_and_weaknesses()
+        import app.services.anki_weakness_service as _aws_mod
+        importlib.reload(_aws_mod)
+        weaknesses = _aws_mod.get_anki_due_and_weaknesses()
         for base in targets:
             post_json(f"{base}/weaknesses-sync", weaknesses)
     except Exception as e:

@@ -250,8 +250,9 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
             }
 
 
-        # 2. Card stats per deck
-        card_sql = """
+        # 2. Card stats per deck (transparently resolving Filtered Deck odid/odue)
+        from app.db.anki_db import NORM_CARDS_SQL
+        card_sql = f"""
             SELECT 
                 c.did,
                 count(c.id) as total_cards,
@@ -262,7 +263,7 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
                 sum(case when c.queue = 1 or (c.queue = 2 and c.due <= ?) then 1 else 0 end) as due_cards,
                 avg(case when c.factor > 0 then c.factor else null end) as avg_factor,
                 sum(case when c.queue in (1, 2, 3) or c.reps > 0 then 1 else 0 end) as cards_studied
-            FROM cards c
+            FROM {NORM_CARDS_SQL} c
             GROUP BY c.did
         """
         card_data = {r[0]: r for r in cur.execute(card_sql, (today_anki_day,)).fetchall()}
@@ -274,7 +275,7 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
         seven_days_ts = int((today_midnight - timedelta(days=7)).timestamp() * 1000)
         fourteen_days_ts = int((today_midnight - timedelta(days=14)).timestamp() * 1000)
 
-        rev_sql = """
+        rev_sql = f"""
             SELECT 
                 c.did,
                 count(r.id) as total_reviews,
@@ -304,7 +305,7 @@ def get_detailed_deck_stats(col_path: Optional[str] = None) -> Dict[str, Any]:
                 sum(case when r.id >= ? and r.type in (1, 2, 3) then 1 else 0 end) as two_weeks_rep_reviews,
                 sum(case when r.id >= ? and r.type in (1, 2, 3) and r.ease in (2, 3, 4) then 1 else 0 end) as two_weeks_rep_passes
             FROM revlog r
-            JOIN cards c ON r.cid = c.id
+            JOIN {NORM_CARDS_SQL} c ON r.cid = c.id
             WHERE r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
             GROUP BY c.did
         """

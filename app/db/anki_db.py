@@ -11,6 +11,17 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator, Optional
 
+# Normalized cards subquery that transparently resolves `odid` (original deck ID)
+# and `odue` (original due day) whenever cards are temporarily inside an Anki Filtered Deck.
+NORM_CARDS_SQL = """(
+    SELECT id, nid,
+           CASE WHEN odid != 0 THEN odid ELSE did END AS did,
+           ord, mod, usn, type, queue,
+           CASE WHEN odid != 0 AND odue > 0 THEN odue ELSE (CASE WHEN odid != 0 THEN 0 ELSE due END) END AS due,
+           ivl, factor, reps, lapses, left, odue, odid, flags, data
+    FROM cards
+)"""
+
 
 def find_local_anki_collection() -> Optional[Path]:
     """Locate the default local Anki collection.anki2 file."""

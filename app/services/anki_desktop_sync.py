@@ -68,6 +68,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             'message': 'Keine Anki-Desktop Sammlung gefunden.',
         }
 
+    from app.db.anki_db import NORM_CARDS_SQL
     with open_anki_db_readonly(target_path) as conn:
         cur = conn.cursor()
         crt = cur.execute('SELECT crt FROM col').fetchone()[0]
@@ -83,7 +84,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         day_start_ms = int(day_start_dt.timestamp() * 1000)
         day_end_ms = day_start_ms + (86400 * 1000)
     
-        rev_sql = 'SELECT r.id, r.cid, c.did, r.ease, r.ivl, r.lastIvl, r.time, r.type, n.sfld FROM revlog r JOIN cards c ON r.cid = c.id JOIN notes n ON c.nid = n.id WHERE r.id >= ? AND r.id < ? ORDER BY r.id DESC'
+        rev_sql = f'SELECT r.id, r.cid, c.did, r.ease, r.ivl, r.lastIvl, r.time, r.type, n.sfld FROM revlog r JOIN {NORM_CARDS_SQL} c ON r.cid = c.id JOIN notes n ON c.nid = n.id WHERE r.id >= ? AND r.id < ? ORDER BY r.id DESC'
         revs_rows = cur.execute(rev_sql, (day_start_ms, day_end_ms)).fetchall()
     
         total_reviews_count = len(revs_rows)
@@ -185,8 +186,8 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
                 })
     
         if is_today:
-            due_today_cnt = cur.execute("""
-                SELECT count(*) FROM cards c
+            due_today_cnt = cur.execute(f"""
+                SELECT count(*) FROM {NORM_CARDS_SQL} c
                 JOIN decks d ON c.did = d.id
                 WHERE ((c.queue = 2 AND c.due <= ?) 
                    OR c.queue = 1 
@@ -197,8 +198,8 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             """, (current_day, current_day)).fetchone()[0]
         elif query_date > date.today():
             # Future date: cards scheduled specifically for target_day!
-            future_cnt = cur.execute("""
-                SELECT count(*) FROM cards c
+            future_cnt = cur.execute(f"""
+                SELECT count(*) FROM {NORM_CARDS_SQL} c
                 JOIN decks d ON c.did = d.id
                 WHERE ((c.queue = 2 AND c.due = ?) 
                    OR (c.queue = 3 AND c.due = ?))
@@ -221,9 +222,9 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             due_today_cnt = len(unique_rep_cids) if unique_rep_cids else total_reviews_count
     
         # Dynamically select cards due tomorrow relative to target query date!
-        tom_sql = """
+        tom_sql = f"""
             SELECT c.id, c.did, n.sfld
-            FROM cards c
+            FROM {NORM_CARDS_SQL} c
             JOIN notes n ON c.nid = n.id
             JOIN decks d ON c.did = d.id
             WHERE c.queue = 2 AND c.due = ?
@@ -270,10 +271,10 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
     
         # Calculate real-time cumulative learned cards in 2. SJ curriculum
         conn.create_collation('unicase', lambda a, b: 0)
-        cur.execute("""
+        cur.execute(f"""
             SELECT count(*),
                    sum(case when c.reps > 0 or c.type > 0 then 1 else 0 end)
-            FROM cards c
+            FROM {NORM_CARDS_SQL} c
             JOIN decks d ON c.did = d.id
             WHERE (lower(d.name) LIKE '%2. sj%' OR lower(d.name) LIKE '%hs 2021%' OR lower(d.name) LIKE '%3. semester%')
               AND lower(d.name) NOT LIKE '%mündlich%'
@@ -284,14 +285,14 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
         pct_curr = round((mastered_curr / max(1, total_curr)) * 100, 1)
     
         # Extract deck-level snapshot to keep Render / cloud in exact lockstep
-        snapshot_sql = """
+        snapshot_sql = f"""
             SELECT c.did,
                    count(*) as total,
                    sum(case when c.reps = 0 and c.queue = 0 then 1 else 0 end) as new_cnt,
                    sum(case when c.reps > 0 then 1 else 0 end) as mastered_cnt,
                    sum(case when c.queue in (1, 3) then 1 else 0 end) as learning_cnt,
                    avg(length(n.flds)) as avg_len
-            FROM cards c
+            FROM {NORM_CARDS_SQL} c
             LEFT JOIN notes n ON c.nid = n.id
             GROUP BY c.did
         """

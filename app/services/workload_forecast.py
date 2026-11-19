@@ -82,7 +82,7 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14, daily_budget: Opt
                 "smoothing_advice": "Keine Anki-Datenbank für Prognose gefunden.",
             }
 
-    from app.db.anki_db import open_anki_db_readonly
+    from app.db.anki_db import open_anki_db_readonly, NORM_CARDS_SQL
     with open_anki_db_readonly(target_path) as conn:
         cur = conn.cursor()
         crt = cur.execute("SELECT crt FROM col").fetchone()[0]
@@ -100,11 +100,11 @@ def get_workload_forecast(col_path=None, days_ahead: int = 14, daily_budget: Opt
 
         # Fetch daily due sums and deck breakdown for the next N days.
         # Group any overdue cards (due <= curr_day) and active learning cards (queue=1) into today's bucket.
-        sql_due = """
+        sql_due = f"""
         SELECT CASE WHEN c.due <= ? THEN ? ELSE c.due END as effective_due,
                c.did,
                COUNT(*) as card_count
-        FROM cards c
+        FROM {NORM_CARDS_SQL} c
         WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?)) AND c.queue != -1
         GROUP BY effective_due, c.did
         ORDER BY effective_due ASC, card_count DESC

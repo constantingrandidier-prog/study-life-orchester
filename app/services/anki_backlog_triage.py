@@ -495,7 +495,7 @@ def calculate_backlog_triage(
     now_ts = now.timestamp()
     now_ms = now_ts * 1000
 
-    from app.db.anki_db import open_anki_db_readonly
+    from app.db.anki_db import open_anki_db_readonly, NORM_CARDS_SQL
     with open_anki_db_readonly(target_path) as conn:
         cur = conn.cursor()
 
@@ -551,7 +551,7 @@ def calculate_backlog_triage(
             SUM(c.lapses) as total_lapses,
             SUM(c.reps) as total_reps,
             SUM(CASE WHEN c.queue = 2 AND c.due <= ? THEN (? - c.due) ELSE 0 END) as sum_overdue_days
-        FROM cards c
+        FROM {NORM_CARDS_SQL} c
         WHERE c.did IN ({placeholders}) AND c.queue != -1
         GROUP BY c.did
         """
@@ -565,7 +565,7 @@ def calculate_backlog_triage(
         SELECT c.did, MAX(r.id) as last_ms, COUNT(*) as total_revs,
                SUM(CASE WHEN r.ease = 1 THEN 1 ELSE 0 END) as fail_count
         FROM revlog r
-        JOIN cards c ON r.cid = c.id
+        JOIN {NORM_CARDS_SQL} c ON r.cid = c.id
         WHERE c.did IN ({placeholders}) AND r.id >= ? AND r.type != 4 AND r.ease in (1, 2, 3, 4)
         GROUP BY c.did
         """
@@ -585,7 +585,7 @@ def calculate_backlog_triage(
             FROM revlog
             GROUP BY cid
         ) fr
-        JOIN cards c ON fr.cid = c.id
+        JOIN {NORM_CARDS_SQL} c ON fr.cid = c.id
         WHERE c.did IN ({placeholders}) AND c.queue != -1
         GROUP BY c.did
         """
@@ -614,7 +614,7 @@ def calculate_backlog_triage(
                COUNT(DISTINCT CASE WHEN r.id >= ? AND fr.first_rev < ? THEN r.cid END) as rep_today_cards,
                COUNT(DISTINCT CASE WHEN r.id >= ? AND r.id < ? AND fr.first_rev < ? THEN r.cid END) as rep_yest_non_new_cards
         FROM revlog r
-        JOIN cards c ON r.cid = c.id
+        JOIN {NORM_CARDS_SQL} c ON r.cid = c.id
         JOIN (
             SELECT cid, MIN(id) as first_rev
             FROM revlog
@@ -635,7 +635,7 @@ def calculate_backlog_triage(
         # Per-card FSRS retrievability, Vortag & >=7d unseen time-risk inspection for Smart Efficiency Triage
         sql_due_cards_detail = f"""
         SELECT c.did, c.queue, c.due, c.ivl, c.lapses, c.reps, c.data, fr.first_rev, fr.last_rev
-        FROM cards c
+        FROM {NORM_CARDS_SQL} c
         LEFT JOIN (
             SELECT cid, MIN(id) as first_rev, MAX(id) as last_rev
             FROM revlog

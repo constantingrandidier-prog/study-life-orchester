@@ -304,7 +304,7 @@
     "next_day_index": 394
   },
   "_latest_target_date": "2026-11-19",
-  "_updated_at": "2026-11-19T10:35:59.749571",
+  "_updated_at": "2026-11-19T10:53:06.941141",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -1281,7 +1281,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:34:58.993811",
+    "last_sync_timestamp": "2026-11-19T10:51:49.728733",
     "current_day_index": 423,
     "target_day_index": 361,
     "next_day_index": 362
@@ -1327,7 +1327,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:34:59.434834",
+    "last_sync_timestamp": "2026-11-19T10:51:50.199886",
     "current_day_index": 423,
     "target_day_index": 368,
     "next_day_index": 369
@@ -1466,7 +1466,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:34:59.994753",
+    "last_sync_timestamp": "2026-11-19T10:51:50.657846",
     "current_day_index": 423,
     "target_day_index": 357,
     "next_day_index": 358
@@ -1608,7 +1608,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:35:01.558631",
+    "last_sync_timestamp": "2026-11-19T10:51:52.362623",
     "current_day_index": 423,
     "target_day_index": 358,
     "next_day_index": 359
@@ -1749,7 +1749,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:35:03.102548",
+    "last_sync_timestamp": "2026-11-19T10:51:53.975269",
     "current_day_index": 423,
     "target_day_index": 359,
     "next_day_index": 360
@@ -1896,7 +1896,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:35:04.720857",
+    "last_sync_timestamp": "2026-11-19T10:51:55.343682",
     "current_day_index": 423,
     "target_day_index": 360,
     "next_day_index": 361
@@ -9456,7 +9456,7 @@
         "front": "Was ist die Rima glottis?"
       }
     ],
-    "last_sync_timestamp": "2026-11-19T10:35:54.050077",
+    "last_sync_timestamp": "2026-11-19T10:52:43.038110",
     "current_day_index": 423,
     "target_day_index": 422,
     "next_day_index": 423
@@ -9820,7 +9820,7 @@
         "front": "Karte"
       }
     ],
-    "last_sync_timestamp": "2026-11-19T10:35:59.555436",
+    "last_sync_timestamp": "2026-11-19T10:53:06.823611",
     "current_day_index": 423,
     "target_day_index": 423,
     "next_day_index": 424

@@ -245,16 +245,20 @@ def test_real_anki_prefix_queries_and_central_ignore():
 
 
 def test_fsrs_retrievability_and_smart_focus_efficiency():
-    """Verify FSRS retrievability formula, smart vs all mode switching, monotonicity across thresholds, and card-ID selection."""
+    """Verify FSRS retrievability formula, >=7d unseen time-risk guard, smart vs all mode switching, and thresholds."""
     import json
     import time
     from app.services.anki_backlog_triage import (
         compute_fsrs_retrievability,
+        evaluate_due_card_smart_focus,
         _apply_budget,
-        select_exact_focus_card_ids,
     )
 
     now_ts = time.time()
+    unseen_cutoff_ms = (now_ts - 6 * 86400) * 1000.0
+    recent_rev_ms = (now_ts - 2 * 86400) * 1000.0
+    week_old_rev_ms = (now_ts - 10 * 86400) * 1000.0
+
     # High stability reviewed recently -> high retrievability (>= 0.85)
     solid_json = json.dumps({"s": 20.0, "decay": 0.281, "lrt": now_ts - 2 * 86400})
     r_solid = compute_fsrs_retrievability(solid_json, now_ts)
@@ -268,6 +272,26 @@ def test_fsrs_retrievability_and_smart_focus_efficiency():
     # Learning / relearning cards (queue 1/3) always flagged weak
     assert compute_fsrs_retrievability(None, now_ts, queue=1) == 0.50
 
+    # Time-unseen guard: card still at R=0.86 is skipped if seen 2 days ago,
+    # but flagged as time_risk if unseen >=7d with lapses>=2 or >=6d overdue!
+    _, time_recent, need_recent = evaluate_due_card_smart_focus(
+        r_prob=0.86, is_vortag=False, last_rev_ms=recent_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=2, overdue_days=0, r_threshold=0.80,
+    )
+    assert need_recent is False and time_recent is False
+
+    _, time_old_lapses, need_old_lapses = evaluate_due_card_smart_focus(
+        r_prob=0.86, is_vortag=False, last_rev_ms=week_old_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=2, overdue_days=0, r_threshold=0.80,
+    )
+    assert need_old_lapses is True and time_old_lapses is True
+
+    _, time_old_overdue, need_old_overdue = evaluate_due_card_smart_focus(
+        r_prob=0.88, is_vortag=False, last_rev_ms=week_old_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=0, overdue_days=6, r_threshold=0.80,
+    )
+    assert need_old_overdue is True and time_old_overdue is True
+
     r78 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350&focus_mode=smart&r_threshold=0.78").json()
     r80 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350&focus_mode=smart&r_threshold=0.80").json()
     r82 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350&focus_mode=smart&r_threshold=0.82").json()
@@ -275,10 +299,16 @@ def test_fsrs_retrievability_and_smart_focus_efficiency():
 
     assert r78["smart_total_due_today"] <= r80["smart_total_due_today"] <= r82["smart_total_due_today"] <= r_all["total_due_today"]
     if r80.get("budget_selected_topics"):
-        assert "introduced:2 or prop:r<0.80" in r80["budget_combined_anki_query"]
+        bq = r80["budget_combined_anki_query"]
+        assert "introduced:2 or prop:r<0.80" in bq
+        assert "-rated:7 (prop:lapses>=2 or prop:due<=-6)" in bq
     if r_all.get("budget_selected_topics"):
         assert "prop:r<" not in r_all["budget_combined_anki_query"]
         assert r_all["total_solid_skipped_today"] == 0
+
+    # Verify Vortag cards pushed >1 day out (learned_yesterday > due_today) are NOT forced into today's pool
+    for t in r80.get("topics", []):
+        assert t.get("vortag_due_today", 0) <= t.get("due_today", 0)
 
     # Verify idempotent cloud switching on a single cached payload
     cached_copy = json.loads(json.dumps(r80))
@@ -288,12 +318,6 @@ def test_fsrs_retrievability_and_smart_focus_efficiency():
     _apply_budget(cached_copy, 350, focus_mode="smart", r_threshold=0.78)
     assert cached_copy["focus_mode"] == "smart"
     assert cached_copy["active_focus_pool_due"] == r78["smart_total_due_today"]
-
-    # Verify exact card ID selection caps cleanly at max_capacity without duplicates
-    sel = select_exact_focus_card_ids(max_capacity=350, focus_mode="smart", r_threshold=0.80)
-    cids = sel["card_ids"]
-    assert len(cids) <= 350
-    assert len(cids) == len(set(cids))
 
 
 

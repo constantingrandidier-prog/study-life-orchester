@@ -4173,50 +4173,6 @@ async function setTriageRThreshold(rVal, btnElement) {
   await loadBacklogTriage(currentTriageBudget);
 }
 
-async function applyTriageFocusTag(btn) {
-  const orig = btn ? btn.innerHTML : '';
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Tagge in Anki...';
-  }
-  try {
-    const res = await fetch('/api/v1/schedule/anki/apply-focus-tag', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        max_capacity: currentTriageBudget || 350,
-        focus_mode: currentTriageFocusMode,
-        r_threshold: currentTriageRThreshold,
-        tag_name: 'SL_Heute_Fokus',
-        sync_ankiweb: true,
-      }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      if (navigator.clipboard && data.search_query) {
-        try { await navigator.clipboard.writeText(data.search_query); } catch (e) {}
-      }
-      if (typeof showToast === 'function') {
-        showToast(`${data.message} Suche kopiert: ${data.search_query}`);
-      }
-      if (btn) {
-        btn.innerHTML = `✓ ${data.card_count} getaggt!`;
-        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 3000);
-      }
-    } else {
-      if (typeof showToast === 'function') {
-        showToast(data.message || 'Anki Desktop nicht erreichbar.');
-      }
-      if (btn) { btn.innerHTML = orig; btn.disabled = false; }
-    }
-  } catch (err) {
-    if (typeof showToast === 'function') {
-      showToast('Fehler beim Taggen: ' + err.message);
-    }
-    if (btn) { btn.innerHTML = orig; btn.disabled = false; }
-  }
-}
-
 async function toggleBacklogTriageModal() {
   const box = document.getElementById('ankiBacklogTriageBox');
   if (!box) return;
@@ -4364,7 +4320,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
     }
     if (pageBudgetText) {
       pageBudgetText.innerHTML = isSmart
-        ? `<strong>Effizienz-Modus (Recall &lt; ${rPct}%):</strong> Zeigt nur <strong>Vortag-Neukarten + vergessensgefährdete Karten</strong> – gefestigter Stoff blockiert keine Plätze mehr.`
+        ? `<strong>Effizienz-Modus (Recall &lt; ${rPct}% oder &gt;7d ungesehen):</strong> Zeigt nur <strong>Vortag-Neukarten + vergessensgefährdete Karten</strong> – gefestigter Stoff blockiert keine Plätze mehr.`
         : `<strong>Voll-Modus:</strong> Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • Alle fälligen Karten im Überblick.`;
     }
 
@@ -4436,7 +4392,8 @@ async function loadBacklogTriage(maxCapacity = 350) {
           const isPartial = Boolean(item.is_partial);
           const isVortagNew = Boolean(item.is_vortag_new);
           const vortCnt = item.vortag_due_today || 0;
-          const weakCnt = item.weak_due_today != null ? item.weak_due_today : Math.max(0, poolDue - vortCnt);
+          const timeRiskCnt = item.time_risk_due_today || 0;
+          const weakCnt = item.weak_due_today != null ? item.weak_due_today : Math.max(0, poolDue - vortCnt - timeRiskCnt);
           const solidCnt = item.solid_due_today || 0;
           const subdecks = item.yesterday_subdecks || [];
           const smartSubdecks = (item.smart_subdecks || []).filter(sd => {
@@ -4480,6 +4437,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
             const detailParts = [];
             if (vortCnt > 0) detailParts.push(`${vortCnt} Vortag`);
             if (weakCnt > 0) detailParts.push(`${weakCnt} schwach`);
+            if (timeRiskCnt > 0) detailParts.push(`${timeRiskCnt} >7d ungesehen`);
             const mixStr = detailParts.join(' + ');
             const skipStr = solidCnt > 0 ? ` • ${solidCnt} solid skip` : '';
             cardBoxSub = isPartial ? `Rest ${item.deferred_from_deck} morgen${skipStr}` : `${mixStr}${skipStr}`;
@@ -6878,7 +6836,6 @@ window.setTriageBudget = setTriageBudget;
 window.applyCustomTriageBudget = applyCustomTriageBudget;
 window.setTriageFocusMode = setTriageFocusMode;
 window.setTriageRThreshold = setTriageRThreshold;
-window.applyTriageFocusTag = applyTriageFocusTag;
 window.copyPageTriageQuery = copyPageTriageQuery;
 window.copyAnkiQuery = copyAnkiQuery;
 window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;

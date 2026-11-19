@@ -2296,7 +2296,7 @@
       "retention_rate": 87.5,
       "retention_gap": 0.0,
       "kprim_traps_count": 1,
-      "last_reviewed_days_ago": 1.0,
+      "last_reviewed_days_ago": 1.1,
       "roi_score": 0.8,
       "urgency": "mastered",
       "urgency_label": "✅ Stoff sitzt solide (Punkte gesichert)",

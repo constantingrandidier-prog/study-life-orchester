@@ -134,6 +134,41 @@ def _extract_subdeck_short_title(raw_name: str) -> str:
 
 
 SMART_R_THRESHOLDS = (0.78, 0.80, 0.82)
+SMART_UNSEEN_DAYS = 7
+SMART_OVERDUE_GUARD_DAYS = 6
+
+
+def _build_smart_filter_suffix(r_threshold: float) -> str:
+    """Builds the Anki search suffix matching Smart Focus (Vortag + weak FSRS + >=7d unseen risk)."""
+    return (
+        f"is:due (introduced:2 or prop:r<{r_threshold:.2f} "
+        f"or (-rated:{SMART_UNSEEN_DAYS} (prop:lapses>=2 or prop:due<=-{SMART_OVERDUE_GUARD_DAYS})))"
+    )
+
+
+def evaluate_due_card_smart_focus(
+    r_prob: float,
+    is_vortag: bool,
+    last_rev_ms: Optional[float],
+    unseen_cutoff_ms: float,
+    lapses: int,
+    overdue_days: int,
+    r_threshold: float,
+):
+    """
+    Classifies a due card into (is_weak_fsrs, is_time_risk, is_smart_needed).
+    Ensures cards unseen for >=7 days with prior lapses or >=6d overdue are guarded
+    even when flat FSRS-6 decay still estimates R >= threshold.
+    """
+    is_weak_fsrs = (not is_vortag) and (r_prob < r_threshold)
+    unseen_week_plus = (last_rev_ms is None) or (last_rev_ms < unseen_cutoff_ms)
+    is_time_risk = (
+        (not is_vortag)
+        and (not is_weak_fsrs)
+        and unseen_week_plus
+        and (lapses >= 2 or overdue_days >= SMART_OVERDUE_GUARD_DAYS)
+    )
+    return is_weak_fsrs, is_time_risk, (is_vortag or is_weak_fsrs or is_time_risk)
 
 
 def _normalize_focus_params(focus_mode: Optional[str] = "smart", r_threshold: Optional[float] = 0.80):
@@ -276,6 +311,7 @@ def calculate_backlog_triage(
     today_ms = int(today_4am.timestamp() * 1000)
     yesterday_ms = int(yesterday_4am.timestamp() * 1000)
     two_days_ms = int(two_days_ago_4am.timestamp() * 1000)
+    unseen_cutoff_ms = int((today_4am - timedelta(days=SMART_UNSEEN_DAYS - 1)).timestamp() * 1000)
     now_ts = now.timestamp()
     now_ms = now_ts * 1000
 
@@ -414,12 +450,12 @@ def calculate_backlog_triage(
             ] + dids + [sem_start_ts]
         ).fetchall()
 
-        # Per-card FSRS retrievability & Vortag inspection for Smart Efficiency Triage
+        # Per-card FSRS retrievability, Vortag & >=7d unseen time-risk inspection for Smart Efficiency Triage
         sql_due_cards_detail = f"""
-        SELECT c.did, c.queue, c.due, c.ivl, c.lapses, c.data, fr.first_rev
+        SELECT c.did, c.queue, c.due, c.ivl, c.lapses, c.data, fr.first_rev, fr.last_rev
         FROM cards c
         LEFT JOIN (
-            SELECT cid, MIN(id) as first_rev
+            SELECT cid, MIN(id) as first_rev, MAX(id) as last_rev
             FROM revlog
             GROUP BY cid
         ) fr ON c.id = fr.cid
@@ -448,9 +484,10 @@ def calculate_backlog_triage(
         "r_sum": 0.0,
         "smart": {"0.78": 0, "0.80": 0, "0.82": 0},
         "weak": {"0.78": 0, "0.80": 0, "0.82": 0},
+        "time_risk": {"0.78": 0, "0.80": 0, "0.82": 0},
         "subdecks": defaultdict(lambda: {"all_due": 0, "vortag_due": 0, "smart_78": 0, "smart_80": 0, "smart_82": 0}),
     })
-    for did, q, due, ivl, card_lapses, data_str, first_rev in due_cards_detail_rows:
+    for did, q, due, ivl, card_lapses, data_str, first_rev, last_rev in due_cards_detail_rows:
         tb, prof, _, _, sub_title = deck_map[did]
         key = (tb, prof)
         ps = prof_smart[key]
@@ -458,6 +495,7 @@ def calculate_backlog_triage(
             data_str, now_ts, queue=q or 2, due=due or 0, current_day=current_day, lapses=card_lapses or 0, ivl=ivl or 0
         )
         is_v_card = bool(first_rev is not None and yesterday_ms <= first_rev < today_ms)
+        overdue_days = max(0, current_day - (due or 0)) if (q or 2) == 2 else 0
         ps["total"] += 1
         ps["r_sum"] += r_prob
         if is_v_card:
@@ -468,10 +506,20 @@ def calculate_backlog_triage(
             sub_rec["vortag_due"] += 1
         for thr in SMART_R_THRESHOLDS:
             tkey = f"{thr:.2f}"
-            is_weak_thr = (not is_v_card) and (r_prob < thr)
+            is_weak_thr, is_time_thr, is_needed_thr = evaluate_due_card_smart_focus(
+                r_prob=r_prob,
+                is_vortag=is_v_card,
+                last_rev_ms=last_rev,
+                unseen_cutoff_ms=unseen_cutoff_ms,
+                lapses=card_lapses or 0,
+                overdue_days=overdue_days,
+                r_threshold=thr,
+            )
             if is_weak_thr:
                 ps["weak"][tkey] += 1
-            if is_v_card or r_prob < thr:
+            if is_time_thr:
+                ps["time_risk"][tkey] += 1
+            if is_needed_thr:
                 ps["smart"][tkey] += 1
                 if thr == 0.78:
                     sub_rec["smart_78"] += 1
@@ -543,7 +591,7 @@ def calculate_backlog_triage(
         real_prefixes = sorted(g["real_prefixes"])
         deck_clause = build_anki_deck_clause(real_prefixes, tb, prof)
         anki_filter_query_all = f"{deck_clause} is:due"
-        smart_anki_filter_query = f"{deck_clause} is:due (introduced:2 or prop:r<{eff_r_val:.2f})"
+        smart_anki_filter_query = f"{deck_clause} {_build_smart_filter_suffix(eff_r_val)}"
         anki_filter_query = smart_anki_filter_query if eff_mode == "smart" else anki_filter_query_all
         anki_hard_query = f"{deck_clause} is:due (prop:ease<2.3 or lapses>1)"
 
@@ -559,9 +607,11 @@ def calculate_backlog_triage(
                 "vortag_due_today": 0,
                 "smart_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
                 "weak_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
+                "time_risk_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
                 "solid_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
                 "smart_due_today": 0,
                 "weak_due_today": 0,
+                "time_risk_due_today": 0,
                 "solid_due_today": 0,
                 "avg_retrievability_pct": 100.0,
                 "smart_subdecks": [],
@@ -607,6 +657,10 @@ def calculate_backlog_triage(
         }
         weak_counts = {
             tkey: (ps["weak"][tkey] if ps else 0)
+            for tkey in ("0.78", "0.80", "0.82")
+        }
+        time_risk_counts = {
+            tkey: (ps["time_risk"][tkey] if ps else 0)
             for tkey in ("0.78", "0.80", "0.82")
         }
         solid_counts = {
@@ -693,8 +747,10 @@ def calculate_backlog_triage(
             color = "#f85149"
             sub_sorted = sorted(g["yesterday_subdecks"], key=lambda x: x["new_learned"], reverse=True)
             sub_str = ", ".join([f"{s['new_learned']}× {s['subdeck']}" for s in sub_sorted[:3]])
+            tr_val = time_risk_counts.get(eff_r_key, 0)
+            tr_txt = f" + {tr_val} >7d ungesehen" if tr_val > 0 else ""
             action = (
-                f"Tag-1-Pflichtwiederholung: {vortag_due_cnt} Vortag-Karten + {weak_counts.get(eff_r_key, 0)} schwache "
+                f"Tag-1-Pflichtwiederholung: {vortag_due_cnt} Vortag-Karten + {weak_counts.get(eff_r_key, 0)} schwache{tr_txt} "
                 f"({sub_str}) – {solid_counts.get(eff_r_key, 0)} solide zurückgestellt."
             )
         elif g["due_today"] > 0 and (raw_urgency >= 42.0 or fail_rate >= 35.0 or effective_overdue >= 8.0 or avg_ret_pct < 80.0):
@@ -702,12 +758,13 @@ def calculate_backlog_triage(
             urgency_level = "KRITISCH"
             level_badge = "🚨 Höchste Priorität"
             color = "#f85149"
+            need_non_v = weak_counts.get(eff_r_key, 0) + time_risk_counts.get(eff_r_key, 0)
             if avg_ret_pct < 80.0:
-                action = f"Hohes Vergessensrisiko (Ø Recall {avg_ret_pct}%): {weak_counts.get(eff_r_key, 0)} schwache Karten gezielt festigen!"
+                action = f"Hohes Vergessensrisiko (Ø Recall {avg_ret_pct}%): {need_non_v} gefährdete Karten gezielt festigen!"
             elif avg_overdue_days >= 5.0:
-                action = f"Sofort wiederholen: Karten im Schnitt {avg_overdue_days} Tage überfällig (Retention {retention_rate}%)!"
+                action = f"Sofort wiederholen: Karten im Schnitt {avg_overdue_days} Tage überfällig ({need_non_v} nötig, Retention {retention_rate}%)!"
             else:
-                action = f"Sofort wiederholen: Seit {days_ago}d keine große Session ({weak_counts.get(eff_r_key, 0)} gefährdet)!"
+                action = f"Sofort wiederholen: Seit {days_ago}d keine große Session ({need_non_v} gefährdet)!"
         elif g["due_today"] > 0:
             urgency_score = round(max(8.0, min(91.0, raw_urgency)), 1)
             urgency_level = "HOCH"
@@ -747,9 +804,11 @@ def calculate_backlog_triage(
             "vortag_due_today": vortag_due_cnt,
             "smart_due_counts": smart_counts,
             "weak_due_counts": weak_counts,
+            "time_risk_due_counts": time_risk_counts,
             "solid_due_counts": solid_counts,
             "smart_due_today": smart_counts[eff_r_key],
             "weak_due_today": weak_counts[eff_r_key],
+            "time_risk_due_today": time_risk_counts[eff_r_key],
             "solid_due_today": solid_counts[eff_r_key],
             "avg_retrievability_pct": avg_ret_pct,
             "smart_subdecks": subdeck_list,
@@ -930,22 +989,31 @@ def _apply_budget(
         sc_map = t.get("smart_due_counts")
         if isinstance(sc_map, dict) and sc_map:
             smart_val = int(sc_map.get(eff_r_key, t.get("smart_due_today", due_tot)) or 0)
-            weak_val = int(t.get("weak_due_counts", {}).get(eff_r_key, max(0, smart_val - int(t.get("vortag_due_today", 0) or 0))) or 0)
+            time_val = int(t.get("time_risk_due_counts", {}).get(eff_r_key, t.get("time_risk_due_today", 0)) or 0)
+            weak_val = int(
+                t.get("weak_due_counts", {}).get(
+                    eff_r_key,
+                    max(0, smart_val - int(t.get("vortag_due_today", 0) or 0) - time_val),
+                )
+                or 0
+            )
             solid_val = max(0, due_tot - smart_val)
         else:
             smart_val = due_tot
             weak_val = due_tot
+            time_val = 0
             solid_val = 0
 
         eff_due = smart_val if eff_mode == "smart" else due_tot
         t["smart_due_today"] = smart_val
         t["weak_due_today"] = weak_val
+        t["time_risk_due_today"] = time_val
         t["solid_due_today"] = solid_val if eff_mode == "smart" else 0
         t["active_due_today"] = eff_due
 
         dclause = t.get("deck_clause")
         if dclause and due_tot > 0:
-            smart_q = f"{dclause} is:due (introduced:2 or prop:r<{eff_r_val:.2f})"
+            smart_q = f"{dclause} {_build_smart_filter_suffix(eff_r_val)}"
             all_q = t.get("anki_filter_query_all") or f"{dclause} is:due"
             t["smart_anki_filter_query"] = smart_q
             t["anki_filter_query"] = smart_q if eff_mode == "smart" else all_q
@@ -958,7 +1026,7 @@ def _apply_budget(
             src = topic_by_key.get((p.get("themenblock"), p.get("dozent")))
             if src:
                 for fld in (
-                    "smart_due_today", "weak_due_today", "solid_due_today",
+                    "smart_due_today", "weak_due_today", "time_risk_due_today", "solid_due_today",
                     "active_due_today", "anki_filter_query", "smart_anki_filter_query",
                 ):
                     if fld in src:
@@ -1017,6 +1085,7 @@ def _apply_budget(
         full_due_cnt = int(t.get("due_today", 0) or 0)
         vort_cnt = int(t.get("vortag_due_today", 0) or 0)
         weak_cnt = int(t.get("weak_due_today", 0) or 0)
+        time_risk_cnt = int(t.get("time_risk_due_today", 0) or 0)
         solid_cnt = int(t.get("solid_due_today", 0) or 0)
         if pool_cnt <= 0:
             continue
@@ -1045,6 +1114,8 @@ def _apply_budget(
                     parts_lbl.append(f"{vort_cnt} Vortag-Neu")
                 if weak_cnt > 0:
                     parts_lbl.append(f"{weak_cnt} schwach (R<{r_pct_label}%)")
+                if time_risk_cnt > 0:
+                    parts_lbl.append(f"{time_risk_cnt} >7d ungesehen")
                 mix_desc = " + ".join(parts_lbl) if parts_lbl else f"{pool_cnt} gefährdet"
                 skip_note = f" • {solid_cnt} gefestigte übersprungen" if solid_cnt > 0 else ""
                 if is_partial:
@@ -1158,14 +1229,14 @@ def _apply_budget(
     if eff_mode == "smart":
         if active_focus_pool_due > budget:
             result["summary_advice"] = (
-                f"🎯 Effizienz-Fokus (R < {r_pct_label}%): Von {total_due_today} fälligen Karten brauchen nur {smart_total_due_today} "
+                f"🎯 Effizienz-Fokus (R < {r_pct_label}% / >7d ungesehen): Von {total_due_today} fälligen Karten brauchen nur {smart_total_due_today} "
                 f"heute Aufmerksamkeit ({solid_total_due_today} gefestigte übersprungen). Davon machst du {effective_today_target} heute ({coverage_pct}%), "
                 f"restliche {deferred_cards_count} rotieren {rollover_days_txt}!"
             )
         elif active_focus_pool_due > 0:
             result["summary_advice"] = (
-                f"🎯 Effizienz-Fokus (R < {r_pct_label}%): Alle {smart_total_due_today} wirklich nötigen Karten "
-                f"({vortag_total_due_today} Vortag + {max(0, smart_total_due_today - vortag_total_due_today)} schwach) passen komplett heute! "
+                f"🎯 Effizienz-Fokus (R < {r_pct_label}% / >7d ungesehen): Alle {smart_total_due_today} wirklich nötigen Karten "
+                f"({vortag_total_due_today} Vortag + {max(0, smart_total_due_today - vortag_total_due_today)} gefährdet) passen komplett heute! "
                 f"{solid_total_due_today} gefestigte Karten automatisch entlastet."
             )
         elif total_due_today > 0:
@@ -1197,13 +1268,14 @@ def _apply_budget(
         deck_union = " or ".join(dict.fromkeys(clauses))
         result["budget_combined_anki_query_all"] = f"({deck_union}) is:due"
         if eff_mode == "smart":
-            result["budget_combined_anki_query"] = f"({deck_union}) is:due (introduced:2 or prop:r<{eff_r_val:.2f})"
+            smart_suffix = _build_smart_filter_suffix(eff_r_val)
+            result["budget_combined_anki_query"] = f"({deck_union}) {smart_suffix}"
             top4_clauses = []
             for t in selected[:4]:
                 for pfx in t.get("real_anki_prefixes", []):
                     top4_clauses.append(f'deck:"{pfx}*"')
                 top4_clauses.append(f'deck:"*2. SJ*{t["themenblock"]}*{t["dozent"]}*"')
-            result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(top4_clauses))}) is:due (introduced:2 or prop:r<{eff_r_val:.2f})"
+            result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(top4_clauses))}) {smart_suffix}"
         else:
             result["budget_combined_anki_query"] = result["budget_combined_anki_query_all"]
     else:
@@ -1216,15 +1288,19 @@ def cache_triage(data: Dict[str, Any]):
         return
     _sanitize_triage_payload(data)
 
-    # Protect against legacy in-memory sync daemons overwriting v2.1 smart FSRS schema
+    # Protect against legacy in-memory sync daemons overwriting v2.2 time-aware FSRS schema
     topics = data.get("topics", [])
-    is_legacy_payload = bool(topics) and ("is_vortag_new" not in topics[0] or "smart_due_counts" not in topics[0])
+    is_legacy_payload = bool(topics) and (
+        "is_vortag_new" not in topics[0]
+        or "smart_due_counts" not in topics[0]
+        or "time_risk_due_counts" not in topics[0]
+    )
     if is_legacy_payload:
         try:
             if BACKLOG_TRIAGE_SNAPSHOT_PATH.exists():
                 snap = json.loads(BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8"))
                 snap_topics = snap.get("topics", [])
-                if snap_topics and "smart_due_counts" in snap_topics[0]:
+                if snap_topics and "time_risk_due_counts" in snap_topics[0]:
                     data = snap
                     _sanitize_triage_payload(data)
         except Exception:
@@ -1282,214 +1358,26 @@ def get_cached_triage() -> Optional[Dict[str, Any]]:
     except Exception:
         db_data = None
 
-    # Prefer whichever has the newest schema ("smart_due_counts" > "is_vortag_new")
+    def _schema_rank(payload: Dict[str, Any]) -> int:
+        tps = payload.get("topics", [])
+        if not tps:
+            return 0
+        t0 = tps[0]
+        if "time_risk_due_counts" in t0:
+            return 3
+        if "smart_due_counts" in t0:
+            return 2
+        if "is_vortag_new" in t0:
+            return 1
+        return 0
+
     chosen = db_data or snap_data
     if db_data and snap_data:
-        db_topics = db_data.get("topics", [])
-        snap_topics = snap_data.get("topics", [])
-        db_score = (2 if (db_topics and "smart_due_counts" in db_topics[0]) else (1 if (db_topics and "is_vortag_new" in db_topics[0]) else 0))
-        snap_score = (2 if (snap_topics and "smart_due_counts" in snap_topics[0]) else (1 if (snap_topics and "is_vortag_new" in snap_topics[0]) else 0))
-        if snap_score > db_score:
+        if _schema_rank(snap_data) > _schema_rank(db_data):
             chosen = snap_data
 
     if chosen:
         _sanitize_triage_payload(chosen)
     return chosen
 
-
-def select_exact_focus_card_ids(
-    max_capacity: int = 350,
-    focus_mode: str = "smart",
-    r_threshold: float = 0.80,
-    col_path=None,
-) -> Dict[str, Any]:
-    """
-    Selects the exact ordered Anki card IDs (up to `max_capacity`) matching the Triage focus plan.
-    Orders within each professor strictly: Vortag newly learned first, then lowest FSRS retrievability R.
-    """
-    triage = calculate_backlog_triage(
-        col_path=col_path,
-        max_capacity=max_capacity,
-        focus_mode=focus_mode,
-        r_threshold=r_threshold,
-    )
-    eff_mode, eff_r_val, _ = _normalize_focus_params(focus_mode, r_threshold)
-    plan = triage.get("focus_plan_open") or triage.get("budget_selected_topics") or []
-    target_path = Path(col_path) if col_path else find_local_anki_collection()
-
-    if not plan or not target_path or not target_path.exists():
-        return {"triage": triage, "card_ids": [], "per_professor": []}
-
-    now = datetime.now()
-    today_4am = now.replace(hour=4, minute=0, second=0, microsecond=0)
-    if now < today_4am:
-        today_4am -= timedelta(days=1)
-    yesterday_4am = today_4am - timedelta(days=1)
-    today_ms = int(today_4am.timestamp() * 1000)
-    yesterday_ms = int(yesterday_4am.timestamp() * 1000)
-    now_ts = now.timestamp()
-
-    from app.db.anki_db import open_anki_db_readonly
-    with open_anki_db_readonly(target_path) as conn:
-        cur = conn.cursor()
-        crt = cur.execute("SELECT crt FROM col").fetchone()[0]
-        current_day = int((now_ts - crt) // 86400)
-
-        raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
-        dids_by_prof = defaultdict(list)
-        for did, dname in raw_decks:
-            tb, prof = parse_curriculum_deck(dname)
-            if tb and prof:
-                dids_by_prof[(tb, prof)].append(did)
-
-        rows = cur.execute("""
-            SELECT c.id, c.did, c.queue, c.due, c.ivl, c.lapses, c.data, fr.first_rev
-            FROM cards c
-            LEFT JOIN (SELECT cid, MIN(id) as first_rev FROM revlog GROUP BY cid) fr ON c.id = fr.cid
-            WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?))
-              AND c.queue != -1
-        """, (current_day, current_day)).fetchall()
-
-    cards_by_did = defaultdict(list)
-    for cid, did, q, due, ivl, lapses, data_str, first_rev in rows:
-        r_prob = compute_fsrs_retrievability(
-            data_str, now_ts, queue=q or 2, due=due or 0, current_day=current_day, lapses=lapses or 0, ivl=ivl or 0
-        )
-        is_v = bool(first_rev is not None and yesterday_ms <= first_rev < today_ms)
-        cards_by_did[did].append((cid, is_v, r_prob))
-
-    selected_cids: List[int] = []
-    per_prof_summary: List[Dict[str, Any]] = []
-    remaining_cap = max(1, int(max_capacity or 350))
-
-    for entry in plan:
-        if remaining_cap <= 0:
-            break
-        key = (entry.get("themenblock"), entry.get("dozent"))
-        prof_cards = []
-        for did in dids_by_prof.get(key, []):
-            prof_cards.extend(cards_by_did.get(did, []))
-        if eff_mode == "smart":
-            prof_cards = [c for c in prof_cards if c[1] or c[2] < eff_r_val]
-        # Vortag first, then lowest retrievability R (highest forgetting risk)
-        prof_cards.sort(key=lambda c: (0 if c[1] else 1, c[2], c[0]))
-        want = min(int(entry.get("assigned_cards", len(prof_cards))), remaining_cap)
-        picked = [c[0] for c in prof_cards[:want]]
-        selected_cids.extend(picked)
-        remaining_cap -= len(picked)
-        per_prof_summary.append({
-            "deck_name": entry.get("deck_name"),
-            "picked": len(picked),
-        })
-
-    return {
-        "triage": triage,
-        "card_ids": selected_cids,
-        "per_professor": per_prof_summary,
-    }
-
-
-def apply_focus_tag_to_anki(
-    max_capacity: int = 350,
-    focus_mode: str = "smart",
-    r_threshold: float = 0.80,
-    tag_name: str = "SL_Heute_Fokus",
-    sync_ankiweb: bool = True,
-) -> Dict[str, Any]:
-    """
-    Tags the exact selected focus cards (up to `max_capacity`) in Anki Desktop via AnkiConnect
-    so the student can open ONE single Filtered Deck (`tag:SL_Heute_Fokus is:due`) on both
-    Desktop and iPad (via AnkiWeb sync) without picking decks manually.
-    """
-    from app.services.anki_local_service import check_ankiconnect_health
-    from app.services.anki_struggle_service import _invoke_ankiconnect
-
-    eff_mode, eff_r_val, _ = _normalize_focus_params(focus_mode, r_threshold)
-    search_query = (
-        f"tag:{tag_name} is:due (introduced:2 or prop:r<{eff_r_val:.2f})"
-        if eff_mode == "smart"
-        else f"tag:{tag_name} is:due"
-    )
-
-    health = check_ankiconnect_health()
-    if not health.get("available"):
-        return {
-            "success": False,
-            "card_count": 0,
-            "tag": tag_name,
-            "search_query": search_query,
-            "synced": False,
-            "message": "Anki Desktop / AnkiConnect ist aktuell nicht erreichbar. Starte Anki auf deinem PC oder nutze den kopierten Suchfilter direkt in Anki.",
-        }
-
-    sel = select_exact_focus_card_ids(
-        max_capacity=max_capacity,
-        focus_mode=eff_mode,
-        r_threshold=eff_r_val,
-    )
-    cids = sel["card_ids"]
-
-    try:
-        # 1. Remove previous day's focus tag cleanly
-        old_cards = _invoke_ankiconnect("findCards", query=f"tag:{tag_name}").get("result", [])
-        if old_cards:
-            old_notes = _invoke_ankiconnect("cardsToNotes", cards=old_cards).get("result", [])
-            if old_notes:
-                _invoke_ankiconnect("removeTags", notes=old_notes, tags=tag_name)
-
-        if not cids:
-            return {
-                "success": True,
-                "card_count": 0,
-                "tag": tag_name,
-                "search_query": search_query,
-                "synced": False,
-                "message": "Aktuell keine offenen Fokus-Karten zum Taggen vorhanden.",
-            }
-
-        # 2. Add fresh focus tag to selected notes
-        nids = _invoke_ankiconnect("cardsToNotes", cards=cids).get("result", [])
-        if nids:
-            _invoke_ankiconnect("addTags", notes=nids, tags=tag_name)
-
-        # 3. Open browser on tagged focus cards in Anki Desktop
-        try:
-            _invoke_ankiconnect("guiBrowse", query=search_query)
-        except Exception:
-            pass
-
-        # 4. Sync with AnkiWeb so the tag is immediately available on iPad
-        synced = False
-        if sync_ankiweb:
-            try:
-                sync_res = _invoke_ankiconnect("sync")
-                synced = (sync_res.get("error") is None)
-            except Exception:
-                synced = False
-
-        sync_note = " + mit AnkiWeb (für iPad) synchronisiert!" if synced else " (Drücke in Anki kurz 'Synchronisieren' für das iPad)."
-        return {
-            "success": True,
-            "card_count": len(cids),
-            "tag": tag_name,
-            "search_query": search_query,
-            "synced": synced,
-            "per_professor": sel["per_professor"],
-            "message": f"🏷️ {len(cids)} Fokus-Karten mit '{tag_name}' markiert{sync_note}",
-        }
-    except Exception as exc:
-        return {
-            "success": False,
-            "card_count": len(cids),
-            "tag": tag_name,
-            "search_query": search_query,
-            "synced": False,
-            "message": f"AnkiConnect-Hinweis: {exc}",
-        }
-
-
-def cleanup_focus_tag_in_anki(tag_name: str = "SL_Heute_Fokus") -> Dict[str, Any]:
-    """Removes temporary daily focus tag from all notes in Anki Desktop."""
-    from app.services.anki_struggle_service import cleanup_struggle_deck_tags
-    return cleanup_struggle_deck_tags(tag_name=tag_name)
 

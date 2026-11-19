@@ -1,7 +1,7 @@
 {
   "available": true,
   "total_cards_scanned": 9687,
-  "total_kprim_traps": 657,
+  "total_kprim_traps": 658,
   "kprim_trap_percentage": 6.8,
   "top_25_todesfallen": [
     {
@@ -11,9 +11,9 @@
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
       "professor_name": "Prof. Dr. Philipp Sommer",
       "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-      "reps": 19,
+      "reps": 20,
       "lapses": 5,
-      "interval_days": 2,
+      "interval_days": 3,
       "card_yield_score": 100.0,
       "is_kprim_trap": true,
       "trap_type": "confusable_pair",
@@ -25,10 +25,10 @@
       "front_snippet": "Was sind die Komponenten der langfristigen Regulation des MAP?",
       "back_snippet": "Vasopressin (ADH) , Aldosteron , Angiotensin (durch Renin Akt.) modulieren die Sympathikuswirkung , Reninsezernierung und Nierenfunktion Also RAA & Vasopresin über Blutvolumen (Angiotensin: Vasokonstriktion & Aldosteron bild. In Niere) (Aldosteron: Weniger Na-",
       "hy_terms_detected": [
-        "renin",
-        "angiotensin",
         "aldosteron",
-        "raas"
+        "renin",
+        "raas",
+        "angiotensin"
       ]
     },
     {
@@ -52,10 +52,10 @@
       "front_snippet": "Allosterische Regulation von Glykolyse und Gluconeogenese Was ist die Funktion von PFK-2/FBP-2?",
       "back_snippet": "Synthese/Abbau von Fructose-2,6-Biphosphat und somit Regulation der Glykolyse/GNG Reguliert über: - Phosphofructokinase-1 (PFK-1) - Fructose-1,6-bisphosphatase-1 (FBPase-1)",
       "hy_terms_detected": [
-        "phosphat",
         "pfk-1",
+        "pfk-2",
         "glykolyse",
-        "pfk-2"
+        "phosphat"
       ]
     },
     {
@@ -79,10 +79,10 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschleunigt die gesamte Glykolyse da: F-6-P → F-1,6-BP beschleunigt wird und F-1,6-BP ein allosterischer Aktivator der Pyruvat",
       "hy_terms_detected": [
-        "phosphat",
         "pfk-1",
+        "pfk-2",
         "glykolyse",
-        "pfk-2"
+        "phosphat"
       ]
     },
     {
@@ -107,8 +107,8 @@
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase , PFK-1, Pyruvatkinase & PFK-2/ FBPase-2 -> Hexokinase ausserhalb der Leber nihct durch SREBP-1c transkribiert",
       "hy_terms_detected": [
         "pfk-1",
-        "glykolyse",
-        "pfk-2"
+        "pfk-2",
+        "glykolyse"
       ]
     },
     {
@@ -133,8 +133,8 @@
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
         "pfk-1",
-        "glykolyse",
-        "pfk-2"
+        "pfk-2",
+        "glykolyse"
       ]
     },
     {
@@ -159,8 +159,8 @@
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona glomerulosa ⇒ Wirkung Feed-Back Mechanismus ➢ Cortisol hemmt im Hypothalamus und in der Adenohypophyse die Freisetzung ",
       "hy_terms_detected": [
         "aldosteron",
-        "cortisol",
-        "acth"
+        "acth",
+        "cortisol"
       ]
     },
     {
@@ -477,11 +477,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "epo",
-        "hypoxie",
         "thrombose",
+        "epo",
         "po2",
-        "hämoglobin"
+        "hämoglobin",
+        "hypoxie"
       ]
     },
     {
@@ -505,11 +505,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "epo",
-        "hypoxie",
         "thrombose",
+        "epo",
         "po2",
-        "hämoglobin"
+        "hämoglobin",
+        "hypoxie"
       ]
     },
     {
@@ -534,10 +534,10 @@
       "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intraz",
       "hy_terms_detected": [
         "adrenalin",
-        "t4",
-        "insulin",
         "noradrenalin",
-        "glykolyse"
+        "insulin",
+        "glykolyse",
+        "t4"
       ]
     },
     {
@@ -561,10 +561,10 @@
       "front_snippet": "Wie wirkt Kortisol?",
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
-        "insulin",
-        "glykolyse",
+        "inr",
         "tsh",
-        "inr"
+        "insulin",
+        "glykolyse"
       ]
     },
     {
@@ -588,11 +588,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "epo",
-        "hypoxie",
-        "po2",
         "sauerstoffbindung",
-        "hämoglobin"
+        "epo",
+        "po2",
+        "hämoglobin",
+        "hypoxie"
       ]
     },
     {
@@ -616,11 +616,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "epo",
-        "hypoxie",
-        "po2",
         "sauerstoffbindung",
-        "hämoglobin"
+        "epo",
+        "po2",
+        "hämoglobin",
+        "hypoxie"
       ]
     }
   ],
@@ -911,8 +911,8 @@
           "front_snippet": "Wann kommt es beispielsweise zur Phagozytose einer Zelle, welche MHC-I Moleküle auf ihrer Zellmembran hat?",
           "back_snippet": "Ist die Zelle gesund, werden nur körpereigene Antigene präsentiert -> dies wird vom IS toleriert Wird die Zelle zum Beispiel von einem Virus befallen , merken die cytotoxischen T-Zellen (CD8) , dass die präsentierten Antigene nicht körpereigen sind und die Zel",
           "hy_terms_detected": [
-            "t-zell",
-            "mhc-i"
+            "mhc-i",
+            "t-zell"
           ]
         },
         {
@@ -936,9 +936,9 @@
           "front_snippet": "Was kann mit dem MHC-II/Antigen-Komplex an der Zelloberfläche geschehen bei einer Antigenpräsentation mit MHC-II Molekülen?",
           "back_snippet": "Dort kann nur ein T-Cell Receptor (TCR) mit dem Molekülkomplex interagieren, stabilisiert und ermöglicht durch CD4. Falls das Antigen als körperfremd anerkannt wird, wird die T-Zelle wird aktiviert",
           "hy_terms_detected": [
+            "mhc-i",
             "t-zell",
-            "mhc-ii",
-            "mhc-i"
+            "mhc-ii"
           ]
         }
       ]
@@ -1017,9 +1017,9 @@
           "front_snippet": "Was muss passieren damit der TCR mit dem MHC-II Komplex interagieren kann? Was passiert nachdem der TCR gebunden hat? (bis&mit affinität erhöht)",
           "back_snippet": "Ein LFA-1 Molekül der T-Zelle interagiert mit geringer Affinität mit einem ICAM-1 der APC Nachdem der TCR dann gebunden hat, erhöht sich durch eine Konformationsänderung die Affiniät der Bindung und der Kontakt zwischen den zwei Zellen verlängert sich wenn Ant",
           "hy_terms_detected": [
+            "mhc-i",
             "t-zell",
-            "mhc-ii",
-            "mhc-i"
+            "mhc-ii"
           ]
         },
         {
@@ -1632,8 +1632,8 @@
           "hy_terms_detected": [
             "fibrinogen",
             "thrombozyt",
-            "von-willebrand",
-            "phosphat"
+            "phosphat",
+            "von-willebrand"
           ]
         },
         {
@@ -1846,9 +1846,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 0,
-          "interval_days": 20,
+          "interval_days": 29,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2005,7 +2005,7 @@
       "high_yield_cards_count": 6,
       "kprim_traps_count": 5,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 55.7,
+      "avg_card_yield_score": 55.8,
       "sample_kprim_traps": [
         {
           "card_id": 1603644152073,
@@ -2014,9 +2014,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 7,
-          "lapses": 1,
-          "interval_days": 5,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 2,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2028,8 +2028,8 @@
           "front_snippet": "Was geschieht wenn die Atrien vollständig depolarisiert sind?",
           "back_snippet": "Isoelektrische Strecke (PQ) —> Kein Signal das wirklich ausgedrückt wird (Ladungsunterschiede werden durch den Körper ausgeglichen). Weiterleitung über AV-Knoten ist nicht sichtbar, da dieser zu klein ist. Durch elektrische Isolation der Ventilebene kann nur ü",
           "hy_terms_detected": [
-            "epo",
-            "av-knoten"
+            "av-knoten",
+            "epo"
           ]
         },
         {
@@ -2053,10 +2053,10 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "epo",
-            "depolarisation",
             "repolarisation",
-            "ekg"
+            "ekg",
+            "epo",
+            "depolarisation"
           ]
         },
         {
@@ -2066,8 +2066,8 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 12,
-          "lapses": 3,
+          "reps": 14,
+          "lapses": 4,
           "interval_days": 2,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
@@ -2080,8 +2080,8 @@
           "front_snippet": "Was ist die ST-Strecke? Was ist besonders zu beachten?",
           "back_snippet": "Ein STEMI* ist ein schwerer Infarkt, der im EKG gut mitverfolgbar ist. Eine Evaluation des Stadiums ist für die Behandlung wichtig --> Stadium 2-3/3 müssen nicht unbedingt vorkommen * vollständiger Verschluss einer Koronararterie. Kein ATP durch unzureichende ",
           "hy_terms_detected": [
-            "epo",
-            "ekg"
+            "ekg",
+            "epo"
           ]
         },
         {
@@ -2368,9 +2368,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 0,
-          "interval_days": 21,
+          "interval_days": 33,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2447,9 +2447,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 25,
+          "interval_days": 43,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2469,9 +2469,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
-          "lapses": 2,
-          "interval_days": 16,
+          "reps": 9,
+          "lapses": 3,
+          "interval_days": 2,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2815,8 +2815,8 @@
           "front_snippet": "Was ist die Fallot-Tetralogie?",
           "back_snippet": "Tetralogie: häufige Kombination von 4 Fehlern Zugrundeliegender Defekt: Verengter rechter Kammerausfluss aufgrund einer Verlagerung des Conusseptums. Kinder sind oft zyanotisch, da zu wenig Blut durch den Lungenkreislauf fliesst. Conusseptum trifft nicht genau",
           "hy_terms_detected": [
-            "ductus arteriosus",
-            "tsh"
+            "tsh",
+            "ductus arteriosus"
           ]
         },
         {
@@ -2962,9 +2962,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 13,
+          "reps": 14,
           "lapses": 3,
-          "interval_days": 2,
+          "interval_days": 7,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3039,9 +3039,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 4,
-          "interval_days": 2,
+          "interval_days": 3,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -3470,11 +3470,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
+            "hämoglobin",
+            "t3",
             "angiotensin",
             "t4",
-            "erythropoietin",
-            "t3",
-            "hämoglobin"
+            "erythropoietin"
           ]
         },
         {
@@ -4106,10 +4106,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroidea stimulierendes Hormung = Thyreotropin ) Regt in der Schilddrüse die Bildung von Thyroxin= T4 und Trijodothyronin= T3",
           "hy_terms_detected": [
-            "t4",
+            "tsh",
             "schilddrüse",
             "t3",
-            "tsh"
+            "t4"
           ]
         },
         {
@@ -4133,12 +4133,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
-            "t4",
+            "inr",
+            "peroxidase",
             "schilddrüse",
             "thyreoglobulin",
             "t3",
-            "inr",
-            "peroxidase"
+            "t4"
           ]
         },
         {
@@ -4306,10 +4306,10 @@
           "front_snippet": "Hypophosphatämie: Def, Ursachen, Symptome, Therapie?",
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
+            "inr",
             "azidose",
             "insulin",
-            "phosphat",
-            "inr"
+            "phosphat"
           ]
         },
         {
@@ -4380,9 +4380,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 2,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 1,
+          "interval_days": 6,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4402,7 +4402,7 @@
       "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
       "total_cards": 172,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 9,
+      "kprim_traps_count": 10,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 40.5,
       "sample_kprim_traps": [
@@ -4413,8 +4413,8 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
-          "lapses": 0,
+          "reps": 5,
+          "lapses": 1,
           "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
@@ -4423,9 +4423,31 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Was versteht man unter der chemischen Wertigkeit?",
-          "back": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konzept: Limitierende AS, also die AS mit dem tiefsten AA-Score E",
+          "back": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konzept: Limitierende AS, also die AS mit dem tiefsten AA-Score. ",
           "front_snippet": "Was versteht man unter der chemischen Wertigkeit?",
           "back_snippet": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konze",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1607979921517,
+          "note_id": 1607979921517,
+          "deck_id": 1789378222987,
+          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+          "professor_name": "Prof. Dr. Raimund Dutzler",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 1,
+          "card_yield_score": 40.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Was ist das P:M:S-Verhältnis?",
+          "back": "Polyen : Monoen : Saturated = 0.7 : 1.3 : 1 Ungesättigte FS sollten Grossteil ausmachen! - Polyen: mehrfach ungesättigt (Linolensäure) (Omega-3&6) - Monoen: einfach ungesättigt (Ölsäure) (Omega-9) - Saturated: Gesättigt (Palmitin-, Stearinsäure) (haben nur einfachbind also kein Omega)",
+          "front_snippet": "Was ist das P:M:S-Verhältnis?",
+          "back_snippet": "Polyen : Monoen : Saturated = 0.7 : 1.3 : 1 Ungesättigte FS sollten Grossteil ausmachen! - Polyen: mehrfach ungesättigt (Linolensäure) (Omega-3&6) - Monoen: einfach ungesättigt (Ölsäure) (Omega-9) - Saturated: Gesättigt (Palmitin-, Stearinsäure) (haben nur ein",
           "hy_terms_detected": []
         },
         {
@@ -4435,9 +4457,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 2,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4457,9 +4479,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4470,28 +4492,6 @@
           "back": "Nahrungsfasern, Nicht-Stärke-Polysaccharide • Werden im menschlichen Verdauungstrakt durch humane Enzyme nicht verdaut • Zellwandbestandteile pflanzlicher Lebensmittel, vorwiegend Polysaccharide Zusatz: Richtwert für Erwachsene: mindestens 30 g/Tag (Ballaststoffdichte 2.5 - 3 g/MJ)",
           "front_snippet": "Was sind Ballaststoffe?",
           "back_snippet": "Nahrungsfasern, Nicht-Stärke-Polysaccharide • Werden im menschlichen Verdauungstrakt durch humane Enzyme nicht verdaut • Zellwandbestandteile pflanzlicher Lebensmittel, vorwiegend Polysaccharide Zusatz: Richtwert für Erwachsene: mindestens 30 g/Tag (Ballaststo",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1637931601445,
-          "note_id": 1637931601445,
-          "deck_id": 1789378222987,
-          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-          "professor_name": "Prof. Dr. Raimund Dutzler",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was ist Lingin ? Beschreibe!",
-          "back": "➢ unlöslicher Ballaststoff ➢ KEIN Kohlenhydrat, sondern Holzfaser ➢ ist unverdaulich, fördert Verdauung in allen Darmabschnitten",
-          "front_snippet": "Was ist Lingin ? Beschreibe!",
-          "back_snippet": "➢ unlöslicher Ballaststoff ➢ KEIN Kohlenhydrat, sondern Holzfaser ➢ ist unverdaulich, fördert Verdauung in allen Darmabschnitten",
           "hy_terms_detected": []
         }
       ]
@@ -4715,10 +4715,10 @@
           "front_snippet": "Wie wirkt Kortisol?",
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
-            "insulin",
-            "glykolyse",
+            "inr",
             "tsh",
-            "inr"
+            "insulin",
+            "glykolyse"
           ]
         },
         {
@@ -4764,11 +4764,11 @@
           "front_snippet": "Wie funktioniert die Aldosteronfreisetzung über Angiotensin II?",
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
-            "epo",
+            "aldosteron",
             "renin",
+            "epo",
             "angiotensin",
-            "depolarisation",
-            "aldosteron"
+            "depolarisation"
           ]
         }
       ]
@@ -5536,9 +5536,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 6,
-          "lapses": 1,
-          "interval_days": 2,
+          "reps": 8,
+          "lapses": 2,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5558,9 +5558,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 10,
+          "reps": 11,
           "lapses": 3,
-          "interval_days": 1,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5677,11 +5677,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
-            "t4",
-            "calcitonin",
+            "tsh",
             "schilddrüse",
+            "calcitonin",
             "t3",
-            "tsh"
+            "t4"
           ]
         }
       ]
@@ -5760,8 +5760,8 @@
           "front_snippet": "Was passiert wenn ACTH von der Hypophyse ausgeschüttet wird? Beschreibe Feedbackloop",
           "back_snippet": "- es stimmuliert die poduktion von Cortisol in den Nebennieren - Cortisol hemmt CRH (corticotropin releasing hormone) - CRH gehemmt -> weniger/kein ACTH mehr ⇒ negativer Feedbackloop",
           "hy_terms_detected": [
-            "cortisol",
-            "acth"
+            "acth",
+            "cortisol"
           ]
         },
         {
@@ -6036,9 +6036,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "insulin",
+            "katecholamin",
             "noradrenalin",
-            "katecholamin"
+            "insulin"
           ]
         },
         {
@@ -6063,9 +6063,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "insulin",
+            "katecholamin",
             "noradrenalin",
-            "katecholamin"
+            "insulin"
           ]
         },
         {
@@ -6090,9 +6090,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "adrenalin",
-            "insulin",
+            "katecholamin",
             "noradrenalin",
-            "katecholamin"
+            "insulin"
           ]
         },
         {
@@ -6117,9 +6117,9 @@
           "back_snippet": "➢ α2 → cAMP ↓ → Kalium Kanal wird nicht durch PKA/EPAC2 phosphoryliert und geschlossen ⇒ keine Depolarisation, kein Ca 2+ Einstrom, keine Insulinausschüttung ➢ β2 → cAMP ↑ → PKA und EPAC2 ↑ → K+ Kanal wird phosphoryliert & schliesst ⇒ Depolarisation ⇒ Ca 2+ Ei",
           "hy_terms_detected": [
             "epo",
-            "depolarisation",
+            "katecholamin",
             "insulin",
-            "katecholamin"
+            "depolarisation"
           ]
         }
       ]
@@ -6275,9 +6275,9 @@
           "front_snippet": "Nebenniere Zona Glomerulosa: Eigenschaften evt. auslassen, kommt bei jele schon vor. hier mehr als repetition",
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Cortisol nicht bilden • Produzieren Aldosteron von Corticosteron • Aldosteron wird stimuliert von Angiotensin II (z.B. tie",
           "hy_terms_detected": [
-            "angiotensin",
             "aldosteron",
-            "cortisol"
+            "cortisol",
+            "angiotensin"
           ]
         },
         {
@@ -6407,8 +6407,8 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Ist die Aktivität der LPL, welche durch Insulin induziert wurde, sofort maximal ?",
           "back_snippet": "Nein, sondern zeitlich verzögert -> weil durch Transkription (SREBP-1c) Grund : Re-Synthese von TAGs und CM Bildung in den Darm Mukosazellen braucht ein bissl Zeit ⇒ also steigt Konzentrationen von Chylomikronen im Plasma auch langsam an -> LPL nimmt Chylomikr",
           "hy_terms_detected": [
-            "insulin",
-            "ags"
+            "ags",
+            "insulin"
           ]
         },
         {
@@ -6512,8 +6512,8 @@
           "front_snippet": "Somatotropin-Wirkungsweise Was ist der GH-Rezeptor für ein Typ Rezeptor und was rekrutiert seine aktive Form? (7 P.)",
           "back_snippet": "Cyto k inrezeptor , hat keine intrinsische Tyr-Kinase-Aktivität (nicht wie Insulin-Rezeptor). nach GH-Bindung ⇒ dimerisierte Rezeptor rekrutiert JAK2-Kinase JAK2 phosphoryliert : - benachbarte JAK2 Moleküle (Transphosphorylation) - sich selbst ( Auto phosphory",
           "hy_terms_detected": [
-            "insulin",
-            "inr"
+            "inr",
+            "insulin"
           ]
         },
         {
@@ -6558,9 +6558,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 5,
+          "reps": 6,
           "lapses": 1,
-          "interval_days": 4,
+          "interval_days": 12,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6660,9 +6660,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 2,
-          "interval_days": 1,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6848,8 +6848,8 @@
           "front_snippet": "Regulation der Cortisol-Synthese long feedback?",
           "back_snippet": "Cortisol: negative Rückkopplung auf - Hypophyse → hemmt ACTH-Freisetzung - Hypothalamus → hemmt CRH-Freisetzung",
           "hy_terms_detected": [
-            "cortisol",
-            "acth"
+            "acth",
+            "cortisol"
           ]
         }
       ]
@@ -7029,11 +7029,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Was stimuliert die Synthese von: Dopamin und Noradrenalin? Was von Adrenalin?",
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
+            "acth",
             "adrenalin",
             "cortisol",
-            "noradrenalin",
             "katecholamin",
-            "acth"
+            "noradrenalin"
           ]
         },
         {
@@ -7057,11 +7057,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Die Synthese von Adrenalin aus Noradrenalin wird hauptsächlich von Cortisol (← ACTH) (und unterstützend von ACh (sympath).) angeregt.",
           "back_snippet": "",
           "hy_terms_detected": [
+            "acth",
             "adrenalin",
             "cortisol",
-            "noradrenalin",
             "katecholamin",
-            "acth"
+            "noradrenalin"
           ]
         }
       ]
@@ -7096,11 +7096,11 @@
           "front_snippet": "Aldosteronfreisetzung wird durch was stimuliert? (3)",
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II → hemmt K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Azidose",
           "hy_terms_detected": [
+            "aldosteron",
+            "azidose",
             "epo",
             "angiotensin",
-            "depolarisation",
-            "azidose",
-            "aldosteron"
+            "depolarisation"
           ]
         },
         {
@@ -8042,8 +8042,8 @@
           "front_snippet": "Wer ist für den Bohr-Effekt verantwortlich? Beschreibe, wie dieser Effekt die Sauerstoffbindung reguliert:",
           "back_snippet": "- Für den Bohr-Effekt sind die alpha-Aminogruppen am aminoterminalen Ende der alpha-Ketten und die Seitenketten der Histidine verantwortlich. - Diese Gruppen besitzen pKS-Werte, die nahe bei pH 7 liegen. - So ist zum Beispiel bei tiefem pH-Wert die Imidazolgru",
           "hy_terms_detected": [
-            "bohr-effekt",
-            "sauerstoffbindung"
+            "sauerstoffbindung",
+            "bohr-effekt"
           ]
         },
         {
@@ -8743,9 +8743,9 @@
           "front_snippet": "T-Zell abhängige B-Zell Aktivierung",
           "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle ",
           "hy_terms_detected": [
+            "mhc-i",
             "t-zell",
-            "mhc-ii",
-            "mhc-i"
+            "mhc-ii"
           ]
         },
         {
@@ -9000,5 +9000,5 @@
       "sample_kprim_traps": []
     }
   },
-  "updated_at": 1794936023.481687
+  "updated_at": 1795079358.444633
 }

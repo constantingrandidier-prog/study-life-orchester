@@ -4126,6 +4126,96 @@ function toggleTomorrowAnkiDetails() {
 }
 
 let currentTriageBudget = 350;
+let currentTriageFocusMode = (function () {
+  try {
+    return localStorage.getItem('sl_triage_focus_mode') === 'all' ? 'all' : 'smart';
+  } catch (e) { return 'smart'; }
+})();
+let currentTriageRThreshold = (function () {
+  try {
+    const v = parseFloat(localStorage.getItem('sl_triage_r_threshold'));
+    return [0.78, 0.80, 0.82].includes(v) ? v : 0.80;
+  } catch (e) { return 0.80; }
+})();
+
+function syncTriageControlButtons() {
+  document.querySelectorAll('.btn-triage-mode').forEach(b => {
+    const isAct = b.getAttribute('data-mode') === currentTriageFocusMode;
+    b.classList.toggle('active', isAct);
+    b.style.background = isAct ? (currentTriageFocusMode === 'smart' ? '#238636' : '#1f6feb') : 'transparent';
+    b.style.color = isAct ? '#fff' : '#8b949e';
+  });
+  const rGroup = document.getElementById('triageRThresholdGroup');
+  if (rGroup) {
+    rGroup.style.display = currentTriageFocusMode === 'smart' ? 'flex' : 'none';
+  }
+  document.querySelectorAll('.btn-triage-r').forEach(b => {
+    const bVal = parseFloat(b.getAttribute('data-r'));
+    const isAct = Math.abs(bVal - currentTriageRThreshold) < 0.005;
+    b.classList.toggle('active', isAct);
+    b.style.background = isAct ? '#1f6feb' : 'transparent';
+    b.style.color = isAct ? '#fff' : '#8b949e';
+  });
+}
+
+async function setTriageFocusMode(mode, btnElement) {
+  currentTriageFocusMode = (mode === 'all') ? 'all' : 'smart';
+  try { localStorage.setItem('sl_triage_focus_mode', currentTriageFocusMode); } catch (e) {}
+  syncTriageControlButtons();
+  await loadBacklogTriage(currentTriageBudget);
+}
+
+async function setTriageRThreshold(rVal, btnElement) {
+  const parsed = parseFloat(rVal);
+  currentTriageRThreshold = isNaN(parsed) ? 0.80 : parsed;
+  try { localStorage.setItem('sl_triage_r_threshold', String(currentTriageRThreshold)); } catch (e) {}
+  syncTriageControlButtons();
+  await loadBacklogTriage(currentTriageBudget);
+}
+
+async function applyTriageFocusTag(btn) {
+  const orig = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Tagge in Anki...';
+  }
+  try {
+    const res = await fetch('/api/v1/schedule/anki/apply-focus-tag', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        max_capacity: currentTriageBudget || 350,
+        focus_mode: currentTriageFocusMode,
+        r_threshold: currentTriageRThreshold,
+        tag_name: 'SL_Heute_Fokus',
+        sync_ankiweb: true,
+      }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (navigator.clipboard && data.search_query) {
+        try { await navigator.clipboard.writeText(data.search_query); } catch (e) {}
+      }
+      if (typeof showToast === 'function') {
+        showToast(`${data.message} Suche kopiert: ${data.search_query}`);
+      }
+      if (btn) {
+        btn.innerHTML = `✓ ${data.card_count} getaggt!`;
+        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 3000);
+      }
+    } else {
+      if (typeof showToast === 'function') {
+        showToast(data.message || 'Anki Desktop nicht erreichbar.');
+      }
+      if (btn) { btn.innerHTML = orig; btn.disabled = false; }
+    }
+  } catch (err) {
+    if (typeof showToast === 'function') {
+      showToast('Fehler beim Taggen: ' + err.message);
+    }
+    if (btn) { btn.innerHTML = orig; btn.disabled = false; }
+  }
+}
 
 async function toggleBacklogTriageModal() {
   const box = document.getElementById('ankiBacklogTriageBox');
@@ -4188,6 +4278,7 @@ async function applyCustomTriageBudget() {
 let latestTriageData = null;
 
 async function loadBacklogTriage(maxCapacity = 350) {
+  syncTriageControlButtons();
   const effectiveCap = (maxCapacity && maxCapacity > 0) ? parseInt(maxCapacity, 10) : (currentTriageBudget || 350);
   const modalListEl = document.getElementById('triageTopicsList');
   const modalAdviceEl = document.getElementById('triageAdviceBanner');
@@ -4199,7 +4290,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
   const topChecklistEl = document.getElementById('pageTriageTopChecklistContainer');
 
   try {
-    const url = `/api/v1/schedule/anki/backlog-triage?max_capacity=${effectiveCap}&_t=${Date.now()}`;
+    const url = `/api/v1/schedule/anki/backlog-triage?max_capacity=${effectiveCap}&focus_mode=${encodeURIComponent(currentTriageFocusMode)}&r_threshold=${currentTriageRThreshold}&_t=${Date.now()}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
@@ -4222,11 +4313,16 @@ async function loadBacklogTriage(maxCapacity = 350) {
         return Object.assign({}, tb, {
           professors: profs,
           total_due_today: profs.reduce((s, p) => s + (p.due_today || 0), 0),
+          smart_total_due_today: profs.reduce((s, p) => s + (p.smart_due_today != null ? p.smart_due_today : (p.due_today || 0)), 0),
           total_due_tomorrow: profs.reduce((s, p) => s + (p.due_tomorrow || 0), 0)
         });
       }).filter(tb => tb.professors.length > 0);
     }
     latestTriageData = data;
+
+    const isSmart = (data.focus_mode || currentTriageFocusMode) === 'smart';
+    const rPct = Math.round(((data.r_threshold != null ? data.r_threshold : currentTriageRThreshold)) * 100);
+    const rKey = (data.r_threshold != null ? data.r_threshold : currentTriageRThreshold).toFixed(2);
 
     const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Vortag-Neukarten, Überfälligkeit und Fehlerquote.';
     if (modalAdviceEl) {
@@ -4244,26 +4340,32 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
     // Update 1-Click Anki query display
     const query = data.budget_combined_anki_query || data.urgent_combined_anki_query || 'is:due';
-    const totalDueToday = data.total_due_today || 0;
+    const totalAllDueToday = data.total_due_today || 0;
+    const poolDueToday = data.active_focus_pool_due != null ? data.active_focus_pool_due : totalAllDueToday;
+    const solidSkipped = data.total_solid_skipped_today != null ? data.total_solid_skipped_today : 0;
     const alreadyRepeated = data.already_repeated_today || 0;
-    const totalWorkloadToday = totalDueToday + alreadyRepeated;
-    const effectiveTarget = data.effective_today_target != null ? data.effective_today_target : Math.min(effectiveCap, totalWorkloadToday);
+    const totalPoolWorkload = poolDueToday + alreadyRepeated;
+    const effectiveTarget = data.effective_today_target != null ? data.effective_today_target : Math.min(effectiveCap, totalPoolWorkload);
     const coveragePct = data.coverage_pct != null ? data.coverage_pct : 100.0;
-    const deferredCount = data.deferred_cards_count != null ? data.deferred_cards_count : Math.max(0, totalDueToday - effectiveTarget);
+    const deferredCount = data.deferred_cards_count != null ? data.deferred_cards_count : Math.max(0, poolDueToday - effectiveTarget);
 
     if (pageQueryPreview) {
       pageQueryPreview.textContent = query;
       pageQueryPreview.setAttribute('title', query);
     }
     if (pageCoveragePill) {
-      if (totalWorkloadToday > effectiveCap && effectiveCap < 9000) {
-        pageCoveragePill.textContent = `${effectiveTarget} / ${totalWorkloadToday} Karten (${coveragePct}% heute • ${deferredCount} verschoben)`;
+      if (isSmart && solidSkipped > 0) {
+        pageCoveragePill.textContent = `${effectiveTarget} / ${totalPoolWorkload} nötigen Karten (${solidSkipped} gefestigte entlastet)`;
+      } else if (totalPoolWorkload > effectiveCap && effectiveCap < 9000) {
+        pageCoveragePill.textContent = `${effectiveTarget} / ${totalPoolWorkload} Karten (${coveragePct}% heute • ${deferredCount} verschoben)`;
       } else {
         pageCoveragePill.textContent = `${effectiveTarget} Karten heute (100% Abdeckung)`;
       }
     }
     if (pageBudgetText) {
-      pageBudgetText.innerHTML = `Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • <strong>Vortag-Neukarten automatisch auf #1</strong> • Rotiert jeden Tag automatisch.`;
+      pageBudgetText.innerHTML = isSmart
+        ? `<strong>Effizienz-Modus (Recall &lt; ${rPct}%):</strong> Zeigt nur <strong>Vortag-Neukarten + vergessensgefährdete Karten</strong> – gefestigter Stoff blockiert keine Plätze mehr.`
+        : `<strong>Voll-Modus:</strong> Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • Alle fälligen Karten im Überblick.`;
     }
 
     // Render TOP PRIORITY FOCUS BOX (#pageTriageTopChecklistContainer)
@@ -4273,18 +4375,21 @@ async function loadBacklogTriage(maxCapacity = 350) {
         : (data.budget_selected_topics || []);
       const completedToday = data.focus_plan_completed_today || [];
       const rolloverDays = data.multi_day_rollover || [];
-      const progressPct = effectiveTarget > 0 ? Math.min(100, Math.round((alreadyRepeated / effectiveTarget) * 100)) : (totalDueToday === 0 ? 100 : 0);
+      const progressPct = effectiveTarget > 0 ? Math.min(100, Math.round((alreadyRepeated / effectiveTarget) * 100)) : (poolDueToday === 0 ? 100 : 0);
 
       let checklistHtml = '';
 
       // 1. Daily Goal & Proportional Relief Bar
+      const skipBadgeHtml = (isSmart && solidSkipped > 0)
+        ? ` • <strong style="color:#3fb950;">${solidSkipped} gefestigte</strong> automatisch übersprungen`
+        : '';
       checklistHtml += `
         <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.8rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
             <div style="font-size: 12px; color: #e6edf3;">
               🎯 <strong>Dein Tagespensum heute: ${effectiveTarget} Wiederholungen</strong>
               <span style="color: #8b949e; font-size: 11px; margin-left: 4px;">
-                (von ${totalWorkloadToday} fälligen = <strong>${coveragePct}%</strong> • Restliche <strong>${deferredCount} Karten</strong> automatisch auf Folgetage verschoben)
+                (${isSmart ? `von ${totalPoolWorkload} nötigen aus ${totalAllDueToday + alreadyRepeated} gesamt` : `von ${totalPoolWorkload} fälligen`} = <strong>${coveragePct}%</strong>${deferredCount > 0 ? ` • Restliche <strong>${deferredCount}</strong> rotieren` : ''}${skipBadgeHtml})
               </span>
             </div>
             <div style="font-size: 11.5px; font-weight: 700; color: ${alreadyRepeated >= effectiveTarget && effectiveTarget > 0 ? '#3fb950' : '#58a6ff'};">
@@ -4307,7 +4412,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
             <div style="display: flex; flex-wrap: wrap; gap: 0.45rem;">
               ${completedToday.map(c => `
                 <span style="font-size: 11px; background: rgba(63, 185, 80, 0.15); border: 1px solid rgba(63, 185, 80, 0.35); color: #e6edf3; padding: 0.15rem 0.55rem; border-radius: 5px;">
-                  ✅ <strong>${escapeHtml(c.themenblock)} › ${escapeHtml(c.dozent)}</strong>: ${c.repeated_today} erledigt ${c.due_remaining > 0 ? `<span style="color:#8b949e;">(${c.due_remaining} noch offen)</span>` : ''}
+                  ✅ <strong>${escapeHtml(c.themenblock)} › ${escapeHtml(c.dozent)}</strong>: ${c.repeated_today} erledigt ${c.due_remaining > 0 ? `<span style="color:#8b949e;">(${c.due_remaining} noch nötig)</span>` : ''}
                 </span>
               `).join('')}
             </div>
@@ -4319,17 +4424,25 @@ async function loadBacklogTriage(maxCapacity = 350) {
       if (openPlan.length === 0) {
         checklistHtml += `
           <div style="background: rgba(46, 160, 67, 0.12); border: 1px solid rgba(63, 185, 80, 0.4); border-radius: 8px; padding: 0.85rem; text-align: center; color: #3fb950; font-weight: 700; font-size: 13px;">
-            🎉 Perfekt! Du hast dein heutiges Fokus-Ziel (${effectiveTarget} Wiederholungen) komplett erreicht!
+            🎉 Perfekt! ${totalAllDueToday > 0 && isSmart ? `Alle offenen Karten sitzen stabil (R ≥ ${rPct}%). Bei Bedarf oben auf '📚 Alle Fälligen' wechseln.` : `Du hast dein heutiges Fokus-Ziel (${effectiveTarget} Wiederholungen) komplett erreicht!`}
           </div>
         `;
       } else {
         checklistHtml += `<div style="display: flex; flex-direction: column; gap: 0.55rem;">`;
         openPlan.forEach((item, idx) => {
           const rankNum = item.rank || (idx + 1);
-          const assigned = item.assigned_cards != null ? item.assigned_cards : item.due_today;
+          const poolDue = item.active_due_today != null ? item.active_due_today : item.due_today;
+          const assigned = item.assigned_cards != null ? item.assigned_cards : poolDue;
           const isPartial = Boolean(item.is_partial);
           const isVortagNew = Boolean(item.is_vortag_new);
+          const vortCnt = item.vortag_due_today || 0;
+          const weakCnt = item.weak_due_today != null ? item.weak_due_today : Math.max(0, poolDue - vortCnt);
+          const solidCnt = item.solid_due_today || 0;
           const subdecks = item.yesterday_subdecks || [];
+          const smartSubdecks = (item.smart_subdecks || []).filter(sd => {
+            const sc = (sd.smart_due_counts && sd.smart_due_counts[rKey] != null) ? sd.smart_due_counts[rKey] : sd.all_due;
+            return sc > 0;
+          });
           const rowBorder = isVortagNew
             ? '1.5px solid rgba(248, 81, 73, 0.65)'
             : (rankNum === 1 ? '1.5px solid rgba(88, 166, 255, 0.55)' : '1px solid rgba(255, 255, 255, 0.12)');
@@ -4339,12 +4452,39 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
           let subdeckHtml = '';
           if (isVortagNew && subdecks.length > 0) {
-            const subList = subdecks.map(s => `<strong>${s.new_learned}×</strong> ${escapeHtml(s.subdeck)}`).join(' • ');
-            subdeckHtml = `
+            const subList = subdecks.map(s => `<strong>${s.new_learned}×</strong> ${escapeHtml(s.subdeck)} (${s.due_now} fällig)`).join(' • ');
+            subdeckHtml += `
               <div style="margin-top: 0.25rem; padding: 0.28rem 0.55rem; background: rgba(248, 81, 73, 0.15); border-left: 3px solid #f85149; border-radius: 4px; font-size: 11px; color: #ffa198;">
-                🔥 <strong>Am Vortag in Anki neu gelernt (Tag-1-Pflicht):</strong> ${subList}
+                🔥 <strong>Vortag in Anki neu gelernt:</strong> ${subList}
               </div>
             `;
+          }
+          if (isSmart && smartSubdecks.length > 1 && (vortCnt > 0 || solidCnt > 0)) {
+            const subBreakdown = smartSubdecks.slice(0, 4).map(sd => {
+              const sc = (sd.smart_due_counts && sd.smart_due_counts[rKey] != null) ? sd.smart_due_counts[rKey] : sd.all_due;
+              return `<span><strong>${sc}×</strong> ${escapeHtml(sd.subdeck)}${sc < sd.all_due ? ` <span style="color:#8b949e;">/${sd.all_due}</span>` : ''}</span>`;
+            }).join(' • ');
+            subdeckHtml += `
+              <div style="margin-top: 0.22rem; padding: 0.24rem 0.55rem; background: rgba(56, 139, 253, 0.1); border-left: 3px solid #58a6ff; border-radius: 4px; font-size: 10.5px; color: #c9d1d9;">
+                📂 <strong>Effizienz-Aufteilung:</strong> ${subBreakdown}
+              </div>
+            `;
+          }
+
+          const cardBoxTitle = isSmart
+            ? (isPartial ? `${assigned} von ${poolDue} nötigen` : `${assigned} nötig`)
+            : (isPartial ? `${assigned} von ${item.due_today} Karten` : `${assigned} Karten komplett`);
+
+          let cardBoxSub = '';
+          if (isSmart) {
+            const detailParts = [];
+            if (vortCnt > 0) detailParts.push(`${vortCnt} Vortag`);
+            if (weakCnt > 0) detailParts.push(`${weakCnt} schwach`);
+            const mixStr = detailParts.join(' + ');
+            const skipStr = solidCnt > 0 ? ` • ${solidCnt} solid skip` : '';
+            cardBoxSub = isPartial ? `Rest ${item.deferred_from_deck} morgen${skipStr}` : `${mixStr}${skipStr}`;
+          } else {
+            cardBoxSub = isPartial ? `Restliche ${item.deferred_from_deck} automatisch morgen` : 'Ordner in Anki auf 0 bringen';
           }
 
           checklistHtml += `
@@ -4360,23 +4500,25 @@ async function loadBacklogTriage(maxCapacity = 350) {
                   <strong style="font-size: 13.5px; color: #f0f6fc;">
                     ${escapeHtml(item.themenblock)} › ${escapeHtml(item.dozent)}
                   </strong>
+                  ${isSmart && solidCnt > 0 ? `<span style="font-size: 10px; padding: 0.1rem 0.45rem; border-radius: 10px; background: rgba(63, 185, 80, 0.14); border: 1px solid rgba(63, 185, 80, 0.35); color: #3fb950; font-weight: 600;">🟢 ${solidCnt} gut gekonnt übersprungen</span>` : ''}
                 </div>
                 ${subdeckHtml}
                 <div style="display: flex; gap: 0.85rem; flex-wrap: wrap; font-size: 11px; color: #8b949e; margin-top: 0.35rem;">
                   <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${escapeHtml(item.days_since_last_review_str)}</strong></span>
+                  ${item.avg_retrievability_pct != null ? `<span>🧠 Recall: <strong style="color: ${item.avg_retrievability_pct < rPct ? '#ff7b72' : '#58a6ff'};">${item.avg_retrievability_pct}%</strong></span>` : ''}
                   <span>🎯 Retention: <strong style="color: ${item.retention_rate_pct < 70 ? '#ff7b72' : '#3fb950'};">${item.retention_rate_pct}%</strong></span>
                   <span>⚙️ Ease: <strong style="color: #c9d1d9;">${item.avg_ease_pct}%</strong></span>
-                  <span>📊 Dringlichkeit: <strong style="color: ${item.color};">${item.urgency_score}/100</strong></span>
+                  <span>📊 Score: <strong style="color: ${item.color};">${item.urgency_score}/100</strong></span>
                 </div>
               </div>
 
               <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
                 <div style="text-align: right; background: ${isPartial ? 'rgba(210, 153, 34, 0.14)' : 'rgba(46, 160, 67, 0.16)'}; border: 1px solid ${isPartial ? 'rgba(210, 153, 34, 0.45)' : 'rgba(63, 185, 80, 0.45)'}; padding: 0.38rem 0.75rem; border-radius: 7px;">
                   <div style="font-size: 14px; font-weight: 800; color: ${isPartial ? '#e3b341' : '#3fb950'};">
-                    ${isPartial ? `${assigned} von ${item.due_today} Karten` : `${assigned} Karten komplett`}
+                    ${cardBoxTitle}
                   </div>
                   <div style="font-size: 10px; color: #c9d1d9;">
-                    ${isPartial ? `Restliche ${item.deferred_from_deck} automatisch morgen` : `Ordner in Anki auf 0 bringen`}
+                    ${cardBoxSub}
                   </div>
                 </div>
                 <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(item.anki_filter_query)}', this)" class="btn-secondary" style="font-size: 10.5px; padding: 0.35rem 0.6rem; color: #c9d1d9; border-radius: 5px; cursor: pointer;">
@@ -4442,8 +4584,9 @@ async function loadBacklogTriage(maxCapacity = 350) {
     themenbloecke.forEach((tb, tbIdx) => {
       const profCount = (tb.professors || []).length;
       const totalDueToday = tb.total_due_today || 0;
+      const smartDueTb = tb.smart_total_due_today != null ? tb.smart_total_due_today : totalDueToday;
       const totalDueTom = tb.total_due_tomorrow || 0;
-      const hasDue = totalDueToday > 0;
+      const hasDue = (isSmart ? smartDueTb : totalDueToday) > 0;
       const borderCol = hasDue ? 'rgba(210, 153, 34, 0.4)' : 'rgba(255, 255, 255, 0.08)';
       const headerBg = hasDue ? 'rgba(210, 153, 34, 0.08)' : 'rgba(255, 255, 255, 0.02)';
 
@@ -4457,11 +4600,11 @@ async function loadBacklogTriage(maxCapacity = 350) {
             <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 11.5px;">
               ${hasDue ? `
                 <span style="background: rgba(248, 81, 73, 0.15); color: #ff7b72; border: 1px solid rgba(248,81,73,0.3); padding: 0.1rem 0.45rem; border-radius: 12px; font-weight: 700;">
-                  ${totalDueToday} heute fällig
+                  ${isSmart ? `${smartDueTb} nötig / ${totalDueToday} fällig` : `${totalDueToday} heute fällig`}
                 </span>
               ` : `
                 <span style="background: rgba(63, 185, 80, 0.12); color: #3fb950; border: 1px solid rgba(63,185,80,0.25); padding: 0.1rem 0.45rem; border-radius: 12px; font-weight: 600;">
-                  0 heute fällig
+                  ${totalDueToday > 0 && isSmart ? `0 nötig (${totalDueToday} stabil)` : '0 heute fällig'}
                 </span>
               `}
               ${totalDueTom > 0 ? `<span style="color: var(--text-muted); font-size: 10.5px;">(+${totalDueTom} morgen)</span>` : ''}
@@ -4473,6 +4616,8 @@ async function loadBacklogTriage(maxCapacity = 350) {
               const isSelectedInBudget = (data.budget_selected_topics || []).some(b => b.themenblock === p.themenblock && b.dozent === p.dozent);
               const cardBorder = isSelectedInBudget ? `1px solid ${p.color}70` : '1px solid rgba(255,255,255,0.06)';
               const cardBg = isSelectedInBudget ? 'rgba(31, 111, 235, 0.05)' : 'rgba(255,255,255,0.015)';
+              const pSmart = p.smart_due_today != null ? p.smart_due_today : p.due_today;
+              const pSolid = p.solid_due_today || 0;
 
               return `
                 <div style="border: ${cardBorder}; border-radius: 6px; background: ${cardBg}; padding: 0.55rem 0.75rem; display: flex; flex-direction: column; gap: 0.35rem;">
@@ -4495,9 +4640,10 @@ async function loadBacklogTriage(maxCapacity = 350) {
                   <!-- 3 Key Decision Factors Grid -->
                   <div style="display: flex; gap: 0.85rem; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; align-items: center; background: rgba(0,0,0,0.15); padding: 0.35rem 0.55rem; border-radius: 4px;">
                     <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${p.days_since_last_review_str}</strong></span>
+                    ${p.avg_retrievability_pct != null ? `<span>🧠 Recall: <strong style="color: ${p.avg_retrievability_pct < rPct ? '#ff7b72' : '#58a6ff'};">${p.avg_retrievability_pct}%</strong></span>` : ''}
                     <span>🎯 Retention: <strong style="color: ${p.retention_rate_pct < 70 ? '#ff7b72' : '#3fb950'};">${p.retention_rate_pct}%</strong> <span style="font-size: 10px; color: #8b949e;">(${p.total_fails}/${p.total_reviews} Fails)</span></span>
                     <span>⚙️ Stabilität: <strong style="color: #e6edf3;">${p.avg_ease_pct}% Ease</strong></span>
-                    <span>🗂️ Fällig: <strong style="color: ${p.due_today > 0 ? '#d29922' : '#8b949e'};">${p.due_today} heute</strong> / ${p.due_tomorrow} morgen</span>
+                    <span>🗂️ Fällig: <strong style="color: ${pSmart > 0 ? '#d29922' : '#3fb950'};">${isSmart && p.due_today > 0 ? `${pSmart} nötig / ${p.due_today} gesamt` : `${p.due_today} heute`}</strong>${isSmart && pSolid > 0 ? ` <span style="color:#3fb950; font-size:10px;">(${pSolid} stabil)</span>` : ''}</span>
                     <span style="margin-left: auto;">Score: <strong style="color: ${p.color};">${p.urgency_score}/100</strong></span>
                   </div>
 
@@ -4537,7 +4683,7 @@ function copyPageTriageQuery() {
       }, 2000);
     }
     if (typeof showToast === 'function') {
-      showToast('Anki-Filter kopiert! In Anki: Werkzeuge ➔ Gefilterten Stapel erstellen ➔ Einfügen');
+      showToast('Anki-Filter kopiert! In Anki: Taste F (Gefilterter Stapel) ➔ Einfügen');
     }
   }).catch(() => {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
@@ -6729,6 +6875,11 @@ window.syncAnkiDesktopNow = syncAnkiDesktopNow;
 window.toggleTomorrowAnkiDetails = toggleTomorrowAnkiDetails;
 window.toggleBacklogTriageModal = toggleBacklogTriageModal;
 window.setTriageBudget = setTriageBudget;
+window.applyCustomTriageBudget = applyCustomTriageBudget;
+window.setTriageFocusMode = setTriageFocusMode;
+window.setTriageRThreshold = setTriageRThreshold;
+window.applyTriageFocusTag = applyTriageFocusTag;
+window.copyPageTriageQuery = copyPageTriageQuery;
 window.copyAnkiQuery = copyAnkiQuery;
 window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
 window.loadWorkloadForecast = loadWorkloadForecast;

@@ -1133,6 +1133,8 @@ def get_anki_desktop_status_endpoint(target_date: Optional[str] = Query(None, de
 from app.services.anki_backlog_triage import (
     calculate_backlog_triage,
     cache_triage,
+    apply_focus_tag_to_anki,
+    cleanup_focus_tag_in_anki,
 )
 
 @router.post(
@@ -1175,11 +1177,45 @@ def post_anki_desktop_sync_endpoint(payload: dict):
 @router.get(
     "/anki/backlog-triage",
     summary="Get Anki Backlog Triage and Emergency Priority for Topics",
-    description="Analyzes due review burden, lapse rates, and time since review to prioritize topics when daily reviews exceed capacity (>500 reviews).",
+    description="Analyzes FSRS retrievability, Vortag newly learned cards, due review burden, and time since review to prioritize only genuinely needed repetitions.",
 )
-def get_anki_backlog_triage_endpoint(max_capacity: Optional[int] = Query(350, description="Max cards student can manage today")):
+def get_anki_backlog_triage_endpoint(
+    max_capacity: Optional[int] = Query(350, description="Max cards student can manage today"),
+    focus_mode: str = Query("smart", description="Focus mode: 'smart' (Vortag + weak R<threshold) or 'all' (full backlog)"),
+    r_threshold: float = Query(0.80, description="FSRS retrievability cutoff (e.g. 0.78, 0.80, 0.82)"),
+):
     """Retrieve backlog triage and priority ranking for Anki topics."""
-    return calculate_backlog_triage(max_capacity=max_capacity)
+    return calculate_backlog_triage(
+        max_capacity=max_capacity,
+        focus_mode=focus_mode,
+        r_threshold=r_threshold,
+    )
+
+
+@router.post(
+    "/anki/apply-focus-tag",
+    summary="Tag today's selected focus cards in Anki for 1-click Desktop/iPad Filtered Deck",
+    description="Tags the exact prioritized focus cards with SL_Heute_Fokus via AnkiConnect and triggers AnkiWeb sync.",
+)
+def post_anki_apply_focus_tag_endpoint(payload: dict = Body(default={})):
+    """Tag exact focus plan cards in Anki Desktop and sync to AnkiWeb for iPad."""
+    return apply_focus_tag_to_anki(
+        max_capacity=int(payload.get("max_capacity") or 350),
+        focus_mode=str(payload.get("focus_mode") or "smart"),
+        r_threshold=float(payload.get("r_threshold") or 0.80),
+        tag_name=str(payload.get("tag_name") or "SL_Heute_Fokus"),
+        sync_ankiweb=bool(payload.get("sync_ankiweb", True)),
+    )
+
+
+@router.post(
+    "/anki/cleanup-focus-tag",
+    summary="Remove temporary daily focus tag from Anki notes",
+)
+def post_anki_cleanup_focus_tag_endpoint(payload: dict = Body(default={})):
+    """Remove temporary focus tag from Anki Desktop."""
+    tag_name = str(payload.get("tag_name") or "SL_Heute_Fokus")
+    return cleanup_focus_tag_in_anki(tag_name=tag_name)
 
 
 @router.post(

@@ -1366,25 +1366,39 @@
           </div>
         </div>
 
-        <!-- Workload Triage 2.0 (Themenblock- & Dozenten-Ebene mit 350-Karten-Fokus) -->
+        <!-- Workload Triage 2.1 (Effizienz-Fokus: Vortag + FSRS Schwachstellen + Budget) -->
         <div style="background: rgba(22, 27, 34, 0.95); padding: 1.25rem; border-radius: 10px; border: 1px solid rgba(88, 166, 255, 0.3); font-size: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
           
           <!-- Header Strip -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
             <div>
               <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                <span style="font-size: 15px; font-weight: 700; color: #58a6ff;">🎯 Workload-Triage 2.0: Repetitions-Fokus</span>
+                <span style="font-size: 15px; font-weight: 700; color: #58a6ff;">🎯 Workload-Triage 2.1: Effizienz-Fokus</span>
                 <span id="triageActiveBudgetBadge" style="font-size: 10.5px; padding: 0.15rem 0.5rem; background: rgba(56, 139, 253, 0.15); border: 1px solid rgba(56, 139, 253, 0.3); color: #79c0ff; border-radius: 12px; font-weight: 600;">
                   Ziel: ~350 Karten
                 </span>
               </div>
               <div style="color: var(--text-muted); font-size: 11.5px; margin-top: 3px;">
-                Priorisiert nach <strong>1. Vortag neu gelernt</strong>, <strong>2. Überfälligkeit (Tage)</strong>, <strong>3. Fehlerquote (Retention)</strong> &amp; <strong>4. Täglicher Rotation</strong>.
+                Wählt automatisch nur <strong>1. Vortag neu gelernt</strong> + <strong>2. vergessensgefährdete Karten (FSRS Recall)</strong> aus und überspringt gefestigten Stoff.
               </div>
             </div>
 
-            <!-- Capacity Budget Selector + Custom Input (Default 350) -->
+            <!-- Focus Mode, FSRS Threshold & Capacity Budget Controls -->
             <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <!-- Smart vs All Toggle -->
+              <div style="display: flex; align-items: center; gap: 0.25rem; background: rgba(0,0,0,0.3); padding: 0.22rem 0.35rem; border-radius: 6px; border: 1px solid rgba(63, 185, 80, 0.35);">
+                <button type="button" id="btnTriageModeSmart" class="btn-triage-mode active" data-mode="smart" onclick="setTriageFocusMode('smart', this)" style="padding: 0.2rem 0.55rem; font-size: 10.5px; border-radius: 4px; border: none; background: #238636; color: #fff; font-weight: 700; cursor: pointer;">🎯 Nur Nötiges</button>
+                <button type="button" id="btnTriageModeAll" class="btn-triage-mode" data-mode="all" onclick="setTriageFocusMode('all', this)" style="padding: 0.2rem 0.5rem; font-size: 10.5px; border-radius: 4px; border: none; background: transparent; color: #8b949e; font-weight: 600; cursor: pointer;">📚 Alle Fälligen</button>
+              </div>
+
+              <!-- FSRS Retrievability Threshold Selector -->
+              <div id="triageRThresholdGroup" style="display: flex; align-items: center; gap: 0.25rem; background: rgba(0,0,0,0.28); padding: 0.22rem 0.4rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                <span style="font-size: 10px; color: var(--text-muted); margin-right: 0.1rem;">Recall:</span>
+                <button type="button" class="btn-triage-r" data-r="0.78" onclick="setTriageRThreshold(0.78, this)" title="Streng: Nur Vortag + akute Karten unter 78% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.42rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">&lt;78%</button>
+                <button type="button" class="btn-triage-r active" data-r="0.80" onclick="setTriageRThreshold(0.80, this)" title="Standard: Vortag + Karten unter 80% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer;">&lt;80%</button>
+                <button type="button" class="btn-triage-r" data-r="0.82" onclick="setTriageRThreshold(0.82, this)" title="Gründlich: Vortag + Karten unter 82% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.42rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">&lt;82%</button>
+              </div>
+
               <div style="display: flex; align-items: center; gap: 0.3rem; background: rgba(0,0,0,0.35); padding: 0.22rem 0.5rem; border-radius: 6px; border: 1px solid rgba(88, 166, 255, 0.3);">
                 <label for="triageCustomBudgetInput" style="font-size: 10.5px; color: #c9d1d9; font-weight: 600;">Wunsch-Ziel:</label>
                 <input type="number" id="triageCustomBudgetInput" value="350" min="10" max="5000" step="10"
@@ -1416,12 +1430,15 @@
                   </span>
                 </div>
                 <div id="pageTriageBudgetText" style="font-size: 11.5px; color: #8b949e; margin-top: 3px;">
-                  Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • Gestern neu gelernte Ankis immer zuerst • Rotiert täglich automatisch.
+                  Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • Gestern neu gelernte + vergessensgefährdete Karten zuerst.
                 </div>
               </div>
-              <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
                 <button type="button" id="btnCopyPageTriageQuery" onclick="copyPageTriageQuery()" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.8rem; background: #238636; border-color: #2ea043; color: #fff; font-weight: 600; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
                   📋 Anki-Filter kopieren
+                </button>
+                <button type="button" id="btnApplyTriageFocusTag" onclick="applyTriageFocusTag(this)" class="btn-secondary" title="Markiert exakt diese Fokus-Karten in Anki mit tag:SL_Heute_Fokus &amp; synct für das iPad" style="font-size: 11px; padding: 0.35rem 0.75rem; background: rgba(31, 111, 235, 0.18); border: 1px solid rgba(56, 139, 253, 0.45); color: #79c0ff; font-weight: 600; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                  🏷️ In Anki taggen (iPad)
                 </button>
               </div>
             </div>

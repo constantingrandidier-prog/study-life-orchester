@@ -80,6 +80,16 @@ def get_anki_due_and_weaknesses(col_path: Optional[str] = None) -> Dict[str, Any
     if not target_path or not target_path.exists():
         w_cached = get_cached_weaknesses()
         if w_cached:
+            try:
+                from app.services.anki_desktop_sync import get_cached_desktop_sync_state
+                cached_sync = get_cached_desktop_sync_state()
+                if cached_sync and cached_sync.get("due_today_count") is not None:
+                    live_due = int(cached_sync["due_today_count"])
+                    w_cached = dict(w_cached)
+                    w_cached["due_reviews_count"] = live_due
+                    w_cached["review_cards_count"] = max(0, live_due - int(w_cached.get("learning_cards_count") or 0))
+            except Exception:
+                pass
             return w_cached
 
         try:

@@ -137,7 +137,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
                 if cid not in card_latest_ivl:
                     # revs_rows is sorted ORDER BY r.id DESC, so first occurrence is latest review of the day
                     card_latest_ivl[cid] = ivl
-            elif rtype in (1, 2):
+            elif rtype in (1, 2, 3):
                 unique_rep_cids.add(cid)
     
         # Graduated = latest review achieved interval >= 1 day (due tomorrow or later)
@@ -175,7 +175,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             today_breakdown[dname] = today_breakdown.get(dname, 0) + 1
             if idx < 10:
                 rev_time_str = datetime.fromtimestamp(r[0] / 1000).strftime('%H:%M:%S')
-                type_label = 'Neu' if r[7] == 0 else ('Wiederholung' if r[7] == 1 else 'Wiederlernen')
+                type_label = 'Neu' if r[7] == 0 else ('Wiederholung' if r[7] == 1 else ('Filter-Deck' if r[7] == 3 else 'Wiederlernen'))
                 recent_sample.append({
                     'time': rev_time_str,
                     'deck': dname,
@@ -263,7 +263,7 @@ def read_live_anki_desktop_state(col_path=None, target_date_str=None):
             y_cards[y_cid] = y_ivl
         yesterday_new_cards = sum(1 for cid, last_ivl in y_cards.items() if last_ivl >= 1)
         yesterday_opened_new_cards = len(y_cards)
-        y_rep_rows = cur.execute('SELECT DISTINCT cid FROM revlog WHERE id >= ? AND id < ? AND type IN (1, 2)', (yesterday_4am_ms, today_4am_ms)).fetchall()
+        y_rep_rows = cur.execute('SELECT DISTINCT cid FROM revlog WHERE id >= ? AND id < ? AND type IN (1, 2, 3)', (yesterday_4am_ms, today_4am_ms)).fetchall()
         yesterday_rep_cards = len(y_rep_rows)
         y_rows = cur.execute('SELECT count(*), sum(time)/1000/60 FROM revlog WHERE id >= ? AND id < ?', (yesterday_4am_ms, today_4am_ms)).fetchone()
         yesterday_total_reviews = y_rows[0] or 0

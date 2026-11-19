@@ -2090,28 +2090,33 @@ async function loadAnkiWeaknesses() {
     if (!res.ok) return;
     const data = await res.json();
 
-    const dueCount = data.due_reviews_count || 0;
-    const dueEl = document.getElementById('pacingDueReviewsVal');
-    if (dueEl) {
-      dueEl.textContent = dueCount;
-    }
-    const dueDisp = document.getElementById('pacingDueReviewsDisplay');
-    if (dueDisp) {
-      dueDisp.textContent = dueCount;
-    }
+    const hasLiveDesktopDue = !!(state.ankiDesktopData && state.ankiDesktopData.due_today_count != null);
+    const dueCount = hasLiveDesktopDue
+      ? Number(state.ankiDesktopData.due_today_count)
+      : (data.due_reviews_count || 0);
+    if (!hasLiveDesktopDue) {
+      const dueEl = document.getElementById('pacingDueReviewsVal');
+      if (dueEl) {
+        dueEl.textContent = dueCount;
+      }
+      const dueDisp = document.getElementById('pacingDueReviewsDisplay');
+      if (dueDisp) {
+        dueDisp.textContent = dueCount;
+      }
 
-    const headerSyncText = document.getElementById('headerSyncText');
-    if (headerSyncText) {
-      headerSyncText.textContent = `Anki Live: ${dueCount} fällig`;
-    }
-    const sideBadgeDue = document.getElementById('sideBadgeDue');
-    if (sideBadgeDue) {
-      sideBadgeDue.textContent = `${dueCount} fällig`;
-    }
-    const navBadgeDue = document.getElementById('navBadgeDue');
-    if (navBadgeDue) {
-      navBadgeDue.textContent = dueCount;
-      navBadgeDue.style.display = dueCount > 0 ? 'inline-flex' : 'none';
+      const headerSyncText = document.getElementById('headerSyncText');
+      if (headerSyncText) {
+        headerSyncText.textContent = `Anki Live: ${dueCount} fällig`;
+      }
+      const sideBadgeDue = document.getElementById('sideBadgeDue');
+      if (sideBadgeDue) {
+        sideBadgeDue.textContent = `${dueCount} fällig`;
+      }
+      const navBadgeDue = document.getElementById('navBadgeDue');
+      if (navBadgeDue) {
+        navBadgeDue.textContent = dueCount;
+        navBadgeDue.style.display = dueCount > 0 ? 'inline-flex' : 'none';
+      }
     }
 
     // Update KPI strip safely without clobbering live Anki data

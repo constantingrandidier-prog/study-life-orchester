@@ -304,7 +304,7 @@
     "next_day_index": 394
   },
   "_latest_target_date": "2026-11-19",
-  "_updated_at": "2026-11-19T10:53:06.941141",
+  "_updated_at": "2026-11-19T11:22:36.623499",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -1281,7 +1281,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:51:49.728733",
+    "last_sync_timestamp": "2026-11-19T11:21:52.975146",
     "current_day_index": 423,
     "target_day_index": 361,
     "next_day_index": 362
@@ -1327,7 +1327,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:51:50.199886",
+    "last_sync_timestamp": "2026-11-19T11:21:53.320114",
     "current_day_index": 423,
     "target_day_index": 368,
     "next_day_index": 369
@@ -1466,7 +1466,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:51:50.657846",
+    "last_sync_timestamp": "2026-11-19T11:21:53.732839",
     "current_day_index": 423,
     "target_day_index": 357,
     "next_day_index": 358
@@ -1608,7 +1608,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:51:52.362623",
+    "last_sync_timestamp": "2026-11-19T11:21:54.869721",
     "current_day_index": 423,
     "target_day_index": 358,
     "next_day_index": 359
@@ -1749,7 +1749,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:51:53.975269",
+    "last_sync_timestamp": "2026-11-19T11:21:55.840464",
     "current_day_index": 423,
     "target_day_index": 359,
     "next_day_index": 360
@@ -1896,7 +1896,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-19T10:51:55.343682",
+    "last_sync_timestamp": "2026-11-19T11:21:56.759071",
     "current_day_index": 423,
     "target_day_index": 360,
     "next_day_index": 361
@@ -9022,7 +9022,7 @@
     "total_curriculum_cards": 8740,
     "curriculum_progress_pct": 56.7,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 459,
+    "due_tomorrow_count": 363,
     "due_tomorrow_deck_breakdown": {
       "TB Atmung :: Einführung und Abschluss Atmung": 3,
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 6,
@@ -9075,15 +9075,9 @@
       "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 25,
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 12,
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 35,
-      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 44,
-      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 8,
-      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 88
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 44
     },
     "due_tomorrow_topics": [
-      {
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-        "count": 88
-      },
       {
         "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
         "count": 44
@@ -9131,10 +9125,6 @@
       {
         "deck": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
         "count": 9
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
-        "count": 8
       },
       {
         "deck": "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing",
@@ -9456,7 +9446,7 @@
         "front": "Was ist die Rima glottis?"
       }
     ],
-    "last_sync_timestamp": "2026-11-19T10:52:43.038110",
+    "last_sync_timestamp": "2026-11-19T11:19:03.341809",
     "current_day_index": 423,
     "target_day_index": 422,
     "next_day_index": 423
@@ -9467,37 +9457,43 @@
     "target_date": "2026-11-19",
     "is_today": true,
     "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
-    "first_review_time": null,
-    "last_review_time": null,
+    "first_review_time": "10:21",
+    "last_review_time": "11:14",
     "today_reviewed_count": 0,
     "new_cards_count": 0,
     "new_cards_opened_count": 0,
     "new_cards_in_learning_count": 0,
-    "repetition_cards_count": 0,
-    "total_reviews_count": 0,
-    "today_time_minutes": 0.0,
-    "today_session_time_minutes": 0.0,
-    "effective_study_minutes": 0.0,
-    "today_lapses_count": 0,
+    "repetition_cards_count": 96,
+    "total_reviews_count": 118,
+    "today_time_minutes": 34.8,
+    "today_session_time_minutes": 53.3,
+    "effective_study_minutes": 53.3,
+    "today_lapses_count": 22,
     "today_new_count": 0,
-    "today_review_count": 0,
-    "today_deck_breakdown": {},
+    "today_review_count": 96,
+    "today_deck_breakdown": {
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 8,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 110
+    },
     "new_by_deck": {},
     "new_opened_by_deck": {},
-    "rep_by_deck": {},
+    "rep_by_deck": {
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 88,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 8
+    },
     "yesterday_reviewed_count": 105,
     "yesterday_new_cards_count": 105,
     "yesterday_new_opened_count": 106,
     "yesterday_repetition_cards_count": 311,
     "yesterday_total_reviews_count": 616,
     "yesterday_time_minutes": 179,
-    "due_today_count": 1389,
-    "due_reviews_count": 1389,
+    "due_today_count": 1293,
+    "due_reviews_count": 1293,
     "cumulative_cards_learned": 4953,
     "total_curriculum_cards": 8740,
     "curriculum_progress_pct": 56.7,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 326,
+    "due_tomorrow_count": 351,
     "due_tomorrow_deck_breakdown": {
       "TB Atmung :: Einführung und Abschluss Atmung": 2,
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 16,
@@ -9545,8 +9541,8 @@
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 9,
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 30,
       "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 31,
-      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 4,
-      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 6
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 5,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 30
     },
     "due_tomorrow_topics": [
       {
@@ -9555,6 +9551,10 @@
       },
       {
         "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+        "count": 30
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
         "count": 30
       },
       {
@@ -9610,10 +9610,6 @@
         "count": 7
       },
       {
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-        "count": 6
-      },
-      {
         "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
         "count": 5
       },
@@ -9630,6 +9626,10 @@
         "count": 5
       },
       {
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "count": 5
+      },
+      {
         "deck": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
         "count": 4
       },
@@ -9643,10 +9643,6 @@
       },
       {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
-        "count": 4
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
         "count": 4
       },
       {
@@ -9742,7 +9738,88 @@
         "count": 1
       }
     ],
-    "recent_reviews_sample": [],
+    "recent_reviews_sample": [
+      {
+        "time": "11:14:39",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 2,
+        "ease_label": "Schwer",
+        "type_label": "Wiederholung",
+        "front": "Wie ist die Nährstoffdichte definiert? Funktion?"
+      },
+      {
+        "time": "11:14:20",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Was (und wie) kann mit einer biolelekrischen Impedanzanalyse bestimmt werden?"
+      },
+      {
+        "time": "11:14:09",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Definition Grundbedarf"
+      },
+      {
+        "time": "11:14:05",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Wie sind die Gewichtsklassen über den BMI definiert?"
+      },
+      {
+        "time": "11:13:55",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Aufgaben der Ernährung?"
+      },
+      {
+        "time": "11:13:51",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "In welche Formen wird die Energie aus der Nahrung umgewandelt?"
+      },
+      {
+        "time": "11:13:43",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Karte"
+      },
+      {
+        "time": "11:13:41",
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "ease": 2,
+        "ease_label": "Schwer",
+        "type_label": "Wiederholung",
+        "front": "Welchen Anteil machen die Organe am Grundumsatz aus?"
+      },
+      {
+        "time": "11:13:03",
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Die Proteinqualität: biologischPDCAAS? → was ist das und wie wirds berechnet?"
+      },
+      {
+        "time": "11:13:01",
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "sind KH nicht-essentiell?"
+      }
+    ],
     "due_tomorrow_sample": [
       {
         "card_id": 1673130738159,
@@ -9820,7 +9897,7 @@
         "front": "Karte"
       }
     ],
-    "last_sync_timestamp": "2026-11-19T10:53:06.823611",
+    "last_sync_timestamp": "2026-11-19T11:22:36.525796",
     "current_day_index": 423,
     "target_day_index": 423,
     "next_day_index": 424

@@ -138,11 +138,17 @@ SMART_UNSEEN_DAYS = 7
 SMART_OVERDUE_GUARD_DAYS = 6
 
 
+def _get_time_guard_r_cap(r_threshold: float) -> float:
+    return round(min(0.90, float(r_threshold) + 0.05), 2)
+
+
 def _build_smart_filter_suffix(r_threshold: float) -> str:
     """Builds the Anki search suffix matching Smart Focus (Vortag + weak FSRS + >=7d unseen risk)."""
+    t_cap = _get_time_guard_r_cap(r_threshold)
     return (
         f"is:due (introduced:2 or prop:r<{r_threshold:.2f} "
-        f"or (-rated:{SMART_UNSEEN_DAYS} (prop:lapses>=2 or prop:due<=-{SMART_OVERDUE_GUARD_DAYS})))"
+        f"or (-rated:{SMART_UNSEEN_DAYS} prop:r<{t_cap:.2f} "
+        f"(prop:lapses>=2 or prop:reps<=2 or prop:due<=-{SMART_OVERDUE_GUARD_DAYS})))"
     )
 
 
@@ -154,19 +160,23 @@ def evaluate_due_card_smart_focus(
     lapses: int,
     overdue_days: int,
     r_threshold: float,
+    reps: int = 99,
 ):
     """
     Classifies a due card into (is_weak_fsrs, is_time_risk, is_smart_needed).
-    Ensures cards unseen for >=7 days with prior lapses or >=6d overdue are guarded
-    even when flat FSRS-6 decay still estimates R >= threshold.
+    Ensures cards unseen for >=7 days whose recall dropped below target (r < r_threshold + 0.05)
+    and that either were only reviewed 1-2x so far (reps<=2), had prior lapses (lapses>=2),
+    or are >=6d overdue are guarded even when flat FSRS-6 decay still estimates R >= threshold.
     """
+    t_cap = _get_time_guard_r_cap(r_threshold)
     is_weak_fsrs = (not is_vortag) and (r_prob < r_threshold)
     unseen_week_plus = (last_rev_ms is None) or (last_rev_ms < unseen_cutoff_ms)
     is_time_risk = (
         (not is_vortag)
         and (not is_weak_fsrs)
         and unseen_week_plus
-        and (lapses >= 2 or overdue_days >= SMART_OVERDUE_GUARD_DAYS)
+        and (r_prob < t_cap)
+        and (lapses >= 2 or reps <= 2 or overdue_days >= SMART_OVERDUE_GUARD_DAYS)
     )
     return is_weak_fsrs, is_time_risk, (is_vortag or is_weak_fsrs or is_time_risk)
 
@@ -183,6 +193,176 @@ def _normalize_focus_params(focus_mode: Optional[str] = "smart", r_threshold: Op
     closest = min(SMART_R_THRESHOLDS, key=lambda k: abs(k - r_val))
     r_key = f"{closest:.2f}"
     return mode, r_val, r_key
+
+
+def _score_and_describe_topic(
+    t: Dict[str, Any],
+    eff_mode: str = "smart",
+    eff_r_val: float = 0.80,
+    eff_r_key: str = "0.80",
+) -> None:
+    """
+    Dynamically computes undiluted FSRS recall, overdue age, urgency_score, urgency_level,
+    level_badge, color, and action_recommendation for a topic under (eff_mode, eff_r_val).
+    Guarantees 100% consistency whether called during fresh DB scan or cached threshold switch.
+    """
+    due_tot = int(t.get("due_today", 0) or 0)
+    active_revs = int(t.get("active_reviews", 0) or 0)
+    total_revs = int(t.get("total_reviews", 0) or 0)
+    if due_tot == 0 and active_revs == 0 and int(t.get("due_tomorrow", 0) or 0) == 0 and total_revs == 0:
+        return
+
+    r_pct_label = int(round(eff_r_val * 100))
+    sc_map = t.get("smart_due_counts")
+    if isinstance(sc_map, dict) and sc_map:
+        smart_val = int(sc_map.get(eff_r_key, t.get("smart_due_today", due_tot)) or 0)
+        time_val = int(t.get("time_risk_due_counts", {}).get(eff_r_key, t.get("time_risk_due_today", 0)) or 0)
+        weak_val = int(
+            t.get("weak_due_counts", {}).get(
+                eff_r_key,
+                max(0, smart_val - int(t.get("vortag_due_today", 0) or 0) - time_val),
+            )
+            or 0
+        )
+        solid_val = max(0, due_tot - smart_val)
+    else:
+        smart_val = due_tot
+        weak_val = due_tot
+        time_val = 0
+        solid_val = 0
+
+    eff_due = smart_val if eff_mode == "smart" else due_tot
+    t["smart_due_today"] = smart_val
+    t["weak_due_today"] = weak_val
+    t["time_risk_due_today"] = time_val
+    t["solid_due_today"] = solid_val if eff_mode == "smart" else 0
+    t["active_due_today"] = eff_due
+
+    all_ret_pct = float(t.get("all_avg_retrievability_pct", t.get("avg_retrievability_pct", 100.0)) or 100.0)
+    all_od_days = float(t.get("all_avg_overdue_days", t.get("avg_overdue_days", 0.0)) or 0.0)
+    sm_ret_map = t.get("smart_avg_retrievability_map") or {}
+    sm_od_map = t.get("smart_avg_overdue_map") or {}
+    sm_un_map = t.get("smart_avg_unseen_map") or {}
+
+    if eff_mode == "smart" and smart_val > 0:
+        active_ret_pct = float(sm_ret_map.get(eff_r_key, all_ret_pct))
+        active_od_days = float(sm_od_map.get(eff_r_key, all_od_days))
+        active_unseen_days = float(sm_un_map.get(eff_r_key, t.get("days_since_last_review") or 0.0))
+    else:
+        active_ret_pct = all_ret_pct
+        active_od_days = all_od_days
+        active_unseen_days = float(t.get("days_since_last_review") or 0.0)
+
+    t["avg_retrievability_pct"] = round(active_ret_pct, 1)
+    t["avg_overdue_days"] = round(active_od_days, 1)
+
+    vortag_due_cnt = int(t.get("vortag_due_today", 0) or 0)
+    uncons_new_due = int(t.get("learned_yesterday_due_today", vortag_due_cnt) or 0)
+    learned_yest_total = int(t.get("learned_yesterday", 0) or 0)
+    # Only flag VORTAG_NEU if there are STILL unrepeated Vortag cards due right now!
+    is_vortag_new = (vortag_due_cnt > 0) if eff_mode == "smart" else (due_tot > 0 and uncons_new_due > 0)
+    t["is_vortag_new"] = is_vortag_new
+
+    days_ago_val = t.get("days_since_last_review")
+    days_ago = float(days_ago_val) if days_ago_val is not None else 999.0
+    raw_days_ago = float(t.get("raw_days_since_last_review", days_ago if days_ago < 900 else 999.0))
+    fail_rate = float(t.get("fail_rate_pct", 0.0) or 0.0)
+    retention_rate = float(t.get("retention_rate_pct", 100.0) or 100.0)
+    avg_ease_pct = float(t.get("avg_ease_pct", 250.0) or 250.0)
+    rep_today_cnt = int(t.get("repeated_today", 0) or 0)
+    rep_yest_cnt = int(t.get("repeated_yesterday", 0) or 0)
+
+    if days_ago < 900:
+        if active_od_days > 1.2:
+            effective_overdue = max(days_ago, min(days_ago + 3.0, active_unseen_days * 0.55), active_od_days * 1.35)
+        else:
+            effective_overdue = max(raw_days_ago if raw_days_ago < 900 else days_ago, active_od_days)
+        if effective_overdue <= 10.0:
+            time_score = (effective_overdue / 10.0) * 22.0
+        else:
+            time_score = 22.0 + min(8.0, ((effective_overdue - 10.0) / 15.0) * 8.0)
+    else:
+        effective_overdue = 10.0
+        time_score = 18.0 if active_revs > 0 else 0.0
+
+    fail_score = min(22.0, (fail_rate / 42.0) * 22.0)
+    forgetting_risk_score = min(26.0, max(0.0, (85.0 - active_ret_pct) * 2.5)) if eff_due > 0 else 0.0
+    ease_penalty = min(8.0, max(0.0, (250.0 - avg_ease_pct) / 40.0 * 8.0))
+    volume_score = min(14.0, (eff_due / 75.0) * 14.0)
+
+    rotated_cooldown = (not is_vortag_new) and (rep_yest_cnt >= 20)
+    t["rotated_cooldown"] = rotated_cooldown
+    rotation_adjustment = -22.0 if rotated_cooldown else 0.0
+
+    raw_urgency = time_score + fail_score + forgetting_risk_score + ease_penalty + volume_score + rotation_adjustment
+    if 0 < eff_due < 10 and not is_vortag_new:
+        raw_urgency *= 0.78
+
+    if is_vortag_new:
+        new_boost = min(7.9, max(vortag_due_cnt, uncons_new_due, learned_yest_total) / 15.0)
+        urgency_score = round(92.0 + new_boost, 1)
+        urgency_level = "VORTAG_NEU"
+        level_badge = "🔥 Vortag neu gelernt"
+        color = "#f85149"
+        sub_sorted = sorted(t.get("yesterday_subdecks") or [], key=lambda x: x.get("new_learned", 0), reverse=True)
+        sub_str = ", ".join([f"{s['new_learned']}× {s['subdeck']}" for s in sub_sorted[:3]])
+        tr_txt = f" + {time_val} >7d ungesehen" if time_val > 0 else ""
+        action = (
+            f"Tag-1-Pflichtwiederholung: {vortag_due_cnt} Vortag-Karten + {weak_val} schwache{tr_txt} "
+            f"({sub_str}) – {solid_val} solide zurückgestellt."
+        )
+    elif eff_mode == "smart" and due_tot > 0 and smart_val == 0:
+        urgency_score = round(min(12.0, max(1.0, (90.0 - all_ret_pct) * 0.5)), 1)
+        urgency_level = "STABIL"
+        level_badge = "🟢 Gefestigt (0 nötig)"
+        color = "#3fb950"
+        action = f"Alle {due_tot} fälligen Karten sitzen stabil (Ø Recall {all_ret_pct}% ≥ {r_pct_label}%) – heute kein Fokus nötig."
+    elif eff_due > 0 and (raw_urgency >= 42.0 or fail_rate >= 35.0 or effective_overdue >= 8.0 or active_ret_pct < (eff_r_val * 100.0)):
+        urgency_score = round(max(15.0, min(91.0, raw_urgency)), 1)
+        urgency_level = "KRITISCH"
+        level_badge = "🚨 Höchste Priorität"
+        color = "#f85149"
+        need_non_v = (weak_val + time_val) if eff_mode == "smart" else due_tot
+        if active_ret_pct < (eff_r_val * 100.0):
+            action = f"Hohes Vergessensrisiko (Ø Recall {round(active_ret_pct, 1)}%): {need_non_v} gefährdete Karten gezielt festigen!"
+        elif active_od_days >= 4.0:
+            action = f"Sofort wiederholen: Fokus-Karten im Schnitt {round(active_od_days, 1)} Tage überfällig ({need_non_v} nötig, Retention {retention_rate}%)!"
+        else:
+            action = f"Sofort wiederholen: Seit {days_ago}d keine große Session ({need_non_v} gefährdet)!"
+    elif eff_due > 0:
+        urgency_score = round(max(8.0, min(91.0, raw_urgency)), 1)
+        urgency_level = "HOCH"
+        level_badge = "🔄 Rotation (Gestern gelernt)" if rotated_cooldown else "⚠️ Wiederholen"
+        color = "#58a6ff" if rotated_cooldown else "#d29922"
+        if rotated_cooldown:
+            action = f"Gestern bereits {rep_yest_cnt} Karten wiederholt – heute rotieren zuerst länger wartende Decks nach oben."
+        else:
+            action = f"Steht für die rollierende Wiederholung bereit ({eff_due} nötig)."
+    else:
+        urgency_score = round(max(0.0, min(10.0, (time_score + fail_score) * 0.25)), 1)
+        urgency_level = "STABIL"
+        level_badge = "✅ Heute erledigt" if rep_today_cnt > 0 else "✅ Stabil"
+        color = "#3fb950"
+        action = (
+            f"Heute bereits {rep_today_cnt} Karten erfolgreich wiederholt!"
+            if rep_today_cnt > 0
+            else "Kürzlich wiederholt & aktuell 0 Karten fällig."
+        )
+
+    if days_ago < 900:
+        if active_od_days > days_ago + 1.5 and eff_due > 0:
+            days_str = f"{days_ago}d (Ø {round(active_od_days, 1)}d fällig)"
+        else:
+            days_str = f"{days_ago}d"
+    else:
+        days_str = "Neu / nie"
+
+    t["days_since_last_review_str"] = days_str
+    t["urgency_score"] = urgency_score
+    t["urgency_level"] = urgency_level
+    t["level_badge"] = level_badge
+    t["color"] = color
+    t["action_recommendation"] = action
 
 
 def compute_fsrs_retrievability(
@@ -320,8 +500,10 @@ def calculate_backlog_triage(
         cur = conn.cursor()
 
         crt = cur.execute("SELECT crt FROM col").fetchone()[0]
-        current_day = int((now.timestamp() - crt) // 86400)
+        crt_date = datetime.fromtimestamp(crt).date()
+        current_day = (today_4am.date() - crt_date).days
         next_day = current_day + 1
+        crt_anchor_sec = int(today_4am.timestamp()) - (current_day * 86400)
 
         raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
         deck_map = {}
@@ -444,7 +626,7 @@ def calculate_backlog_triage(
         activity_rows = cur.execute(
             sql_daily_activity,
             [
-                crt,
+                crt_anchor_sec,
                 today_ms, today_ms,
                 yesterday_ms, today_ms, yesterday_ms,
             ] + dids + [sem_start_ts]
@@ -452,7 +634,7 @@ def calculate_backlog_triage(
 
         # Per-card FSRS retrievability, Vortag & >=7d unseen time-risk inspection for Smart Efficiency Triage
         sql_due_cards_detail = f"""
-        SELECT c.did, c.queue, c.due, c.ivl, c.lapses, c.data, fr.first_rev, fr.last_rev
+        SELECT c.did, c.queue, c.due, c.ivl, c.lapses, c.reps, c.data, fr.first_rev, fr.last_rev
         FROM cards c
         LEFT JOIN (
             SELECT cid, MIN(id) as first_rev, MAX(id) as last_rev
@@ -485,9 +667,13 @@ def calculate_backlog_triage(
         "smart": {"0.78": 0, "0.80": 0, "0.82": 0},
         "weak": {"0.78": 0, "0.80": 0, "0.82": 0},
         "time_risk": {"0.78": 0, "0.80": 0, "0.82": 0},
+        "smart_r_sum": {"0.78": 0.0, "0.80": 0.0, "0.82": 0.0},
+        "smart_od_sum": {"0.78": 0.0, "0.80": 0.0, "0.82": 0.0},
+        "smart_unseen_sum": {"0.78": 0.0, "0.80": 0.0, "0.82": 0.0},
+        "smart_unseen_cnt": {"0.78": 0, "0.80": 0, "0.82": 0},
         "subdecks": defaultdict(lambda: {"all_due": 0, "vortag_due": 0, "smart_78": 0, "smart_80": 0, "smart_82": 0}),
     })
-    for did, q, due, ivl, card_lapses, data_str, first_rev, last_rev in due_cards_detail_rows:
+    for did, q, due, ivl, card_lapses, card_reps, data_str, first_rev, last_rev in due_cards_detail_rows:
         tb, prof, _, _, sub_title = deck_map[did]
         key = (tb, prof)
         ps = prof_smart[key]
@@ -496,6 +682,7 @@ def calculate_backlog_triage(
         )
         is_v_card = bool(first_rev is not None and yesterday_ms <= first_rev < today_ms)
         overdue_days = max(0, current_day - (due or 0)) if (q or 2) == 2 else 0
+        unseen_card_days = max(0.0, (now_ts - (float(last_rev) / 1000.0)) / 86400.0) if last_rev else None
         ps["total"] += 1
         ps["r_sum"] += r_prob
         if is_v_card:
@@ -514,6 +701,7 @@ def calculate_backlog_triage(
                 lapses=card_lapses or 0,
                 overdue_days=overdue_days,
                 r_threshold=thr,
+                reps=card_reps if card_reps is not None else 99,
             )
             if is_weak_thr:
                 ps["weak"][tkey] += 1
@@ -521,6 +709,11 @@ def calculate_backlog_triage(
                 ps["time_risk"][tkey] += 1
             if is_needed_thr:
                 ps["smart"][tkey] += 1
+                ps["smart_r_sum"][tkey] += r_prob
+                ps["smart_od_sum"][tkey] += overdue_days
+                if unseen_card_days is not None:
+                    ps["smart_unseen_sum"][tkey] += unseen_card_days
+                    ps["smart_unseen_cnt"][tkey] += 1
                 if thr == 0.78:
                     sub_rec["smart_78"] += 1
                 elif thr == 0.80:
@@ -613,6 +806,8 @@ def calculate_backlog_triage(
                 "weak_due_today": 0,
                 "time_risk_due_today": 0,
                 "solid_due_today": 0,
+                "all_avg_retrievability_pct": 100.0,
+                "smart_avg_retrievability_map": {"0.78": 100.0, "0.80": 100.0, "0.82": 100.0},
                 "avg_retrievability_pct": 100.0,
                 "smart_subdecks": [],
                 "due_tomorrow": 0,
@@ -623,8 +818,12 @@ def calculate_backlog_triage(
                 "yesterday_subdecks": [],
                 "is_vortag_new": False,
                 "rotated_cooldown": False,
+                "all_avg_overdue_days": 0.0,
+                "smart_avg_overdue_map": {"0.78": 0.0, "0.80": 0.0, "0.82": 0.0},
+                "smart_avg_unseen_map": {"0.78": 0.0, "0.80": 0.0, "0.82": 0.0},
                 "avg_overdue_days": 0.0,
                 "active_reviews": 0,
+                "raw_days_since_last_review": None,
                 "days_since_last_review": None,
                 "days_since_last_review_str": "Noch nicht im Umlauf",
                 "avg_ease_pct": 250.0,
@@ -649,7 +848,7 @@ def calculate_backlog_triage(
 
         ps = prof_smart.get((tb, prof))
         due_cnt_total = g["due_today"]
-        avg_ret_pct = round((ps["r_sum"] / max(1, ps["total"])) * 100.0, 1) if (ps and ps["total"] > 0) else 100.0
+        all_ret_pct = round((ps["r_sum"] / max(1, ps["total"])) * 100.0, 1) if (ps and ps["total"] > 0) else 100.0
         vortag_due_cnt = ps["vortag_due"] if ps else 0
         smart_counts = {
             tkey: (ps["smart"][tkey] if ps else 0)
@@ -667,6 +866,37 @@ def calculate_backlog_triage(
             tkey: max(0, due_cnt_total - smart_counts[tkey])
             for tkey in ("0.78", "0.80", "0.82")
         }
+
+        last_ms = g["last_ms"]
+        raw_days_ago = round((now_ms - last_ms) / (86400 * 1000), 1) if last_ms > 0 else 999.0
+
+        # Scale substantive session threshold with actual due cards (min 2 for small decks, up to 35 for large decks)
+        min_session_revs = max(2, min(35, int(round(max(g["due_today"], 4) * 0.22))))
+        day_dict = prof_day_revs.get((tb, prof), {})
+        subst_days = [d for d, cnt in day_dict.items() if cnt >= min_session_revs]
+        if subst_days:
+            last_subst_day = max(subst_days)
+            subst_days_ago = max(0.0, float(current_day - last_subst_day))
+            days_ago = round(max(raw_days_ago, subst_days_ago), 1) if rep_today_cnt < min_session_revs else raw_days_ago
+        else:
+            days_ago = raw_days_ago
+
+        all_overdue_days = round(g["sum_overdue_days"] / g["due_today"], 1) if g["due_today"] > 0 else 0.0
+        smart_ret_map = {}
+        smart_od_map = {}
+        smart_unseen_map = {}
+        for tkey in ("0.78", "0.80", "0.82"):
+            sc_n = smart_counts[tkey]
+            if ps and sc_n > 0:
+                smart_ret_map[tkey] = round((ps["smart_r_sum"][tkey] / sc_n) * 100.0, 1)
+                smart_od_map[tkey] = round(ps["smart_od_sum"][tkey] / sc_n, 1)
+                u_cnt = ps["smart_unseen_cnt"][tkey]
+                smart_unseen_map[tkey] = round(ps["smart_unseen_sum"][tkey] / u_cnt, 1) if u_cnt > 0 else (days_ago if days_ago < 900 else 0.0)
+            else:
+                smart_ret_map[tkey] = all_ret_pct
+                smart_od_map[tkey] = 0.0
+                smart_unseen_map[tkey] = days_ago if days_ago < 900 else 0.0
+
         subdeck_list = []
         if ps:
             for sname, svals in ps["subdecks"].items():
@@ -682,118 +912,13 @@ def calculate_backlog_triage(
                 })
             subdeck_list.sort(key=lambda x: (x["vortag_due"], x["smart_due_counts"]["0.80"], x["all_due"]), reverse=True)
 
-        last_ms = g["last_ms"]
-        raw_days_ago = round((now_ms - last_ms) / (86400 * 1000), 1) if last_ms > 0 else 999.0
-
-        # Calculate days since last substantive review session
-        # Scales threshold with deck size (3 cards for tiny decks, 10 cards for normal/large decks)
-        min_session_revs = max(3, min(10, int(max(g["active_reviews"], g["due_today"]) * 0.25)))
-        day_dict = prof_day_revs.get((tb, prof), {})
-        subst_days = [d for d, cnt in day_dict.items() if cnt >= min_session_revs]
-        if subst_days:
-            last_subst_day = max(subst_days)
-            subst_days_ago = max(0.0, float(current_day - last_subst_day))
-            days_ago = round(max(raw_days_ago, subst_days_ago), 1) if rep_today_cnt < min_session_revs else raw_days_ago
-        else:
-            days_ago = raw_days_ago
-
-        avg_overdue_days = round(g["sum_overdue_days"] / g["due_today"], 1) if g["due_today"] > 0 else 0.0
         avg_ease_pct = round(g["sum_factor"] / g["count_factor"] / 10, 1) if g["count_factor"] > 0 else 250.0
         fail_rate = round((g["fail_count"] / g["total_revs"] * 100) if g["total_revs"] > 0 else 0.0, 1)
         retention_rate = round(100.0 - fail_rate, 1) if g["total_revs"] > 0 else 100.0
-
         learned_yest_total = g["learned_yesterday"]
         uncons_new_due = g["learned_yest_due_now"] + g["learned_prev48_uncons_due"]
-        is_vortag_new = (g["due_today"] > 0) and (learned_yest_total > 0 or uncons_new_due > 0)
 
-        # Effective overdue metric combines session recency and actual due-card age
-        effective_overdue = max(days_ago if days_ago < 900 else 10.0, avg_overdue_days)
-
-        # 1. Time / Overdue score (0-40 points)
-        if days_ago < 900:
-            if effective_overdue <= 10.0:
-                time_score = (effective_overdue / 10.0) * 28.0
-            else:
-                time_score = 28.0 + min(12.0, ((effective_overdue - 10.0) / 20.0) * 12.0)
-        else:
-            time_score = 20.0 if g["active_reviews"] > 0 else 0.0
-
-        # 2. Retention / Fail score (0-24 points)
-        fail_score = min(24.0, (fail_rate / 50.0) * 24.0)
-
-        # 3. FSRS Forgetting Risk score (0-18 points): ranks decks with lower recall probability higher!
-        forgetting_risk_score = min(18.0, max(0.0, (86.0 - avg_ret_pct) * 1.6)) if g["due_today"] > 0 else 0.0
-
-        # 4. Ease / stability penalty (0-10 points)
-        ease_penalty = min(10.0, max(0.0, (250.0 - avg_ease_pct) / 40.0 * 10.0))
-
-        # 5. Smart due volume bonus (0-8 points)
-        volume_score = min(8.0, (max(smart_counts.get(eff_r_key, 0), g["due_tomorrow"]) / 50.0) * 8.0)
-
-        # 6. Daily Rotation Cooldown:
-        # If this professor was already heavily repeated yesterday (>= 20 non-new reviews)
-        # and has NO newly learned cards from yesterday, step back today so waiting decks rotate up!
-        rotated_cooldown = (not is_vortag_new) and (rep_yest_cnt >= 20 or (days_ago <= 1.2 and avg_overdue_days < 1.5))
-        rotation_adjustment = -22.0 if rotated_cooldown else 0.0
-
-        raw_urgency = time_score + fail_score + forgetting_risk_score + ease_penalty + volume_score + rotation_adjustment
-
-        if is_vortag_new:
-            # Tier 1 Top Priority: Newly learned cards from yesterday MUST be consolidated first!
-            new_boost = min(7.9, max(learned_yest_total, uncons_new_due) / 15.0)
-            urgency_score = round(92.0 + new_boost, 1)
-            urgency_level = "VORTAG_NEU"
-            level_badge = "🔥 Vortag neu gelernt"
-            color = "#f85149"
-            sub_sorted = sorted(g["yesterday_subdecks"], key=lambda x: x["new_learned"], reverse=True)
-            sub_str = ", ".join([f"{s['new_learned']}× {s['subdeck']}" for s in sub_sorted[:3]])
-            tr_val = time_risk_counts.get(eff_r_key, 0)
-            tr_txt = f" + {tr_val} >7d ungesehen" if tr_val > 0 else ""
-            action = (
-                f"Tag-1-Pflichtwiederholung: {vortag_due_cnt} Vortag-Karten + {weak_counts.get(eff_r_key, 0)} schwache{tr_txt} "
-                f"({sub_str}) – {solid_counts.get(eff_r_key, 0)} solide zurückgestellt."
-            )
-        elif g["due_today"] > 0 and (raw_urgency >= 42.0 or fail_rate >= 35.0 or effective_overdue >= 8.0 or avg_ret_pct < 80.0):
-            urgency_score = round(max(15.0, min(91.0, raw_urgency)), 1)
-            urgency_level = "KRITISCH"
-            level_badge = "🚨 Höchste Priorität"
-            color = "#f85149"
-            need_non_v = weak_counts.get(eff_r_key, 0) + time_risk_counts.get(eff_r_key, 0)
-            if avg_ret_pct < 80.0:
-                action = f"Hohes Vergessensrisiko (Ø Recall {avg_ret_pct}%): {need_non_v} gefährdete Karten gezielt festigen!"
-            elif avg_overdue_days >= 5.0:
-                action = f"Sofort wiederholen: Karten im Schnitt {avg_overdue_days} Tage überfällig ({need_non_v} nötig, Retention {retention_rate}%)!"
-            else:
-                action = f"Sofort wiederholen: Seit {days_ago}d keine große Session ({need_non_v} gefährdet)!"
-        elif g["due_today"] > 0:
-            urgency_score = round(max(8.0, min(91.0, raw_urgency)), 1)
-            urgency_level = "HOCH"
-            level_badge = "🔄 Rotation (Gestern gelernt)" if rotated_cooldown else "⚠️ Wiederholen"
-            color = "#58a6ff" if rotated_cooldown else "#d29922"
-            if rotated_cooldown:
-                action = f"Gestern bereits {rep_yest_cnt} Karten wiederholt – heute rotieren zuerst länger wartende Decks nach oben."
-            else:
-                action = "Steht für die rollierende Wiederholung bereit."
-        else:
-            urgency_score = round(max(0.0, time_score + fail_score + ease_penalty), 1)
-            urgency_level = "STABIL"
-            level_badge = "✅ Heute erledigt" if rep_today_cnt > 0 else "✅ Stabil"
-            color = "#3fb950"
-            action = (
-                f"Heute bereits {rep_today_cnt} Karten erfolgreich wiederholt!"
-                if rep_today_cnt > 0
-                else "Kürzlich wiederholt & aktuell 0 Karten fällig."
-            )
-
-        if days_ago < 900:
-            if avg_overdue_days > days_ago + 2.0 and g["due_today"] > 0:
-                days_str = f"{days_ago}d (Ø {avg_overdue_days}d fällig)"
-            else:
-                days_str = f"{days_ago}d"
-        else:
-            days_str = "Neu / nie"
-
-        topics.append({
+        topic_entry = {
             "themenblock": tb,
             "dozent": prof,
             "deck_name": f"{tb} › {prof}",
@@ -810,7 +935,9 @@ def calculate_backlog_triage(
             "weak_due_today": weak_counts[eff_r_key],
             "time_risk_due_today": time_risk_counts[eff_r_key],
             "solid_due_today": solid_counts[eff_r_key],
-            "avg_retrievability_pct": avg_ret_pct,
+            "all_avg_retrievability_pct": all_ret_pct,
+            "smart_avg_retrievability_map": smart_ret_map,
+            "avg_retrievability_pct": smart_ret_map[eff_r_key] if (eff_mode == "smart" and smart_counts[eff_r_key] > 0) else all_ret_pct,
             "smart_subdecks": subdeck_list,
             "due_tomorrow": g["due_tomorrow"],
             "repeated_today": rep_today_cnt,
@@ -818,27 +945,33 @@ def calculate_backlog_triage(
             "learned_yesterday": learned_yest_total,
             "learned_yesterday_due_today": uncons_new_due,
             "yesterday_subdecks": sorted(g["yesterday_subdecks"], key=lambda x: x["new_learned"], reverse=True),
-            "is_vortag_new": is_vortag_new,
-            "rotated_cooldown": rotated_cooldown,
-            "avg_overdue_days": avg_overdue_days,
+            "is_vortag_new": False,
+            "rotated_cooldown": False,
+            "all_avg_overdue_days": all_overdue_days,
+            "smart_avg_overdue_map": smart_od_map,
+            "smart_avg_unseen_map": smart_unseen_map,
+            "avg_overdue_days": smart_od_map[eff_r_key] if (eff_mode == "smart" and smart_counts[eff_r_key] > 0) else all_overdue_days,
             "active_reviews": g["active_reviews"],
+            "raw_days_since_last_review": raw_days_ago if raw_days_ago < 900 else None,
             "days_since_last_review": days_ago if days_ago < 900 else None,
-            "days_since_last_review_str": days_str,
+            "days_since_last_review_str": "",
             "avg_ease_pct": avg_ease_pct,
             "fail_rate_pct": fail_rate,
             "retention_rate_pct": retention_rate,
             "total_fails": g["fail_count"],
             "total_reviews": g["total_revs"],
-            "urgency_score": urgency_score,
-            "urgency_level": urgency_level,
-            "level_badge": level_badge,
-            "color": color,
-            "action_recommendation": action,
+            "urgency_score": 0.0,
+            "urgency_level": "STABIL",
+            "level_badge": "",
+            "color": "#3fb950",
+            "action_recommendation": "",
             "anki_filter_query": anki_filter_query,
             "anki_filter_query_all": anki_filter_query_all,
             "smart_anki_filter_query": smart_anki_filter_query,
             "anki_hard_query": anki_hard_query,
-        })
+        }
+        _score_and_describe_topic(topic_entry, eff_mode=eff_mode, eff_r_val=eff_r_val, eff_r_key=eff_r_key)
+        topics.append(topic_entry)
 
     # Sort topics overall: due_today > 0 first, then Vortag newly learned, then urgency_score descending
     topics.sort(
@@ -983,40 +1116,38 @@ def _apply_budget(
     budget = max(1, int(budget or 350))
     all_topics = result.get("topics", [])
 
-    # Recompute smart vs solid counts dynamically for the requested focus_mode & r_threshold
+    # Recompute smart vs solid counts, undiluted FSRS recall, and urgency scores dynamically for focus_mode & r_threshold
     for t in all_topics:
+        _score_and_describe_topic(t, eff_mode=eff_mode, eff_r_val=eff_r_val, eff_r_key=eff_r_key)
         due_tot = int(t.get("due_today", 0) or 0)
-        sc_map = t.get("smart_due_counts")
-        if isinstance(sc_map, dict) and sc_map:
-            smart_val = int(sc_map.get(eff_r_key, t.get("smart_due_today", due_tot)) or 0)
-            time_val = int(t.get("time_risk_due_counts", {}).get(eff_r_key, t.get("time_risk_due_today", 0)) or 0)
-            weak_val = int(
-                t.get("weak_due_counts", {}).get(
-                    eff_r_key,
-                    max(0, smart_val - int(t.get("vortag_due_today", 0) or 0) - time_val),
-                )
-                or 0
-            )
-            solid_val = max(0, due_tot - smart_val)
-        else:
-            smart_val = due_tot
-            weak_val = due_tot
-            time_val = 0
-            solid_val = 0
-
-        eff_due = smart_val if eff_mode == "smart" else due_tot
-        t["smart_due_today"] = smart_val
-        t["weak_due_today"] = weak_val
-        t["time_risk_due_today"] = time_val
-        t["solid_due_today"] = solid_val if eff_mode == "smart" else 0
-        t["active_due_today"] = eff_due
-
         dclause = t.get("deck_clause")
         if dclause and due_tot > 0:
             smart_q = f"{dclause} {_build_smart_filter_suffix(eff_r_val)}"
             all_q = t.get("anki_filter_query_all") or f"{dclause} is:due"
             t["smart_anki_filter_query"] = smart_q
             t["anki_filter_query"] = smart_q if eff_mode == "smart" else all_q
+
+    all_topics.sort(
+        key=lambda x: (
+            x.get("active_due_today", x.get("due_today", 0)) > 0,
+            x.get("due_today", 0) > 0,
+            x.get("is_vortag_new", False),
+            x.get("urgency_score", 0.0),
+            x.get("avg_overdue_days", 0.0),
+        ),
+        reverse=True,
+    )
+
+    result["urgent_topics"] = [
+        t for t in all_topics
+        if t.get("urgency_level") in ("VORTAG_NEU", "KRITISCH", "HOCH")
+        and t.get("active_due_today", t.get("due_today", 0)) > 0
+    ]
+    result["deferrable_topics"] = [
+        t for t in all_topics
+        if t.get("urgency_level") == "STABIL"
+        or t.get("active_due_today", t.get("due_today", 0)) == 0
+    ]
 
     # Sync updated topic fields into grouped themenbloecke entries
     topic_by_key = {(t.get("themenblock"), t.get("dozent")): t for t in all_topics}
@@ -1027,11 +1158,32 @@ def _apply_budget(
             if src:
                 for fld in (
                     "smart_due_today", "weak_due_today", "time_risk_due_today", "solid_due_today",
-                    "active_due_today", "anki_filter_query", "smart_anki_filter_query",
+                    "active_due_today", "avg_retrievability_pct", "avg_overdue_days",
+                    "is_vortag_new", "rotated_cooldown", "days_since_last_review_str",
+                    "urgency_score", "urgency_level", "level_badge", "color",
+                    "action_recommendation", "anki_filter_query", "smart_anki_filter_query",
                 ):
                     if fld in src:
                         p[fld] = src[fld]
+        profs.sort(
+            key=lambda x: (
+                x.get("active_due_today", x.get("due_today", 0)) > 0,
+                x.get("due_today", 0) > 0,
+                x.get("is_vortag_new", False),
+                x.get("urgency_score", 0.0),
+            ),
+            reverse=True,
+        )
         tb["smart_total_due_today"] = sum(p.get("smart_due_today", p.get("due_today", 0)) for p in profs)
+
+    if isinstance(result.get("themenbloecke"), list):
+        result["themenbloecke"].sort(
+            key=lambda x: (
+                max([p.get("urgency_score", 0.0) for p in x.get("professors", []) if p.get("active_due_today", p.get("due_today", 0)) > 0] or [0.0]),
+                x.get("smart_total_due_today", x.get("total_due_today", 0)),
+            ),
+            reverse=True,
+        )
 
     total_due_today = sum(t.get("due_today", 0) for t in all_topics)
     smart_total_due_today = sum(t.get("smart_due_today", t.get("due_today", 0)) for t in all_topics)
@@ -1202,7 +1354,10 @@ def _apply_budget(
     else:
         deferred_cards_count = active_focus_pool_due
 
-    days_to_clear_backlog = math.ceil(active_focus_pool_due / max(1, budget)) if active_focus_pool_due > 0 else 0
+    if active_focus_pool_due > 0:
+        days_to_clear_backlog = (1 if len(focus_plan_open) > 0 else 0) + len(multi_day_rollover)
+    else:
+        days_to_clear_backlog = 0
 
     result["focus_mode"] = eff_mode
     result["r_threshold"] = eff_r_val
@@ -1288,19 +1443,20 @@ def cache_triage(data: Dict[str, Any]):
         return
     _sanitize_triage_payload(data)
 
-    # Protect against legacy in-memory sync daemons overwriting v2.2 time-aware FSRS schema
+    # Protect against legacy in-memory sync daemons overwriting v2.3 undiluted FSRS schema
     topics = data.get("topics", [])
     is_legacy_payload = bool(topics) and (
         "is_vortag_new" not in topics[0]
         or "smart_due_counts" not in topics[0]
         or "time_risk_due_counts" not in topics[0]
+        or "smart_avg_retrievability_map" not in topics[0]
     )
     if is_legacy_payload:
         try:
             if BACKLOG_TRIAGE_SNAPSHOT_PATH.exists():
                 snap = json.loads(BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8"))
                 snap_topics = snap.get("topics", [])
-                if snap_topics and "time_risk_due_counts" in snap_topics[0]:
+                if snap_topics and "smart_avg_retrievability_map" in snap_topics[0]:
                     data = snap
                     _sanitize_triage_payload(data)
         except Exception:
@@ -1363,6 +1519,8 @@ def get_cached_triage() -> Optional[Dict[str, Any]]:
         if not tps:
             return 0
         t0 = tps[0]
+        if "smart_avg_retrievability_map" in t0:
+            return 4
         if "time_risk_due_counts" in t0:
             return 3
         if "smart_due_counts" in t0:

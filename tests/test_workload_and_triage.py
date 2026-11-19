@@ -245,12 +245,13 @@ def test_real_anki_prefix_queries_and_central_ignore():
 
 
 def test_fsrs_retrievability_and_smart_focus_efficiency():
-    """Verify FSRS retrievability formula, >=7d unseen time-risk guard, smart vs all mode switching, and thresholds."""
+    """Verify FSRS retrievability formula, >=7d unseen time-risk guard, undiluted recall scoring, and mode switching."""
     import json
     import time
     from app.services.anki_backlog_triage import (
         compute_fsrs_retrievability,
         evaluate_due_card_smart_focus,
+        _score_and_describe_topic,
         _apply_budget,
     )
 
@@ -272,25 +273,58 @@ def test_fsrs_retrievability_and_smart_focus_efficiency():
     # Learning / relearning cards (queue 1/3) always flagged weak
     assert compute_fsrs_retrievability(None, now_ts, queue=1) == 0.50
 
-    # Time-unseen guard: card still at R=0.86 is skipped if seen 2 days ago,
-    # but flagged as time_risk if unseen >=7d with lapses>=2 or >=6d overdue!
+    # Time-unseen guard: card at R=0.83 is skipped if seen 2 days ago,
+    # but flagged as time_risk if unseen >=7d with lapses>=2, reps<=2, or >=6d overdue!
     _, time_recent, need_recent = evaluate_due_card_smart_focus(
-        r_prob=0.86, is_vortag=False, last_rev_ms=recent_rev_ms,
-        unseen_cutoff_ms=unseen_cutoff_ms, lapses=2, overdue_days=0, r_threshold=0.80,
+        r_prob=0.83, is_vortag=False, last_rev_ms=recent_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=2, overdue_days=0, r_threshold=0.80, reps=2,
     )
     assert need_recent is False and time_recent is False
 
     _, time_old_lapses, need_old_lapses = evaluate_due_card_smart_focus(
-        r_prob=0.86, is_vortag=False, last_rev_ms=week_old_rev_ms,
-        unseen_cutoff_ms=unseen_cutoff_ms, lapses=2, overdue_days=0, r_threshold=0.80,
+        r_prob=0.83, is_vortag=False, last_rev_ms=week_old_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=2, overdue_days=0, r_threshold=0.80, reps=5,
     )
     assert need_old_lapses is True and time_old_lapses is True
 
+    _, time_old_fresh, need_old_fresh = evaluate_due_card_smart_focus(
+        r_prob=0.83, is_vortag=False, last_rev_ms=week_old_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=0, overdue_days=1, r_threshold=0.80, reps=2,
+    )
+    assert need_old_fresh is True and time_old_fresh is True
+
     _, time_old_overdue, need_old_overdue = evaluate_due_card_smart_focus(
-        r_prob=0.88, is_vortag=False, last_rev_ms=week_old_rev_ms,
-        unseen_cutoff_ms=unseen_cutoff_ms, lapses=0, overdue_days=6, r_threshold=0.80,
+        r_prob=0.84, is_vortag=False, last_rev_ms=week_old_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=0, overdue_days=6, r_threshold=0.80, reps=5,
     )
     assert need_old_overdue is True and time_old_overdue is True
+
+    # Rock-solid card above target retention (R=0.90 >= 0.85) stays skipped
+    _, time_rock_solid, need_rock_solid = evaluate_due_card_smart_focus(
+        r_prob=0.90, is_vortag=False, last_rev_ms=week_old_rev_ms,
+        unseen_cutoff_ms=unseen_cutoff_ms, lapses=0, overdue_days=6, r_threshold=0.80, reps=5,
+    )
+    assert need_rock_solid is False and time_rock_solid is False
+
+    # Verify zero-smart-due deck (due_today > 0 but smart_due_today == 0) is STABIL, not KRITISCH
+    zero_smart_topic = {
+        "themenblock": "TB Atmung", "dozent": "Einführung & Abschluss",
+        "due_today": 8, "active_reviews": 40, "total_reviews": 30, "due_tomorrow": 0,
+        "vortag_due_today": 0, "learned_yesterday": 100, "learned_yesterday_due_today": 0,
+        "smart_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
+        "weak_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
+        "time_risk_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
+        "all_avg_retrievability_pct": 85.3,
+        "smart_avg_retrievability_map": {"0.80": 85.3},
+        "all_avg_overdue_days": 1.0,
+        "smart_avg_overdue_map": {"0.80": 0.0},
+        "smart_avg_unseen_map": {"0.80": 7.0},
+        "days_since_last_review": 7.0,
+    }
+    _score_and_describe_topic(zero_smart_topic, eff_mode="smart", eff_r_val=0.80, eff_r_key="0.80")
+    assert zero_smart_topic["is_vortag_new"] is False
+    assert zero_smart_topic["urgency_level"] == "STABIL"
+    assert zero_smart_topic["urgency_score"] <= 12.0
 
     r78 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350&focus_mode=smart&r_threshold=0.78").json()
     r80 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350&focus_mode=smart&r_threshold=0.80").json()
@@ -301,7 +335,7 @@ def test_fsrs_retrievability_and_smart_focus_efficiency():
     if r80.get("budget_selected_topics"):
         bq = r80["budget_combined_anki_query"]
         assert "introduced:2 or prop:r<0.80" in bq
-        assert "-rated:7 (prop:lapses>=2 or prop:due<=-6)" in bq
+        assert "-rated:7 prop:r<0.85 (prop:lapses>=2 or prop:reps<=2 or prop:due<=-6)" in bq
     if r_all.get("budget_selected_topics"):
         assert "prop:r<" not in r_all["budget_combined_anki_query"]
         assert r_all["total_solid_skipped_today"] == 0

@@ -303,8 +303,8 @@
     "target_day_index": 393,
     "next_day_index": 394
   },
-  "_latest_target_date": "2026-11-19",
-  "_updated_at": "2026-11-19T14:59:52.557308",
+  "_latest_target_date": "2026-11-20",
+  "_updated_at": "2026-11-20T10:05:02.249256",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -9018,9 +9018,9 @@
     "yesterday_time_minutes": 179,
     "due_today_count": 311,
     "due_reviews_count": 311,
-    "cumulative_cards_learned": 4964,
+    "cumulative_cards_learned": 5101,
     "total_curriculum_cards": 8740,
-    "curriculum_progress_pct": 56.8,
+    "curriculum_progress_pct": 58.4,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 326,
     "due_tomorrow_deck_breakdown": {
@@ -9431,7 +9431,7 @@
         "front": "Wie tötet eine CD8-T-Zelle eine virusinfizierte Zelle?"
       }
     ],
-    "last_sync_timestamp": "2026-11-19T14:59:38.507135",
+    "last_sync_timestamp": "2026-11-19T23:59:03.468122",
     "current_day_index": 423,
     "target_day_index": 422,
     "next_day_index": 423
@@ -9440,23 +9440,25 @@
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
     "target_date": "2026-11-19",
-    "is_today": true,
+    "is_today": false,
     "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
     "first_review_time": "10:21",
-    "last_review_time": "14:55",
-    "today_reviewed_count": 11,
-    "new_cards_count": 11,
-    "new_cards_opened_count": 11,
-    "new_cards_in_learning_count": 0,
-    "repetition_cards_count": 386,
-    "total_reviews_count": 489,
-    "today_time_minutes": 155.2,
-    "today_session_time_minutes": 196.1,
-    "effective_study_minutes": 196.1,
-    "today_lapses_count": 90,
-    "today_new_count": 11,
-    "today_review_count": 386,
+    "last_review_time": "16:02",
+    "today_reviewed_count": 146,
+    "new_cards_count": 146,
+    "new_cards_opened_count": 148,
+    "new_cards_in_learning_count": 2,
+    "repetition_cards_count": 387,
+    "total_reviews_count": 703,
+    "today_time_minutes": 202.7,
+    "today_session_time_minutes": 263.6,
+    "effective_study_minutes": 263.6,
+    "today_lapses_count": 161,
+    "today_new_count": 146,
+    "today_review_count": 387,
     "today_deck_breakdown": {
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 212,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 2,
       "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 132,
       "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 29,
       "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 8,
@@ -9481,48 +9483,52 @@
       "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 8
     },
     "new_by_deck": {
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 135,
       "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 11
     },
     "new_opened_by_deck": {
-      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 11
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 136,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 11,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 1
     },
     "rep_by_deck": {
       "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 21,
       "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 88,
-      "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing": 8,
       "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 21,
-      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 39,
-      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 17,
       "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 8,
-      "TB Atmung :: Loffing :: Lunge / Loffing": 21,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 8,
+      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 39,
       "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 16,
       "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 16,
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 5,
       "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 14,
-      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 7,
+      "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing": 8,
       "TB Atmung :: Loffing :: Atemmuskulatur / Loffing": 16,
-      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 16,
       "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 6,
-      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 24,
-      "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 6,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 17,
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 17,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 24,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 16,
+      "TB Atmung :: Loffing :: Lunge / Loffing": 21,
+      "TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing": 4,
+      "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 6,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 1,
       "TB Herz-Kreislauf :: Loffing :: Mediastinum und Perikard / Loffing": 8,
-      "TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing": 4
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 7
     },
-    "yesterday_reviewed_count": 105,
-    "yesterday_new_cards_count": 105,
-    "yesterday_new_opened_count": 106,
-    "yesterday_repetition_cards_count": 311,
-    "yesterday_total_reviews_count": 616,
-    "yesterday_time_minutes": 179,
-    "due_today_count": 1002,
-    "due_reviews_count": 1002,
-    "cumulative_cards_learned": 4964,
+    "yesterday_reviewed_count": 146,
+    "yesterday_new_cards_count": 146,
+    "yesterday_new_opened_count": 148,
+    "yesterday_repetition_cards_count": 387,
+    "yesterday_total_reviews_count": 703,
+    "yesterday_time_minutes": 202,
+    "due_today_count": 387,
+    "due_reviews_count": 387,
+    "cumulative_cards_learned": 5101,
     "total_curriculum_cards": 8740,
-    "curriculum_progress_pct": 56.8,
+    "curriculum_progress_pct": 58.4,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 386,
+    "due_tomorrow_count": 446,
     "due_tomorrow_deck_breakdown": {
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 2,
       "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 4,
@@ -9554,10 +9560,11 @@
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 31,
       "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 5,
       "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 40,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 59,
       "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 4,
       "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 18,
       "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 17,
-      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 31,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 32,
       "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 12,
       "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 7,
       "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 11,
@@ -9575,6 +9582,10 @@
     },
     "due_tomorrow_topics": [
       {
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
+        "count": 59
+      },
+      {
         "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
         "count": 40
       },
@@ -9583,11 +9594,11 @@
         "count": 37
       },
       {
-        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
-        "count": 31
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+        "count": 32
       },
       {
-        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
         "count": 31
       },
       {
@@ -9769,84 +9780,84 @@
     ],
     "recent_reviews_sample": [
       {
-        "time": "14:55:08",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "16:02:27",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Welche unverseifbaren Bestandteile (Fettbegleitstoffe) kann man in grossen Mengen zu sich "
+        "front": "Wie entstehen Maillardprodukte?"
       },
       {
-        "time": "14:55:04",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "16:02:13",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Linolsäurereihe"
+        "front": "Wie entstehen Benzpyrene? Welche Wirkungen hat es?"
       },
       {
-        "time": "14:54:55",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "16:02:03",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Nenne drei wichtige essentielle FS und ihr Vorkommen/Rolle"
+        "front": "Was versteht man unter Nutrigenomik?"
       },
       {
-        "time": "14:54:31",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "16:00:53",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Ölsäurereihe"
+        "front": "Wie wirken Oxalsäure und Phytinsäure? Wo kommen sie vor?"
       },
       {
-        "time": "14:52:00",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "16:00:20",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Wie verändern doppelbindungen den Zustand der Fettsäure? Wodurch werden sie gebildet?"
+        "front": "Was ist Solanin? Welche Schäden kann es verursachen?"
       },
       {
-        "time": "14:51:53",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "15:59:38",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "alpha-Linolensäurereihe"
+        "front": "Was sind Alkaloide?"
       },
       {
-        "time": "14:51:39",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "15:59:34",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Welche Dosis an Alkohol vertragen Mann/Frau? Unterschied?"
+        "front": "Was sind Blausäureglycoside?"
       },
       {
-        "time": "14:51:38",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "15:59:00",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Kriterien für FS-ZufuhrUnverseifbare Bestandteile ?"
+        "front": "Was sind Lecitine?"
       },
       {
-        "time": "14:51:33",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "15:58:57",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Aus was für Saccharide besteht Stärke?"
+        "front": "Karte"
       },
       {
-        "time": "14:51:29",
-        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "time": "15:58:54",
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
         "ease": 3,
         "ease_label": "Gut",
         "type_label": "Neu",
-        "front": "Eigenschaften unlöslicher Ballaststoffe"
+        "front": "Wie funktioniert die Kariesprophylaxe mit Fluor?"
       }
     ],
     "due_tomorrow_sample": [
@@ -9926,9 +9937,393 @@
         "front": "Was für eine Funktion haben NK-Zellen?"
       }
     ],
-    "last_sync_timestamp": "2026-11-19T14:59:52.368502",
-    "current_day_index": 423,
+    "last_sync_timestamp": "2026-11-20T09:59:04.539177",
+    "current_day_index": 424,
     "target_day_index": 423,
     "next_day_index": 424
+  },
+  "2026-11-20": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-11-20",
+    "is_today": true,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": null,
+    "last_review_time": null,
+    "today_reviewed_count": 0,
+    "new_cards_count": 0,
+    "new_cards_opened_count": 0,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 0,
+    "total_reviews_count": 0,
+    "today_time_minutes": 0.0,
+    "today_session_time_minutes": 0.0,
+    "effective_study_minutes": 0.0,
+    "today_lapses_count": 0,
+    "today_new_count": 0,
+    "today_review_count": 0,
+    "today_deck_breakdown": {},
+    "new_by_deck": {},
+    "new_opened_by_deck": {},
+    "rep_by_deck": {},
+    "yesterday_reviewed_count": 146,
+    "yesterday_new_cards_count": 146,
+    "yesterday_new_opened_count": 148,
+    "yesterday_repetition_cards_count": 387,
+    "yesterday_total_reviews_count": 703,
+    "yesterday_time_minutes": 202,
+    "due_today_count": 1449,
+    "due_reviews_count": 1449,
+    "cumulative_cards_learned": 5101,
+    "total_curriculum_cards": 8740,
+    "curriculum_progress_pct": 58.4,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 342,
+    "due_tomorrow_deck_breakdown": {
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 9,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 3,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 1,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 5,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 5,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 5,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 2,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 5,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 5,
+      "TB Herz-Kreislauf :: Loffing :: Mediastinum und Perikard / Loffing": 1,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 8,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 3,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 2,
+      "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing": 8,
+      "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 2,
+      "TB Atmung :: Loffing :: Lunge / Loffing": 12,
+      "TB Atmung :: Loffing :: Atemmuskulatur / Loffing": 17,
+      "TB Herz-Kreislauf :: Loffing :: Lymphsystem / Loffing": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 4,
+      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 11,
+      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 24,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 3,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 25,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 6,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 6,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 19,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 18,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 10,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 3,
+      "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 8,
+      "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 22,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 4,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 23,
+      "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 20,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 1,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 5,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 6,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 1
+    },
+    "due_tomorrow_topics": [
+      {
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "count": 25
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
+        "count": 24
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "count": 23
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+        "count": 22
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
+        "count": 20
+      },
+      {
+        "deck": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+        "count": 19
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+        "count": 18
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
+        "count": 17
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Lunge / Loffing",
+        "count": 12
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing",
+        "count": 11
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+        "count": 10
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "count": 9
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "count": 8
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing",
+        "count": 8
+      },
+      {
+        "deck": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
+        "count": 8
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
+        "count": 6
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
+        "count": 6
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
+        "count": 6
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
+        "count": 5
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
+        "count": 5
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "count": 4
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "count": 3
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "count": 3
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
+        "count": 3
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Lymphsystem / Loffing",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Organkreisläufe / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Mediastinum und Perikard / Loffing",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
+        "count": 1
+      }
+    ],
+    "recent_reviews_sample": [],
+    "due_tomorrow_sample": [
+      {
+        "card_id": 1598803349700,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Aus welchen Bestandteilen setzt sich das Blutvolumen zusammen?"
+      },
+      {
+        "card_id": 1598803349720,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "In welche Gruppen lassen sich die Leukozyten unterteilen? Was sind ihre Anteile?"
+      },
+      {
+        "card_id": 1598803349727,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Wie lange verweilen die Granulozyten im Knochenmark?"
+      },
+      {
+        "card_id": 1598803349728,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Wie lange verweilen die Granulozyten im Blut?"
+      },
+      {
+        "card_id": 1598803349732,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Welchen Einfluss haben Corticosteroide auf den marginalen Pool der Granulozyten?"
+      },
+      {
+        "card_id": 1598803349756,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Was bindet LFA-I (Integrin)?"
+      },
+      {
+        "card_id": 1598803349760,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Woran erkennt man das Alter der Granulozyten? Nenne die 3 Altersstufen der Granulozyten"
+      },
+      {
+        "card_id": 1598814538091,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Granulozyten-\"Pools\"{{c1::Knochenmark}}:- {{c2::90}}% der Granulozyten.- {{c3::7-10}} Tage"
+      },
+      {
+        "card_id": 1600618728439,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "front": "Welche Zelltypen können sich aus myeloischen Stammzellen bilden? Welche Vorstufen?"
+      },
+      {
+        "card_id": 1600619351457,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "front": "Welche beiden Leukozyten haben einen gemeinsamen Vorgänger?"
+      },
+      {
+        "card_id": 1600620191644,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "front": "Was ist der Unterschied zwischen rotem und gelbem Knochenmark? Wie ist das Verhältnis?"
+      },
+      {
+        "card_id": 1600626498453,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "front": "Wo sind die Megakaryozyten im KM?"
+      },
+      {
+        "card_id": 1600699094137,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "front": "Welches sind die 4 Ebenen von Schutzmechanismen vor Pathogenen?"
+      },
+      {
+        "card_id": 1600701353419,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "front": "Was präsentieren Zellen mit nur MHC-I Molekülen an der Oberfläche?"
+      },
+      {
+        "card_id": 1600785611148,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "front": "Erkläre, über welche Mechanismen die adaptive und innate Immunabwehr in einer Makrophage k"
+      }
+    ],
+    "last_sync_timestamp": "2026-11-20T10:05:02.138351",
+    "current_day_index": 424,
+    "target_day_index": 424,
+    "next_day_index": 425
   }
 }

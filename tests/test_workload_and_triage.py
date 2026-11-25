@@ -233,10 +233,14 @@ def test_real_anki_prefix_queries_and_central_ignore():
 
     triage = calculate_backlog_triage(max_capacity=350)
     bq = triage.get("budget_combined_anki_query", "")
-    selected = triage.get("budget_selected_topics", [])
-    for sel in selected:
-        for pfx in sel.get("real_anki_prefixes", []):
-            assert f'deck:"{pfx}*"' in bq
+    selected_sds = triage.get("selected_subdecks", [])
+    assert len(selected_sds) > 0
+    for sd in selected_sds:
+        exact_deck = sd.get("full_anki_deck")
+        if exact_deck:
+            assert f'deck:"{exact_deck}"' in bq
+    # Coarse wildcard professor prefixes must NOT be used when exact subdecks are available
+    assert '*" or deck:"' not in bq
 
     # Verify deck stats also exclude Wenger and Sommer
     dstats = get_detailed_deck_stats()
@@ -352,6 +356,141 @@ def test_fsrs_retrievability_and_smart_focus_efficiency():
     _apply_budget(cached_copy, 350, focus_mode="smart", r_threshold=0.78)
     assert cached_copy["focus_mode"] == "smart"
     assert cached_copy["active_focus_pool_due"] == r78["smart_total_due_today"]
+
+
+def test_triage_3_0_three_zones_and_anti_starvation():
+    """Teil 1: Verify strict 3-zone cascade (A1 > A2 > B > C Med > C Low), no volume bias, and >=10d Anti-Starvation."""
+    from app.services.anki_backlog_triage import _apply_budget, _score_subdeck_entry
+
+    def _mk_topic(tb, prof, subdecks, yield_level="medium", days=3.0):
+        all_due = sum(s["all_due"] for s in subdecks)
+        smart_80 = sum(s["smart_due_counts"]["0.80"] for s in subdecks)
+        vort = sum(s.get("vortag_due", 0) for s in subdecks)
+        young = sum(s.get("young_due", 0) for s in subdecks)
+        return {
+            "themenblock": tb,
+            "dozent": prof,
+            "deck_name": f"{tb} › {prof}",
+            "real_anki_prefixes": [f"2. SJ - 1::{tb}::{prof}"],
+            "deck_clause": f'deck:"2. SJ - 1::{tb}::{prof}*"',
+            "due_today": all_due,
+            "vortag_due_today": vort,
+            "young_due_today": young,
+            "yield_level": yield_level,
+            "smart_due_counts": {"0.78": smart_80, "0.80": smart_80, "0.82": smart_80},
+            "weak_due_counts": {"0.78": max(0, smart_80 - vort), "0.80": max(0, smart_80 - vort), "0.82": max(0, smart_80 - vort)},
+            "time_risk_due_counts": {"0.78": 0, "0.80": 0, "0.82": 0},
+            "all_avg_retrievability_pct": 74.0,
+            "smart_avg_retrievability_map": {"0.78": 74.0, "0.80": 74.0, "0.82": 74.0},
+            "all_avg_overdue_days": days,
+            "smart_avg_overdue_map": {"0.78": days, "0.80": days, "0.82": days},
+            "smart_avg_unseen_map": {"0.78": days, "0.80": days, "0.82": days},
+            "days_since_last_review": days,
+            "active_reviews": 100,
+            "total_reviews": 50,
+            "fail_rate_pct": 20.0,
+            "retention_rate_pct": 80.0,
+            "repeated_today": 0,
+            "repeated_yesterday": 0,
+            "smart_subdecks": subdecks,
+        }
+
+    sd_a1 = {
+        "subdeck": "VL Vortag", "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::VL Vortag",
+        "yield_level": "medium", "all_due": 25, "vortag_due": 25, "young_due": 0,
+        "smart_due_counts": {"0.78": 25, "0.80": 25, "0.82": 25},
+        "avg_r_pct": 70.0, "avg_r_map": {"0.80": 70.0}, "days_since_last_review": 1.0, "fail_rate_pct": 15.0,
+    }
+    sd_a2 = {
+        "subdeck": "VL Jung 3d", "full_anki_deck": "2. SJ - 1::TB Verdauung::Rogler::VL Jung 3d",
+        "yield_level": "medium", "all_due": 20, "vortag_due": 0, "young_due": 16,
+        "smart_due_counts": {"0.78": 20, "0.80": 20, "0.82": 20},
+        "avg_r_pct": 75.0, "avg_r_map": {"0.80": 75.0}, "days_since_last_review": 3.0, "fail_rate_pct": 20.0,
+    }
+    sd_b_small = {
+        "subdeck": "VL High-Yield Klein", "full_anki_deck": "2. SJ - 1::TB Blut & Immunsystem::Manatschal::VL High-Yield Klein",
+        "yield_level": "high", "all_due": 6, "vortag_due": 0, "young_due": 0,
+        "smart_due_counts": {"0.78": 6, "0.80": 6, "0.82": 6},
+        "avg_r_pct": 72.0, "avg_r_map": {"0.80": 72.0}, "days_since_last_review": 4.0, "fail_rate_pct": 25.0,
+    }
+    sd_c_med_huge = {
+        "subdeck": "VL Med-Yield Riesig", "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::Robert::VL Med-Yield Riesig",
+        "yield_level": "medium", "all_due": 200, "vortag_due": 0, "young_due": 0,
+        "smart_due_counts": {"0.78": 200, "0.80": 200, "0.82": 200},
+        "avg_r_pct": 72.0, "avg_r_map": {"0.80": 72.0}, "days_since_last_review": 4.0, "fail_rate_pct": 25.0,
+    }
+    sd_c_low_fresh = {
+        "subdeck": "VL Low-Yield Frisch", "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::VL Low-Yield Frisch",
+        "yield_level": "low", "all_due": 15, "vortag_due": 0, "young_due": 0,
+        "smart_due_counts": {"0.78": 15, "0.80": 15, "0.82": 15},
+        "avg_r_pct": 76.0, "avg_r_map": {"0.80": 76.0}, "days_since_last_review": 2.0, "fail_rate_pct": 10.0,
+    }
+    sd_c_low_starved = {
+        "subdeck": "VL Low-Yield 11d Alt", "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::VL Low-Yield 11d Alt",
+        "yield_level": "low", "all_due": 12, "vortag_due": 0, "young_due": 0,
+        "smart_due_counts": {"0.78": 12, "0.80": 12, "0.82": 12},
+        "avg_r_pct": 74.0, "avg_r_map": {"0.80": 74.0}, "days_since_last_review": 11.0, "fail_rate_pct": 18.0,
+    }
+
+    payload = {
+        "connected": True,
+        "topics": [
+            _mk_topic("TB Verdauung", "Stockmann", [sd_a1], yield_level="medium", days=1.0),
+            _mk_topic("TB Verdauung", "Rogler", [sd_a2], yield_level="medium", days=3.0),
+            _mk_topic("TB Blut & Immunsystem", "Manatschal", [sd_b_small], yield_level="high", days=4.0),
+            _mk_topic("TB Stoffwechsel", "Robert", [sd_c_med_huge], yield_level="medium", days=4.0),
+            _mk_topic("TB Verdauung", "Dutzler", [sd_c_low_fresh, sd_c_low_starved], yield_level="low", days=2.0),
+        ],
+        "themenbloecke": [],
+    }
+
+    # Pack with large budget to inspect full strict order across all 6 subdecks
+    _apply_budget(payload, budget=500, focus_mode="smart", r_threshold=0.80)
+    ordered_names = [s["subdeck"] for s in payload["selected_subdecks"]]
+
+    # (a) A1 Vortag is ALWAYS #1, followed by A2 Jung <=5d
+    assert ordered_names[0] == "VL Vortag"
+    assert ordered_names[1] == "VL Jung 3d"
+    # (b) Starved Low-Yield (>=10d) & small High-Yield beat huge 200-card Med-Yield (no volume bias!)
+    assert ordered_names.index("VL High-Yield Klein") < ordered_names.index("VL Med-Yield Riesig")
+    assert ordered_names.index("VL Low-Yield 11d Alt") < ordered_names.index("VL Med-Yield Riesig")
+    # (c) Fresh Low-Yield is NEVER hidden/deleted, but stays strictly at the very end of Zone C
+    assert "VL Low-Yield Frisch" in ordered_names
+    assert ordered_names[-1] == "VL Low-Yield Frisch"
+
+    # (d) Tight budget (e.g. 60 cards): A1 (25) + A2 (20) + Starved Low-Yield (12) + High-Yield (3) fit,
+    #     while fresh Low-Yield & huge Med-Yield wait for rollover
+    _apply_budget(payload, budget=60, focus_mode="smart", r_threshold=0.80)
+    sel_names_60 = [s["subdeck"] for s in payload["selected_subdecks"]]
+    assert "VL Vortag" in sel_names_60
+    assert "VL Jung 3d" in sel_names_60
+    assert "VL Low-Yield 11d Alt" in sel_names_60
+    assert "VL Low-Yield Frisch" not in sel_names_60
+    # Verify exact subdeck path in Anki query (Dutzler's starved subdeck included, fresh subdeck NOT pulled in!)
+    bq = payload["budget_combined_anki_query"]
+    assert 'deck:"2. SJ - 1::TB Verdauung::Dutzler::VL Low-Yield 11d Alt"' in bq
+    assert 'deck:"2. SJ - 1::TB Verdauung::Dutzler::VL Low-Yield Frisch"' not in bq
+    assert "prop:ivl<=5" in bq
+
+
+def test_triage_3_0_exact_subdeck_query_scaling_live_db():
+    """Teil 1: Verify exact subdeck queries scale cleanly across 350, 500, 700, and All on real collection.anki2."""
+    r350 = calculate_backlog_triage(max_capacity=350)
+    r500 = calculate_backlog_triage(max_capacity=500)
+    r700 = calculate_backlog_triage(max_capacity=700)
+    rall = calculate_backlog_triage(max_capacity=5000)
+
+    assert r350.get("triage_version") == "3.0"
+    assert "zone_summary" in r350
+    assert len(r350["selected_subdecks"]) <= len(r500["selected_subdecks"]) <= len(r700["selected_subdecks"]) <= len(rall["selected_subdecks"])
+    assert r350["budget_accumulated_cards"] <= r500["budget_accumulated_cards"] <= r700["budget_accumulated_cards"] <= rall["budget_accumulated_cards"]
+
+    # Every A1 Vortag subdeck must be 100% present already at default budget 350
+    all_vortag_decks = {sd["full_anki_deck"] for sd in rall["selected_subdecks"] if sd.get("vortag_due", 0) > 0}
+    sel_350_decks = {sd["full_anki_deck"] for sd in r350["selected_subdecks"]}
+    assert all_vortag_decks.issubset(sel_350_decks)
+    assert "prop:ivl<=5" in r350["budget_combined_anki_query"]
+
 
 
 

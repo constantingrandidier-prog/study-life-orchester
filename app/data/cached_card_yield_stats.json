@@ -1,7 +1,7 @@
 {
   "available": true,
   "total_cards_scanned": 9687,
-  "total_kprim_traps": 658,
+  "total_kprim_traps": 662,
   "kprim_trap_percentage": 6.8,
   "top_25_todesfallen": [
     {
@@ -11,9 +11,9 @@
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
       "professor_name": "Prof. Dr. Philipp Sommer",
       "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-      "reps": 20,
+      "reps": 21,
       "lapses": 5,
-      "interval_days": 3,
+      "interval_days": 6,
       "card_yield_score": 100.0,
       "is_kprim_trap": true,
       "trap_type": "confusable_pair",
@@ -25,10 +25,10 @@
       "front_snippet": "Was sind die Komponenten der langfristigen Regulation des MAP?",
       "back_snippet": "Vasopressin (ADH) , Aldosteron , Angiotensin (durch Renin Akt.) modulieren die Sympathikuswirkung , Reninsezernierung und Nierenfunktion Also RAA & Vasopresin über Blutvolumen (Angiotensin: Vasokonstriktion & Aldosteron bild. In Niere) (Aldosteron: Weniger Na-",
       "hy_terms_detected": [
-        "raas",
         "renin",
-        "angiotensin",
-        "aldosteron"
+        "aldosteron",
+        "raas",
+        "angiotensin"
       ]
     },
     {
@@ -54,15 +54,15 @@
       "hy_terms_detected": [
         "phosphat",
         "glykolyse",
-        "pfk-1",
-        "pfk-2"
+        "pfk-2",
+        "pfk-1"
       ]
     },
     {
       "card_id": 1639260617639,
       "note_id": 1639260617639,
-      "deck_id": 1789378223010,
-      "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+      "deck_id": 1795593429125,
+      "deck_name": "Filtered Deck 08:56",
       "professor_name": "Prof. Dr. Carsten Wagner",
       "professor_institute": "Physiologisches Institut UZH",
       "reps": 6,
@@ -81,8 +81,8 @@
       "hy_terms_detected": [
         "phosphat",
         "glykolyse",
-        "pfk-1",
-        "pfk-2"
+        "pfk-2",
+        "pfk-1"
       ]
     },
     {
@@ -107,15 +107,15 @@
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase , PFK-1, Pyruvatkinase & PFK-2/ FBPase-2 -> Hexokinase ausserhalb der Leber nihct durch SREBP-1c transkribiert",
       "hy_terms_detected": [
         "glykolyse",
-        "pfk-1",
-        "pfk-2"
+        "pfk-2",
+        "pfk-1"
       ]
     },
     {
       "card_id": 1639253545171,
       "note_id": 1639253545171,
-      "deck_id": 1789378223010,
-      "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+      "deck_id": 1795593429125,
+      "deck_name": "Filtered Deck 08:56",
       "professor_name": "Prof. Dr. Christian Stockmann",
       "professor_institute": "Anatomisches Institut UZH",
       "reps": 4,
@@ -133,8 +133,8 @@
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
         "glykolyse",
-        "pfk-1",
-        "pfk-2"
+        "pfk-2",
+        "pfk-1"
       ]
     },
     {
@@ -477,11 +477,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "hypoxie",
         "hämoglobin",
         "thrombose",
-        "epo",
-        "po2"
+        "hypoxie",
+        "po2",
+        "epo"
       ]
     },
     {
@@ -505,39 +505,11 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
-        "hypoxie",
         "hämoglobin",
         "thrombose",
-        "epo",
-        "po2"
-      ]
-    },
-    {
-      "card_id": 1641221352285,
-      "note_id": 1641221352285,
-      "deck_id": 1789378223048,
-      "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
-      "professor_name": "Prof. Dr. Heimo Emmert",
-      "professor_institute": "Institut für Biochemie UZH",
-      "reps": 3,
-      "lapses": 0,
-      "interval_days": 7,
-      "card_yield_score": 100.0,
-      "is_kprim_trap": true,
-      "trap_type": "negation_directional",
-      "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-      "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-      "card_type": "kprim_mechanism",
-      "front": "Metabolische Regulation während Aerober Belastung Glucoseaufnahme in arbeitenden Muskelzellen → von was hängt der Aufnahmemechanismus NICHT ab, und von was hängt er ab?",
-      "back": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intrazellulären Vesikeln mit Plasmamembran. Reminder: Insulin förd",
-      "front_snippet": "Metabolische Regulation während Aerober Belastung Glucoseaufnahme in arbeitenden Muskelzellen → von was hängt der Aufnahmemechanismus NICHT ab, und von was hängt er ab?",
-      "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intraz",
-      "hy_terms_detected": [
-        "glykolyse",
-        "adrenalin",
-        "t4",
-        "insulin",
-        "noradrenalin"
+        "hypoxie",
+        "po2",
+        "epo"
       ]
     },
     {
@@ -561,10 +533,10 @@
       "front_snippet": "Wie wirkt Kortisol?",
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
-        "inr",
         "glykolyse",
         "insulin",
-        "tsh"
+        "tsh",
+        "inr"
       ]
     },
     {
@@ -588,11 +560,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "hypoxie",
         "hämoglobin",
-        "sauerstoffbindung",
+        "hypoxie",
+        "po2",
         "epo",
-        "po2"
+        "sauerstoffbindung"
       ]
     },
     {
@@ -616,11 +588,39 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
-        "hypoxie",
         "hämoglobin",
-        "sauerstoffbindung",
+        "hypoxie",
+        "po2",
         "epo",
-        "po2"
+        "sauerstoffbindung"
+      ]
+    },
+    {
+      "card_id": 1638633691991,
+      "note_id": 1638633691987,
+      "deck_id": 1789378222950,
+      "deck_name": "TB Atmung :: Atmung_Physiologie_Wenger",
+      "professor_name": "Prof. Dr. Roland Wenger",
+      "professor_institute": "Physiologisches Institut UZH",
+      "reps": 0,
+      "lapses": 0,
+      "interval_days": 0,
+      "card_yield_score": 95.0,
+      "is_kprim_trap": true,
+      "trap_type": "negation_directional",
+      "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+      "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+      "card_type": "kprim_mechanism",
+      "front": "Hypoxie",
+      "back": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur Hämgruppe COCl2 (Cobalt): Funktion umgekehrt zu EPO Fe3+-Ch",
+      "front_snippet": "Hypoxie",
+      "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
+      "hy_terms_detected": [
+        "hämoglobin",
+        "hypoxie",
+        "po2",
+        "epo",
+        "sauerstoffbindung"
       ]
     }
   ],
@@ -701,8 +701,8 @@
           "front_snippet": "Besitzen Erythrozyten Mitochondrien?",
           "back_snippet": "Nein! - KEINE Mitochondrien -> Anaerobe Glykolyse (O2 ist ja an Hämoglobin gebunden und würde somit auch nicht zur Verfügung stehen) -> Entstehung von Laktat und ATP.",
           "hy_terms_detected": [
-            "glykolyse",
-            "hämoglobin"
+            "hämoglobin",
+            "glykolyse"
           ]
         },
         {
@@ -750,9 +750,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 42,
+          "reps": 43,
           "lapses": 12,
-          "interval_days": 2,
+          "interval_days": 3,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -774,9 +774,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 9,
+          "reps": 10,
           "lapses": 2,
-          "interval_days": 4,
+          "interval_days": 14,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -796,9 +796,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
+          "reps": 11,
           "lapses": 2,
-          "interval_days": 2,
+          "interval_days": 6,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1003,9 +1003,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 3,
-          "interval_days": 3,
+          "interval_days": 11,
           "card_yield_score": 87.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -1029,9 +1029,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 15,
+          "reps": 16,
           "lapses": 3,
-          "interval_days": 19,
+          "interval_days": 21,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1394,7 +1394,7 @@
       "high_yield_cards_count": 2,
       "kprim_traps_count": 4,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 53.2,
+      "avg_card_yield_score": 53.3,
       "sample_kprim_traps": [
         {
           "card_id": 1601370395307,
@@ -1441,9 +1441,9 @@
           "front_snippet": "Was versteht man unter negativer Selektion? Wo findet sie statt?",
           "back_snippet": "Vermeidung von Autoreaktivität und Erzeugung von zentraler Toleranz gegenüber körpereigenem Gewebe (damit sie nur fremdes angreiffen) --> DP-Zellen werden durch dendritische Zellen/ mTEC an der Kortex/Mark-Grenze auf TCRs mit zu hoher Affinität für körpereigen",
           "hy_terms_detected": [
+            "thymus",
             "negative selektion",
-            "t-zell",
-            "thymus"
+            "t-zell"
           ]
         },
         {
@@ -1630,10 +1630,10 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "3. Aktivierung : Signaltransduktion führt zu Pseudopodien und Phosphatidylserin-Präsentation an der Membran. 4. GPIIb/IIIa-Aktivierung : Der Rezeptor wechselt in seine hochaffine Form. 5. Verstärkung & Aggregation : Aktiviertes GPIIb/IIIa bindet an vWF (feste ",
           "hy_terms_detected": [
-            "thrombozyt",
             "phosphat",
-            "fibrinogen",
-            "von-willebrand"
+            "thrombozyt",
+            "von-willebrand",
+            "fibrinogen"
           ]
         },
         {
@@ -1747,9 +1747,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 5,
+          "reps": 6,
           "lapses": 0,
-          "interval_days": 20,
+          "interval_days": 42,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1958,9 +1958,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 29,
+          "reps": 30,
           "lapses": 8,
-          "interval_days": 10,
+          "interval_days": 11,
           "card_yield_score": 78.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -1972,8 +1972,8 @@
           "front_snippet": "Was bewirkt Phospholamban? Wie wird es reguliert?",
           "back_snippet": "PLB hemmt im dephosphorylierten Zustand SERCA (Ca-ATPase) Ausschüttung von Noradrenalin durch Sympathikus aktiviert Beta1-Rezeptoren : --> aktiviert Adenylylcyclase --> erhöht cAMP --> erhöht Aktivität PKA --> Phosphorylierung von PLB --> Keine Hemmung von SER",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin"
+            "noradrenalin",
+            "adrenalin"
           ]
         }
       ]
@@ -2014,9 +2014,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Roland Wenger",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 9,
+          "reps": 10,
           "lapses": 2,
-          "interval_days": 2,
+          "interval_days": 9,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2053,9 +2053,9 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "repolarisation",
-            "depolarisation",
             "ekg",
+            "depolarisation",
+            "repolarisation",
             "epo"
           ]
         },
@@ -2066,9 +2066,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 14,
-          "lapses": 4,
-          "interval_days": 2,
+          "reps": 16,
+          "lapses": 5,
+          "interval_days": 1,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2170,9 +2170,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 16,
+          "reps": 17,
           "lapses": 3,
-          "interval_days": 8,
+          "interval_days": 11,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2390,9 +2390,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 8,
-          "lapses": 1,
-          "interval_days": 25,
+          "reps": 10,
+          "lapses": 2,
+          "interval_days": 3,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2414,7 +2414,7 @@
       "high_yield_cards_count": 7,
       "kprim_traps_count": 14,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 59.9,
+      "avg_card_yield_score": 60.0,
       "sample_kprim_traps": [
         {
           "card_id": 1603645710856,
@@ -2469,9 +2469,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 9,
+          "reps": 10,
           "lapses": 3,
-          "interval_days": 2,
+          "interval_days": 8,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2493,9 +2493,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 29,
+          "reps": 30,
           "lapses": 9,
-          "interval_days": 8,
+          "interval_days": 18,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -2637,9 +2637,9 @@
           "deck_name": "TB Atmung :: Loffing :: Lunge / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 10,
+          "interval_days": 36,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3039,9 +3039,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 15,
+          "reps": 16,
           "lapses": 4,
-          "interval_days": 3,
+          "interval_days": 4,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -3470,11 +3470,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
+            "t4",
             "t3",
             "hämoglobin",
-            "t4",
-            "angiotensin",
-            "erythropoietin"
+            "erythropoietin",
+            "angiotensin"
           ]
         },
         {
@@ -4106,10 +4106,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroidea stimulierendes Hormung = Thyreotropin ) Regt in der Schilddrüse die Bildung von Thyroxin= T4 und Trijodothyronin= T3",
           "hy_terms_detected": [
-            "t3",
             "t4",
-            "tsh",
-            "schilddrüse"
+            "t3",
+            "schilddrüse",
+            "tsh"
           ]
         },
         {
@@ -4133,12 +4133,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
-            "t3",
-            "inr",
             "t4",
-            "peroxidase",
+            "t3",
             "thyreoglobulin",
-            "schilddrüse"
+            "schilddrüse",
+            "peroxidase",
+            "inr"
           ]
         },
         {
@@ -4307,9 +4307,9 @@
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
             "phosphat",
+            "insulin",
             "azidose",
-            "inr",
-            "insulin"
+            "inr"
           ]
         },
         {
@@ -4333,8 +4333,8 @@
           "front_snippet": "Was sind die nicht klassischen Wirkungen von Vit. D?",
           "back_snippet": "- Immunsystem! --> Calcitriol scheint die Pathogenaufnahme und -abtötung von Makrophagen zu verbessern - Hemmt Reninfreisetzung - Stimuliert Bildung von bakteriziden Substanzen",
           "hy_terms_detected": [
-            "renin",
-            "calcitriol"
+            "calcitriol",
+            "renin"
           ]
         },
         {
@@ -4413,9 +4413,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 2,
-          "interval_days": 1,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4435,9 +4435,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 1,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4457,9 +4457,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 1,
-          "interval_days": 1,
+          "interval_days": 4,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4479,9 +4479,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 5,
+          "reps": 6,
           "lapses": 1,
-          "interval_days": 1,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4529,25 +4529,25 @@
         }
       ]
     },
-    "1789378223061": {
-      "deck_id": 1789378223061,
-      "deck_name": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
-      "total_cards": 56,
-      "high_yield_cards_count": 0,
-      "kprim_traps_count": 1,
-      "confusable_pairs_count": 0,
-      "avg_card_yield_score": 50.3,
+    "1795593429125": {
+      "deck_id": 1795593429125,
+      "deck_name": "Filtered Deck 08:56",
+      "total_cards": 350,
+      "high_yield_cards_count": 15,
+      "kprim_traps_count": 41,
+      "confusable_pairs_count": 2,
+      "avg_card_yield_score": 49.0,
       "sample_kprim_traps": [
         {
           "card_id": 1608070182703,
           "note_id": 1608070182703,
-          "deck_id": 1789378223061,
-          "deck_name": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+          "deck_id": 1795593429125,
+          "deck_name": "Filtered Deck 08:56",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 2,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 1,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4559,17 +4559,101 @@
           "front_snippet": "Ist das Gangsystem des Pankreas konstant?",
           "back_snippet": "Nein, viele Varianten Es gibt z.B. nicht immer einen Ductus pancreaticus accessorius",
           "hy_terms_detected": []
+        },
+        {
+          "card_id": 1638126825452,
+          "note_id": 1638126825452,
+          "deck_id": 1795593429125,
+          "deck_name": "Filtered Deck 08:56",
+          "professor_name": "PD Dr. med. Milena Sokolowska",
+          "professor_institute": "SIAF Davos & UZH Medizinische Fakultät",
+          "reps": 3,
+          "lapses": 0,
+          "interval_days": 12,
+          "card_yield_score": 69.0,
+          "is_kprim_trap": true,
+          "trap_type": "causal_chain",
+          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
+          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
+          "card_type": "kprim_mechanism",
+          "front": "Steigert oder senkt Cortisol die Blutglucosekonzentration?",
+          "back": "Steigert die Glucosekonzentration im Blut",
+          "front_snippet": "Steigert oder senkt Cortisol die Blutglucosekonzentration?",
+          "back_snippet": "Steigert die Glucosekonzentration im Blut",
+          "hy_terms_detected": [
+            "cortisol"
+          ]
+        },
+        {
+          "card_id": 1638131633976,
+          "note_id": 1638131633966,
+          "deck_id": 1795593429125,
+          "deck_name": "Filtered Deck 08:56",
+          "professor_name": "Prof. Dr. Carsten Wagner",
+          "professor_institute": "Physiologisches Institut UZH",
+          "reps": 19,
+          "lapses": 5,
+          "interval_days": 5,
+          "card_yield_score": 77.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Regulation von Bildung und Verbrauch von Glucose-6-Phosphat Was ist der Effekt von G-6-P in extrahepatischem, Insulin-abhängigem Gewebe?",
+          "back": "beide allosterisch: - Hemmung der Hexokinase (Glykolyse) - Förderung der Glykogensynthese (hemmt Phosphorylase) -> G6P Zeichen für Rückstau -> in Leber keine Wirkung auf Glucokinase -> also nur in Muskel",
+          "front_snippet": "Regulation von Bildung und Verbrauch von Glucose-6-Phosphat Was ist der Effekt von G-6-P in extrahepatischem, Insulin-abhängigem Gewebe?",
+          "back_snippet": "beide allosterisch: - Hemmung der Hexokinase (Glykolyse) - Förderung der Glykogensynthese (hemmt Phosphorylase) -> G6P Zeichen für Rückstau -> in Leber keine Wirkung auf Glucokinase -> also nur in Muskel",
+          "hy_terms_detected": [
+            "phosphat",
+            "glykolyse",
+            "insulin"
+          ]
+        },
+        {
+          "card_id": 1638131887979,
+          "note_id": 1638131887979,
+          "deck_id": 1795593429125,
+          "deck_name": "Filtered Deck 08:56",
+          "professor_name": "Prof. Dr. Carsten Wagner",
+          "professor_institute": "Physiologisches Institut UZH",
+          "reps": 18,
+          "lapses": 4,
+          "interval_days": 4,
+          "card_yield_score": 69.0,
+          "is_kprim_trap": true,
+          "trap_type": "causal_chain",
+          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
+          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
+          "card_type": "kprim_mechanism",
+          "front": "Regulation von Bildung und Verbrauch von Glucose-6-Phosphat Wie fördert Glucose-6-Phosphat die Glykogensynthese?",
+          "back": "durch Aktivierung der Phosphoproteinphosphatase 1 (PP1) , welche die Glykogensynthase aktiviert und durch Induktion der IN aktiven Form der Glykogen-Phosphorylase (in der Leber → Glucose bindet an Glykogen-Phosphorylase ⇒ konform. Änderung ⟹ kann jetzt durch PP1 dephosphoryliert werden) und anscheinend: durch allosteri",
+          "front_snippet": "Regulation von Bildung und Verbrauch von Glucose-6-Phosphat Wie fördert Glucose-6-Phosphat die Glykogensynthese?",
+          "back_snippet": "durch Aktivierung der Phosphoproteinphosphatase 1 (PP1) , welche die Glykogensynthase aktiviert und durch Induktion der IN aktiven Form der Glykogen-Phosphorylase (in der Leber → Glucose bindet an Glykogen-Phosphorylase ⇒ konform. Änderung ⟹ kann jetzt durch P",
+          "hy_terms_detected": [
+            "phosphat"
+          ]
         }
       ]
+    },
+    "1789378223061": {
+      "deck_id": 1789378223061,
+      "deck_name": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+      "total_cards": 8,
+      "high_yield_cards_count": 0,
+      "kprim_traps_count": 0,
+      "confusable_pairs_count": 0,
+      "avg_card_yield_score": 50.0,
+      "sample_kprim_traps": []
     },
     "1789378222988": {
       "deck_id": 1789378222988,
       "deck_name": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
       "total_cards": 173,
       "high_yield_cards_count": 1,
-      "kprim_traps_count": 5,
+      "kprim_traps_count": 6,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 40.5,
+      "avg_card_yield_score": 39.9,
       "sample_kprim_traps": [
         {
           "card_id": 1608133004909,
@@ -4622,9 +4706,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 2,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 1,
+          "interval_days": 8,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4638,25 +4722,25 @@
           "hy_terms_detected": []
         },
         {
-          "card_id": 1608225166472,
-          "note_id": 1608225166472,
+          "card_id": 1608225067220,
+          "note_id": 1608225067220,
           "deck_id": 1789378222988,
           "deck_name": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 1,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Was sind Zusatzstoffe?",
-          "back": "Zusatzstoffe sind besondere Zutaten, die mit E-Nummern bezeichnet werden Nur was ausdrücklich erlaubt ist, darf verwendet werden Zusatzstoffe werden bei technischer Notwendigkeit eingesetzt, wenn die Substanz gesundheitlich unbedenklich ist Der Verbraucher darf nicht getäuscht werden (z.B. Eiernudeln enthalten Eier und",
-          "front_snippet": "Was sind Zusatzstoffe?",
-          "back_snippet": "Zusatzstoffe sind besondere Zutaten, die mit E-Nummern bezeichnet werden Nur was ausdrücklich erlaubt ist, darf verwendet werden Zusatzstoffe werden bei technischer Notwendigkeit eingesetzt, wenn die Substanz gesundheitlich unbedenklich ist Der Verbraucher dar",
+          "front": "Wann sind Maillardprodukte erwünscht?",
+          "back": "Melanoidine verleihen braune Farben und Aroma —> red. Zucker reagiert mit prim. Aminogruppe über schiffische Base Vorkommen: Brotkruste, Kaffee, gebräunte Fleischteile Geschmacksintensiv aber nicht Metabolisierbar: Aromastoffe: Cystein + Glucose --> gebratenes Steak Glycin + Glucose --> Karamellpudding; Prolin + Glucos",
+          "front_snippet": "Wann sind Maillardprodukte erwünscht?",
+          "back_snippet": "Melanoidine verleihen braune Farben und Aroma —> red. Zucker reagiert mit prim. Aminogruppe über schiffische Base Vorkommen: Brotkruste, Kaffee, gebräunte Fleischteile Geschmacksintensiv aber nicht Metabolisierbar: Aromastoffe: Cystein + Glucose --> gebratenes",
           "hy_terms_detected": []
         }
       ]
@@ -4715,10 +4799,10 @@
           "front_snippet": "Wie wirkt Kortisol?",
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
-            "inr",
             "glykolyse",
             "insulin",
-            "tsh"
+            "tsh",
+            "inr"
           ]
         },
         {
@@ -4765,10 +4849,10 @@
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
             "depolarisation",
+            "epo",
             "renin",
-            "angiotensin",
             "aldosteron",
-            "epo"
+            "angiotensin"
           ]
         }
       ]
@@ -4786,7 +4870,7 @@
     "1789378223063": {
       "deck_id": 1789378223063,
       "deck_name": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
-      "total_cards": 137,
+      "total_cards": 58,
       "high_yield_cards_count": 0,
       "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
@@ -5198,11 +5282,11 @@
     "1789378223010": {
       "deck_id": 1789378223010,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
-      "total_cards": 213,
-      "high_yield_cards_count": 34,
-      "kprim_traps_count": 45,
-      "confusable_pairs_count": 4,
-      "avg_card_yield_score": 62.7,
+      "total_cards": 153,
+      "high_yield_cards_count": 21,
+      "kprim_traps_count": 30,
+      "confusable_pairs_count": 2,
+      "avg_card_yield_score": 62.5,
       "sample_kprim_traps": [
         {
           "card_id": 1638126348933,
@@ -5251,30 +5335,6 @@
           "hy_terms_detected": []
         },
         {
-          "card_id": 1638126825452,
-          "note_id": 1638126825452,
-          "deck_id": 1789378223010,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
-          "professor_name": "PD Dr. med. Milena Sokolowska",
-          "professor_institute": "SIAF Davos & UZH Medizinische Fakultät",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 12,
-          "card_yield_score": 69.0,
-          "is_kprim_trap": true,
-          "trap_type": "causal_chain",
-          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
-          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
-          "card_type": "kprim_mechanism",
-          "front": "Steigert oder senkt Cortisol die Blutglucosekonzentration?",
-          "back": "Steigert die Glucosekonzentration im Blut",
-          "front_snippet": "Steigert oder senkt Cortisol die Blutglucosekonzentration?",
-          "back_snippet": "Steigert die Glucosekonzentration im Blut",
-          "hy_terms_detected": [
-            "cortisol"
-          ]
-        },
-        {
           "card_id": 1638126878579,
           "note_id": 1638126878579,
           "deck_id": 1789378223010,
@@ -5297,6 +5357,30 @@
           "hy_terms_detected": [
             "adrenalin"
           ]
+        },
+        {
+          "card_id": 1638127155877,
+          "note_id": 1638127155876,
+          "deck_id": 1789378223010,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+          "professor_name": "PD Dr. med. Milena Sokolowska",
+          "professor_institute": "SIAF Davos & UZH Medizinische Fakultät",
+          "reps": 1,
+          "lapses": 0,
+          "interval_days": 14,
+          "card_yield_score": 69.0,
+          "is_kprim_trap": true,
+          "trap_type": "causal_chain",
+          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
+          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
+          "card_type": "kprim_mechanism",
+          "front": "Steigert oder senkt Adrenalin die Konzentration von Glucose im Blut?",
+          "back": "Steigert",
+          "front_snippet": "Steigert oder senkt Adrenalin die Konzentration von Glucose im Blut?",
+          "back_snippet": "Steigert",
+          "hy_terms_detected": [
+            "adrenalin"
+          ]
         }
       ]
     },
@@ -5315,7 +5399,7 @@
       "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
       "total_cards": 77,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 4,
+      "kprim_traps_count": 7,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 50.0,
       "sample_kprim_traps": [
@@ -5326,9 +5410,9 @@
           "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 3,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5336,9 +5420,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Inwiefern beeinflusst die Anatomie die GERD?",
-          "back": "Wenn der untere Sphinkter nicht mehr am richtigen Ort ist, wird der Oesophagus nicht geschlossen → grösseres Risiko für Reflux zB erhöhter intraabdomineller Druck schiebt den Magen nach oben (Hiatushernie oder Schwangerschaft) → Diaphragma engt den Magen ein und nicht mehr den Oesophagus",
+          "back": "Wenn der untere Sphinkter nicht mehr am richtigen Ort ist, wird der Oesophagus nicht geschlossen → grösseres Risiko für Reflux —> gMz und Muskelschlinge des Diaphragma komplementieren sich zB erhöhter intraabdomineller Druck schiebt den Magen nach oben (Hiatushernie oder Schwangerschaft) → Diaphragma engt den Magen ein",
           "front_snippet": "Inwiefern beeinflusst die Anatomie die GERD?",
-          "back_snippet": "Wenn der untere Sphinkter nicht mehr am richtigen Ort ist, wird der Oesophagus nicht geschlossen → grösseres Risiko für Reflux zB erhöhter intraabdomineller Druck schiebt den Magen nach oben (Hiatushernie oder Schwangerschaft) → Diaphragma engt den Magen ein u",
+          "back_snippet": "Wenn der untere Sphinkter nicht mehr am richtigen Ort ist, wird der Oesophagus nicht geschlossen → grösseres Risiko für Reflux —> gMz und Muskelschlinge des Diaphragma komplementieren sich zB erhöhter intraabdomineller Druck schiebt den Magen nach oben (Hiatus",
           "hy_terms_detected": []
         },
         {
@@ -5348,9 +5432,9 @@
           "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 12,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5364,15 +5448,37 @@
           "hy_terms_detected": []
         },
         {
+          "card_id": 1639063678655,
+          "note_id": 1639063678655,
+          "deck_id": 1789378223038,
+          "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
+          "professor_name": "Prof. Dr. Christian Stockmann",
+          "professor_institute": "Anatomisches Institut UZH",
+          "reps": 3,
+          "lapses": 0,
+          "interval_days": 15,
+          "card_yield_score": 50.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Unterschied osmotische und sekretorische Diarrhoe",
+          "back": "-> Osmot. Diarrhö: wenn man Intravenös ernährt dann kein Stuhlgang mehr da kein osmotischer Sog mehr. -> sekret. Diarröh: Zellen sekretieren zu viel Flüssigkeit",
+          "front_snippet": "Unterschied osmotische und sekretorische Diarrhoe",
+          "back_snippet": "-> Osmot. Diarrhö: wenn man Intravenös ernährt dann kein Stuhlgang mehr da kein osmotischer Sog mehr. -> sekret. Diarröh: Zellen sekretieren zu viel Flüssigkeit",
+          "hy_terms_detected": []
+        },
+        {
           "card_id": 1639063961344,
           "note_id": 1639063961344,
           "deck_id": 1789378223038,
           "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 1,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5383,28 +5489,6 @@
           "back": "Transmurale Entzündung (= durch alle Wandschichten) in allen Abschnitten des Gastrointestinaltrakt segmental (abschnittweise entzündet, dann wieder nicht entzündet)",
           "front_snippet": "Was ist Morbus Crohn?",
           "back_snippet": "Transmurale Entzündung (= durch alle Wandschichten) in allen Abschnitten des Gastrointestinaltrakt segmental (abschnittweise entzündet, dann wieder nicht entzündet)",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1639064016396,
-          "note_id": 1639064016396,
-          "deck_id": 1789378223038,
-          "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
-          "professor_name": "Prof. Dr. Christian Stockmann",
-          "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Wie unterscheidet man Colitis ulcerosa von Morbus Crohn?",
-          "back": "Colitis ulcerosa: Entzündung nur im Dickdarm (meist im Rektum) kontinuierlich (überall entzündet, nicht segmental) nur in der Tunica mucosa Hinweis: Blutbeimengungen im Stuhl (hat es bei Morbus Crohn nicht so häufig)",
-          "front_snippet": "Wie unterscheidet man Colitis ulcerosa von Morbus Crohn?",
-          "back_snippet": "Colitis ulcerosa: Entzündung nur im Dickdarm (meist im Rektum) kontinuierlich (überall entzündet, nicht segmental) nur in der Tunica mucosa Hinweis: Blutbeimengungen im Stuhl (hat es bei Morbus Crohn nicht so häufig)",
           "hy_terms_detected": []
         }
       ]
@@ -5512,7 +5596,7 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 4,
           "interval_days": 1,
           "card_yield_score": 49.0,
@@ -5536,9 +5620,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 8,
-          "lapses": 2,
-          "interval_days": 1,
+          "reps": 11,
+          "lapses": 3,
+          "interval_days": 4,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5558,9 +5642,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 11,
+          "reps": 12,
           "lapses": 3,
-          "interval_days": 2,
+          "interval_days": 4,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5677,11 +5761,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
-            "t3",
             "t4",
+            "t3",
             "calcitonin",
-            "tsh",
-            "schilddrüse"
+            "schilddrüse",
+            "tsh"
           ]
         }
       ]
@@ -5791,11 +5875,11 @@
     "1789378223013": {
       "deck_id": 1789378223013,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
-      "total_cards": 133,
+      "total_cards": 108,
       "high_yield_cards_count": 4,
-      "kprim_traps_count": 12,
+      "kprim_traps_count": 9,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 52.6,
+      "avg_card_yield_score": 52.9,
       "sample_kprim_traps": [
         {
           "card_id": 1639578101813,
@@ -5804,9 +5888,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 1,
-          "interval_days": 2,
+          "interval_days": 12,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5817,28 +5901,6 @@
           "back": "via Leber: -praktisch \"alle\" Nährstoffe, die im Darm resorbiert werden, gelangen über die Leber in den Körperkreislauf nicht via Leber : - Lipide : werden im Darm in Chylomikronen verpackt und über die Lymphe (Ductus Thoracicus) im Körperkreislauf verteilt",
           "front_snippet": "Welche Nährstoffe gelangen über Pfortader in die Leber? welche nicht?",
           "back_snippet": "via Leber: -praktisch \"alle\" Nährstoffe, die im Darm resorbiert werden, gelangen über die Leber in den Körperkreislauf nicht via Leber : - Lipide : werden im Darm in Chylomikronen verpackt und über die Lymphe (Ductus Thoracicus) im Körperkreislauf verteilt",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1639582855227,
-          "note_id": 1639582855226,
-          "deck_id": 1789378223013,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
-          "professor_name": "Prof. Dr. Christian Stockmann",
-          "professor_institute": "Anatomisches Institut UZH",
-          "reps": 12,
-          "lapses": 3,
-          "interval_days": 4,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: Abfall hepatische Gallensäure konzentration und Gallensäuresynthese und Export ?",
-          "back": "InAktivierung von FXR* Fazit : ⇒ Gallensäuresynthese wird induziert und der Export gehemmt ⟹ Steigerung der intrazellulären Gallensäurekonzentration * keine Hemmung von CYP7A1 und keine Indizierung von ABCA11",
-          "front_snippet": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: Abfall hepatische Gallensäure konzentration und Gallensäuresynthese und Export ?",
-          "back_snippet": "InAktivierung von FXR* Fazit : ⇒ Gallensäuresynthese wird induziert und der Export gehemmt ⟹ Steigerung der intrazellulären Gallensäurekonzentration * keine Hemmung von CYP7A1 und keine Indizierung von ABCA11",
           "hy_terms_detected": []
         },
         {
@@ -5867,26 +5929,49 @@
           ]
         },
         {
-          "card_id": 1639583999697,
-          "note_id": 1639583999697,
+          "card_id": 1639585104748,
+          "note_id": 1639585104748,
           "deck_id": 1789378223013,
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 6,
-          "lapses": 1,
-          "interval_days": 7,
-          "card_yield_score": 59.0,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 15,
+          "card_yield_score": 60.0,
           "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "trap_type": "causal_chain",
+          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
+          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
           "card_type": "kprim_mechanism",
-          "front": "Welches Enzym gehört zwar nicht zur FS Synthese, spielt aber eine zentrale Rolle bei der Regulation der de novo FS Synthese ?",
-          "back": "Der Pyruvatdehydrogenase-Komplex (PD) : ➢ PD ⇒ Regulation der Acetyl-CoA Konzentration , welche dann die FS Synthese beeinflusst ➢ Beachte auch hier die Rolle von Insulin : ⇒ Insulin wirkt über die PDP, die Acetyl-CoA Produktion stimuliert und somit auch die FS Synthese aktiviert .",
-          "front_snippet": "Welches Enzym gehört zwar nicht zur FS Synthese, spielt aber eine zentrale Rolle bei der Regulation der de novo FS Synthese ?",
-          "back_snippet": "Der Pyruvatdehydrogenase-Komplex (PD) : ➢ PD ⇒ Regulation der Acetyl-CoA Konzentration , welche dann die FS Synthese beeinflusst ➢ Beachte auch hier die Rolle von Insulin : ⇒ Insulin wirkt über die PDP, die Acetyl-CoA Produktion stimuliert und somit auch die F",
+          "front": "Leber: Beschreibe die allosterische Regulation der Acetyl-CoA Carboxylase (ACC)",
+          "back": "Citrat → aktiviert allosterisch (Acetyl-CoA + Oxalacetat) Acyl-CoA → hemmt allosterisch (Feedback, Produkt der FS)",
+          "front_snippet": "Leber: Beschreibe die allosterische Regulation der Acetyl-CoA Carboxylase (ACC)",
+          "back_snippet": "Citrat → aktiviert allosterisch (Acetyl-CoA + Oxalacetat) Acyl-CoA → hemmt allosterisch (Feedback, Produkt der FS)",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1639586207175,
+          "note_id": 1639586207165,
+          "deck_id": 1789378223013,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
+          "professor_name": "Prof. Dr. Christian Stockmann",
+          "professor_institute": "Anatomisches Institut UZH",
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 2,
+          "card_yield_score": 78.0,
+          "is_kprim_trap": true,
+          "trap_type": "causal_chain",
+          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
+          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
+          "card_type": "kprim_mechanism",
+          "front": "Leber: Synchronisation von Lipidstoffwechsel und Cholesterinstoffwechsel → inwiefern spielt Insulin eine Rolle hier?",
+          "back": "Insulin induziert Transkription von LXR und aktiviert SREBP-1c ⇒ so wird der Effekt, dass LXR das SREBP-1c induziert noch verstärkt -> auch mit Glykolyse verbunden (Lieferant von Bausteine) Sinn davon : wenn LXR hoch → bedeutet, dass es viel Cholesterin (Oxysterine) hat ⇒ man will also Acyl-CoA, um Cholesterin damit zu",
+          "front_snippet": "Leber: Synchronisation von Lipidstoffwechsel und Cholesterinstoffwechsel → inwiefern spielt Insulin eine Rolle hier?",
+          "back_snippet": "Insulin induziert Transkription von LXR und aktiviert SREBP-1c ⇒ so wird der Effekt, dass LXR das SREBP-1c induziert noch verstärkt -> auch mit Glykolyse verbunden (Lieferant von Bausteine) Sinn davon : wenn LXR hoch → bedeutet, dass es viel Cholesterin (Oxyst",
           "hy_terms_detected": [
+            "glykolyse",
             "insulin"
           ]
         }
@@ -5954,9 +6039,9 @@
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 6,
+          "interval_days": 44,
           "card_yield_score": 60.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5976,9 +6061,9 @@
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 9,
+          "interval_days": 17,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -6035,9 +6120,9 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "insulin",
             "noradrenalin",
+            "insulin",
+            "adrenalin",
             "katecholamin"
           ]
         },
@@ -6062,9 +6147,9 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "insulin",
             "noradrenalin",
+            "insulin",
+            "adrenalin",
             "katecholamin"
           ]
         },
@@ -6089,9 +6174,9 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "insulin",
             "noradrenalin",
+            "insulin",
+            "adrenalin",
             "katecholamin"
           ]
         },
@@ -6276,8 +6361,8 @@
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Cortisol nicht bilden • Produzieren Aldosteron von Corticosteron • Aldosteron wird stimuliert von Angiotensin II (z.B. tie",
           "hy_terms_detected": [
             "cortisol",
-            "angiotensin",
-            "aldosteron"
+            "aldosteron",
+            "angiotensin"
           ]
         },
         {
@@ -6332,36 +6417,12 @@
     "1789378223045": {
       "deck_id": 1789378223045,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
-      "total_cards": 130,
-      "high_yield_cards_count": 10,
-      "kprim_traps_count": 24,
+      "total_cards": 95,
+      "high_yield_cards_count": 5,
+      "kprim_traps_count": 19,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 57.7,
+      "avg_card_yield_score": 57.5,
       "sample_kprim_traps": [
-        {
-          "card_id": 1640032041897,
-          "note_id": 1640032041897,
-          "deck_id": 1789378223045,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
-          "professor_name": "Prof. Dr. Heimo Emmert",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 10,
-          "card_yield_score": 59.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Die Resorptionsphase Wie kommt es zu einer Umschaltung auf Glykogensynthese? (grob!) (nenne 3 Punkte)",
-          "back": "➢ Steigende Konzentrationen von Produkten der Glykolyse verlangsamen den Abbau von Glucose ➢ Die Glykogensynthese wird durch Aktivierung der Glykogensynthase beschleunigt. ➢ Die Glykogenolyse wird reziprok gehemmt -> entweder oder Prinzip (nie Glykogen Abbau und Aufbau gleichzeitig)",
-          "front_snippet": "Die Resorptionsphase Wie kommt es zu einer Umschaltung auf Glykogensynthese? (grob!) (nenne 3 Punkte)",
-          "back_snippet": "➢ Steigende Konzentrationen von Produkten der Glykolyse verlangsamen den Abbau von Glucose ➢ Die Glykogensynthese wird durch Aktivierung der Glykogensynthase beschleunigt. ➢ Die Glykogenolyse wird reziprok gehemmt -> entweder oder Prinzip (nie Glykogen Abbau u",
-          "hy_terms_detected": [
-            "glykolyse"
-          ]
-        },
         {
           "card_id": 1640034071941,
           "note_id": 1640034071940,
@@ -6369,9 +6430,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 19,
+          "reps": 20,
           "lapses": 7,
-          "interval_days": 3,
+          "interval_days": 11,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6383,31 +6444,6 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt sich die Fähigkeit von Insulin im Lipidstoffwechsel aus, indirekt cAMP zu senken? (via PDE-3B)",
           "back_snippet": "cAMP ↓ → PKA ↓ ➢ → HSL und Perilipin werden NICHT phosphoryliert ⇒ Lipolyse ↓ ➢ → GPAT * wird weniger/nicht phosphoryliert* ⇒ GPAT aktiv ⇒ Lipogenese ↑ * speichert Nährstoffe als Fett (macht erster Schritt der TAG-Prod.)",
           "hy_terms_detected": [
-            "insulin"
-          ]
-        },
-        {
-          "card_id": 1640034371301,
-          "note_id": 1640034371301,
-          "deck_id": 1789378223045,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
-          "professor_name": "Prof. Dr. Heimo Emmert",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 8,
-          "lapses": 2,
-          "interval_days": 8,
-          "card_yield_score": 78.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Die Resorptionsphase - Lipidstoffwechsel Ist die Aktivität der LPL, welche durch Insulin induziert wurde, sofort maximal ?",
-          "back": "Nein, sondern zeitlich verzögert -> weil durch Transkription (SREBP-1c) Grund : Re-Synthese von TAGs und CM Bildung in den Darm Mukosazellen braucht ein bissl Zeit ⇒ also steigt Konzentrationen von Chylomikronen im Plasma auch langsam an -> LPL nimmt Chylomikron und VLDL auf und macht TAG daraus ⇒ ist also biochemisch ",
-          "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Ist die Aktivität der LPL, welche durch Insulin induziert wurde, sofort maximal ?",
-          "back_snippet": "Nein, sondern zeitlich verzögert -> weil durch Transkription (SREBP-1c) Grund : Re-Synthese von TAGs und CM Bildung in den Darm Mukosazellen braucht ein bissl Zeit ⇒ also steigt Konzentrationen von Chylomikronen im Plasma auch langsam an -> LPL nimmt Chylomikr",
-          "hy_terms_detected": [
-            "ags",
             "insulin"
           ]
         },
@@ -6435,6 +6471,52 @@
             "phosphat",
             "insulin"
           ]
+        },
+        {
+          "card_id": 1640034642081,
+          "note_id": 1640034642081,
+          "deck_id": 1789378223045,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+          "professor_name": "Prof. Dr. Heimo Emmert",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 18,
+          "card_yield_score": 59.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Die Resorptionsphase - Lipidstoffwechsel Insulinwirkung auf LPL: Vergleiche Muskelgewebe vs Fettgewebe",
+          "back": "Im Gegenteil zum Fettgewebe wird die Lipoproteinlipase im Muskel durch Insulin leicht reprimiert . im Fettgewebe hingegen wird die Exprimierung von LPL durch Insulin induziert -> M. Will kein Fett",
+          "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Insulinwirkung auf LPL: Vergleiche Muskelgewebe vs Fettgewebe",
+          "back_snippet": "Im Gegenteil zum Fettgewebe wird die Lipoproteinlipase im Muskel durch Insulin leicht reprimiert . im Fettgewebe hingegen wird die Exprimierung von LPL durch Insulin induziert -> M. Will kein Fett",
+          "hy_terms_detected": [
+            "insulin"
+          ]
+        },
+        {
+          "card_id": 1640034870019,
+          "note_id": 1640034870019,
+          "deck_id": 1789378223045,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+          "professor_name": "Prof. Dr. Heimo Emmert",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 25,
+          "card_yield_score": 50.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Die Resorptionsphase - Lipidstoffwechsel bevorzugte Energiequelle des Muskels ?",
+          "back": "Glucose und nicht Fett!! ← wird nicht bevorzugt",
+          "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel bevorzugte Energiequelle des Muskels ?",
+          "back_snippet": "Glucose und nicht Fett!! ← wird nicht bevorzugt",
+          "hy_terms_detected": []
         }
       ]
     },
@@ -6512,8 +6594,8 @@
           "front_snippet": "Somatotropin-Wirkungsweise Was ist der GH-Rezeptor für ein Typ Rezeptor und was rekrutiert seine aktive Form? (7 P.)",
           "back_snippet": "Cyto k inrezeptor , hat keine intrinsische Tyr-Kinase-Aktivität (nicht wie Insulin-Rezeptor). nach GH-Bindung ⇒ dimerisierte Rezeptor rekrutiert JAK2-Kinase JAK2 phosphoryliert : - benachbarte JAK2 Moleküle (Transphosphorylation) - sich selbst ( Auto phosphory",
           "hy_terms_detected": [
-            "inr",
-            "insulin"
+            "insulin",
+            "inr"
           ]
         },
         {
@@ -6660,9 +6742,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 8,
+          "reps": 9,
           "lapses": 2,
-          "interval_days": 2,
+          "interval_days": 8,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6682,9 +6764,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 3,
+          "interval_days": 12,
           "card_yield_score": 49.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6857,34 +6939,12 @@
     "1789378223048": {
       "deck_id": 1789378223048,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
-      "total_cards": 109,
-      "high_yield_cards_count": 3,
-      "kprim_traps_count": 18,
+      "total_cards": 49,
+      "high_yield_cards_count": 0,
+      "kprim_traps_count": 8,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 56.5,
+      "avg_card_yield_score": 55.4,
       "sample_kprim_traps": [
-        {
-          "card_id": 1640871933346,
-          "note_id": 1640871933346,
-          "deck_id": 1789378223048,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
-          "professor_name": "Prof. Dr. Heimo Emmert",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 4,
-          "lapses": 0,
-          "interval_days": 7,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was ist bemerkenswert im Bezug auf O2 Verbrauch des Gehirns bei Arbeit vs Ruhe?",
-          "back": "- konstanter O2 Verbrauch , keine Steigerung bei Arbeit -grösster O2 Verbrauch pro Gewicht -leistet keine Arbeit, also keine Umstellung bei Umstellung auf Arbeit",
-          "front_snippet": "Was ist bemerkenswert im Bezug auf O2 Verbrauch des Gehirns bei Arbeit vs Ruhe?",
-          "back_snippet": "- konstanter O2 Verbrauch , keine Steigerung bei Arbeit -grösster O2 Verbrauch pro Gewicht -leistet keine Arbeit, also keine Umstellung bei Umstellung auf Arbeit",
-          "hy_terms_detected": []
-        },
         {
           "card_id": 1640873753936,
           "note_id": 1640873753936,
@@ -6910,47 +6970,74 @@
           ]
         },
         {
-          "card_id": 1640874323880,
-          "note_id": 1640874323880,
-          "deck_id": 1789378223048,
-          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
-          "professor_name": "Prof. Dr. Christian Stockmann",
-          "professor_institute": "Anatomisches Institut UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 7,
-          "card_yield_score": 60.0,
-          "is_kprim_trap": true,
-          "trap_type": "causal_chain",
-          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
-          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
-          "card_type": "kprim_mechanism",
-          "front": "vergleiche, wie Glykogen-Phosphorylase im Muskel vs Leber aktiviert/deaktiviert wird",
-          "back": "Muskel : ➢ allosterisch → AMP aktiviert; ATP und Glc-6-P hemmen ➢ kovalent → Phosphorylase-Kinase phosphoryliet und aktiviert; PP1 dephosphoryliert und hemmt Leber : ➢ kovalent → Phosphorylase-Kinase phosphoryliert und aktiviert; PP1* dephosphoryliert und hemmt * Achtung : hier kommt auch allosterische Wirkung dazu; Gl",
-          "front_snippet": "vergleiche, wie Glykogen-Phosphorylase im Muskel vs Leber aktiviert/deaktiviert wird",
-          "back_snippet": "Muskel : ➢ allosterisch → AMP aktiviert; ATP und Glc-6-P hemmen ➢ kovalent → Phosphorylase-Kinase phosphoryliet und aktiviert; PP1 dephosphoryliert und hemmt Leber : ➢ kovalent → Phosphorylase-Kinase phosphoryliert und aktiviert; PP1* dephosphoryliert und hemm",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1640876242664,
-          "note_id": 1640876242664,
+          "card_id": 1641219825752,
+          "note_id": 1641219825752,
           "deck_id": 1789378223048,
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
-          "lapses": 0,
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 12,
+          "card_yield_score": 68.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Metabolische Regulation während Aerober Belastung wie wird die Glykogensynthese während Muskelarbeit herunterreguliert?",
+          "back": "➢ wenig Insulin → wenig PP1 → Glykogen-Synthase nicht aktiviert Muskelkontraktion : ➢ AMP ↑ → AMPK → Glykogensynthase phosphr. und INaktiviert ➢ Ca 2+ ↑ → CaMK ↑ → Glykogensynthase phosphr. und INaktiviert Adrenalin ➢ cAMP → PKA → Glykogensynthase phosphr. und INaktiviert",
+          "front_snippet": "Metabolische Regulation während Aerober Belastung wie wird die Glykogensynthese während Muskelarbeit herunterreguliert?",
+          "back_snippet": "➢ wenig Insulin → wenig PP1 → Glykogen-Synthase nicht aktiviert Muskelkontraktion : ➢ AMP ↑ → AMPK → Glykogensynthase phosphr. und INaktiviert ➢ Ca 2+ ↑ → CaMK ↑ → Glykogensynthase phosphr. und INaktiviert Adrenalin ➢ cAMP → PKA → Glykogensynthase phosphr. und",
+          "hy_terms_detected": [
+            "insulin",
+            "adrenalin"
+          ]
+        },
+        {
+          "card_id": 1641220450319,
+          "note_id": 1641220450319,
+          "deck_id": 1789378223048,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
+          "professor_name": "Prof. Dr. Heimo Emmert",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 6,
+          "lapses": 1,
           "interval_days": 6,
+          "card_yield_score": 59.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Metabolische Regulation während Aerober Belastung Rolle des Lactats → Wieso wird Laktat gebildet überhaupt (in Ruhesituationen) ?",
+          "back": "weil Citratzyklus nicht genug Kapazität für die hohe Durchflussrate der Glykolyse hat → angestautes Pyruvat wird zu Lactat umgewandelt (einzige Möglichkeit) ⇒ «Stoffwechselzwang», da sonst Glykolyse nicht ablaufen kann (prod NADox)",
+          "front_snippet": "Metabolische Regulation während Aerober Belastung Rolle des Lactats → Wieso wird Laktat gebildet überhaupt (in Ruhesituationen) ?",
+          "back_snippet": "weil Citratzyklus nicht genug Kapazität für die hohe Durchflussrate der Glykolyse hat → angestautes Pyruvat wird zu Lactat umgewandelt (einzige Möglichkeit) ⇒ «Stoffwechselzwang», da sonst Glykolyse nicht ablaufen kann (prod NADox)",
+          "hy_terms_detected": [
+            "glykolyse"
+          ]
+        },
+        {
+          "card_id": 1641220881480,
+          "note_id": 1641220881480,
+          "deck_id": 1789378223048,
+          "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
+          "professor_name": "Prof. Dr. Heimo Emmert",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 7,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Metabolische Regulation während Anaerober Belastung Führt Laktat selber zu Ansäuerung der Muskelzelle?",
-          "back": "Nein nicht das Laktat sondern die Hydrolyse von ATP senkt den pH ⇒ bei ATP Hydrolyse netsteht auch H + -> laktatprod. Als puffersystem",
-          "front_snippet": "Metabolische Regulation während Anaerober Belastung Führt Laktat selber zu Ansäuerung der Muskelzelle?",
-          "back_snippet": "Nein nicht das Laktat sondern die Hydrolyse von ATP senkt den pH ⇒ bei ATP Hydrolyse netsteht auch H + -> laktatprod. Als puffersystem",
+          "front": "Metabolische Regulation während Aerober Belastung Welche zwei Wege, Laktat abzubauen?",
+          "back": "Abbau von Lactat geschieht in arbeitendem Muskel selbst, sowie in anderen Organen (Lactat wird exportiert) → über 2 Wege: ➢ Oxidation zu H2O & CO2 → steigt +/- linear mit anfallendem Lactat an (Citrat-Zyklus)* ➢ Gluconeogenese → geschieht relativ Konstant (konstanter Durchfluss) → Anteil der Gluconeogenese bei zunehmen",
+          "front_snippet": "Metabolische Regulation während Aerober Belastung Welche zwei Wege, Laktat abzubauen?",
+          "back_snippet": "Abbau von Lactat geschieht in arbeitendem Muskel selbst, sowie in anderen Organen (Lactat wird exportiert) → über 2 Wege: ➢ Oxidation zu H2O & CO2 → steigt +/- linear mit anfallendem Lactat an (Citrat-Zyklus)* ➢ Gluconeogenese → geschieht relativ Konstant (kon",
           "hy_terms_detected": []
         }
       ]
@@ -7030,9 +7117,9 @@
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
             "cortisol",
-            "adrenalin",
-            "noradrenalin",
             "acth",
+            "noradrenalin",
+            "adrenalin",
             "katecholamin"
           ]
         },
@@ -7058,9 +7145,9 @@
           "back_snippet": "",
           "hy_terms_detected": [
             "cortisol",
-            "adrenalin",
-            "noradrenalin",
             "acth",
+            "noradrenalin",
+            "adrenalin",
             "katecholamin"
           ]
         }
@@ -7096,11 +7183,11 @@
           "front_snippet": "Aldosteronfreisetzung wird durch was stimuliert? (3)",
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II → hemmt K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Azidose",
           "hy_terms_detected": [
-            "azidose",
             "depolarisation",
-            "angiotensin",
+            "epo",
             "aldosteron",
-            "epo"
+            "azidose",
+            "angiotensin"
           ]
         },
         {
@@ -7171,8 +7258,8 @@
           "front_snippet": "Zweite sympathische Synapse: fast immer Noradrenalin Ausnahme: Nierenmark schüttet Adrenalin aus Schweissdrüsen werden über ACh aktiviert.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "adrenalin",
-            "noradrenalin"
+            "noradrenalin",
+            "adrenalin"
           ]
         }
       ]
@@ -8042,8 +8129,8 @@
           "front_snippet": "Wer ist für den Bohr-Effekt verantwortlich? Beschreibe, wie dieser Effekt die Sauerstoffbindung reguliert:",
           "back_snippet": "- Für den Bohr-Effekt sind die alpha-Aminogruppen am aminoterminalen Ende der alpha-Ketten und die Seitenketten der Histidine verantwortlich. - Diese Gruppen besitzen pKS-Werte, die nahe bei pH 7 liegen. - So ist zum Beispiel bei tiefem pH-Wert die Imidazolgru",
           "hy_terms_detected": [
-            "bohr-effekt",
-            "sauerstoffbindung"
+            "sauerstoffbindung",
+            "bohr-effekt"
           ]
         },
         {
@@ -8648,11 +8735,11 @@
     "1789378223026": {
       "deck_id": 1789378223026,
       "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
-      "total_cards": 42,
+      "total_cards": 38,
       "high_yield_cards_count": 0,
       "kprim_traps_count": 2,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 53.2,
+      "avg_card_yield_score": 53.1,
       "sample_kprim_traps": [
         {
           "card_id": 1758125642974,
@@ -8675,8 +8762,8 @@
           "front_snippet": "MHC-Moleküle Klasse 1 und 2 Erkennung und Exprimierung",
           "back_snippet": "1. Präsentierte Peptide werden von Cytotoxischen T-Zellen erkannt; von allen Zellen des Körpers ausser roten BK exprimiert 2. Präsentierte Peptide werden von T-Helfer-Zellen erkannt; nur von Makrophagen , dendritischen Zellen, B-Zellen und Epithelzellen des Th",
           "hy_terms_detected": [
-            "t-zell",
-            "thymus"
+            "thymus",
+            "t-zell"
           ]
         },
         {
@@ -8706,159 +8793,41 @@
     "1789378223027": {
       "deck_id": 1789378223027,
       "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
-      "total_cards": 20,
+      "total_cards": 17,
       "high_yield_cards_count": 1,
       "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 54.0,
+      "avg_card_yield_score": 54.8,
       "sample_kprim_traps": []
     },
     "1789378223028": {
       "deck_id": 1789378223028,
       "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
-      "total_cards": 60,
-      "high_yield_cards_count": 1,
-      "kprim_traps_count": 3,
+      "total_cards": 47,
+      "high_yield_cards_count": 0,
+      "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 52.0,
-      "sample_kprim_traps": [
-        {
-          "card_id": 1758727804906,
-          "note_id": 1758727804906,
-          "deck_id": 1789378223028,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 9,
-          "lapses": 2,
-          "interval_days": 4,
-          "card_yield_score": 87.0,
-          "is_kprim_trap": true,
-          "trap_type": "causal_chain",
-          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
-          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
-          "card_type": "kprim_mechanism",
-          "front": "T-Zell abhängige B-Zell Aktivierung",
-          "back": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle erkennt Peptid auf MHC-II über TCR → T-Helferzelle wird akti",
-          "front_snippet": "T-Zell abhängige B-Zell Aktivierung",
-          "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle ",
-          "hy_terms_detected": [
-            "mhc-ii",
-            "t-zell",
-            "mhc-i"
-          ]
-        },
-        {
-          "card_id": 1758728528605,
-          "note_id": 1758728528605,
-          "deck_id": 1789378223028,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 17,
-          "lapses": 4,
-          "interval_days": 2,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was passiert in der hellen Zone des Keimzentrums?",
-          "back": "B-Zellen mit hoher Affinität für ein Antigen auf follikulären dendritischen Zellen F FH , nehmen dies auf und präsentieren es via MHC-2 -> wenn Fremd Ag kommt T FH -Zelle (TCR) und bindet -> Co-Stimulation -> wenn selbst-Ag -> kein passender TCR -> keine co-Stimulation -> Apoptose —> Pos. Selektion (death by neglect) —",
-          "front_snippet": "Was passiert in der hellen Zone des Keimzentrums?",
-          "back_snippet": "B-Zellen mit hoher Affinität für ein Antigen auf follikulären dendritischen Zellen F FH , nehmen dies auf und präsentieren es via MHC-2 -> wenn Fremd Ag kommt T FH -Zelle (TCR) und bindet -> Co-Stimulation -> wenn selbst-Ag -> kein passender TCR -> keine co-St",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1758729578951,
-          "note_id": 1758729578951,
-          "deck_id": 1789378223028,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 8,
-          "lapses": 1,
-          "interval_days": 28,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Eigenschaften Plasmazellen",
-          "back": "- Ausdifferenzierte B-Zellen - Teilen sich nicht mehr - langlebig - sehr wenige bis keine Oberflächen-Immunglobuline - prod. Einfach Ak",
-          "front_snippet": "Eigenschaften Plasmazellen",
-          "back_snippet": "- Ausdifferenzierte B-Zellen - Teilen sich nicht mehr - langlebig - sehr wenige bis keine Oberflächen-Immunglobuline - prod. Einfach Ak",
-          "hy_terms_detected": []
-        }
-      ]
+      "avg_card_yield_score": 51.3,
+      "sample_kprim_traps": []
     },
     "1789378223029": {
       "deck_id": 1789378223029,
       "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
-      "total_cards": 20,
+      "total_cards": 10,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 2,
+      "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 59.5,
-      "sample_kprim_traps": [
-        {
-          "card_id": 1758806532341,
-          "note_id": 1758806532341,
-          "deck_id": 1789378223029,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 10,
-          "lapses": 2,
-          "interval_days": 7,
-          "card_yield_score": 59.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Selbst-Antigene werden nicht nur auf mTECs präsentiert, sondern auch auch Antigen-präsentierenden Immunzellen",
-          "back": "mTECs = medulläre Epithelzellen auf Thymus -> MHC1",
-          "front_snippet": "Selbst-Antigene werden nicht nur auf mTECs präsentiert, sondern auch auch Antigen-präsentierenden Immunzellen",
-          "back_snippet": "mTECs = medulläre Epithelzellen auf Thymus -> MHC1",
-          "hy_terms_detected": [
-            "thymus"
-          ]
-        },
-        {
-          "card_id": 1758806992883,
-          "note_id": 1758806992883,
-          "deck_id": 1789378223029,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 17,
-          "lapses": 4,
-          "interval_days": 26,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was ist APECED?",
-          "back": "Polyglanduläres Autoimmunsyndrom - autosomal rezessiv - neutralisierende Antikörper gegen IL-17 (können nicht mehr funktionieren) - Hypoparathyreoidismus —> funktionsverlust von AIRE-Gene in mTEC (Ausfall zentrale Toleranz) —> Zytokine Hemmer (IL-17) keine Neutro. Gran. Mehr, d.h. Anfällig für Pilzinfektion",
-          "front_snippet": "Was ist APECED?",
-          "back_snippet": "Polyglanduläres Autoimmunsyndrom - autosomal rezessiv - neutralisierende Antikörper gegen IL-17 (können nicht mehr funktionieren) - Hypoparathyreoidismus —> funktionsverlust von AIRE-Gene in mTEC (Ausfall zentrale Toleranz) —> Zytokine Hemmer (IL-17) keine Neu",
-          "hy_terms_detected": []
-        }
-      ]
+      "avg_card_yield_score": 58.1,
+      "sample_kprim_traps": []
     },
     "1789378223030": {
       "deck_id": 1789378223030,
       "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
-      "total_cards": 32,
+      "total_cards": 24,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 4,
+      "kprim_traps_count": 3,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 52.3,
+      "avg_card_yield_score": 52.7,
       "sample_kprim_traps": [
         {
           "card_id": 1758871391815,
@@ -8907,28 +8876,6 @@
           "hy_terms_detected": []
         },
         {
-          "card_id": 1758980454518,
-          "note_id": 1758980454518,
-          "deck_id": 1789378223030,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 7,
-          "lapses": 0,
-          "interval_days": 26,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Autoinflammation",
-          "back": "- vererbt - angeborenes Immunsystem - entzündungsfördernde Zytokine spielen zentrale Rolle (IL-1B, IL-6, TNF-a) - auslösende Faktoren sind Inflammasomaktivierende Substanzen - keine Antikörper gegen Selbst-Antigene Autoinflammation = angeborenes Immunsystem außer Kontrolle ohne Autoantikörper.",
-          "front_snippet": "Autoinflammation",
-          "back_snippet": "- vererbt - angeborenes Immunsystem - entzündungsfördernde Zytokine spielen zentrale Rolle (IL-1B, IL-6, TNF-a) - auslösende Faktoren sind Inflammasomaktivierende Substanzen - keine Antikörper gegen Selbst-Antigene Autoinflammation = angeborenes Immunsystem au",
-          "hy_terms_detected": []
-        },
-        {
           "card_id": 1758981590955,
           "note_id": 1758981590955,
           "deck_id": 1789378223030,
@@ -8957,37 +8904,12 @@
     "1789378223031": {
       "deck_id": 1789378223031,
       "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
-      "total_cards": 22,
+      "total_cards": 17,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 1,
+      "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 50.5,
-      "sample_kprim_traps": [
-        {
-          "card_id": 1758983395754,
-          "note_id": 1758983395754,
-          "deck_id": 1789378223031,
-          "deck_name": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 16,
-          "lapses": 3,
-          "interval_days": 24,
-          "card_yield_score": 24.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Wie kann Psoriasis unterdrückt werden?",
-          "back": "Disregulation von IL-23 und IL-17 (Th17) Produktion, durch gamma-delta T-Zellen wenig Indikation für Selbstreaktive T-Zellen —> d.h. Man muss versuchen IL-17 und IL-23 zu stoppen -> Psoriasis keine klassische Autoimmunerkrankung da auch viel innates IS mitspielt",
-          "front_snippet": "Wie kann Psoriasis unterdrückt werden?",
-          "back_snippet": "Disregulation von IL-23 und IL-17 (Th17) Produktion, durch gamma-delta T-Zellen wenig Indikation für Selbstreaktive T-Zellen —> d.h. Man muss versuchen IL-17 und IL-23 zu stoppen -> Psoriasis keine klassische Autoimmunerkrankung da auch viel innates IS mitspie",
-          "hy_terms_detected": [
-            "t-zell"
-          ]
-        }
-      ]
+      "avg_card_yield_score": 51.1,
+      "sample_kprim_traps": []
     },
     "1789378222963": {
       "deck_id": 1789378222963,
@@ -9000,5 +8922,5 @@
       "sample_kprim_traps": []
     }
   },
-  "updated_at": 1795101082.556705
+  "updated_at": 1795593596.0039358
 }

@@ -1,0 +1,2331 @@
+{
+  "version": "2.0",
+  "total_source_summaries": 38,
+  "entries": [
+    {
+      "id": "einfuehrung_abschluss",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Einführung & Abschluss",
+      "subdeck_patterns": [
+        "Einführung & Abschluss",
+        "Einführung und Abschluss"
+      ],
+      "source_summaries": [
+        "2025-09-15_Einfuehrung_Anatomie_TB_Blut.md"
+      ],
+      "lecture_dates": [
+        "2025-09-15"
+      ],
+      "exam_highlights": [
+        "Anatomie-Jahresprüfung (Lienkamp/Colacicco): „Alles“ ab Tag 1 des 1. Jahres (inkl. Kursskripte, Röntgenanatomie, klinische Vorlesungen) ist ohne Vertiefungsthemen oder Eingrenzungen prüfungsrelevant. Große Zusammenhänge verstehen (z. B. Organlage im Thorax, 4 Leberlappen) und im Tutorat mündlich argumentieren.",
+        "Klinische Einführung TB Blut & Immunsystem (Dr. Kreutmayer): Grobgliederung der Hämatopoese (Myelopoese vs. Lymphopoese; Knochenmark, Thymus, Blut, sekundär lymphatische Organe) und Immunantwort (angeboren vs. erworben; humoral vs. zellvermittelt) verstehen.",
+        "AML-Einführungsfall (Kreutmayer): Panzytopenie im Blutbild mit 15 % Blasten im Blutausstrich und 85 % myeloischen Blasten (Verdrängung der Hämatopoese) im Knochenmark; die 5 Fall-Quizfragen werden erst in der Abschlussvorlesung aufgelöst (nicht in den 6 Transkripten vom 15.–26.09. enthalten)."
+      ],
+      "clinical_pearls": [
+        "AML & Tumorlysesyndrom: Gingivahyperplasie kann ein charakteristisches AML-Zeichen sein; rascher Zellzerfall unter Chemotherapie setzt Kalium (Herzrhythmusstörungen/EKG), Phosphat und Harnsäure (Nierenschädigung) frei → Pause, massive Flüssigkeitszufuhr und Elektrolytkontrolle.",
+        "Fieber in Neutropenie ist ein Notfall: Zuerst Kulturen abnehmen (Blut, Urin, Stuhl, Rachenabstrich), dann sofort i.v.-Breitbandantibiotika; Knochenmarkspunktion beim Erwachsenen an Spina iliaca posterior superior (Bauchlage) oder Crista iliaca (Seitenlage) in Lokalanästhesie.",
+        "Allogene Stammzelltransplantation überträgt ein Zellgemisch (Stammzellen + Immunzellen/T-Zellen): Haupteffekt ist immunologisch (Graft-vs.-Leukemia), Nebenwirkung ist Graft-vs.-Host-Disease (akut: Haut, Darm, Leber; chronisch: jedes Organ möglich)."
+      ],
+      "deemphasized_notes": [
+        "Anatomie-Mini-Details wie die „14. Generation der Abzweigung einer Arterie am Vorfuß“ oder „18. Generation der arteriellen Leberlappenversorgung“ bezeichnete Prof. Lienkamp explizit als „wurscht“.",
+        "In der klinischen Einführung (Kreutmayer) muss der Fachbegriff „Tumorlysesyndrom“ nicht auswendig gelernt werden – wichtig ist nur das Verständnis der Elektrolytverschiebung."
+      ]
+    },
+    {
+      "id": "manatschal_myoglobin_haemoglobin",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Manatschal",
+      "subdeck_patterns": [
+        "1 Myoglobin, Hämoglobin"
+      ],
+      "source_summaries": [
+        "2025-09-18_TB_Blut_-_Immunsystem.md",
+        "2025-09-19_TB_Blut_-_Immunsystem.md",
+        "2025-09-22_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-18",
+        "2025-09-19",
+        "2025-09-22"
+      ],
+      "exam_highlights": [
+        "Sauerstoffbindungskurven sicher verstehen: Myoglobin (Monomer, hyperbolisch, K_D ≈ 2 Torr) vs. Hämoglobin (Tetramer α₂β₂, sigmoidal durch positive Kooperativität, Hill-Konstante n ≈ 2,8, K_D ≈ 25 Torr), Kurvenverschiebung bei K_D-Änderung und Ablesen von K_D bei halbmaximaler Sättigung bzw. am Wendepunkt im semilogarithmischen Plot.",
+        "T-/R-Form & Kooperativitätsmodelle: T-Form (Desoxy-Hb) hat tiefe, R-Form (Oxy-Hb) hohe O₂-Affinität; im Symmetriemodell liegen bei gegebener Ligandenkonzentration T- und R-Form gleichzeitig mit unterschiedlichem Besetzungsgrad in Lösung vor, während im sequentiellen Modell die O₂-Bindung benachbarte Untereinheiten schrittweise beeinflusst.",
+        "Heterotrope Allosterie & HbF: 2,3-BPG bindet im zentralen Hohlraum der T-Form an positive Ladungen → Rechtsverschiebung; bei HbF (α₂γ₂) ist ein zentrales Histidin durch Serin ersetzt (2 positive Ladungen weniger) → schwächere 2,3-BPG-Bindung → Linksverschiebung für O₂-Transfer Mutter→Fötus.",
+        "Pathobiochemie & Redoxsystem: Wirkprinzipien anomaler Hämoglobine (Häm-Tasche, Methämoglobin-Bildung, T/R-Gleichgewicht), Sichelzellanämie, Thalassämien sowie ROS-/Met-Hb-Entgiftung durch Methämoglobin-Reduktase, Superoxiddismutase, Katalase und Glutathion-Peroxidase/-Reduktase."
+      ],
+      "clinical_pearls": [
+        "Höhenanpassung (4500 m ü.M.): O₂-Sättigungsdifferenz Lunge–Gewebe sinkt zunächst von 38 % auf 30 %; durch gesteigerte Glykolyse steigt 2,3-BPG innerhalb von Stunden von ~5 mM auf ~8 mM und hebt die Abgabe wieder auf 37 %, während die Erythrozyten-Neubildung Wochen dauert.",
+        "Sichelzellanämie auf atomarer Ebene: Punktmutation GAG→GTC an β-Pos. 6 (Glutamat→Valin) exponiert hydrophobes Valin, das nur in der T-Form (Desoxy-Hb) in eine komplementäre hydrophobe Tasche passt → reversible faserige Aggregate im sauerstoffarmen Gewebe → schmerzhafte Thromben.",
+        "Struktur- & Spektraldetails: Distales Histidin schützt Fe²⁺ über H-Brücke vor Oxidation zu Methämoglobin (Fe³⁺); Desoxy-Hb zeigt 1 Peak und Oxy-Hb 2 Peaks bei 500–600 nm (Pulsoximetrie bei 660/940 nm); laut 2012-Paper sind Schwangerschaften trotz erhöhtem HbF bei β-Thalassämie/Sichelzellanämie möglich (vermutlich durch erhöhtes mütterliches 2,3-BPG)."
+      ],
+      "deemphasized_notes": [
+        "Mathematische Herleitung und Linearisierung der Hill-Gleichung, die Gleichung des Symmetriemodells sowie das Excel-File „Bindung Adair“ (evolutionäre Spielerei) sind explizit KEIN Prüfungsstoff.",
+        "Die Namen und exakten Mutationen der anomalen Hämoglobine in der Übersichtstabelle müssen nicht auswendig gelernt werden (nur die Wirkprinzipien); das hochgeladene Schwangerschafts-Paper von 2012 ist ebenfalls kein Prüfungsstoff."
+      ]
+    },
+    {
+      "id": "manatschal_co2_transport",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Manatschal",
+      "subdeck_patterns": [
+        "2 CO2-Transport"
+      ],
+      "source_summaries": [
+        "2025-09-22_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-22"
+      ],
+      "exam_highlights": [
+        "Hydrogencarbonat-Puffer (CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻, pK_S = 6,1, beschleunigt durch Carboanhydrase): Puffert bei Blut-pH 7,4 trotz pK_S = 6,1 effektiv, weil er durch konstante CO₂-Abatmung über die Lunge (24'000 mmol ≈ 1,1 kg/24 h) als offenes System arbeitet.",
+        "Die zwei separaten Bohr-Effekt-Mechanismen unterscheiden (CO₂ und H⁺ wirken unabhängig rechtsverschiebend): (1) Carbamat-Bildung am N-Terminus (10–15 % des CO₂; wandelt positive in negative Ladung um → stabilisiert T-Form) und (2) Bindung von 2 Bohr-Protonen an die C-terminalen Histidine der β-Untereinheiten (Salzbrücken zu β-Asp und α-Lys → stabilisieren T-Form).",
+        "Henderson-Hasselbalch-Gleichung (pH = pK_S + log₁₀([Base]/[Säure]), Pufferbereich pK_S ± 1) sowie Zusammenspiel von Carboanhydrase und Chlorid-Hydrogencarbonat-Austauscher beherrschen; Säure-Base-Reaktionen sind in der Biologie wegen des extrem schnellen Protonentransfers besonders häufig (Prüfungstipp)."
+      ],
+      "clinical_pearls": [
+        "Histidin-pK_S-Verschiebung im Bohr-Effekt: Die lokale Proteinumgebung verschiebt den „pK_S“ der spezifischen β-His-Reste von 6,2 (Oxy-Hb) auf 7,7 (Desoxy-Hb) – bei pH 7,4 sind im Oxy-Hb daher nur ~6 % protoniert, im Desoxy-Hb jedoch 67 %.",
+        "Hyper- vs. Hypoventilation: Schnelles Atmen (Hyperventilation) atmet zu viel CO₂ ab, verbraucht H⁺ und führt zur Alkalose; flaches/langsames Atmen (Hypoventilation) hält CO₂ zurück und bewirkt eine Azidose.",
+        "Physiologische pH-Werte im Vergleich: Blut pH 7,36–7,44 (~40 nM H⁺), intrazellulär pH 7,0–7,2 (~80 nM H⁺), Lysosomen pH 4–5, Magen pH 1–2; Verhältnis CO₂ : H₂CO₃ im Blut beträgt ca. 400 : 1."
+      ],
+      "deemphasized_notes": [
+        "Exakte pK_S-Werte bis auf die zweite Nachkommastelle auswendig zu lernen bringt laut Dozentin nichts, da pK_S-Werte von Temperatur und chemischer Umgebung abhängen und keine Konstanten sind."
+      ]
+    },
+    {
+      "id": "manatschal_blutgerinnung",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Manatschal",
+      "subdeck_patterns": [
+        "3 Blutgerinnung"
+      ],
+      "source_summaries": [
+        "2025-09-26_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-26"
+      ],
+      "exam_highlights": [
+        "Die Gerinnungskaskade ist ausdrücklich prüfungsrelevant („für Sie als Mediziner ganz, ganz wichtig“): Extrinsischer Weg (Faktor III/Tissue Factor + VII → IX & X) und intrinsischer Weg (XII → XI → IX) konvergieren bei Tenase (IXa + VIIIa → X) und Prothrombinase (Xa + Va → Thrombin) mit positiver Thrombin-Rückkopplung.",
+        "Gla-Domänen (γ-Carboxyglutamat, Vitamin-K-abhängig) koordinieren Ca²⁺ (6 Koordinationsbindungen) zur Verankerung der Faktoren an Phosphatidylserin auf aktivierten Thrombozyten (durch Scramblasen exponiert); Thrombin diffundiert als Ausnahme von der Membran weg.",
+        "Fibrinbildung & Antikoagulation: Thrombin spaltet ein kleines N-terminales Peptid von Fibrinogen ab → hydrophobe Aggregation → kovalente Quervernetzung durch Ca²⁺-abhängigen Faktor XIII (Transglutaminase verknüpft Glutamin und Lysin unter NH₃-Abspaltung); Antithrombin III (Serpin, verstärkt durch Heparin) hemmt Thrombin irreversibel im acylierten Zwischenprodukt, ergänzt durch Protein C/S, TFPI und Fibrinolyse."
+      ],
+      "clinical_pearls": [
+        "Vitamin-K-Antagonisten hemmen die γ-Carboxylierung von Glutamat in Gla-Domänen, wodurch die Ca²⁺-vermittelte Bindung an Thrombozytenphospholipide entfällt.",
+        "Dialysemembranen und Implantate können über negativ geladene Oberflächen direkt Faktor XII (intrinsischen Weg) aktivieren; VWF zirkuliert teils an Faktor VIII gebunden und legt seine Rezeptorbindungsstellen erst nach EZM-Bindung frei.",
+        "Heparin bringt Thrombin und (rekombinant in Ziegen produziertes) Antithrombin III zusammen und legt dessen reaktiven Loop frei; Fibrinogen ist 230 Å (23 nm) pro Monomer lang (im Audio versprochen als 32 nm)."
+      ],
+      "deemphasized_notes": [
+        "Die detaillierten Namen der Thrombozyten-Glykoproteinrezeptoren müssen in der Biochemie nicht gemerkt werden („Einzig was Sie sich merken können: das GP steht für Glykoprotein“).",
+        "Konkrete Halbwertszeiten der Gerinnungsfaktoren, die exakte Domänenarchitektur jedes einzelnen Faktors sowie der genaue chemische Aufbau von Heparin müssen nicht auswendig gelernt werden."
+      ]
+    },
+    {
+      "id": "schneider_blut_und_blutplasma",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Schneider",
+      "subdeck_patterns": [
+        "Blut und Blutplasma / Wenger",
+        "Blut und Blutplasma"
+      ],
+      "source_summaries": [
+        "2025-09-18_TB_Blut_-_Immunsystem.md",
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-18",
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "Volumenersatz & Terminologie (Stockmann): Kristalloide Lösungen (0,9 % NaCl, Ringer-Laktat, isotone Glukose; kein onkotischer Druck, i.v. oder oral) vs. kolloidale Lösungen (Humanalbumin, Gelatine, HES 130 kDa; nur i.v., hyperonkotisch als Plasmaexpander, umstritten); immer „Dehydratation“ statt „Dehydrierung“ verwenden.",
+        "Osmolarität (~290 mosmol/kg) vs. Tonizität: Isoosmolal ist nicht zwingend isoton, da biologische Membranen nicht strikt semipermeabel sind (z. B. dringen Glycerin oder Harnstoff ein, Wasser folgt nach → Hämolyse).",
+        "Blutviskosität & Hämatokrit (Stockmann): Hämatokrit umfasst formal alle zellulären Bestandteile inklusive Buffy-Coat (♂ 0,4–0,54); steigender Hämatokrit erhöht die Gesamtblutviskosität exponentiell (Strömungswiderstand nach Hagen-Poiseuille, Herzarbeit; theoretisches Optimum ~0,3)."
+      ],
+      "clinical_pearls": [
+        "Fåhræus-Lindqvist-Effekt: In kleinen Gefäßen/Kapillaren steigt die Viskosität durch Verformbarkeit der Erythrozyten („Gänsemarsch“ in paraboloider Form) und Axialmigration mit Bildung eines zellfreien Plasmasaums deutlich geringer an; in großen Venen/bei Schock entsteht dagegen Rouleaux-Bildung (Geldrollen) mit massivem Viskositätsanstieg.",
+        "Blutspende (~500 ml ≈ 10 % Blutvolumen): Flüssigkeitsvolumen ist durch Trinken/kolloidosmotischen Druck rasch kompensiert (Gesamtblutvolumen nach 1–2 Tagen), die Erythrozytenzahl wegen Eisenverlust erst nach Wochen; Haltbarkeit von Erythrozytenkonzentraten ~42 Tage.",
+        "Korrektur Herzinsuffizienz (Stockmann): Linksherzinsuffizienz → Lungenödem, Rechtsherzinsuffizienz → periphere Ödeme (Extremitäten); im venösen Blut steigt der Hämatokrit durch den Hamburger-Shift leicht an."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "schneider_erythrozyten",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Schneider",
+      "subdeck_patterns": [
+        "Erythrozyten / Wenger",
+        "Erythrozyten"
+      ],
+      "source_summaries": [
+        "2025-09-18_TB_Blut_-_Immunsystem.md",
+        "2025-09-19_TB_Blut_-_Immunsystem.md",
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-18",
+        "2025-09-19",
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "Erythrozyten-Indizes & Optische Analytik (Stockmann & Schneider): Lambert-Beersches Gesetz kennen; MCV (80–100 fl, makrozytär vs. mikrozytär in der Anämiediagnostik) und MCH (~30 pg) sowie normale Erythrozytenkonzentration (4–5 × 10¹²/l) und Price-Jones-Kurve (Ø ~7,5 µm) beherrschen.",
+        "Eisenstoffwechsel (Schneider): Gesamteisen 4–5 g, Aufnahme & Verlust je 1–2 mg/d, wobei der Eisenverlust NICHT reguliert ist (Anpassung erfolgt über die Aufnahme); Transferrin (Fe³⁺-Transport), Ferritin (Speicher, bester Serum-Marker), DMT1 (Fe²⁺-Aufnahme) und Ferroportin (Export, reguliert durch Hepcidin aus der Leber) kennen.",
+        "Stoffwechsel, CO₂-Transport & Polyglobulie (Stockmann): Pentosephosphatweg (G6PD → NADPH → Glutathion gegen oxidativen Stress), Carboanhydrase II + Bande-3-Protein (Hamburger-Shift), osmotische Resistenz (50 % Hämolyse bei ~4,3 g/l bzw. ~0,5 % NaCl) sowie primäre Polyzythämie (Gain-of-Function in JAK2) vs. sekundäre (HIF-Stabilisierung bei VHL/PHD-Mutation, 2,3-BPG-Mangel, 70–80 % idiopathisch)."
+      ],
+      "clinical_pearls": [
+        "Favismus / G6PD-Mangel (X-chromosomal, auch heterozygote Frauen durch zufällige X-Inaktivierung betroffen; Selektionsvorteil gegen P. falciparum): Keine Pollen-Allergie (Korrektur eines falschen Zeitungsartikels), sondern akute hämolytische Anämie durch Verzehr von Favabohnen (Vicin/Convicin) oder Primaquin/bestimmte Antibiotika.",
+        "Anämie-Beispiele (Schneider): Makrozytär-megaloblastär (38-j. Patient mit Vitiligo → Autoantikörper gegen Intrinsic Factor/Parietalzellen bei autoimmuner Gastritis → B12-Mangel), mikrozytär-hypochromer Eisenmangel (Blässe, Mundrhagaden, brüchige Fingernägel; häufigste Form bei uns), chronische Entzündung (IL-6 → ↑ Hepcidin → Ferroportin-Abbau), PNH (PIG-A-Defekt → Verlust von CD55/CD59 → Komplementlyse), CRISPR-Cas9-Reaktivierung von HbF bei Sichelzellanämie/β-Thalassämie.",
+        "Pulsoximetrie & Häm-Abbau: Klassische 2-Wellenlängen-Pulsoximeter (660/940 nm) bestimmen auch die Herzfrequenz, versagen aber bei Rauchgasvergiftung (CO-Hb überlagert Oxy-Hb; Klinikgeräte nutzen bis 8 Wellenlängen); Häm-Abbau über Bilirubin ergibt Urobilin (gelber Urin) und Sterkobilinogen→Dipyrrole (brauner Stuhl)."
+      ],
+      "deemphasized_notes": [
+        "Die komplexe Mathematik hinter der Streuungskorrektur bei Multi-Wellenlängen-Oximetern muss nicht verstanden oder gekannt werden (Stockmann).",
+        "MCHC (~350 g/l) ist laut Schneider „mehr eine theoretische Grösse“ und „generell aber nicht zwingend notwendig für die Diagnose“."
+      ]
+    },
+    {
+      "id": "schneider_thrombozyten_wundheilung_blutgruppen",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Schneider",
+      "subdeck_patterns": [
+        "Thrombozyten, Wundheilung, Blutgruppen"
+      ],
+      "source_summaries": [
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "Primäre Hämostase (Stockmann): Die drei zentralen Thrombozyten-Rezeptorkomplexe kennen – GPIb/IX–VWF (reversible Adhäsion), GPIa/IIa & GPVI (Kollagenbindung) und GPIIb/IIIa–Fibrinogen (Aggregation, stabilisiert durch Thrombospondin) – sowie Cyclooxygenase (COX → TXA₂) als Target von Aspirin.",
+        "Sekundäre Hämostase, Wundheilung & Fibrinolyse: Bedeutung von Gewebefreilegung (Tissue Factor) und Ca²⁺ verstehen; Retraktion durch Aktin-Myosin der Thrombozyten, Wundheilung über Myofibroblasten (Smooth Muscle Actin), Keratinozyten und VEGF (Angiogenese), Fibrinolyse via tPA → Plasminogen → Plasmin → D-Dimere.",
+        "Blutgruppen (AB0 & Rhesusfaktor, auch fürs Blutpraktikum relevant): AB0 basiert auf Glykosyltransferasen am identischen Genlokus auf das H-Antigen und bildet postnatal T-Zell-unabhängig präformierte IgM-Antikörper (starke Agglutination & Komplementlyse); Rhesus (RhD) kodiert direkt ein Membranprotein und bildet T-Zell-abhängige, plazentagängige IgG-Antikörper erst nach Sensibilisierung."
+      ],
+      "clinical_pearls": [
+        "Niedrigdosiertes Langzeit-Aspirin hemmt die Cyclooxygenase in Thrombozyten → reduzierte Thromboxan-A₂-Synthese und geringeres Thromboserisiko; therapeutisch lösen rekombinantes tPA, Urokinase und Streptokinase Fibrinthromben auf, während D-Dimere als Marker stattfindender Fibrinolyse dienen.",
+        "AB0-Besonderheiten: A1 vs. A2 unterscheidet sich in der Expressionsstärke (bei A2 drohen falsch-negative Tests mit Anti-A); der seltene Bombay-Phänotyp (v. a. Indien ~1:10.000) hat kein H-Antigen, bildet Anti-H-Antikörper und darf nur Bombay-Blut erhalten.",
+        "Rhesus-Prophylaxe: Eine Rh⁻-Mutter wird meist bei Geburt eines Rh⁺-Kindes sensibilisiert; Anti-D-Antikörper vor/nach der Geburt verhindern die Sensibilisierung und müssen in jeder Schwangerschaft mit Rh⁺-Fötus wiederholt werden."
+      ],
+      "deemphasized_notes": [
+        "Das detaillierte Zuckergerüst des H-Antigens sowie exakte Details aller anderen Blutgruppensysteme außerhalb von AB0 und Rhesusfaktor müssen nicht gekannt werden.",
+        "Polymorphismen im CcEe-Locus des Rhesussystems sind laut Stockmann „für die Blutgruppennomenklatur und für die Transfusionsreaktionen irrelevant“."
+      ]
+    },
+    {
+      "id": "stockmann_erythropoiese_myelopoiese",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Erythropoiese, Myelopoiese"
+      ],
+      "source_summaries": [
+        "2025-09-15_Einfuehrung_Anatomie_TB_Blut.md",
+        "2025-09-18_TB_Blut_-_Immunsystem.md",
+        "2025-09-19_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-15",
+        "2025-09-18",
+        "2025-09-19"
+      ],
+      "exam_highlights": [
+        "Hämatopoese-Orte & Stammzell-Potenz: Embryonale/fetale Abfolge (insulär im Dottersack bis 3. Monat → hepatolienal in Leber/Milz → medullär im roten Knochenmark ab 4. Monat; Korrektur vom 18.09.: rotes, nicht „weißes“ Knochenmark); CD34 als Stammzellmarker; explizit prüfungsrelevanter Nachtrag (19.09.): hämatopoetische Stammzellen sind multipotent (auf hämatopoetische Linie festgelegt), nicht pluripotent.",
+        "Abgefragtes Hämatopoese-Kernwissen (Einstiegs-Quiz 19.09.): Neutrophilen-Reifungsreihe, kernhaltiges Vorstadium (orthochromatischer Erythroblast) vor dem Retikulozyten (~1–2 % im Blut mit RNA-Resten als Maß für Knochenmarksaktivität), Polyploidie der Megakaryozyten bis 64n durch Endomitose sowie Erythrozyten-Normalwert (4–6 Mio./µl).",
+        "Relative Leukozyten-Häufigkeit (Neutrophile 50–70 %, Lymphozyten 25–45 %, Monozyten 2–6 %, Eosinophile/Basophile selten) kennen und reaktive Linksverschiebung (mehr Stabkernige bei bakterieller Infektion) von Leukämie (frühe Vorläufer wie Myelozyten/Promyelozyten im Blut) unterscheiden."
+      ],
+      "clinical_pearls": [
+        "Erythropoese & Lebenszyklus: Reifung dauert 5–7 Tage (~2–2,5 Mio. Retikulozyten/s), Lebensdauer ~120 Tage; Erythrozyten messen konstant ~7,5 µm (Größenmaßstab im Blutausstrich), besitzen keine Mitochondrien (anaerobe Glykolyse) und werden bei zunehmender Steifigkeit in Milz (rote Pulpa) und Leber (Kupffer-Zellen) abgebaut.",
+        "Langerhans-Zelle der Haut: Prof. Stockmann korrigierte die Folie ausdrücklich – sie ist eigentlich eine hautständige dendritische Zelle, kein klassischer Makrophage.",
+        "EPO-Rezeptor (Zytokinrezeptor, JAK/STAT5): Klinisch relevant bei chronischer Niereninsuffizienz; Glykosilierungsunterschiede ermöglichen den Dopingnachweis."
+      ],
+      "deemphasized_notes": [
+        "Exakte Zytokin-Details im Übersichtsdiagramm und BFU („Burst-Forming Units“ – „müssen Sie aber nicht wissen“) müssen nicht auswendig gelernt werden.",
+        "Exakte Zahlen-Grenzwerte bei Referenzbereichen (z. B. ob Thrombozyten-Obergrenze 300.000 oder 350.000/µl ist: „wird Sie keiner fragen, das ist absoluter Käse“) sind nicht prüfungsrelevant – entscheidend ist die relative Verteilung."
+      ]
+    },
+    {
+      "id": "stockmann_leukozyten_1",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Leukozyten I / Ullrich",
+        "Leukozyten I"
+      ],
+      "source_summaries": [
+        "2025-09-19_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-19"
+      ],
+      "exam_highlights": [
+        "Morphologie im Blutausstrich (Pappenheim-Färbung, zentral fürs Histologie-Praktikum & durch 7-Fragen-Abschlussquiz abgefragt): Beurteilung nach Zellgröße (Erythrozyt 7,5 µm als Maßstab), Granula-Färbung (Eosinophile rot/azidophil mit zweigelapptem Kern; Basophile 10–14 µm grob blau-violett über dem Kern; Monozyten 15–20 µm blau-grau mit nierenförmigem Kern) und Kernform.",
+        "Zellfunktionen (Quiz- & Kernstoff): Neutrophile (stab-/segmentkernig, Phagozytose, Degranulation, ROS, NETs), dendritische Zellen (konventionell/Langerhans = Antigenpräsentation; plasmazytoid = IFN-α), B-Zellen (Knochenmark → Plasmazellen) vs. T-Zellen (Thymus) und NK-Zellen (Perforin & Granzym → Apoptose).",
+        "Leukozytenmigration & Differentialblutbild: Rollen (Selektine auf Endothel bei Vasodilatation) → Adhäsion → Diapedese → Chemotaxis (IL-8-Gradient für Neutrophile); Basiswerte (Leukozyten 3'500/4'000–10'000/µl, Thrombozyten 150'000–300'000/µl) und reaktive vs. pathologische Linksverschiebung kennen."
+      ],
+      "clinical_pearls": [
+        "Lehrbuch-/Folienkorrekturen (19.09.): Basophile Granulozyten differenzieren NICHT in Mastzellen (eigene Linie); Langerhans-Zellen der Haut sind dendritische Zellen, keine Makrophagen; ausgestoßene DNA-Netze heißen NETs („Neutrophil Extracellular Traps“ mit r).",
+        "Schnittebene & Alterszeichen: Kernbrücken zwischen Neutrophilen-Segmenten oder den zwei Lappen der Eosinophilen sind im Schnitt oft nicht sichtbar (ober-/unterhalb der Schnittebene); Neutrophile mit 5–6 Kernsegmenten sind sehr alt.",
+        "Klinische Orientierungswerte: Granulozytose > 7'500 Neutrophile/µl; Granulozytopenie < 500/µl birgt hohes Risiko für bakterielle Infektionen & Sepsis; Eosinophilie > 450/µl tritt bei Allergie/Asthma, Parasiten oder als gutartige lymphozytär-eosinophile Heilphase auf."
+      ],
+      "deemphasized_notes": [
+        "Innate Lymphoid Cells (ILCs, Gruppe 1–3) im Detail („nur für die Galerie“ – nur NK-Zellen wissen) sowie die Details der dendritischen Zell-Subtypen im unteren Folien-Schema („können Sie ausblenden“) und detaillierte klinische Pathologien (Granulozytose/-penie, Eosinophilie) sind explizit nicht prüfungsrelevant.",
+        "Bei der Leukozyten-Adhäsion reicht das vereinfachte Modell zu wissen, dass Selektine hier eine Rolle spielen."
+      ]
+    },
+    {
+      "id": "stockmann_thymus_lymphatisches_system",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Thymus und lymphatisches System / Ullrich",
+        "Thymus und lymphatisches System"
+      ],
+      "source_summaries": [
+        "2025-09-22_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-22"
+      ],
+      "exam_highlights": [
+        "Histologie-Prüfungserkennungsmerkmale (explizit benannt): Hassall-Körperchen im Mark des Thymus („gibt's eben nur im Thymus“), Randsinus direkt unter der Kapsel des Lymphknotens (häufige Histokurs-Frage), Marginalzone der Milz (Grenze weiße/rote Pulpa) sowie Tonsilla palatina (mehrschichtig unverhorntes Plattenepithel + Krypten mit Detritus + einwandernde Lymphozyten).",
+        "Zirkulation & Selektion (6-Fragen-Abschlussquiz): Thymus mit positiver Selektion in der Rinde (Thymusepithelzellen) und negativer Selektion im Mark (dendritische Zellen); im Lymphknoten treten dendritische Zellen über Vasa afferentia ein, naive T-Zellen über Hochendothelvenen (HEV) im Parakortex (T-Zell-Zone), B-Zellen liegen in Primär-/Sekundärfollikeln (Keimzentrum) des Kortex.",
+        "Milz-Gefäßabfolge & Kompartimente: Reihenfolge Trabekelarterie → Zentralarterie → Pinselarteriole → Milzsinus wissen; weiße Pulpa (PALS = T-Zellen um Zentralarterie + B-Zell-Lymphfollikel) vs. rote Pulpa (weitlumige Milzsinus mit Ringfasern aus Typ-III-Kollagen, Abbau alter Erythrozyten nach ~120 d)."
+      ],
+      "clinical_pearls": [
+        "Lymphadenopathie & Lymphödem: Schmerzhafte, harte Lymphknotenschwellung deutet auf Infektion/Entzündung hin, schmerzlose Schwellung hingegen meist auf Lymphome oder Tumormetastasen; Entfernung von Lymphknoten (z. B. axillär) stört den Abfluss der ~10 % interstitiellen Flüssigkeit und verursacht ein Lymphödem.",
+        "Zweizeitige Milzruptur (Notfall): Nach stumpfem Bauchtrauma reißt erst das Milzparenchym bei noch haltender Kapsel; Stunden bis Tage später rupturiert die Kapsel → Schmerzen im linken Oberbauch, Hypotonie, Tachykardie. Nach Splenektomie besteht erhöhte Anfälligkeit gegenüber blutgetragenen Pathogenen.",
+        "Stauungssplenomegalie & MALT: Da venöses Milzblut über die V. lienalis in die Pfortader fließt, verursacht eine Leberzirrhose eine Stauungssplenomegalie; zum organisierten MALT zählen Peyer-Plaques (Ileum) und Appendix vermiformis („Darmtonsille“)."
+      ],
+      "deemphasized_notes": [
+        "Exakte Grammzahlen/Maße der Milz („wird Sie keiner nach diesen Zahlen fragen“) sowie der Detailunterschied der Thymuslage beim Neugeborenen vs. Erwachsenen („für die Galerie“) müssen nicht auswendig gelernt werden.",
+        "Das Auffinden interdigitierender dendritischer Zellen, fibroblastischer Retikulumzellen und Pinselarteriolen im histologischen Schnitt sowie die Namen der „Marginal Zone Macrophages“ werden in der Prüfung nicht verlangt."
+      ]
+    },
+    {
+      "id": "stockmann_phasen_der_immunantwort",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Phasen der Immunantwort Ulli",
+        "Phasen der Immunantwort"
+      ],
+      "source_summaries": [
+        "2025-09-19_TB_Blut_-_Immunsystem.md",
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-19",
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "Primär- vs. Sekundärantwort (als „Punchline“ am 25.09. markiert): Die Primärantwort besitzt mehrere Tage Latenz und bildet zunächst IgM vor Klassenwechsel zu IgG/IgA/IgE sowie Gedächtniszellen; die Sekundärantwort startet binnen Stunden bis 1–2 Tagen, ist stärker/spezifischer und produziert direkt vorwiegend IgG.",
+        "Kinetik der Leukozytenrekrutierung & Verweildauer: Endothel-Rollen (Selektine) → Adhäsion → Diapedese → Chemotaxis (z. B. IL-8-Gradient für Neutrophile); Neutrophile bleiben 6–12 h im Blut / 1–2 d im Gewebe, während Gedächtniszellen Jahre bis lebenslang überleben.",
+        "Differentialblutbild in verschiedenen Infektphasen: Akute bakterielle Infektion führt zu Leukozytose (12'000–25'000/µl) mit reaktiver Linksverschiebung (Stabkernige ↑, bis 90 % Neutrophile), akute Virusinfektion (Influenza, EBV) dagegen zu normalen oder leicht erniedrigten Gesamtleukozyten mit relativer Lymphozytose (50–70 %)."
+      ],
+      "clinical_pearls": [
+        "Covid-19 & Impfung: Die Impfung verhindert über die schnelle Sekundärantwort schwere Verläufe; auch Patienten ohne hohen Antikörpertiter waren teils durch eine funktionierende CD8⁺-zytotoxische T-Zell-Antwort geschützt.",
+        "Lymphozytär-eosinophile Heilphase: Nach einer akuten bakteriellen Infektion kann in der Erholungsphase eine gutartige Eosinophilie gemeinsam mit erhöhten Lymphozyten auftreten."
+      ],
+      "deemphasized_notes": [
+        "Die CCR7-Unterscheidung bei Gedächtniszellen wurde explizit als „für Sie auch nicht so wichtig“ eingestuft."
+      ]
+    },
+    {
+      "id": "stockmann_zellulaere_immunitaet",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Zelluläre Immunität und Immunsystem 2",
+        "Zelluläre Immunität und Immunsystem Ulli"
+      ],
+      "source_summaries": [
+        "2025-09-19_TB_Blut_-_Immunsystem.md",
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-19",
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "MHC-Restriktion & Cross-Presentation („Punchline“ 25.09.): Wissen, dass MHC-II → CD4⁺-T-Zellen und MHC-I → CD8⁺-T-Zellen aktiviert, dass die drei APZ (dendritische Zellen, Makrophagen, B-Zellen) MHC-II, CD40 und MHC-I tragen, und dass Cross-Presentation exogener Antigene auf MHC-I im Lymphknoten existiert.",
+        "3-Signal-Aktivierung & Zytotoxizität: Kostimulation über CD40–CD40L, B7 (CD80/CD86)–CD28, 4-1BBL und IL-2 (klonale Expansion); CD8⁺-zytotoxische T-Zellen eliminieren Zielzellen in der Peripherie mittels Perforin (Porenbildung) und Granzym (Apoptose).",
+        "Die 5 CD4⁺-T-Helferzell-Subtypen kennen („Punchline“ 25.09.): Tʜ1 (IFN-γ/TNF → Makrophagenaktivierung), Tʜ2 (IL-4/IL-5/IL-13 → Parasiten/Allergien/Eosinophile), Tʜ17 (IL-17/IL-21/IL-22 → Neutrophile & Darmepithel), Treg (u. a. IL-10 → Immunsuppression) und Tꜰʜ (im Keimzentrum für B-Zell-Aktivierung mit BCR-Kreuzvernetzung + CD40–CD40L → Plasmazellen)."
+      ],
+      "clinical_pearls": [
+        "Angeborene NK-Zell-Defekte verursachen rezidivierende (v. a. periorale) Herpesvirus-Infektionen, da virusinfizierte Zellen MHC-I verlieren und ohne „Missing Self“-Erkennung durch NK-Zellen frühzeitig nicht abgeräumt werden.",
+        "E-Mail-Q&A & Folienkorrektur (25.09.): CD40 wird auf B-Zellen und allen anderen APZ exprimiert; der B-Zell-Rezeptor heißt korrekt BCR (Tippfehler „BRC“ auf der Folie korrigiert)."
+      ],
+      "deemphasized_notes": [
+        "Die differenzierungsauslösenden Zytokine oben in der T-Helfer-Übersicht sowie zellinterne Transkriptionsfaktoren der Tʜ-Subtypen müssen nicht gewusst werden („das müssen Sie nicht wissen“, „soll Sie auch nicht interessieren“).",
+        "Die genauen molekularen Transportmechanismen der Cross-Presentation vom Zytosol ins ER („wird Sie niemand danach fragen“) sind kein Prüfungsstoff."
+      ]
+    },
+    {
+      "id": "tuzlak_becher_immuntoleranz",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Tuzlak / Becher",
+      "subdeck_patterns": [
+        "Immuntoleranz"
+      ],
+      "source_summaries": [
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "Orte der Toleranz (explizit wichtig): Zentrale Toleranz in primären lymphatischen Organen (Knochenmark für B-Zellen: Deletion, Rezeptor-Editing, Anergie, klonale Ignoranz; Thymus für T-Zellen: positive Selektion an cTECs vs. Tod durch Vernachlässigung von 80–90 %, negative Selektion in Medulla an mTECs mit AIRE) vs. periphere Toleranz in sekundären lymphatischen Organen (Anergie ohne Kostimulation, aktivierungsinduzierter Zelltod, Tregs).",
+        "Regulatorische T-Zellen (Tregs): 5–10 % aller CD4⁺-Zellen, Transkriptionsfaktor FoxP3, benötigen IL-2 (hochaffiner Rezeptor CD25); Unterteilung in thymusständige nTregs/tTregs (Agonistenselektion) und peripher durch TGF-β induzierte iTregs/pTregs.",
+        "4 Suppressionsmechanismen von Tregs: Hemmende Zytokine (explizit nur TGF-β und IL-10 merken), aktive Hemmung dendritischer Zellen über CTLA-4 (blockiert CD80/CD86), metabolische Störung (cAMP und IL-2-Entzug über CD25) sowie (umstritten) Zytolyse via Perforin/Granzym."
+      ],
+      "clinical_pearls": [
+        "APECED / APS-1 (autosomal-rezessive AIRE-Mutation): Führt u. a. zu neutralisierenden Autoantikörpern gegen IL-17 → chronische mukokutane Candidiasis, Hypoparathyreoidismus, Kolitis und Typ-1-Diabetes (bei Einzeltherapie normale Lebenserwartung).",
+        "Scurfy-Maus & IPEX-Syndrom (X-chromosomal-rezessive FoxP3-Mutation): Betrifft fast nur Knaben; ab 1.–2. Lebensmonat schwerer wässrig-schleimiger Durchfall, Typ-1-Diabetes und Multiorgan-Autoimmunität – ohne frühe Stammzelltransplantation meist Tod vor dem 2. Geburtstag. Diphtherietoxin-Mausexperiment zeigt lebenslange Notwendigkeit von Tregs.",
+        "Orale Toleranz (Ovalbumin-Mausexperiment): Orale Gabe von Hühnerei-Ovalbumin vor Immunisierung unterdrückt die systemische Immunantwort im Mausmodell, blieb als Autoimmuntherapie beim Menschen bisher aber wenig effektiv."
+      ],
+      "deemphasized_notes": [
+        "Die genaue molekularbiologische Regulation der IgM-Herunterregulation bei anergischen B-Zellen muss nicht gewusst werden.",
+        "Bei den inhibitorischen Treg-Zytokinen muss man sich ausdrücklich nur TGF-β und IL-10 merken („sind auch die einzigen zwei, die man sich jetzt so merken muss“)."
+      ]
+    },
+    {
+      "id": "tuzlak_becher_autoimmunitaet_entzuendung",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Tuzlak / Becher",
+      "subdeck_patterns": [
+        "Autoimmunität und Entzündung"
+      ],
+      "source_summaries": [
+        "2025-09-26_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-26"
+      ],
+      "exam_highlights": [
+        "Entzündung & 3 zentrale Zytokine (explizit prüfungsrelevant): IL-1β, TNF (Gefäßdurchlässigkeit, IgG-Einstrom, Lymphabfluss) und IL-6 inkl. CRP-Induktion in Hepatozyten (Opsonin, nach 6–8 h nachweisbar, Norm ~5 mg/l).",
+        "Autoinflammation vs. Autoimmunität: Autoinflammation ist meist monogen/vererbt im angeborenen Immunsystem (Inflammasom, keine Auto-AK), Autoimmunität meist erworben/multifaktoriell mit adaptiven Auto-AK/T-Zellen (Ausnahmen: AIRE, FoxP3, ALPS) und MHC-II- sowie Umwelt-Assoziation.",
+        "Grundprinzipien der Autoimmunität verstehen (keine Detailabfrage): Multiple Sklerose (ZNS-Myelin, schubförmig vs. progredient, Frauen ≥3× häufiger), SLE (ANA gegen DNA/Chromatin/RNPs, Immunkomplex-Nierenschäden) und Mechanismen wie molekulare Mimikry bzw. klonal ignorante B-Zellen bei Zellschaden."
+      ],
+      "clinical_pearls": [
+        "US-Militär-Kohorte (10 Mio. Proben) zu MS: EBV-Infektion erhöht das MS-Risiko um das 32-Fache (CMV-Kontrolle ohne Korrelation); eineiige Zwillinge zeigen bei MS nur 20–40 % Konkordanz, und höhere Breitengrade (weniger Vitamin D) korrelieren mit höherer MS-Prävalenz (~1:200).",
+        "CRP & SLE: CRP steigt stark bei bakteriellen Infekten und mäßig bei Virusinfekten sowie Schwangerschaft; beim SLE zeigen 80 % der Betroffenen ein Schmetterlingserythem.",
+        "CTLA-4-Defizienz (Dr. Unger, 26.09.): Autosomal-dominante Immundysregulation mit schwerer Diarrhö, Lungengranulomen, Splenomegalie und Zytopenien (Tregs entfernen CD80/86 nicht effektiv) – gezielt behandelbar mit Abatacept."
+      ],
+      "deemphasized_notes": [
+        "Die Spaltung der inaktiven IL-1β-Proform („das nur am Rande“), welches Zytokin exakt welches Zielgewebe außerhalb der Leber beeinflusst, sowie Details zu Inflammasom, familiärem Mittelmeerfieber und IL-10R-Mangel müssen explizit nicht gewusst werden.",
+        "Die Prüfungsfragen werden laut Dozentin nicht sehr detailliert sein – es zählt vor allem das grundlegende Systemverständnis."
+      ]
+    },
+    {
+      "id": "tuzlak_becher_monoklonale_antikoerper",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Tuzlak / Becher",
+      "subdeck_patterns": [
+        "Monoklonale Antikörper in Diagnostik und Therapie"
+      ],
+      "source_summaries": [
+        "2025-09-26_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-26"
+      ],
+      "exam_highlights": [
+        "Herstellung monoklonaler Antikörper (ein Epitop, vs. polyklonal): Hybridom-Methode (Köhler & Milstein, Nobelpreis 1985: Maus-Milzzellen + HGPRT⁻-Myelomzellen + PEG) sowie Phagen-Display-Bibliothek (humane Plasmazell-mRNA → PCR variabler Regionen → Bakteriophagen/E. coli → Antigen-Selektion) und Nomenklatur-Endungen (-omab, -ximab, -zumab, -umab).",
+        "Diagnostik-Verfahren: ELISA (linearer Bereich + Standardkurve), Western Blot (denaturiert), direkter/indirekter Coombs-Test (Rhesus-Inkompatibilität), Durchflusszytometrie/FACS (bis 50 Parameter, z. B. IgM⁺IgD⁺ B-Zellen) und Immunfluoreszenz.",
+        "Therapiekonzepte: Anti-TNF/löslicher TNF-Rezeptor-Fc bei rheumatoider Arthritis, Anti-CD20 (Rituximab/Ocrelizumab) und Natalizumab (Migrationsblockade) bei MS, IL-23/IL-17-Blockade bei Psoriasis sowie Checkpoint-Inhibitoren (Anti-CTLA-4, Anti-PD-1)."
+      ],
+      "clinical_pearls": [
+        "Anti-CD20 (Ocrelizumab/Rituximab) bei MS schont CD20⁻-Plasmazellen und unterdrückt Schübe sowie MRT-Plaques sehr wirksam, verhindert aber nicht den Übergang in die progrediente Phase.",
+        "Psoriasis-Entdeckung: Topisches Imiquimod (Aldara, TLR7/8-Agonist gegen Warzen) deckte im Mausmodell zufällig die γδ-T-Zell / IL-23 / IL-17-Achse auf; Vorläufer moderner Tumor-Immuntherapien waren William Coleys Toxine (1891).",
+        "ELISA-Praxisdetail: Messungen müssen im linearen Bereich der Standardkurve erfolgen, da bei zu konzentriertem Serum Sättigung eintritt und Unterschiede verloren gehen."
+      ],
+      "deemphasized_notes": [
+        "Der GAD-Marker bei Betazellen in der Immunfluoreszenz (Typ-1-Diabetes) sowie weitere Checkpoint-Inhibitoren neben CTLA-4 und PD-1 müssen zum jetzigen Zeitpunkt nicht gewusst werden."
+      ]
+    },
+    {
+      "id": "tuzlak_becher_angeborenes_erworbenes_immunsystem",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Tuzlak / Becher",
+      "subdeck_patterns": [
+        "Das angeborene und erworbene Immunsystem"
+      ],
+      "source_summaries": [
+        "2025-09-26_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-26"
+      ],
+      "exam_highlights": [
+        "Hinweis zur Transkript-Abdeckung: Eine eigene Tuzlak/Becher-Vorlesung zu diesem Subdeck bzw. zum Komplementsystem ist in den 6 Transkripten vom 15.–26.09.2025 noch nicht enthalten (das Komplementsystem wurde am 26.09. ausdrücklich auf den Montag nach der Blutgerinnung verschoben).",
+        "Angeborene Immundefekte (Dr. Susanne Unger, 26.09. – explizites Lernziel): Abgrenzung primär (508 bekannte IUIS-Gene) vs. sekundär sowie Fähigkeit, anhand der 5 besprochenen Beispiele (SCID/RAG1, Hyper-IgE/STAT3, CVID, CTLA-4-Defizienz, CGD/CYBB) Klinik und zugrunde liegenden Mechanismus („wieso eigentlich“) zu erklären.",
+        "Klinische Warnzeichen (Dr. Unger): Erkennungs-Akronyme ELVIS (Erreger, Lokalisation, Verlauf, Intensität, Summe – Infektanfälligkeit) und GARFIELD (Granulome, Autoimmunität, Rezidivierendes Fieber, ungewöhnliche Ekzeme, Lymphoproliferation, chronische Darmentzündungen – Immundysregulation) sowie Blutbild als erstes Screening."
+      ],
+      "clinical_pearls": [
+        "SCID & Hyper-IgE-Syndrom: SCID durch RAG1-Mutation zeigt T⁻B⁻NK⁺ (keine Lymphknoten/Tonsillen, Gedeihstörung, konsanguine Eltern; Differentialdiagnosen ADA⁻ [T⁻B⁻NK⁻] und IL-7R⁻ [T⁻B⁺NK⁺]; kurativ Stammzelltransplantation/Gentherapie); Hyper-IgE-Syndrom durch heterozygote dominant-negative STAT3-Loss-of-Function-Mutation (kalte Abszesse ohne Rötung/Überwärmung, Ekzeme, Skoliose, hypermobile Gelenke, persistierende Milchzähne).",
+        "CVID & septische Granulomatose (CGD): CVID ist der häufigste symptomatische Immundefekt (~30 % genetisch geklärt, Bronchiektasen, subkutane Ig-Substitution); X-chromosomale CGD (CYBB/gp91phox) verursacht tiefe Leber-/Bauchabszesse & Burkholderia-Pneumonie bei normalen B/T-Zellen/Ig (Schnelldiagnose via DHR-Test / fehlender Oxidative Burst).",
+        "Ethischer Aspekt bei X-chromosomaler CGD (CYBB): Bei genetischer Testung von Schwestern/Konduktorinnen stehen Recht auf Wissen und Recht auf Nichtwissen für die Familienplanung im Fokus."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "tuzlak_becher_rekombination_immunrezeptoren",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Tuzlak / Becher",
+      "subdeck_patterns": [
+        "Rekombination adaptiver Immunrezeptoren"
+      ],
+      "source_summaries": [
+        "2025-09-25_TB_Blut_-_Immunsystem.md",
+        "2025-09-26_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-25",
+        "2025-09-26"
+      ],
+      "exam_highlights": [
+        "Hinweis zur Transkript-Abdeckung: Eine eigenständige Vorlesung zur Rekombination adaptiver Immunrezeptoren ist in den 6 Transkripten vom 15.–26.09.2025 nicht enthalten; belegt sind nur Querverweise aus Immuntoleranz und angeborenen Immundefekten.",
+        "TCR-Diversität & Rezeptor-Editing (25.09.): Im Thymus entstehen bis zu 10¹⁸ TCR-Varianten; bei der zentralen B-Zell-Toleranz im Knochenmark dient Rezeptor-Editing (erneute VDJ-Umstrukturierung) zur Korrektur autoreaktiver B-Zell-Rezeptoren.",
+        "RAG1-SCID (Dr. Unger, 26.09.): Eine Mutation in RAG1 führt zu einem T⁻B⁻NK⁺-Immundefekt mit fehlenden T- und B-Zellen bei erhaltenen NK-Zellen."
+      ],
+      "clinical_pearls": [
+        "SCID-Fallbeispiel (26.09.): 4 Monate altes Mädchen mit Viren-/Pilzinfekten, Diarrhö, Gedeihstörung, fehlenden Lymphknoten/Tonsillen, konsanguinen Eltern und 2 verstorbenen Geschwistern (RAG1-Mutation; kurativ Stammzelltransplantation/Gentherapie; historisch: David Vetter); Differentialdiagnosen sind ADA⁻ (T⁻B⁻NK⁻) und IL-7R⁻ (T⁻B⁺NK⁺).",
+        "Rezeptor-Editing (25.09.): Durch erneute VDJ-Umstrukturierung im Knochenmark können autoreaktive B-Zellen der klonalen Deletion entgehen, wobei ein Ausfall der B-Zell-Toleranz wegen der benötigten T-Zell-Hilfe insgesamt weniger schwerwiegend ist."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "tuzlak_becher_zellentstehung_und_reifung",
+      "themenblock": "TB Blut & Immunsystem",
+      "dozent": "Tuzlak / Becher",
+      "subdeck_patterns": [
+        "Zellentstehung und Reifung"
+      ],
+      "source_summaries": [
+        "2025-09-22_TB_Blut_-_Immunsystem.md",
+        "2025-09-25_TB_Blut_-_Immunsystem.md"
+      ],
+      "lecture_dates": [
+        "2025-09-22",
+        "2025-09-25"
+      ],
+      "exam_highlights": [
+        "Hinweis zur Transkript-Abdeckung: Eine eigenständige Tuzlak/Becher-Vorlesung „Zellentstehung und Reifung“ ist in den 6 Transkripten vom 15.–26.09.2025 nicht enthalten; belegt sind die Reifungsschritte aus Anatomie (22.09.) und Immuntoleranz (25.09.).",
+        "T-Zell-Reifung im Thymus (25.09.): Durchlaufen der Stadien DN (1–4) → DP (CD4⁺CD8⁺) → SP (CD4⁺ oder CD8⁺).",
+        "Positive & negative Selektion (22.09. & 25.09.): Im Thymus-Kortex erfolgt die positive Selektion an cTECs (ca. 80–90 % sterben durch „Tod durch Vernachlässigung“), in der Medulla die negative Selektion an mTECs (AIRE) bzw. dendritischen Zellen sowie bei intermediärer Affinität die Agonistenselektion zu Tregs."
+      ],
+      "clinical_pearls": [
+        "Thymus-Involution (22.09.): Beim Neugeborenen ist der Thymus zweilappig und groß (oberes/mittleres Mediastinum), beim Erwachsenen schrumpft er durch zunehmenden Ersatz durch Fettgewebe (mittleres Mediastinum).",
+        "Zentrale B-Zell-Toleranz & AIRE (25.09.): Im Knochenmark lösen lösliche Selbstantigene bei B-Zellen Anergie (IgM-Runterregulation) aus, andere Selbstantigene führen zu Deletion oder Rezeptor-Editing; im Thymus verursacht eine autosomal-rezessive AIRE-Mutation das APECED-/APS-1-Syndrom (u. a. Anti-IL-17-Autoantikörper → chronische mukokutane Candidiasis)."
+      ],
+      "deemphasized_notes": [
+        "Die genaue molekularbiologische Regulation der IgM-Herunterregulation bei anergischen B-Zellen muss nicht gewusst werden (25.09.)."
+      ]
+    },
+    {
+      "id": "herz_kreislauf_einfuehrung",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Einführung & Abschluss",
+      "subdeck_patterns": [
+        "Herz-Kreislauf Einführung"
+      ],
+      "source_summaries": [
+        "2025-10-03_TB_Herz_-Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-03"
+      ],
+      "exam_highlights": [
+        "Unterschiede zwischen akutem Stress (Adrenalin/Noradrenalin aus Nebennierenmark) und chronischem Stress (CRH → ACTH → Cortisol) sowie die Allostase-Reaktionsmuster (inkl. Burnout/fehlender Reaktion) verstehen.",
+        "Stellung psychosozialer Risikofaktoren im Vergleich zu traditionellen KHK-Risikofaktoren kennen (INTERHEART-Studie: Platz 3 nach Rauchen und Dyslipidämie) sowie den molekularen Endothelmechanismus (eNOS/NO-Downregulation, Hyperkoagulabilität, Zytokine).",
+        "Hinweis zur Quellenlage: In den 14 Transkript-Zusammenfassungen ist keine separate klinische Auftaktvorlesung vor dem 02.10. enthalten; diese Punkte stammen aus der ersten klinisch-psychophysiologischen Blockvorlesung."
+      ],
+      "clinical_pearls": [
+        "Takotsubo-Syndrom („Broken Heart“ / „Happy Heart“): Betrifft vorwiegend Frauen (50–80 J.) mit apikaler Hypo-/Akinesie und basaler Hyperkontraktion; Auslöser können auch positive Ereignisse oder physische Trigger (Narkose, Sepsis) sein; Mortalität ~5 % (wie akuter Myokardinfarkt).",
+        "Akute Stress-Trigger in Studien: Nach 9/11 traten signifikant mehr adäquate ICD-Schocks auf; bei der Fußball-WM 2006 stiegen Notfalleinsätze bei spannenden Spielen durch zeitliche Bündelung bei suszeptiblen Patienten; Kriegs-Autopsien (Korea 77 %, Vietnam 45 %) zeigten prämature Koronaratherosklerose bei ~20-Jährigen.",
+        "Schlaflosigkeit erhöht das Risiko kardiovaskulärer Events um ~45 %, während Optimismus bzw. ein Sense of Purpose das Risiko um ~35 % senkt."
+      ],
+      "deemphasized_notes": [
+        "Detaillierte Zielorgan-Liste des vegetativen Nervensystems (Fokus liegt auf dem Herz) und die genaue immunologische Kaskade auf der Stress-Übersichtsfolie müssen nicht im Detail gewusst werden.",
+        "Spezifische Studienzahlen („Grundverständnis wichtiger als Zahlen“) und der detaillierte Behandlungsalgorithmus beim Takotsubo-Syndrom sind nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "herz_kreislauf_abschluss",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Einführung & Abschluss",
+      "subdeck_patterns": [
+        "Herz-Kreislauf Abschluss"
+      ],
+      "source_summaries": [
+        "2025-10-10_TB_Herz_-_Kreislauf.md",
+        "2025-10-29_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-10",
+        "2025-10-29"
+      ],
+      "exam_highlights": [
+        "Biopsychosoziales Modell (Engel 1977: Vulnerabilität, negative Schemata, im Schnitt 4 Stressoren bei Depression) und die drei Überträgersysteme (vegetatives NS, neuroendokrines System inkl. Aldosteron-vermitteltem Blutdruckanstieg, neuroimmunologisches System) mit klinischem Bezug beschreiben können.",
+        "Objektive Messmethoden für Stress/Emotionen kennen: HRV (niedrig bei Stress), Hautleitwert, Biofeedback, EEG-Wellen (Delta, Alpha, Beta), Haarcortisol (zuverlässigster chronischer Stressmarker) sowie Persönlichkeitserfassung (Big Five inkl. umkodierter reversed Items).",
+        "Prüfungsorganisation HB 1 (13.01.2026, ~100 MC-Fragen in 4h zu Blut/Immunsystem, Herz-Kreislauf, Atmung): Vorlesungsfolien allein reichen zum Bestehen ausdrücklich nicht aus — ergänzend Lehrbücher nutzen."
+      ],
+      "clinical_pearls": [
+        "Auf der Notfallstation kann eine Panikattacke mit Brustschmerz, Tachykardie und Hypertonie einen Herzinfarkt imitieren (erst somatisch sicher ausschließen, psychische Genese mitdenken); Weißkittelhypertonie stets kontextabhängig bewerten.",
+        "Delir auf Intensivstation (USZ-Verbrennungsstation): Haupttreiber sind neuroimmunologische Aktivierung plus Schlafentzug — in der Praxis Lärm am Patientenbett (z. B. Verpackungen) vermeiden sowie Licht- und Schlafhygiene beachten.",
+        "Schnelle subkortikale Amygdala-Bahn vs. bewusste kortikale Bewertung im vmPFC; bei Depression besteht eine Überaktivität von limbischem System/Amygdala bei verminderter Präfrontalkortex-Aktivität."
+      ],
+      "deemphasized_notes": [
+        "Folien-Hinweis aus dem Big-Five-Teil: Die Dozentin sprach anfangs versehentlich von „Empathie“ statt korrekt Extraversion."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_kreislauf_uebersicht",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Kreislauf-Übersicht"
+      ],
+      "source_summaries": [
+        "2025-10-02_TB_Herz_-Kreislauf.md",
+        "2025-10-09_TB_Herz_-_Kreislauf.md",
+        "2025-10-13_TB_Herz_-_Kreislauf.md",
+        "2025-10-15_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-02",
+        "2025-10-09",
+        "2025-10-13",
+        "2025-10-15"
+      ],
+      "exam_highlights": [
+        "Ohmsches Gesetz (Q = ΔP / R) und die zentrale Kreislaufgleichung (MAP − CVP = SVR · SV · HF) sicher anwenden können („kommt mit Sicherheit in der einen oder anderen Form an der Prüfung“).",
+        "Hagen-Poiseuille-Gesetz (r⁴-Abhängigkeit, Quiz: Radius-Halbierung → 16-facher Widerstand): Parallelschaltung senkt den Gesamtwiderstand, wodurch Arteriolen (nicht die parallel geschalteten Kapillaren) die primären Widerstandsgefäße sind.",
+        "Volumenverteilung und Kontinuitätsgleichung: ~85 % des Blutvolumens liegen im Niederdrucksystem (davon 3/4 in Venen/Venolen); maximale Gesamtquerschnittsfläche in den Kapillaren (~500 m²) senkt die Flussgeschwindigkeit von ~20 cm/s (Aorta) auf < 1 mm/s (Kapillaren)."
+      ],
+      "clinical_pearls": [
+        "HZV-Verteilung (~5 l/min in Ruhe vs. 20 l/min bei maximaler Belastung): Skelettmuskel steigt von 15 % auf 75 % (15 l/min), Gehirn bleibt absolut konstant (0,75 l/min; relativ 15 % → 4 %), Herz bleibt bei ~5 % (absolut 4–5× mehr), bei Hitze erreicht die Haut bis ~50 % des HZV.",
+        "HZV-Bestimmung über das Ficksche Prinzip sowie indirekte Messung des linken Vorhofdrucks (PAWP) mittels Ballon-Okklusion in der A. pulmonalis per Rechtsherzkatheter.",
+        "Blutflussrate (Volumen/Zeit) streng von der Blutflussgeschwindigkeit (Strecke/Zeit) unterscheiden; bei konstantem ZVD bleibt der MAP gleich, wenn sich CO verdoppelt und TPR halbiert."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "kurtcuoglu_erregungsleitungssystem",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Erregungsleitungssystem"
+      ],
+      "source_summaries": [
+        "2025-10-03_TB_Herz_-Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-03"
+      ],
+      "exam_highlights": [
+        "Normwerte merken: Entladungsfrequenz des Sinusknotens 60–100/min (AV-junktionaler Bereich 40–60/min, Purkinje-Fasern 20–40/min) und Ruhemembranpotenzial des Kardiomyozyten −85 bis −90 mV.",
+        "Aktionspotenzial Arbeitsmyokard (Phasen 0–4, Na⁺-getrieben) vs. Schrittmacherzelle (HCN-Kanal / Funny Current If, Ca²⁺-getriebene Depolarisation) sowie elektromechanische Kopplung (RyR2, SERCA, Phospholamban, Troponin C) beherrschen.",
+        "Explizit als wichtig markiert: Parasympathikus (M₂, Gi) wirkt nur auf Schrittmacherzellen und Vorhöfe (keine Wirkung auf Ventrikel-Kontraktilität), Sympathikus (β₁, Gs → cAMP → PKA) wirkt zusätzlich positiv inotrop und lusitrop auf den Ventrikel."
+      ],
+      "clinical_pearls": [
+        "Lehrbuch-Diskrepanz: Prof. Löffing bezeichnet das sekundäre Erregungsbildungszentrum als „AV-Knoten“, der Physiologie-Dozent präziser als „AV-junktionaler Bereich“.",
+        "Der linke Tawara-Schenkel leitet schneller als der rechte und erregt das Ventrikelseptum daher von links nach rechts (entscheidend für die EKG-Interpretation).",
+        "Ein Stromunfall in der relativen Refraktärzeit ist besonders gefährlich für Kammerflimmern; hohe HRV zeigt Parasympathikus-Dominanz (rascher ACh-Umsatz), niedrige HRV Sympathikus-Dominanz (langsamerer Noradrenalin-Abbau)."
+      ],
+      "deemphasized_notes": [
+        "Weiterführende Übersichtsarbeit zur regional unterschiedlichen Ionenkanal-Expression („Keine Pflichtlektüre“) und genaue anatomische Details der Medulla-oblongata-Zentren sind nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_ekg",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "EKG"
+      ],
+      "source_summaries": [
+        "2025-10-06_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-06"
+      ],
+      "exam_highlights": [
+        "Physikalischer Ursprung des EKG (Dipolmoment von negativ nach positiv, Oberflächenpotenzialfeld) und detaillierte Herleitung von P-Welle, PQ-Dauer (≤ 0,20 s bei 60/min), QRS (≤ 0,10 s), ST-Strecke, T-Welle und QT-Dauer.",
+        "Ableitungssysteme (Einthoven I–III bipolar; Goldberger aVR/aVL/aVF und Wilson V1–V6 pseudo-unipolar) sowie Herzachsenbestimmung mittels Einthoven-Dreieck und Cabrera-Kreis (wird im Physiologiepraktikum geübt).",
+        "Rhythmusstörungen erkennen: Sinusbradykardie/-tachykardie, respiratorische Sinusarrhythmie, AV-Block Grad I–III, Vorhofflattern (< 350/min) vs. -flimmern (> 350–600/min, AV-Knoten als Frequenzsieb) und Kammerflimmern."
+      ],
+      "clinical_pearls": [
+        "PQ- und ST-Strecke sind nicht nur wegen geringer aktiver Masse isoelektrisch, sondern weil das EKG nur transiente Veränderungen misst (statische Ladungsdifferenzen werden an der Oberfläche sofort durch Ströme ausgeglichen).",
+        "STEMI-Stadien: Stadium 0 = Erstickungs-T, Stadium 0–1 = ST-Hebung, Stadium 2 = isoelektrische ST-Strecke mit T-Inversion und Infarkt-Q; Hyperkaliämie erhöht und Hypokaliämie flacht die T-Welle ab; Long-QT (> 480 ms) u. a. durch Psychopharmaka/Drogen.",
+        "Standardeichung 10 mm = 1 mV und 50 mm = 1 s; Hypertrophie-Indizes (Sokolow-Lyon ≥ 3,5 mV, Lewis > 1,6 mV); respiratorische Sinusarrhythmie entsteht durch direkte Kopplung von Atemzentrum und Nucleus ambiguus."
+      ],
+      "deemphasized_notes": [
+        "Die Dipolmoment-Formel (p = q · d) ist nicht wichtig (nur Prinzip und Richtung negativ → positiv); die U-Welle muss nicht berücksichtigt werden.",
+        "ST-Strecken-Länge und T-Wellen-Dauer werden nicht ausgemessen, Vektorkardiografie wird klinisch kaum verwendet, und für QTc gibt es kein einheitliches Normverfahren (Dozent bevorzugt effektive HF-Tabellen)."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_herzmechanik",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Herzmechanik"
+      ],
+      "source_summaries": [
+        "2025-10-02_TB_Herz_-Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-02"
+      ],
+      "exam_highlights": [
+        "Wiggers-Diagramm (Herzzyklus): Zusammenhänge zwischen Druckkurven (Aorta, Ventrikel, Vorhof, Inzisur), Klappenaktionen, Herztönen (S1–S4) und Volumenverlauf (isovolumetrische Kontraktion/Relaxation, Auswurfphase) herleiten können; Normwerte kennen (~120/80 mmHg links, < 25 mmHg rechts).",
+        "Lehrbuch-Definitionen beachten: Beginn der Diastole (Aortenklappenschluss vs. Mitralklappenöffnung in der Vorlesung) und Auskultationsvariabilität der Trikuspidalklappe (4. ICR parasternal rechts vs. links).",
+        "Sarkomer-Mechanik: Von den 3 Gründen für die höhere Kraft bei Vordehnung reicht es prinzipiell, die ersten zwei zu wissen — (1) optimale Sarkomerlänge von 2,2–2,3 µm und (2) höhere Ca²⁺-Sensitivität."
+      ],
+      "clinical_pearls": [
+        "Herztöne: S1-Spaltung bei Erwachsenen meist pathologisch (z. B. Rechtsschenkelblock); S2 physiologisch gespalten bei tiefer Inspiration; S3 bei Kindern normal, bei Erwachsenen evtl. Herzinsuffizienz; S4 (Vorhofkontraktion) immer pathologisch (z. B. linksventrikuläre Hypertrophie).",
+        "Klappengeräusche: Mitralinsuffizienz erzeugt ein systolisches Rauschen zwischen S1 und S2; Aortenklappeninsuffizienz ein diastolisches Rauschen direkt nach S2.",
+        "Der Pulmonary Arterial Wedge Pressure (PAWP) misst über Ballon-Okklusion in der A. pulmonalis per Rechtsherzkatheter indirekt den Druck im linken Vorhof."
+      ],
+      "deemphasized_notes": [
+        "Bei der Sarkomer-Vordehnung reicht es prinzipiell aus, die ersten zwei der drei Gründe (optimale Sarkomerlänge 2,2–2,3 µm und höhere Ca²⁺-Sensitivität) zu kennen."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_herzarbeit_regulation",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Herzarbeit und Regulation der Herzfunktion"
+      ],
+      "source_summaries": [
+        "2025-10-08_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-08"
+      ],
+      "exam_highlights": [
+        "Verbindliche Prüfungsdefinition: Kontraktilität = mechanischer Druckaufbau pro Zeiteinheit (Δp/Δt, gilt für Frank-Starling und extrakardial); Inotropie = ausschließlich Verschiebung der maximalen isometrischen Kraftkurve / ESPVR (z. B. durch Sympathikus nach links oben).",
+        "Must-Know-Größen und Surrogate: SV = EDV − ESV, EF = SV / EDV („sehr wichtige Größe, sicher wissen und anwenden“) und CO = SV · HF; weder Vor- noch Nachlaständerungen verschieben die ESPVR! Surrogate: Vorlast → EDV/ZVD, Nachlast → MAP, Inotropie → EF/ESPVR-Steigung, Kontraktilität → Δp/Δt per Linksherzkatheter.",
+        "Laplace-Gesetz am Ventrikel (Kugelmodell: ΔP = K · 2d/r mit Faktor 2) und kinetische Energie im PV-Loop (in Ruhe links ~1 % / rechts ~5 % vernachlässigbar außer bei Stenosen; bei starker Belastung rechts bis 50 % relevant)."
+      ],
+      "clinical_pearls": [
+        "Der linke Ventrikel wird v. a. in der Diastole durchblutet; da Tachykardie die Diastole überproportional verkürzt, verlängern Betablocker bei KHK das diastolische Perfusionsfenster.",
+        "Bei Herzinsuffizienz (EDV bereits ausgeschöpft) senkt eine hohe Nachlast das SV stark → Blutdrucksenker entlasten das Herz; denervierte Transplantatherzen funktionieren im Alltag dank des Frank-Starling-Mechanismus.",
+        "Physiologische Hypertrophie (Sport/Schwangerschaft: Länge > Breite, reversibel, keine Fibrose) vs. pathologische Hypertrophie (Hypertonie/Stenose: Breite > Länge, Fibrose) → Herzdilatation (großes r, dünnes d → Überlastung nach Laplace → Zelltod)."
+      ],
+      "deemphasized_notes": [
+        "Die lokale Durchblutungsregulation wurde in dieser Vorlesung nur kurz angerissen und in einer eigenen Folgevorlesung behandelt."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_hochdrucksystem",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Hochdrucksystem"
+      ],
+      "source_summaries": [
+        "2025-10-09_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-09"
+      ],
+      "exam_highlights": [
+        "Zentrale Kreislaufgleichung (ausdrückliche Prüfungsgarantie + Bonuspunkt-Ankündigung für mündliche Prüfung): MAP − CVP = SVR · CO = SVR · SV · HF auswendig lernen, verstehen und auf Szenarien (z. B. Blutverlust/Schock) anwenden.",
+        "MAP-Prüfungsdefinition: Lehrbuch-Näherungsformeln (1/3 Psys + 2/3 Pdia) reichen nicht aus — gefragt ist die effektive Bedeutung als zeitliche Mittelung (Integral der Druckkurve über einen Herzzyklus geteilt durch die Zyklusdauer).",
+        "Messortabhängigkeit & Windkessel: Von herznah nach herzfern nehmen MAP und Pdia ab, während Psys zunächst zu- (später ab-) und der Pulsdruck zunehmen (z. B. A. femoralis ~160 mmHg systolisch normal); Druckwelle ~5 m/s vs. Stroke Distance ~0,2 m/s; Zylinder-Laplace T = ΔP · r / d."
+      ],
+      "clinical_pearls": [
+        "Richtwerte & Messfehler: Normal < 120 / < 80 mmHg (120/80 gilt bereits als erhöht!), hypertensive Krise > 180 / > 120 mmHg → sofortige Klinikeinweisung; niemals über Kleidung messen (~10 mmHg Fehler möglich).",
+        "Korotkoff-Ausnahme & Doppler: Bei Kleinkindern und Schwangeren ist Phase 5 oft schwer hörbar → Phase 4 (plötzliche Dämpfung) nutzen; Doppler-Ultraschall (5–15 MHz, winkelabhängig) inkl. retrogradem Fluss in der A. abdominalis wird im Praktikum gemessen.",
+        "Morning Blood Pressure Surge (höchste Infarkt-/Hirnschlaginzidenz beim Erwachen) und Salzkonsum (WHO max. 5 g/Tag; erhöht Blutvolumen → ZVD → Vorlast → SV → Blutdruck)."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "kurtcuoglu_lokale_durchblutung",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Lokale Durchblutung"
+      ],
+      "source_summaries": [
+        "2025-10-10_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-10"
+      ],
+      "exam_highlights": [
+        "Ionenkanäle & Pumpen der glatten Gefäßmuskelzelle: Prüfungsrelevant sind ausschließlich die explizit besprochenen Komponenten (SERCA, Na⁺/Ca²⁺- bzw. Ca²⁺-ATPase, RyR [alle 3 Formen], IP₃R, dehnungsaktivierter Kanal SAC, spannungsaktivierte Ca²⁺-Kanäle, Ca²⁺-aktivierte K⁺-Kanäle).",
+        "Regulationsebenen & Ca²⁺-Sensitivität: Bayliss-Effekt (Dehnung → SAC → Depolarisation → Ca²⁺-Einstrom, begrenzt durch Ca²⁺-aktivierte K⁺-Kanäle), Schubspannungs-NO (cGMP/PKG → MLCP ↑), Ca²⁺-Sensitivierung (PKC/Rho-Kinase → MLCP ↓) und retrograde Dilatation.",
+        "Quiz-Fallen: Endothelin-1 wirkt über ET_A auf der Gefäßmuskelzelle vasokonstriktiv, aber über ET_B auf der Endothelzelle (via NO) vasodilatierend; hypoxische Vasodilatation tritt nur im Körperkreislauf auf."
+      ],
+      "clinical_pearls": [
+        "Nitroglycerin-Quizfalle: Nitroglycerin setzt NO direkt aus dem Medikament frei — nicht über eine endotheliale NO-Ausschüttung.",
+        "Adrenalin wirkt in niedriger/mittlerer Konzentration vasodilatierend (höhere β₂-Affinität, cAMP/PKA), in hoher Konzentration netto vasokonstriktiv (α-Rezeptoren); ACE-Hemmer blockieren v. a. das endotheliale ACE in der Lunge.",
+        "Funktionelle Sympatholyse beim Sport: Metaboliten (Adenosin via CD39/CD73, H⁺, Laktat, K⁺) dilatieren Gefäße im arbeitenden Muskel und hemmen präsynaptisch die Noradrenalin-Freisetzung an Sympathikus-Varikositäten."
+      ],
+      "deemphasized_notes": [
+        "Aus den drei Ionenkanal-/Pumpentabellen wird alles, was in der Vorlesung nicht explizit gezeigt und besprochen wurde, an der Prüfung nicht gefragt.",
+        "Die letzte Folie („reaktive Hyperämie“) wurde als selbsterklärend ausgelassen; Metaboliten-Details folgen in der Vorlesung Organkreisläufe."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_niederdrucksysteme",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Niederdrucksysteme"
+      ],
+      "source_summaries": [
+        "2025-10-13_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-13"
+      ],
+      "exam_highlights": [
+        "Diffusions- vs. Durchblutungslimitierung (ausdrücklich als wichtiges Konzept mit Zug-Analogie und Kurven betont) sowie 1. Ficksches Gesetz in den Kapillaren (~500 m² Fläche, ~1 s Kontaktzeit, in Ruhe nur ~1/4 offen).",
+        "Kolloidosmotischer (onkotischer) Druck (als extrem bedeutsam und Quizfrage hervorgehoben): Wird v. a. von Albuminen getragen und hält das Blutvolumen im Gefäß; Starling-Bilanz: ~20 l/Tag filtriert, 16–18 l rückresorbiert, 2–4 l/Tag über Lymphsystem drainiert.",
+        "Zentralvenendruck (2–8 mmHg), a-/c-/x-/v-/y-Wellen (Ventilebenenmechanismus) und ~20× höhere Venen-Compliance; präzise Kalibration auf Herzhöhe (Indifferenzebene arteriell Vorhofhöhe, venös ~10 cm unter Zwerchfellkuppel) ist essenziell."
+      ],
+      "clinical_pearls": [
+        "Ödem-Beispiele: Linksherzinsuffizienz → erhöhter hydrostatischer Kapillardruck → Lungenödem (erst interstitiell, dann alveolär); Protein-Unterernährung (Kwashiorkor) → tiefer onkotischer Druck → Aszites; Allergie (Histamin/Bradykinin) → Permeabilitätsanstieg; langes Sitzen/Stehen → Knöchelödem (Muskelpumpe).",
+        "Lymphödem entsteht v. a. nach Axilladissektion (> 10 Lymphknoten beim Mammakarzinom), Bestrahlung (Prostatakarzinom) oder parasitär durch Fadenwürmer (Filarien).",
+        "Wird der Arm bei der Blutdruckmessung über Herzhöhe angehoben, misst man fälschlich zu tiefe Blutdruckwerte."
+      ],
+      "deemphasized_notes": [
+        "Die langfristige Blutdruckregulation über die Niere wird erst im nächsten Semester (Nierenphysiologie) ausführlich behandelt."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_organkreislaeufe",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Organkreisläufe"
+      ],
+      "source_summaries": [
+        "2025-10-15_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-15"
+      ],
+      "exam_highlights": [
+        "Lungenkreislauf & Quiz-Schwerpunkt: Niederdruck (~20–25/10 mmHg, PVR ~1/10 des SVR), minimaler Gesamtwiderstand bei Atemruhelage (FRC) und hypoxische pulmonale Vasokonstriktion (HPV) ausschließlich in der Lunge (vs. hypoxische Vasodilatation überall sonst im Körperkreislauf).",
+        "Organ-Autoregulation: Gehirn (~15 % HZV, CPP = MAP − ICP, Astrozyten-Kopplung, Hyperkapnie → Vasodilatation, Hypokapnie → Vasokonstriktion), Niere (~20 % HZV, Bayliss-Effekt der Arteriola afferens + tubuloglomeruläre Rückkopplung via Macula densa) und Skelettmuskel (funktionelle Hyperämie überwindet α₁-Konstriktion).",
+        "Prüfungshinweis: Das Praktikum Ergometrie sowie alle anderen Praktika gehören ausdrücklich zum Prüfungsstoff der MC-Prüfung Mitte; Hagen-Poiseuille (Radius −50 % → Widerstand ×16) wurde als Quiz abgefragt."
+      ],
+      "clinical_pearls": [
+        "Hydrostatik in der Lunge: Da der effektive Filtrationsdruck basal nahe 0 (−2 mmHg) und apikal stark negativ (−22 mmHg) ist, beginnen Lungenödeme bei Linksherzinsuffizienz basal und steigen nach kranial auf.",
+        "Schlafapnoe (Hyperkapnie → zerebrale Vasodilatation → ICP ↑ → Blutdruck ↑) vs. Hyperventilation vor dem Tauchen (Hypokapnie → zerebrale Vasokonstriktion → Risiko einer Unterwasser-Synkope).",
+        "Hautdurchblutung & Atherosklerose: Schweißdrüsen werden über cholinerge Sympathikusfasern (ACh) gesteuert, Kälte verlagert α₁-Rezeptoren aus dem Golgi-Apparat in die Membran; Plaques entstehen bevorzugt an Außenwänden von Gefäßgabelungen (niedrige Schubspannung)."
+      ],
+      "deemphasized_notes": [
+        "Die langfristige Blutdruckregulation über die Niere wird ins nächste Semester verschoben; nicht besprochene Organe sind über Kapitelangaben in den Unterlagen abgedeckt."
+      ]
+    },
+    {
+      "id": "kurtcuoglu_uebergeordnete_regulation",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Kurtcuoglu",
+      "subdeck_patterns": [
+        "Übergeordnete Regulation"
+      ],
+      "source_summaries": [
+        "2025-10-16_TB_Herz_-_Kreislauf.md",
+        "2025-10-29_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-16",
+        "2025-10-29"
+      ],
+      "exam_highlights": [
+        "Geschlossener Regelkreis (primäre MAP-Regulation, Betriebspunkt A als Schnittpunkt von Cardiac Output und Venous Return): Relativ wenig Auswendiglernen, aber hohes Verständnis des Zusammenspiels gefordert (CLab Usage fürs Praktikum empfohlen).",
+        "Beliebte Prüfungsfrage: Barorezeptoren in der Wand von Karotissinus und Aortenbogen (Dehnungsrezeptoren → Ncl. tractus solitarii) strikt von Karotis- bzw. Aortenkörperchen (Chemorezeptoren) unterscheiden.",
+        "Lehr-Update vom 29.10.: Bei der Vorhofdehnung soll künftig nicht mehr von bestimmten Rezeptortypen (Typ A/B) und einem Reflex, sondern vom Vorhofdehnungseffekt bzw. Bainbridge-Effekt gesprochen werden (daneben Gauer-Henry-Reflex und ANP)."
+      ],
+      "clinical_pearls": [
+        "Bei chronischem Hypertonus adaptieren Barorezeptoren (Resetting nach rechts) und eignen sich daher nur zur kurzfristigen Regulation; Diuretika senken über das Blutvolumen den Venous Return und damit CO und MAP.",
+        "Orthostase (HF +9 % sitzend→stehend, +30 % liegend→stehend) und Valsalva-Manöver (Prüfung des Barorezeptorreflexes und einer Venenklappeninsuffizienz; Risiko für Synkope/Gefäßruptur); α₁ wirkt via PLC/IP₃/SR-Ca²⁺, α₂ hemmt präsynaptisch Noradrenalin.",
+        "Salzgehalt-Fakt: Brot/Semmeli enthalten oft mehr Salz als Chips (dort liegt es nur auf der Oberfläche)."
+      ],
+      "deemphasized_notes": [
+        "Niere, langfristige Blutdruckregulation und RAAS werden ausdrücklich auf das nächste Semester verschoben und müssen hier nicht auswendig gelernt werden.",
+        "Der Ventrikel-Füllungsdruck als Regelgröße wird nicht explizit behandelt, da er nur bei extrem hohen Drücken relevant ist."
+      ]
+    },
+    {
+      "id": "loffing_herzstruktur",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Herzstruktur"
+      ],
+      "source_summaries": [
+        "2025-10-02_TB_Herz_-Kreislauf.md",
+        "2025-10-09_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-02",
+        "2025-10-09"
+      ],
+      "exam_highlights": [
+        "p.a.-Röntgenbild (prüfungsrelevant): Randbildend sind rechter Vorhof, V. cava superior, Aortenbogen, Truncus pulmonalis, Auricula sinistra, linker Ventrikel und Apex cordis; der rechte Ventrikel ist im p.a.-Bild NICHT randbildend (erst seitlich), und der linke Vorhof liegt am weitesten dorsal (seitlich / TEE).",
+        "Mündliche Prüfung am Präparat: Herz zuerst in physiologischer Körperposition halten, Herzohren aufsuchen (Spitzen zeigen auf Ursprung des Truncus pulmonalis) und Gefäßabgänge verfolgen (nicht von Schnitträndern der Aorta täuschen lassen).",
+        "Ventilebenen-Mechanismus, Auskultationspunkte (Punctum maximum, Erb-Punkt), relative vs. absolute Herzdämpfung sowie Binnenräume (Mm. pectinati, Trabeculae carneae, Mm. papillares, Chordae tendineae, Fossa/Limbus ovalis, Noduli Arantii; linker Ventrikel 3–4× dicker)."
+      ],
+      "clinical_pearls": [
+        "Der Herzspitzenstoß ist bei schlanken Personen im Liegen im 5. ICR medioklavikulär links sichtbar; die Facies diaphragmatica entspricht klinisch der „Herzhinterwand“.",
+        "Im Präparatedemonstrations-Vergleich wog ein massiv hypertrophiertes/dilatiertes Herz > 500 g (Normalgröße ≈ Faustgröße) mit Schrittmacher und zweifachem Bypass auf RIVA und R. circumflexus."
+      ],
+      "deemphasized_notes": [
+        "Sonographie-Details und MRT-Physik werden nicht im Detail benötigt."
+      ]
+    },
+    {
+      "id": "loffing_herzwand",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Herzwand"
+      ],
+      "source_summaries": [
+        "2025-10-02_TB_Herz_-Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-02"
+      ],
+      "exam_highlights": [
+        "Herzwand-Schichten: Endokard (Herzklappen sind Endokardduplikaturen!), Myokard (~70 % Kardiomyozyten, ~30 % Stroma) und Epikard (Tunica serosa + Tela subserosa).",
+        "Histologie & spezielle Kardiomyozyten: Glanzstreifen (Desmosomen, Gap Junctions/Nexus), myoendokrine Vorhofzellen (ANP) sowie Unterschied zwischen Reizbildungszellen (kleiner/dünner, wenig Sarkomere/Glanzstreifen) und Reizleitungszellen/Purkinje-Fasern (größer, heller durch viel Glykogen).",
+        "Connexine (40, 43, 45): Die genauen Nummern müssen nicht gewusst werden, wohl aber, dass regionale Unterschiede bestehen."
+      ],
+      "clinical_pearls": [
+        "Kardiale Troponine sind herzmuskelspezifisch, werden bei Zelluntergang früh ins Blut freigesetzt und dienen der Frühdiagnostik des Myokardinfarkts.",
+        "Trotz ~300 g Gewicht und ~70 % Kardiomyozyten-Anteil erhält das Herz bereits in Ruhe ~5 % des HZV (unter Belastung 4–5-fache Steigerung)."
+      ],
+      "deemphasized_notes": [
+        "Bei den Connexinen (40, 43, 45) müssen die Nummern nicht auswendig gelernt werden.",
+        "Die histologische Vergleichstabelle Herz-/Skelett-/glatte Muskulatur gilt als Stoff des 1. Studienjahres und wird nur zur Erinnerung aufgeführt."
+      ]
+    },
+    {
+      "id": "loffing_gefaessversorgung_innervation",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Gefässversorgung und Innervation des Herzens"
+      ],
+      "source_summaries": [
+        "2025-10-02_TB_Herz_-Kreislauf.md",
+        "2025-10-06_TB_Herz_-_Kreislauf.md",
+        "2025-10-09_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-02",
+        "2025-10-06",
+        "2025-10-09"
+      ],
+      "exam_highlights": [
+        "Must-Know-Koronargefäße: A. coronaria sinistra (R. circumflexus, RIVA + Rr. septales ant.) und A. coronaria dextra (R. interventricularis post. + Rr. septales post.) als funktionelle Endarterien; venöser Abfluss 2/3 über Sinus coronarius (V. cardiaca magna/media/parva) und 1/3 direkt über Thebesius-Venen.",
+        "Vegetative Innervation (wichtige Unterscheidung): Sympathikus innerviert Sinusknoten, AV-Knoten und Ventrikel; Parasympathikus (N. vagus) innerviert nur Sinusknoten und AV-Knoten, NICHT den Ventrikel (kein Einfluss auf Kammern-Kontraktionskraft).",
+        "Versorgungstypen (70 % ausgeglichen, 15 % Links-, 15 % Rechtsversorgungstyp), viszerosensible Fasern (Schmerzprojektion über Rückenmark) und Lymphabfluss-Überkreuzung (linkes Herz → rechter Venenwinkel, rechtes Herz → linker Venenwinkel)."
+      ],
+      "clinical_pearls": [
+        "Head-Zone beim Infarkt: Isolierter Schmerz im linken Unterkiefer über N. vagus → N. trigeminus (wichtig für Zahnmediziner, v. a. ältere Frauen); Sympathikusaktivierung verursacht linksseitiges Schwitzen, Piloerektion und einseitige Mydriasis.",
+        "Prinzip der letzten Wiese: Da Koronararterien epikardial liegen und nach innen ziehen, entstehen erste Infarktnekrosen subendokardial; Sinusknoten, AV-Knoten und His-Bündel werden meist von der A. coronaria dextra versorgt.",
+        "Koronararterien sind trotz herznaher Lage muskuläre Arterien (Ausnahme!); Bypässe erfolgen mit Beinvenen oder der A. thoracica interna (nach Unterbindung ihrer Interkostaläste)."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "loffing_mediastinum_perikard",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Mediastinum und Perikard"
+      ],
+      "source_summaries": [
+        "2025-10-06_TB_Herz_-_Kreislauf.md",
+        "2025-10-09_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-06",
+        "2025-10-09"
+      ],
+      "exam_highlights": [
+        "Wichtige Definition: Der Übergang Aorta ascendens → Arcus aortae liegt exakt an der Perikard-Umschlagslinie (daher verlaufen Aorta ascendens, Truncus pulmonalis [3–5 cm] und Koronargefäße intraperikardial; venöser Schenkel max. 1 cm).",
+        "Präparierkurs-Must-Know: Sinus transversus pericardii (Finger zwischen arteriellem Schenkel ventral und venösem Schenkel dorsal) und Sinus obliquus pericardii (Hand von Herzspitze zwischen linkem Vorhof ventral und Ösophagus dorsal) tasten; Perikardinnervation über N. phrenicus (C3–C5), Blutversorgung über A. pericardiacophrenica.",
+        "Mediastinum (superius/inferius: anterius, medium, posterius), V. azygos/hemiazygos/hemiazygos accessoria sowie alle Durchtrittsstrukturen durch die Apertura thoracis superior (A./V. subclavia, A. carotis communis, N. vagus, N. phrenicus, Trachea, Ösophagus, Truncus sympathicus)."
+      ],
+      "clinical_pearls": [
+        "Im Präparierkurs werden A. thoracica interna und Lig. sternopericardiacum beim Entfernen der vorderen Thoraxwand durchtrennt und sind daher nur als Stummel bzw. nicht sichtbar.",
+        "Der Arcus aortae projiziert sich im Röntgenbild auf Höhe des 4. Brustwirbelkörpers (BWK 4); Bandverbindungen des Perikards sind Membrana bronchopericardiaca, Lig. sternopericardiacum und Lig. phrenicopericardiacum."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "loffing_arterien_arteriolen_kapillaren_venen",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Arterien, Arteriolen, Kapillaren, Venulen und Venensystem"
+      ],
+      "source_summaries": [
+        "2025-10-06_TB_Herz_-_Kreislauf.md",
+        "2025-10-08_TB_Herz_-_Kreislauf.md",
+        "2025-10-09_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-06",
+        "2025-10-08",
+        "2025-10-09"
+      ],
+      "exam_highlights": [
+        "Große Körpergefäße (als bekannt vorausgesetzt): Aortenbogenabgänge (Truncus brachiocephalicus, A. carotis communis sin., A. subclavia sin.) sowie paarige (Aa. phrenicae inf., Aa. renales, Aa. lumbales 1–4, A. testicularis/ovarica) und unpaarige Äste der Aorta abdominalis (Truncus coeliacus, A. mesenterica sup./inf., Bifurcatio aortae).",
+        "Wandbau & Typen: Elastische (inkl. A. pulmonalis) vs. muskuläre Arterien (Ausnahme: Aa. coronariae!) vs. Übergangstyp (A. thoracica interna); Kapillaren: kontinuierlich (Zonulae occludentes), fenestriert (Diaphragma) und diskontinuierlich/Sinusoide (inkl. postkapillärer Venolen als Ort der Diapedese).",
+        "4 histologische Venen-Kriterien (weites Lumen, dünne Wand, irreguläre Muskelschicht mit viel Kollagen, ungleichmäßige Wanddicke) und Vena-cava-Prüfungsfalle: zirkuläre Muskulatur = Tunica media, längsverlaufende Muskelbündel = Tunica adventitia."
+      ],
+      "clinical_pearls": [
+        "Anastomosen & Rete mirabile: Zwischen A. mesenterica sup. und inf. meist funktionell ausreichend, zwischen Truncus coeliacus und A. mesenterica sup. meist nicht; Niere (arteriell-arterielles Rete) vs. Leber (venös-arterielle Pfortaderversorgung); Weibel-Palade-Körperchen (v. a. Venolen) speichern Von-Willebrand-Faktor.",
+        "Histologie-Fallen: Die Wellung der Lamina elastica interna ist teils Fixierungsartefakt und zeigt Autofluoreszenz; durchtrennte Arterien ziehen sich im OP nach Wegfall der Adventitia-Längsstabilisierung zurück.",
+        "Klinik: Hirnbasisaneurysmen (Circulus arteriosus Willisii) töten nicht durch Verbluten (wie Aortenaneurysma/-dissektion), sondern durch Hirnkompression; tiefe Beinvenenthrombose → Lungenembolie; im OP bei Schwindel auf Zehenspitzen wippen (Muskelpumpe)."
+      ],
+      "deemphasized_notes": [
+        "Lebervenen/portokavale Anastomosen werden in der Gastrointestinal-Vorlesung, der Circulus arteriosus Willisii in der ZNS-Vorlesung und die langfristige renale Blutdruckregulation im nächsten Semester vertieft."
+      ]
+    },
+    {
+      "id": "loffing_lymphsystem",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Lymphsystem"
+      ],
+      "source_summaries": [
+        "2025-10-09_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-09"
+      ],
+      "exam_highlights": [
+        "Drainage & Bau: Führt die restlichen ~10 % der im Kapillarbett filtrierten Gewebsflüssigkeit ab; blind beginnende Lymphkapillaren (bis 100 µm) haben diskontinuierliches Endothel und sind über Mikrofibrillen verankert.",
+        "Abflusswege & Venenwinkel: Cisterna chyli (sammelt Trunci lumbales + Darmlymphe) → Ductus thoracicus (3 Körperquadranten: beide Beine, Becken, Bauchraum, linke obere Hälfte) mündet in den linken Venenwinkel (mit Truncus jugularis, subclavius, bronchomediastinalis sin.); rechter oberer Quadrant in den rechten Venenwinkel.",
+        "Ausnahmen ohne Lymphgefäße (Knorpel, Knochen, Zahn, Nierenmark, Epithelien, Plazenta; ZNS nur wenige nachgewiesen) sowie Lymphe-Zusammensetzung (klar, nur Lymphozyten — außer milchig-trübe Darmlymphe im „Milchbrustgang“)."
+      ],
+      "clinical_pearls": [
+        "Lymphknoten-Tastbefund: Entzündlich vergrößerte Lymphknoten sind druckschmerzhaft, lymphogene Tumormetastasen dagegen vergrößert und in der Regel nicht druckschmerzhaft; inguinale Gruppen liegen parallel zum Leistenband (Genitalien/unterer Bauch) bzw. senkrecht in Beinachse (Bein).",
+        "Sekundäre Lymphödeme sind häufiger als primäre (Ursachen: Parasiten/Bakterien/Pilze, Tumormetastasen, Axilladissektion bei Mammakarzinom, Bestrahlung)."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "atmung_einfuehrung_abschluss",
+      "themenblock": "TB Atmung",
+      "dozent": "Einführung & Abschluss",
+      "subdeck_patterns": [
+        "Einführung und Abschluss Atmung"
+      ],
+      "source_summaries": [
+        "2025-10-13_TB_Herz_-_Kreislauf.md",
+        "2025-10-24_TB_Atmung.md",
+        "2025-10-29_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-13",
+        "2025-10-24",
+        "2025-10-29"
+      ],
+      "exam_highlights": [
+        "Klinische Einführung (Prof. Ulrich): Diskrepanz zwischen lange stabiler SpO₂ (sigmoide Kurve) und bereits stark abfallendem paO₂ einprägen; für den Sauerstoff-Content muss bekannt sein, dass Hämoglobin und Sättigung entscheidend sind (genaue Formelzahlen nicht nötig).",
+        "Psychophysiologie der Angst (Dr. Hackl): Alle Fragen sind durch die Folien beantwortbar; Angst vs. Furcht, schnelle Amygdala-Bahn (Fall SM / Urbach-Wiethe-Syndrom) vs. Kortexregulation, SAM- vs. HPA-Achse, GAD-7 (> 10 mittelgradig) und klassische vs. operante/instrumentelle Konditionierung (hier synonym).",
+        "Funktionelle Atemstörungen & HB-1-Prüfung (29.10.): Screening über Nijmegen-Fragebogen (16 Items, Cut-off ≥ 20); psychische Komorbiditäten (Depression, Angst, PTBS) bei COPD/Asthma/CF senken Therapieadhärenz; für HB 1 (13.01.2026) reichen Folien allein nicht — Lehrbücher hinzuziehen."
+      ],
+      "clinical_pearls": [
+        "Höhen- & Flugmedizin: Oberhalb 3000 m Schlafhöhe nur um 300–400 m/Nacht steigern (Prophylaxe: Acetazolamid; bei HAPE Dexamethason + Abstieg; Brustschmerz passt nicht zu AMS/HAPE/HACE → Herzinfarkt ausschließen!); bei Pneumothorax absolutes Flug- und Seilbahnverbot bis mind. 7 Tage nach Restitution (Spannungspneumothorax); COPD mit SpO₂ > 92 % braucht keinen Zusatz-O₂.",
+        "Funktionelle Atemnot (8–10 % in der internistischen Praxis): typisch sind fehlende Nachtbeschwerden, Beginn in Ruhe, normales Sprechen, Kribbelparästhesien/Pfötchenstellung; keine leichtfertigen Benzodiazepine (Lorazepam-Suchtgefahr) und keine wiederholten „Beruhigungs-EKGs/Lufus“.",
+        "Antidepressive Sportdosis: 3×/Woche für mindestens 20 Minuten schweißtreibender Sport wirkt bei mittelschwerer Depression vergleichbar zu einem Antidepressivum."
+      ],
+      "deemphasized_notes": [
+        "Ausdrücklich gestrichene veraltete Maßnahme (29.10.): Rückatmung in eine Tüte bei Hyperventilation nicht mehr empfehlen (kann Angst/Panik verstärken); eine einzelne Panikattacke ist keine Panikstörung.",
+        "Ventilatorische Akklimatisations-Steilheitskurven (Prof. Ulrich) werden nicht geprüft; neue Klassifikationskriterien funktioneller Störungen werden erst im 3. Studienjahr vertieft."
+      ]
+    },
+    {
+      "id": "loffing_anatomie_atmungsorgane",
+      "themenblock": "TB Atmung",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Anatomie der Atmungsorgane"
+      ],
+      "source_summaries": [
+        "2025-10-13_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-13"
+      ],
+      "exam_highlights": [
+        "Knochen der Nasenhöhle (im Schädelkurs/Studiensammlung am kolorierten Schädel anschauen): Os nasale, Os frontale, Maxilla (Proc. frontalis/palatinus), Os palatinum, Os ethmoidale (Lamina cribrosa/perpendicularis, Crista galli, Conchae sup./med.), Concha nasalis inf., Vomer und Os sphenoidale.",
+        "Grundlagen & Nasenrelief: Äußere vs. innere Atmung, Ruheatmung (16–20/min, Atemzugvolumen ~0,5 l), Vestibulum/Limen nasi, Nasengänge (Meatus nasi), Recessus sphenoethmoidalis, Choane sowie Mündung des Ductus nasolacrimalis in den Meatus nasi inferior.",
+        "Gefäße & Nerven: Anastomose aus A. carotis interna (Aa. ethmoidales ant./post. aus A. ophthalmica) und externa (A. sphenopalatina durch Foramen sphenopalatinum); Innervation durch N. V1/V2, N. I, N. VII (Ganglion pterygopalatinum) und Sympathikus."
+      ],
+      "clinical_pearls": [
+        "Locus Kiesselbachi (vorderes Septum gegenüber mittlerer Nasenmuschel) ist häufigste Ursache für Epistaxis: Nase komprimieren und Kopf nicht in den Nacken legen (Blut läuft sonst in den Magen → Übelkeit).",
+        "Organum vomeronasale (Jacobson-Organ): Rudimentäre Epithelzellcluster am Septum bei Biopsien nicht mit einem invasiven Tumor verwechseln; der Ductus nasolacrimalis weitet sich oft erst postnatal (tränendes Babyauge).",
+        "Nasenbeinbrüche betreffen das dünne paarige Os nasale; alle Sinus paranasales sind paarig, oft asymmetrisch und wachsen postnatal (Kieferhöhle bis > 60. Lebensjahr)."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "loffing_anatomie_atmungsorgane_ii",
+      "themenblock": "TB Atmung",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Anatomie der Atmungsorgane II"
+      ],
+      "source_summaries": [
+        "2025-10-15_TB_Herz_-_Kreislauf.md",
+        "2025-10-16_TB_Herz_-_Kreislauf.md",
+        "2025-10-17_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-15",
+        "2025-10-16",
+        "2025-10-17"
+      ],
+      "exam_highlights": [
+        "Nasennebenhöhlen & Histologie: Mündungen (Sinus maxillaris/frontalis, vordere/mittlere Siebbeinzellen über Hiatus semilunaris in Meatus nasi medius; Sinus sphenoidalis in Recessus sphenoethmoidalis); Abgrenzung mehrreihig vs. mehrschichtig, Kinetosomen (Kinozilien vs. Mikrovilli) und die ~10 µm breite Basalmembran.",
+        "Larynx-Schwerpunkte: Strukturen am Aditus laryngis (Epiglottis, Plica aryepiglottica, Aryknorpel, Incisura interarytenoidea), Begriff Petiolus epiglottidis, Knorpelarten (Epiglottis = elastisch; Schild-/Ring-/Stellknorpel überwiegend hyalin) und M. cricoarytenoideus posterior („Postikus“) als einziger Stimmritzenöffner.",
+        "Innervation Larynx & Pharynx: N. laryngeus superior (R. externus → nur M. cricothyroideus; R. internus → sensibel bis Plica vocalis) vs. N. laryngeus inferior/recurrens (alle übrigen inneren Muskeln + infraglottisch sensibel); Pharynx (V2 → Naso-, IX → Oro-, X → Hypopharynx; M. stylopharyngeus als Leitmuskel für N. IX)."
+      ],
+      "clinical_pearls": [
+        "Sinusitis maxillaris (häufigste Sinusitis durch kranialen Abfluss gegen die Schwerkraft, Risiko Orbitaphlegmone), transsphenoidaler Zugang zur Hypophyse und Lamina-cribrosa-Fraktur (Liquor-Nachweis aus der Nase per Urin-Glukose-Teststreifen).",
+        "Kartagener-Syndrom (Dyneinarm-Defekt → fehlende Zilienmotilität, männliche Infertilität, Situs inversus); Glottisödem in der lockeren Lamina propria des Vestibulum laryngis (Notfall: Koniotomie durch Conus elasticus).",
+        "Zenker-Divertikel im Killian-Dreieck (Foetor ex ore), Vagusreflex/Bolustod im Recessus piriformis (submuköse Lage von N. laryngeus sup./recurrens) sowie abschwellende Nasentropfen bei Mittelohrentzündung (Tuba-auditiva-Belüftung)."
+      ],
+      "deemphasized_notes": [
+        "Der Schluckakt wird in der Physiologie beim Gastrointestinaltrakt detaillierter behandelt und hier nur im Überblick besprochen.",
+        "Komplizierte 3D-Bewegungen des Larynx sowie die Präparation der Bulla ethmoidalis werden ins Selbststudium (Studiensammlung/Präparierkurs) verlagert."
+      ]
+    },
+    {
+      "id": "loffing_trachea_und_bronchien",
+      "themenblock": "TB Atmung",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Trachea und Bronchien"
+      ],
+      "source_summaries": [
+        "2025-10-17_TB_Atmung.md",
+        "2025-10-16_TB_Herz_-_Kreislauf.md"
+      ],
+      "lecture_dates": [
+        "2025-10-17",
+        "2025-10-16"
+      ],
+      "exam_highlights": [
+        "Trachea-Projektion (ausdrücklich wissen): Cartilago cricoidea auf Höhe C6, Bifurcatio tracheae (mit Carina) auf Höhe Th4; 16–20 hufeisenförmige hyaline Knorpelspangen, Ligamenta anularia und M. trachealis.",
+        "Terminologie-Hinweis: Korrekt Paries cartilagineus vs. Paries membranaceus verwenden („Paries ist die Wand, nicht Pars cartilaginea“).",
+        "Trachea-Histologie: Tunica mucosa mit sehr breiter Basalmembran (~5 µm in Trachea, sonst < 1 µm), mehrreihigem Flimmerepithel, Becherzellen und seromukösen Glandulae tracheales (mit von-Ebner-Halbmonden) in der Lamina propria; Tunica fibromusculocartilaginea und Adventitia."
+      ],
+      "clinical_pearls": [
+        "Fremdkörperaspiration: Aspirierte Kleinteile (z. B. Legoteile, Erdnüsse) landen fast immer im Bronchus principalis dexter, weil er breiter und steiler ist als der linke.",
+        "In der Incisura jugularis liegt die Trachea bereits ca. 7 cm tief unter der Haut (nur Ringknorpel und erste zwei Knorpelspangen gut tastbar); Tracheotomia superior (zwischen Ringknorpel und 1. Spange) vs. inferior (zwischen 1. und 2. Spange).",
+        "Bei der Bronchoskopie ist am Paries membranaceus die Ösophagus-Peristaltik während des Schluckens sichtbar; Rauchen schädigt Kinozilien und stimuliert Becherzellen (morgendlicher Raucherhusten)."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "loffing_trachea_und_bronchien_2",
+      "themenblock": "TB Atmung",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Trachea und Bronchien 2"
+      ],
+      "source_summaries": [
+        "2025-10-17_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-17"
+      ],
+      "exam_highlights": [
+        "Unterscheidungskriterium Bronchus vs. Bronchiolus: Bronchioli besitzen keinen Knorpel mehr (zudem nehmen Epithelhöhe, Becherzellen und Drüsen ab, während die glatte Muskulatur relativ zunimmt).",
+        "Nomenklatur-Vorgabe: In den Bronchioli terminales den Begriff Keulenzellen statt „Clarazellen“ verwenden (wegen der NS-Vergangenheit von Max Clara).",
+        "Dichotome Aufzweigung zu Bronchioli respiratorii (einschichtig kubisch, einzelne Alveolen in der Wand) sowie Lymphabfluss entlang der Trachea über die Rekurrenskette (Nodi lymphatici paratracheales)."
+      ],
+      "clinical_pearls": [
+        "Klinischer Unterschied: Bronchitis/Bronchiolitis verengt v. a. die Bronchioli (Inspirationsproblem), während beim Asthma die Kontraktion glatter Muskulatur um den Alveolareingang dominiert (Exspirationsproblem).",
+        "Schleimlösende Mukolytika bei Tracheitis sind in ihrer Wirksamkeit umstritten (evtl. Placeboeffekt); Rauchgase schädigen bei Rauchgasvergiftung direkt das respiratorische Epithel."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "loffing_lunge",
+      "themenblock": "TB Atmung",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Lunge"
+      ],
+      "source_summaries": [
+        "2025-10-17_TB_Atmung.md",
+        "2025-10-20_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-17",
+        "2025-10-20"
+      ],
+      "exam_highlights": [
+        "Anordnung am Hilum pulmonis (ausdrücklich wichtig): Rechts B-A-V von kranial nach kaudal (Bronchus oben), links reitet die A. pulmonalis auf dem Bronchus; im Präparierkurs verlaufen Äste der A. pulmonalis parallel zu tastbaren Bronchien, während V.-pulmonalis-Äste sie unabhängig überkreuzen.",
+        "Lappen, Segmente & Gefäße: Rechts 3 Lappen (10 Segmente), links 2 Lappen mit Incisura cardiaca/Lingula (9–10 Segmente); Vasa publica (funktionelle Endarterien, ~13 mmHg) vs. Vasa privata (Aa./Vv. bronchiales aus Aorta/A. intercostalis post. → V. azygos/hemiazygos, ~100 mmHg).",
+        "Alveolen (~300 Mio., ~100 m²), Typ-I-/Typ-II-Pneumozyten (Surfactant in Lamellarkörpern), Kohn-Poren, Blut-Luft-Schranke (Flüssigkeitsfilm + Typ-I-Pneumozyt + verschmolzene Basalmembran + Endothel), Plexus pulmonalis und Lymphabfluss (Hilus- → Bifurkations- → Rekurrenskette-Lymphknoten)."
+      ],
+      "clinical_pearls": [
+        "Lungenembolie & Emphysem: Äste der A. pulmonalis sind funktionelle Endarterien ohne Segment-Anastomosen (Lungeninfarkt); beim Emphysem erhöht der Verlust von Alveolarsepten den Kapillarbett-Widerstand (pulmonale Hypertonie → Rechtsherzbelastung).",
+        "Surfactant, COVID-19 & Forensik: Frühgeborene benötigen intratracheales Surfactant; SARS-CoV-2 bindet via ACE2 v. a. an Typ-II-Pneumozyten; spezifisches Gewicht < 1 ermöglicht die forensische Schwimmprobe (Totgeburt sinkt vs. Lebendgeburt schwimmt).",
+        "Bronchialkarzinom-Metastasierung folgt Hilus-, Bifurkations- und paratrachealen Lymphknoten (durch anthrakotisches Pigment oft schwarz gepunktet)."
+      ],
+      "deemphasized_notes": [
+        "Flächen und Kanten der Lunge (Facies costalis, diaphragmatica, mediastinalis; Margo anterior, inferior) wurden auf der Folie kleiner gedruckt und ausdrücklich als „weniger wichtig“ eingeordnet."
+      ]
+    },
+    {
+      "id": "loffing_atemmuskulatur",
+      "themenblock": "TB Atmung",
+      "dozent": "Loffing",
+      "subdeck_patterns": [
+        "Atemmuskulatur"
+      ],
+      "source_summaries": [
+        "2025-10-20_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-20"
+      ],
+      "exam_highlights": [
+        "Häufiger Röntgenfehler (ausdrücklich betont): Bei Lendenwirbeln sind die lateralen Fortsätze Processus costales (Rippenreste!), nicht Processus transversi.",
+        "Reihenfolge im Interkostalraum (kranial → kaudal): V – A – N (Vene, Arterie, Nerv) — klinisch zentral für die Thoraxpunktion.",
+        "Atemmuskeln & Diaphragma-Durchtritte: Mm. intercostales externi (Inspiration) vs. interni / M. transversus thoracis (Exspiration), Atemhilfsmuskeln (Mm. scaleni, sternocleidomastoideus, pectorales, latissimus dorsi) sowie Foramen venae cavae (V. cava inf. + re. N. phrenicus), Hiatus oesophageus (Ösophagus + Trunci vagales + li. N. phrenicus) und Hiatus aorticus (Aorta + Ductus thoracicus)."
+      ],
+      "clinical_pearls": [
+        "Thoraxpunktion (Pleurapunktion): Immer im hinteren Drittel am Oberrand der unteren Rippe punktieren, weil das V-A-N-Bündel dorsal noch geschützt hinter der oberen Rippe liegt und erst weiter ventral nach unten wandert.",
+        "Klinische Atemmuster: Patienten mit Dyspnoe stützen intuitiv die Arme ab (Fixierung für Mm. pectorales / M. latissimus dorsi); Schwangere im 3. Trimenon nutzen v. a. Brustatmung (Zwerchfell blockiert), Neugeborene v. a. Bauchatmung (horizontale Rippen).",
+        "Hinweis zur Vorlesungsfolie: Auf der Diaphragma-Folie waren Crus dextrum und Crus sinistrum vertauscht beschriftet (im Vortrag korrigiert)."
+      ],
+      "deemphasized_notes": [
+        "Für die vollständige Tabelle kleinerer Zwerchfellöffnungen und -inhalte verweist der Dozent auf das Selbststudium in den Unterlagen."
+      ]
+    },
+    {
+      "id": "robert_lipoproteine",
+      "themenblock": "TB Stoffwechsel",
+      "dozent": "Robert",
+      "subdeck_patterns": [
+        "1 Lipoproteine"
+      ],
+      "source_summaries": [
+        "2025-11-10_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-10"
+      ],
+      "exam_highlights": [
+        "Freie Fettsäuren zirkulieren im Blut ausschließlich an Albumin gebunden (nicht in Lipoproteinen); ca. 25 % der Körperlipide stammen aus der Nahrung und ca. 75 % aus der De-novo-Synthese der Leber.",
+        "Die Lipidresorption im Darm setzt zwingend Mizellenbildung über Gallensäuren voraus; Chylomikronen-Remnants benötigen zwingend ApoE für die Leberaufnahme über LDLR/LRP1.",
+        "Zentrale Apolipoproteine und Wege: ApoB48 (Chylomikronen, 48 % so lang wie ApoB100), ApoB100 (VLDL/LDL, LDLR-Bindung), ApoC2 (LPL-Aktivierung) vs. ApoC3/ANGPTL3 (LPL-Hemmung) sowie ApoA1 (HDL/LCAT) im Reverse Cholesterol Transport über ABCA1, ABCG1 und SR-B1.",
+        "Herzinfarkt-Grenzwerte: TG < 2 mmol/l, Totalcholesterin < 5 mmol/l, HDL > 1 mmol/l, LDL < 3 mmol/l, Non-HDL-C < 3 mmol/l; Lp(a) ist rein genetisch determiniert (KIV-2-Repeats, einmal testen reicht) mit Cutoff um 30 mg/dl und deutlich höherem Risiko bei > 50 mg/dl."
+      ],
+      "clinical_pearls": [
+        "Familiäre Hypercholesterinämie (FH) hat in der Schweiz eine heterozygote Prävalenz von ca. 1:250 (Diagnose über Blutlipide und Xanthome an Knie/Augen, da Gentests zu teuer) und manifestiert sich teils schon als früher Herzinfarkt (z. B. mit 38 Jahren).",
+        "LPL-Defizienz (Typ 1/Typ 5) zeigt milchig-weißes Plasma nach Stehen über Nacht bei 4 °C, ≥ 6-fach erhöhte Triglyzeride und Xanthome; die Tangier-Krankheit (ABCA1-Defekt) führt zu fehlendem HDL, charakteristischen orangen Tonsillen und erhöhtem Atheroskleroserisiko.",
+        "Der ANGPTL3-Blocker Evinacumab wirkt im Gegensatz zu Statinen oder PCSK9-Antikörpern auch bei homozygoter LDLR-Defizienz ohne funktionierenden LDL-Rezeptor; Alkohol erhöht zwar scheinbar HDL, steigert aber stark die Triglyzeride."
+      ],
+      "deemphasized_notes": [
+        "Werte für ApoA1 müssen nicht auswendig gelernt werden."
+      ]
+    },
+    {
+      "id": "emmert_kohlenhydrat_stoffwechsel",
+      "themenblock": "TB Stoffwechsel",
+      "dozent": "Emmert",
+      "subdeck_patterns": [
+        "5 Regulation Kohlenhydrat Stoffwechsel"
+      ],
+      "source_summaries": [
+        "2025-11-10_TB_Verdauung.md",
+        "2025-11-13_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-10",
+        "2025-11-13"
+      ],
+      "exam_highlights": [
+        "Glukagon wirkt ausschließlich auf die Leber, und Glukose-6-phosphatase kommt nur dort vor (nicht im Muskel); GLUT4 (Muskel/Fett, kleiner K_T, insulinabhängige Translokation) unterscheidet sich von GLUT2 (Leber, hoher K_T = 40 mmol/L, insulinunabhängig).",
+        "In der Leber sind drei Transkriptionsfaktoren abzugrenzen: SREBP-1c (Insulin → Glykolyse/Fettsäuren, im Gegensatz zu SREBP-2 für Cholesterin), ChREBP (Glukose → Pentosephosphatweg → Xylulose-5-phosphat → PP2A) und CREB (Glukagon → cAMP → PKA); PKA hemmt ChREBP und SREBP-1c.",
+        "PFK-1 wird durch Fruktose-2,6-bisphosphat aktiviert (bifunktionelle PFK-2/FBPase-2: dephosphoryliert via PP2A = Kinase aktiv, phosphoryliert via PKA = Phosphatase aktiv), und die Leber-Pyruvatkinase (PKL) wird durch PKA-Phosphorylierung inaktiviert.",
+        "Beim Glykogenstoffwechsel zählt die übergeordnete reziproke Regulation von Glykogensynthase (aktiviert via PP1 mit G_M/G_L, gehemmt via CK2/GSK3) und Glykogenphosphorylase (Muskel: allosterische T/R-Steuerung und Ca²⁺; Leber: Inaktivierung über Glukose-Bindung + PP1)."
+      ],
+      "clinical_pearls": [
+        "Im Skelettmuskel steigt der Glukoseumsatz über GLUT4 von ~20 % im Nüchternzustand auf bis zu 90 % nach einer Mahlzeit durch Insulin; ohne Phosphorylierung zu Glukose-6-phosphat kann Glukose die Zelle wieder verlassen.",
+        "Da dem Skelettmuskel die Glukose-6-phosphatase fehlt, stabilisiert ausschließlich das Leberglykogen die Blutglukose, während Muskelglykogen der lokalen Energieversorgung dient."
+      ],
+      "deemphasized_notes": [
+        "Biochemische Strukturmotive der Transkriptionsfaktoren (CREB = Basic Leucine Zipper, SREBP = Basic Helix-Loop-Helix) und die Regulation der Pyruvat-Dehydrogenase (1.-Jahr-Stoff) sind nicht prüfungsrelevant; zwei übersprungene Folien zur GSK3-Hemmung sowie Einzeldetails der Glykogen-Signalkaskaden werden nicht abgefragt.",
+        "Für die Prüfung ist nur der Vorlesungsinhalt relevant (hochgeladene Skripte dienen nur der Hintergrundlektüre)."
+      ]
+    },
+    {
+      "id": "emmert_leberspezifischer_stoffwechsel",
+      "themenblock": "TB Stoffwechsel",
+      "dozent": "Emmert",
+      "subdeck_patterns": [
+        "6 Leberspezifischer Stoffwechsel"
+      ],
+      "source_summaries": [
+        "2025-11-13_TB_Verdauung.md",
+        "2025-11-19_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-13",
+        "2025-11-19"
+      ],
+      "exam_highlights": [
+        "Leberläppchen sind funktionell zoniert: Zone 1 (periportal) übernimmt Glukoneogenese, Glykogenabbau und oxidative Energiegewinnung, Zone 3 (perivenös) glukoseverbrauchende Wege und Biotransformation; die Resorptionsphase ist lipogen (G6Pase gehemmt), die Postresorptionsphase glukogen (Ketonkörperbildung durch Oxalacetat-Abzug).",
+        "De-novo-Lipogenese (Citrat-Shuttle, PDH, ACC, ChREBP, SREBP-1c) und Cholesterinsynthese (2 Acetyl-CoA + 1 Acetoacetyl-CoA, SREBP-2) konkurrieren um NADPH aus Pentosephosphatweg und Malatenzym; bei der PDH aktivieren Acetyl-CoA und NADH/NAD⁺ die inaktivierende PDH-Kinase, während Pyruvat sie hemmt und Insulin die PDH-Phosphatase aktiviert.",
+        "Biotransformation (statt Entgiftung) umfasst Phase I (CYP450 in Zone 3, inkl. Giftungen wie Aflatoxin-Epoxid oder Benzpyren-Diol-Epoxid → Guanin-Addukt), Phase II (Konjugation z. B. mit Glucuronsäure) und Phase III (Export), geprägt durch genetische Variabilität, Induktion, Kompetition und Neugeborenen-Unreife.",
+        "Ethanolabbau über ADH/ALDH erzeugt überschüssiges NADH und hemmt Glukoneogenese, β-Oxidation, Zitratzyklus und PDH (Fettleber, Laktat- und Ketoazidose); über MEOS (CYP2E1) entstehen akut Medikamenten-Kompetition, chronisch eine 10-fache Induktion (auch bei Abstinenz) sowie ROS/IL-6/TNF-α und Fibrose."
+      ],
+      "clinical_pearls": [
+        "Eine alkoholische Ketoazidose darf nicht wie beim Typ-1-Diabetes mit Insulin therapiert werden, da kein Insulinmangel, sondern eine NADH/NAD⁺-Imbalance vorliegt (stattdessen Flüssigkeitsstabilisierung und ggf. Bicarbonat).",
+        "Unreife Glucuronyltransferase bei Neugeborenen/Frühgeborenen verursacht Neugeborenengelbsucht (Lichttherapie gegen Bilirubin-Enzephalopathie) und Kontraindikation von Chloramphenicol (Grey-Baby-Syndrom); Barbiturate bei Stillenden gefährden das Atemzentrum des Säuglings und wirken nach Absetzen zeitverzögert induzierend.",
+        "Die Leber deckt ihren eigenen Energiebedarf überwiegend über Fettsäuren und Aminosäuren (kaum Glykolyse), besitzt keinen Cholesterinabbauweg (Ausscheidung nur über die Galle) und nutzt ungesättigte Fettsäuren (z. B. Omega-3) bevorzugt zur Ketonkörpersynthese."
+      ],
+      "deemphasized_notes": [
+        "Komplexe Reaktionsdetails von Cholesterin- und Gallensäuresynthese, Details des enterohepatischen Cholesterinkreislaufs, Einzelmitglieder der CYP450-Tabelle, einzelne Medikamentenbeispiele aus dem Skript und die Struktur der Glucuronsäure müssen nicht auswendig gelernt werden.",
+        "Alkoholstatistiken (europäischer Vergleich 2022, BAG-Zahl 16,4 %, Medizinstudierenden-Studie 2017) sind nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "hersberger_fettsaeurestoffwechsel",
+      "themenblock": "TB Stoffwechsel",
+      "dozent": "Hersberger",
+      "subdeck_patterns": [
+        "6 Regulation des Fettsäurestoffwechsels"
+      ],
+      "source_summaries": [
+        "2025-11-21_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-21"
+      ],
+      "exam_highlights": [
+        "Drei Schlüsselenzyme der Fettsäuresynthese: PDH (gehemmt via PDK 1–4 durch Acetyl-CoA und hohe NADH/NAD⁺-Ratio; aktiviert durch Pyruvat und Insulin über PDH-Phosphatase), ACC (allosterisch aktiviert durch Citrat, gehemmt durch langkettige Acyl-CoAs/Malonyl-CoA; phosphoryliert/gehemmt via AMPK, Glukagon, Adrenalin) und FAS (transkriptionell induziert durch SREBP-1c und ChREBP/MLX).",
+        "Transkriptionelle Abgrenzung: SREBP-1c (Insulin und LXR/RXR bei Cholesterinüberschuss) induziert Glykolyse, FAS, Elongasen, Desaturasen, GPAT, Malat-Enzym und PPW ohne Einfluss auf die Cholesterinsynthese; SREBP-2 steuert die Cholesterinbiosynthese und SREBP-1a reagiert auf Mangel an ungesättigten Fettsäuren (PUFAs hemmen FAS über SREBP-1a).",
+        "Beim Fettsäureabbau hemmt Malonyl-CoA allosterisch die CPT-1 (geschwindigkeitsbestimmender Schritt der β-Oxidation) und verhindert so gleichzeitige Synthese und Oxidation; CPT-2 regeneriert Acyl-CoA in der Mitochondrienmatrix.",
+        "PPAR-Kernrezeptoren (Heterodimere mit RXR): PPARα (aktiviert durch PUFAs) induziert CPT-1 und β-Oxidation, PPARγ (aktiviert durch Prostaglandin-/Leukotrien-Metabolite) fördert Adipozytendifferenzierung, Fettspeicherung und Insulinsensitivität, und PPARβ/δ reguliert Fettsäuremobilisierung sowie reversen Cholesterintransport."
+      ],
+      "clinical_pearls": [
+        "Fibrate (Fenofibrat, Bezafibrat) aktivieren PPARα und senken gezielt Triglyzeride (nicht Cholesterin) bei Hypertriglyzeridämie.",
+        "Pioglitazon (einzig verbliebenes Thiazolidindion) aktiviert PPARγ und verbessert die Insulinsensitivität bei Typ-2-Diabetes.",
+        "Die neuen PPARβ/δ-Agonisten Seladelpar und Elafibranor werden zur Therapie der primären biliären Cholangitis eingesetzt."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "stockmann_oesophagus_und_magen",
+      "themenblock": "TB Verdauung",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Oesophagus und Magen"
+      ],
+      "source_summaries": [
+        "2025-11-12_TB_Verdauung.md",
+        "2025-11-14_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-12",
+        "2025-11-14"
+      ],
+      "exam_highlights": [
+        "Makroskopie und Bauchfell des Magens: Omentum minus (Lig. hepatogastricum, hepatoduodenale, hepatooesophageale), Bursa omentalis (Zugang über Foramen omentale/Winslow), Magenabschnitte (Kardia, Fundus, Corpus, Pars pylorica mit Antrummühle/M. sphincter pylori), Magenstraße und 3 Schichten der Tunica muscularis (innen Fibrae obliquae, Mitte Stratum circulare, außen Stratum longitudinale).",
+        "Histologie der Magenschleimhaut: Einschichtig hochprismatisches Muzin-Epithel mit Foveolae gastricae; Unterscheidung der Abschnitte anhand Foveolae:Drüsen-Verhältnis und Verzweigungsgrad (Corpus 1:2 tubulär, Pylorus > 1:1 verzweigt + Lymphfollikel, Kardia ~1:1 stark verzweigt) sowie Belegzellen (eosinophil, intrazelluläre Sekretkanäle, H⁺/K⁺-ATPase, Intrinsic Factor) vs. Hauptzellen (rER, Pepsinogen).",
+        "Ösophagus-Histologie und Schichtennomenklatur: Der Ösophagus weist in den oberen zwei Dritteln Skelettmuskulatur und erst im unteren Drittel glatte Muskulatur auf (lymphatisches Gewebe nimmt nach aboral zu); Tela submucosa und Tela subserosa sind jeweils als „Tela“ (nicht „Tunica“) zu bezeichnen.",
+        "Gefäße und Innervation des Magens: Kleine Kurvatur (A. gastrica sin./dext.), große Kurvatur (A. gastroomentalis sin./dext.), Fundus (Aa. gastricae breves/posteriores aus A. lienalis); venös → V. portae (portokavale Anastomosen am Ösophagus); Parasympathikus über Truncus vagalis ant./post., Sympathikus über Ganglion coeliacum."
+      ],
+      "clinical_pearls": [
+        "Magenulzera können bis in die gefäßreiche Tela submucosa erodieren und akut bluten; statt früherer Vagotomie (Tonusverlust, Völlegefühl) kombiniert man heute Antibiotika gegen *Helicobacter pylori* mit PPIs.",
+        "Die Virchow-Drüse (linker supraklavikulärer Lymphknoten) ist eine typische Metastasenlokalisation des Magenkarzinoms."
+      ],
+      "deemphasized_notes": [
+        "Individuelle Magenformen (unterschiedlich tief hängender Magen) sind nicht prüfungsrelevant.",
+        "Die Stammzelltheorie sowie Isthmus- und Nebenzellen werden im Histo-Kurs nicht geprüft (Fokus liegt auf Haupt- und Belegzellen)."
+      ]
+    },
+    {
+      "id": "stockmann_duodenum_und_pankreas",
+      "themenblock": "TB Verdauung",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Duodenum und Pankreas"
+      ],
+      "source_summaries": [
+        "2025-11-12_TB_Verdauung.md",
+        "2025-11-14_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-12",
+        "2025-11-14"
+      ],
+      "exam_highlights": [
+        "Peritoneale Lage des Duodenums (~30 cm, C-förmig um den Pankreaskopf): Nur die Pars superior (Bulbus) liegt intraperitoneal, Pars descendens (Papilla duodeni major & minor), Pars horizontalis/inferior und Pars ascendens liegen sekundär retroperitoneal; das glattmuskuläre Treitz-Band (Lig. suspensorium duodeni) markiert die Flexura duodenojejunalis.",
+        "Das histologische Pflichtmerkmal des Duodenums sind muköse Brunner-Drüsen (pH 9 mit Bicarbonat & Schleim) in der Tela submucosa neben blattförmigen Zotten; versorgt wird der duodenopankreatische Komplex über den Arcus pancreaticoduodenalis ant./post. (Truncus coeliacus/A. gastroduodenalis + A. mesenterica superior).",
+        "Das Pankreas liegt sekundär retroperitoneal in der Rückwand der Bursa omentalis (Caput mit Processus uncinatus nahe A./V. mesenterica sup., Corpus, Cauda); Ductus pancreaticus und Ductus choledochus münden gemeinsam an der Papilla duodeni major (Vateri).",
+        "Histologische Abgrenzung zur Parotis: Sind in einem rein exokrinen Pankreas-Anschnitt keine Langerhans-Inseln (heller, mit Sinusoiden) sichtbar, sind zentroazinäre Zellen das einzige Unterscheidungsmerkmal gegenüber der Parotis."
+      ],
+      "clinical_pearls": [
+        "Das Treitz-Band trennt klinisch obere und untere GI-Blutungen; neben der Flexura duodenojejunalis liegende Fossae/Rezessus können Dünndarmschlingen einklemmen (innere Hernien).",
+        "Ein Pankreaskopfkarzinom komprimiert nahe der Papilla major in ~70 % den Ductus choledochus (Ikterus), verursacht durch Infiltration des Ganglion coeliacum starke Dauerschmerzen und wird ggf. mittels Whipple-Operation reseziert (5-Jahres-Überleben ~13 %)."
+      ],
+      "deemphasized_notes": [
+        "Exakte Zentimeterangaben (z. B. 13–15 cm Pankreas) sowie exakte Wirbelhöhen sind relativ akademisch; die Treitz-Hernie im Recessus duodenalis superior wurde nur nebenbei erwähnt."
+      ]
+    },
+    {
+      "id": "stockmann_duenndarm",
+      "themenblock": "TB Verdauung",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Dünndarm"
+      ],
+      "source_summaries": [
+        "2025-11-14_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-14"
+      ],
+      "exam_highlights": [
+        "Jejunum (~2/5) und Ileum (~3/5 bis Valva ileocaecalis) liegen intraperitoneal an der Radix mesenterii; das Jejunum zeigt hohe Plicae circulares und fingerförmige Zotten, das Ileum kaum Plicae, dafür antimesenteriale Peyer-Plaques (50–100 aggregierte Lymphfollikel mit Domregion ohne Zotten/Krypten/Becherzellen und mit M-Zellen, die in der Prüfung erwähnt werden sollten).",
+        "Histologische Erkennungsmerkmale: Die Lamina muscularis mucosae ist hochcharakteristisch für den Darm, und die Orientierung der Tunica muscularis (innen zirkulär, außen longitudinal) zeigt im Schnitt Längs- vs. Querschnitt an; Plicae, Zotten (~1 mm), Lieberkühn-Krypten (~0,3 mm) und Mikrovilli vergrößern die Oberfläche auf ~4 m².",
+        "Gefäß- und Lymphwege: Venöses Blut fließt über V. mesenterica sup. und V. splenica in die V. portae (Nährstoffe, Alkohol, orale Medikamente); Fette gelangen über die zentrale Zottenlymphkapillare → mesenterische LK → Truncus intestinalis → Cisterna chyli → Ductus thoracicus → linker Venenwinkel.",
+        "Vegetative Ausnahme im Darm: Der Sympathikus (präganglionär kurz, prävertebrale Ganglien) wirkt im Darm hemmend auf die Motilität, der Parasympathikus (N. vagus bis distales Kolon, präganglionär lang) fördert sie über den Plexus myentericus (Auerbach)."
+      ],
+      "clinical_pearls": [
+        "Das Meckel-Divertikel im Ileum (Relikt des Ductus omphaloentericus/vitellinus, Rückbildung 6.–8. SSW) kann sich entzünden und eine Appendizitis imitieren.",
+        "Dank des intramuralen Plexus myentericus (Auerbach, „Darmgehirn“) bleibt die Peristaltik auch bei Querschnittslähmung erhalten.",
+        "Zöliakie (HLA-DQ2/DQ8) verursacht Zottenatrophie, Malabsorption, Anämie, Durchfall und Wachstumsstörungen bei Kindern; Ausfall der täglichen ~5,5 L Flüssigkeitsrückresorption (z. B. Cholera) ist lebensbedrohlich."
+      ],
+      "deemphasized_notes": [
+        "Die Zusatzfolie zu nicht-zöliakiebedingten Glutensensitivitäten (Weizenallergie, Reizdarmsyndrom/FODMAP, Dermatitis herpetiformis, Hashimoto/Diabetes, Gluten-Ataxie) ist ausdrücklich kein Prüfungsstoff.",
+        "Exakte Zentimeterangaben der Dünndarmabschnitte (besser 2/5 vs. 3/5 merken), die Wirbelhöhe der Radix mesenterii (L2) und Zotten-Turnover-Zahlen bei Zöliakie müssen nicht auswendig gelernt werden."
+      ]
+    },
+    {
+      "id": "stockmann_colon_und_rektum",
+      "themenblock": "TB Verdauung",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Colon und Rektum"
+      ],
+      "source_summaries": [
+        "2025-11-24_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-24"
+      ],
+      "exam_highlights": [
+        "Peritonealverhältnisse (~1,5 m Kolon): Caecum/Colon ascendens und descendens sind sekundär retroperitoneal, Colon transversum (Mesocolon transversum / Radix mesocolica) und sigmoideum (Mesosigmoideum) intraperitoneal; der Recessus intersigmoideus markiert den dahinter liegenden linken Ureter, und Excavatio rectovesicalis bzw. rectouterina (Douglas-Raum) bilden den tiefsten Punkt der Bauchhöhle.",
+        "Kennzeichen und Histologie: Kolon besitzt 3 Tänien (Taenia libera, mesocolica, omentalis), Haustren, Plicae semilunares und Appendices epiploicae (fehlen alle beim Rektum) sowie histologisch nur Krypten ohne Zotten und viele Becherzellen; die Appendix vermiformis (65 % retrozäkal, 30 % kleines Becken) zeigt vollständige Längsmuskulatur und massenhaft Lymphfollikel.",
+        "Rektum, Analkanal und Kontinenz: Rektum (~12 cm, Rectum mobile/fixum, Plicae transversae recti) geht in Zona columnalis (Plexus haemorrhoidalis internus, arteriell), Zona intermedia/alba (Pecten analis, unverhorntes PE, stark schmerzempfindlich, Plexus externus venös) und Zona cutanea über; Kontinenz sichern Sphincter internus/externus, M. puborectalis, Schwellkörper und Sigma-Abknickung.",
+        "Gefäße und Innervation: AMS und AMI anastomosieren über die Riolansche Anastomose (A. colica media ↔ A. colica sinistra); am Cannon-Böhm-Punkt (Flexura coli sinistra) wechselt der Parasympathikus vom N. vagus auf den sakralen Parasympathikus (S2–S4; somatisch N. pudendus)."
+      ],
+      "clinical_pearls": [
+        "Die unteren 2/3 des Rektums drainieren über die V. iliaca interna in die V. cava und umgehen bei Suppositorien den hepatischen First-Pass-Effekt; innere Hämorrhoiden bluten hellrot (3, 7, 11 Uhr), Analfissuren der Zona alba sind extrem schmerzhaft.",
+        "Appendizitis-Schmerz wandert von periumbilikal zum McBurney- bzw. Lanz-Punkt (Psoas-Zeichen; DD: Divertikulitis im linken Unterbauch, Adnexitis, EUG; langes Mesosigmoideum kann Sigmadivertikulitis rechts vortäuschen); digital tastet man rektal bis zur Plica transversa recti media (6–7 cm).",
+        "Enge Nachbarschaft von Gallenblase und Flexura coli dextra ermöglicht bei Cholezystitis Fisteln ins Kolon; im Präpariersaal zum Auffinden der meist retrozäkalen Appendix (65 %) das Caecum anheben."
+      ],
+      "deemphasized_notes": [
+        "Einzelheiten zu den zahlreichen arteriellen Variationen der Kolonversorgung müssen nicht im Detail gelernt werden."
+      ]
+    },
+    {
+      "id": "wagner_kauen_schmecken_riechen",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Kauen, Schmecken, Riechen"
+      ],
+      "source_summaries": [
+        "2025-11-13_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-13"
+      ],
+      "exam_highlights": [
+        "Speichel (0,5–1,5 L/Tag, v. a. submandibulär): Der isotone Primärspeichel (~40 mmol/L HCO₃⁻) wird in Ausführungsgängen durch NaCl-Resorption (Aldosteron-gesteigert) und aktive HCO₃⁻-Sekretion hypoton und alkalisch; Statherine ermöglichen Zahnremineralisierung, Parasympathikus (ACh) liefert viel wässriges Sekret, Sympathikus (NA/β) wenig muköses Sekret.",
+        "Geschmack: 6 Modalitäten (Süß, Salzig, Sauer, Bitter, Umami = Glutamat, Fett) gleichmäßig über die Zunge verteilt; Geschmacksknospen sitzen auf Wall-, Pilz- und Blätterpapillen (Fadenpapillen nur mechanisch), wobei nur Typ-II- (Süß/Umami/Bitter/Salzig → ATP) und Typ-III-Zellen (Sauer → Serotonin) Rezeptoren/Kanäle tragen (Typ I = Stützzellen, Typ IV = Basalzellen).",
+        "Weitere Chemo-/Thermosensoren: TRPV1 detektiert Capsaicin (Chili), Wärme und sauren pH; TRPM8 detektiert Menthol und Kälte; das geschmacksgekoppelte G-Protein Gustducin kommt auch extralingual vor (z. B. Darm, Hoden, Knochen, Auge).",
+        "Geruch: Ca. 30 Mio. Riechzellen am Nasendach mit ~400 GPCR-Riechrezeptoren zeigen schnelle Adaptation und projizieren über den Bulbus olfactorius (Glomeruli, Büschel-/Mitralzellen, Körnerzell-Modulation) in limbisches System, Hippocampus, piriformen/orbitofrontalen Cortex und Hypothalamus."
+      ],
+      "clinical_pearls": [
+        "Atropin (muskarinerger ACh-Antagonist) hemmt die Speichelsekretion vor Intubation/OP zur Aspirationsprophylaxe; auch Antidepressiva, Cannabis, Mumps und das Sjögren-/Sicca-Syndrom vermindern den Speichelfluss.",
+        "Ein Mangel an Statherinen im Speichel fördert die Präzipitation von Ca²⁺ und Phosphat in den Zahnzwischenräumen und damit die Entstehung von Zahnstein."
+      ],
+      "deemphasized_notes": [
+        "Die alte „Zungenlandkarte“ und die Folienangabe, Typ-I-Zellen der Geschmacksknospen trügen Rezeptoren, sind ausdrücklich falsch bzw. zu streichen; für die Geruchsanzahl gilt als sicherere Prüfungsantwort 10.000 statt 1 Billion.",
+        "Feindetails der intrazellulären Geschmackssignaltransduktion sowie sämtliche Einzelpfeile des multimodalen Verschaltungsschemas müssen nicht genau gewusst werden (wichtig sind die gemeinsamen Projektionen in limbisches System, Hypothalamus und Hippocampus)."
+      ]
+    },
+    {
+      "id": "wagner_schlucken_oesophagus",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Schlucken, Propulsion Peristaltik des Oesophagus"
+      ],
+      "source_summaries": [
+        "2025-11-13_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-13"
+      ],
+      "exam_highlights": [
+        "Der Ösophagus verfügt über einen oberen (OÖS) und unteren Ösophagussphinkter (UÖS) sowie quergestreifte Muskulatur im oberen Drittel (willkürlich) gegenüber glatter Muskulatur in den unteren zwei Dritteln (vegetativ).",
+        "Die 3 Schluckphasen (oral willkürlich; pharyngeal unwillkürlich mit Epiglottisverschluss und OÖS-Öffnung; ösophageal mit Peristaltik gegen die Schwerkraft, ~10 s in der Manometrie) werden vom Schluckzentrum im Hirnstamm mit Atem- und Brechzentrum koordiniert.",
+        "Die Ösophagus-Clearance gegen Magensäure stützt sich auf Speichelschlucken, einen Motilitätsanstieg bei Säurereiz und das mehrschichtige Plattenepithel im unteren Drittel."
+      ],
+      "clinical_pearls": [
+        "Achalasie kombiniert gestörte Ösophagusmotilität mit fehlender Relaxation des UÖS und führt zu massivem Speisestau sowie Dehnung oberhalb des UÖS im Bariumschluck.",
+        "Chronischer Reflux (GERD) durch UÖS-Insuffizienz oder Hernie kann zu Ulzerationen und Barrett-Ösophagus (Karzinom-Vorstufe) führen; abends keinen Alkohol (erschlafft UÖS) oder schwere Spätmahlzeiten, Säurehemmung bzw. Ultima Ratio Fundoplikatio.",
+        "Bei tiefer Bewusstlosigkeit (Intoxikation, Anästhesie) fällt der Schluck-/Schutzreflex aus, sodass aspirierter Mageninhalt eine hochlethale Aspirationspneumonie auslöst."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "wagner_magenfuellung_magensaft",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Magenfüllung und Magensaftsekretion"
+      ],
+      "source_summaries": [
+        "2025-11-14_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-14"
+      ],
+      "exam_highlights": [
+        "Magenmotorik und Entleerung: Speicher, Propulsion, Quetschen am verengten Pylorus und Retropulsion; flüssige Nahrung passiert schneller als feste, während Fett und Ballaststoffe die Magenentleerung verzögern und das Sättigungsgefühl verlängern.",
+        "Zelltypen und HCl-Sekretion: Belegzellen fusionieren bei Stimulation Vesikel in Canaliculi („Farnblattstruktur“) zur Sekretion von HCl (H⁺/K⁺-ATPase, K⁺-Recycling, apikaler Cl⁻-Kanal, Carboanhydrase; pH 1–2 zur Denaturierung/Immunabwehr) und Intrinsic Factor; Hauptzellen liefern Pepsinogen (Schneeballaktivierung), G-Zellen Gastrin, ECL-Zellen Histamin und D-Zellen hemmendes Somatostatin.",
+        "Regulation und Schleimhautschutz: ACh, Gastrin und Histamin (inkl. Dehnung, Eiweiß, Alkohol/Röststoffe) stimulieren in kephaler, gastraler und intestinaler Phase, während Somatostatin, GIP, Neurotensin und Sekretin hemmen; Prostaglandin E₂ sichert den Schutzfilm aus Mukus und HCO₃⁻."
+      ],
+      "clinical_pearls": [
+        "Die basolaterale HCO₃⁻-Abgabe der Belegzellen erzeugt nach dem Essen eine postprandiale Alkalose (*alkaline tide*, Maximum nach 30–45 Min.) mit leichter Minderung der Hirndurchblutung („postprandiales Koma“); dank CO₂-Impermeabilität der apikalen Mukosa entweicht geschluckte Kohlensäure nach oben.",
+        "Chronische (> 7 Tage) COX-Inhibitoren (ASS, Ibuprofen, Diclofenac, Paracetamol) oder Glukokortikoide hemmen Prostaglandin E₂ bzw. die Schutzschicht und fördern Ulzera; *Helicobacter pylori* neutralisiert Säure mittels Urease (Ammoniak, pH 9).",
+        "Langzeit-PPI-Therapie (irreversible Hemmung der H⁺/K⁺-ATPase) birgt Risiken für Hypomagnesiämie und chronischen Nierenschaden; Alternative sind H₂-Rezeptorantagonisten."
+      ],
+      "deemphasized_notes": [
+        "Genaue intrazelluläre Signalkaskaden in Belegzellen für ACh/Gastrin vs. Histamin (cAMP) sowie der biochemische Prostaglandin-Syntheseweg (COX) müssen nicht auswendig gelernt werden."
+      ]
+    },
+    {
+      "id": "wagner_exokrines_pankreas",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Exokrine Pankreasfunktion"
+      ],
+      "source_summaries": [
+        "2025-11-14_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-14"
+      ],
+      "exam_highlights": [
+        "Das exokrine Pankreas (80–90 % der Organmasse, bis zu 2 L/Tag) sezerniert inaktive Zymogene, die erst im Duodenum durch Enteropeptidase → Trypsin im Schneeballprinzip aktiviert werden.",
+        "Das Gangsystem reichert den Pankreassaft auf das 6–7-fache der Plasma-HCO₃⁻-Konzentration an, indem CFTR über die WNK-Kinase auf Bicarbonat-Sekretion umgeschaltet wird.",
+        "Die drei wichtigsten Regulatoren zum Merken sind N. vagus (ACh), Cholezystokinin (CCK) und Sekretin (daneben VIP)."
+      ],
+      "clinical_pearls": [
+        "Gallensteine im gemeinsamen Ausführungsgang stauen zurück und aktivieren vorzeitig Trypsinogen zu Trypsin (akute Pankreatitis/Selbstverdau); chronische Schädigung (v. a. Alkohol) führt zu Diabetes und Vitamin-A/D/E/K-Mangel (klinisch v. a. D/Knochen und K/Gerinnung).",
+        "Mukoviszidose (autosomal-rezessiv, ~80 % ΔF508-Mutation im CFTR-Gen) verursacht Pankreasinsuffizienz, Gallestau, Lungeninfekte, Mekoniumileus bei Geburt und positiven Pilocarpin-Schweißtest; chemische Chaperone korrigieren ~90 % der Mutationen innerhalb von 14 Tagen deutlich."
+      ],
+      "deemphasized_notes": [
+        "Die Vielzahl einzelner Pankreas-Transporter muss nicht auswendig gelernt werden – entscheidend ist allein der CFTR-Kanal und seine Umschaltung auf Bicarbonat via WNK-Kinase."
+      ]
+    },
+    {
+      "id": "wagner_leber_galle",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Leber, Gallenproduktion und -sekretion"
+      ],
+      "source_summaries": [
+        "2025-11-20_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-20"
+      ],
+      "exam_highlights": [
+        "Säure-Basen-Kopplung der Ammoniak-Entgiftung: Der Harnstoffzyklus verbraucht große Mengen HCO₃⁻ und wird bei Azidose herunterreguliert, sodass Ammoniak über Glutamin-Synthese entgiftet wird und die Niere daraus NH₄⁺ (Urin) sowie neues HCO₃⁻ (Blut) gewinnt.",
+        "Die Galle (in der Gallenblase als reinem Speicher eingedickt, durch CCK ausgeschüttet) ermöglicht über primäre/sekundäre Gallensalze im enterohepatischen Kreislauf die Mizellenbildung für Lipasen sowie die Resorption von Fetten und Vitamin A, D, E und K.",
+        "Bilirubin und Ikterus-Typen: Prähepatisch (Hämolyse → unkonjugiertes Bilirubin ↑), intrahepatisch (unkonjugiert wie bei Gilbert-Meulengracht oder konjugiert ↑) und posthepatisch (Gallenstein, Tumor → konjugiertes Bilirubin ↑; Abbau über Urobilinogen/Sterkobilin).",
+        "Phase I (Oxidation/Hydrolyse) und Phase II (Konjugation) steuern die Ausscheidung über Niere vs. Galle und führen bei Multimorbidität/Polypharmazie zu Transporter-Konkurrenz."
+      ],
+      "clinical_pearls": [
+        "Cholestase verursacht hellen/weißlichen Stuhl (fehlendes Sterkobilin), dunklen Urin, Juckreiz, langfristig Mangel an Vitamin A, D, E und K (v. a. Knochen/D und Gerinnung/K) sowie bei Fettmalabsorption sekundäre Kalziumoxalat-Nierensteine (freie Fettsäuren binden Ca²⁺ im Darm, Oxalat wird resorbiert).",
+        "Beim physiologischen Neugeborenenikterus (ab Tag 2–3 durch HbF-Abbau und unreife Leberenzyme) droht wegen durchlässiger Blut-Hirn-Schranke ein Kernikterus → Monitoring und UV-Lichttherapie.",
+        "Steckt ein Gallenstein im gemeinsamen Endgang von Ductus choledochus und pancreaticus, droht eine akute Pankreatitis → Therapie mittels ERCP, Sphinkterotomie und Steinextraktion."
+      ],
+      "deemphasized_notes": [
+        "Einzelne Leber-/Gallentransporter (wie MRP2) sowie extrem seltene angeborene Leberstoffwechselstörungen (Crigler-Najjar- oder Dubin-Johnson-Syndrom) müssen ausdrücklich nicht gelernt werden."
+      ]
+    },
+    {
+      "id": "wagner_duenndarmfunktion",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Dünndarmfunktion"
+      ],
+      "source_summaries": [
+        "2025-11-20_TB_Verdauung.md",
+        "2025-11-21_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-20",
+        "2025-11-21"
+      ],
+      "exam_highlights": [
+        "Im Dünndarm (~250 m² Fläche, min. ~1 m nötig) neutralisiert CFTR-abhängiges HCO₃⁻ die H⁺- und Ca²⁺-Ionen in Becherzell-Vesikeln, wodurch sich Mucine elektrisch abgestoßen zur Schutzschicht entfalten; Di-/Tripeptide werden über PEPT1, Monosaccharide über SGLT1 (Na⁺-abhängig: Glukose, Galaktose) und GLUT2 (Glukose, Galaktose, Fruktose) aufgenommen.",
+        "Vitamin B12 bindet im Speichel an Haptocorrin (Schutz vor Magensäure), wird im Duodenum durch Trypsin auf Intrinsic Factor umgeladen und im terminalen Ileum über den Cubam-Rezeptor endozytiert.",
+        "Eisenhaushalt (10–15 mg/d Zufuhr, ~1 mg/d Absorption, bei Menstruation 4–5 mg/d Verlust): Fe³⁺ wird via Ferrireduktase (obligater Kofaktor Vitamin C) zu Fe²⁺ reduziert, als Fe²⁺/H⁺-Symport aufgenommen, an Ferritin gebunden, basolateral über Ferroportin exportiert, durch kupferabhängiges Hephaestin reoxidiert und an Transferrin gebunden; Hepcidin aus der Leber hemmt Ferroportin.",
+        "Mineralien (Ca²⁺, Mg²⁺, Phosphat): Calcium (~150 mg/d netto) wird transzellulär oder parazellulär (Claudine) aufgenommen und durch Calcitriol, Schilddrüsen- und Sexualhormone gefördert (hohe Glukokortikoide hemmen); anorganische Phosphatzusätze sind zu 80–100 % bioverfügbar (vs. ~10 % bei Phytaten)."
+      ],
+      "clinical_pearls": [
+        "Antibiotika und ACE-Hemmer konkurrieren am PEPT1 mit Peptiden und müssen vor dem Essen eingenommen werden; bei Glukose-Galaktose-Malabsorption bleibt nur Fruktose (pharmakologische SGLT1-Hemmung scheiterte an Durchfall/Gasen); Laktoseintoleranz (physiologische Laktase-Downregulation) wird mittels H₂-Atemtest nachgewiesen.",
+        "Bei oral therapieresistentem Eisenmangel an Vitamin-C- oder Kupfermangel (Hephaestin) denken; Hepcidin-Mutationen führen zur Hämochromatose („Bronzediabetes“); bei Magenatrophie/Omeprazol/Crohn wird Vitamin B12 intramuskulär gegeben.",
+        "Cystinurie (2–3 % aller Nierensteine) betrifft Darm und Niere; parazellulär unreguliert aufgenommene anorganische Phosphate aus Fleischzusätzen steigern Sympathikotonus, Blutdruck und kardiovaskuläres Risiko."
+      ],
+      "deemphasized_notes": [
+        "Einzelne Aminosäuretransporter (außer Cystinurie/PEPT1), konkrete Namen der Phosphat-Transporter und die komplette Liste aller Ca²⁺-Regulatoren (Fokus: Calcitriol, Schilddrüsen-, Sexualhormone, Glukokortikoide) müssen nicht gelernt werden; die hormonelle Regulation des Magnesiumhaushalts ist unbekannt („Blackbox“)."
+      ]
+    },
+    {
+      "id": "wagner_dickdarmfunktion",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Dickdarmfunktion"
+      ],
+      "source_summaries": [
+        "2025-11-21_TB_Verdauung.md",
+        "2025-11-24_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-21",
+        "2025-11-24"
+      ],
+      "exam_highlights": [
+        "Wasser- und Elektrolyttransport: Im Dickdarm werden ~1–1,5 L Wasser/Tag (Stuhl 100–200 ml/d) über Aquaporine und Tight Junctions/Claudine (~6 zusätzliche Na⁺ parazellulär pro ATP der Na⁺/K⁺-ATPase) resorbiert; proximal erfolgt elektroneutrale NaCl-Aufnahme, distal elektrogene Na⁺-Aufnahme über ENaC (Aldosteron) plus aktive K⁺-Sekretion (bis 10 % der K⁺-Ausscheidung).",
+        "Kryptenzellen sezernieren aktiv Cl⁻ über CFTR (gekoppelt mit K⁺-Kanal, stimuliert durch cAMP, cGMP und VIP) plus parazelluläres Na⁺/H₂O; sekretorische Diarrhöen nutzen diesen Weg bei Choleratoxin (cAMP + VIP/Serotonin), Rotavirus (VIP/Serotonin + Brechzentrum) und hitzestabilem *E.-coli*-Enterotoxin (Guanylatzyklase → cGMP).",
+        "Mikrobiom (0,5–1 kg Bakterien) und Ballaststoffe (SGE ≥ 30 g/d; Prä- vs. Probiotika): Bakterien verdrängen Pathogene, liefern Vitamine (Folat, Biotin, Vit. K), bilden sekundäre Gallensalze und fermentieren Ballaststoffe zu kurzkettigen Fettsäuren (Butyrat, Propionat, Laktat), die lokal Glukoneogenese im Dickdarm speisen und damit über die Pfortader die hepatische Glukoneogenese hemmen.",
+        "Stuhlnorm (2–3×/d bis 2–3×/Woche) und Diarrhö (> 700 g/d): Man unterscheidet sekretorische, osmotische (Laktoseintoleranz, Mg²⁺/Vit. C), Motilitäts-bedingte und entzündliche Diarrhö sowie Dysenterie (blutig bei schwerer Epithelschädigung)."
+      ],
+      "clinical_pearls": [
+        "Chronischer Laxanzienabusus erzeugt eine Hypokaliämie, die die glatte Darmmuskulatur lähmt und Obstipation verstärkt; extremer Sympathikus-Stress kann paradox durch fehlende Peristaltik („glattes Rohr“) eine sekundär osmotische Diarrhö auslösen.",
+        "Hitzestabiles *E.-coli*-Enterotoxin in lange stehenden Speisen bleibt nach dem Aufwärmen aktiv und wirkt rasch über cGMP; bei Mukoviszidose verhindert der CFTR-Defekt die Kryptensekretion (Mekoniumileus).",
+        "Hoher Ballaststoffkonsum kann als unerwünschte Nebenwirkung Eisen im Darmlumen binden und die Eisenresorption reduzieren."
+      ],
+      "deemphasized_notes": [
+        "Die ~30 verschiedenen Claudin-Typen sowie Namen und Details seltener angeborener Defekte der Cl⁻/HCO₃⁻-Austauscher im proximalen Kolon müssen nicht auswendig gelernt werden."
+      ]
+    },
+    {
+      "id": "wagner_regulation_koordination",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Regulation und Koordination der Verdauung"
+      ],
+      "source_summaries": [
+        "2025-11-13_TB_Verdauung.md",
+        "2025-11-26_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-13",
+        "2025-11-26"
+      ],
+      "exam_highlights": [
+        "Überblick und Phasen: Die 4 Hauptfunktionen (Digestion, Absorption, Sekretion, Motilität) werden über kephale (N. vagus), gastrale und intestinale Phase koordiniert; von 1–2 L Aufnahme + 8–9 L Sekreten werden 90 % im Dünndarm rückresorbiert (~100 mL/d im Stuhl; Verweildauer Dünndarm 1–2 h, Dickdarm 0,5–4 Tage).",
+        "Enterisches und vegetatives Nervensystem: Plexus myentericus steuert Motilität (Dehnungsreiz → proximal Kontraktion, distal Relaxation = aborale Propulsion), Plexus submucosus Sensorik, Sekretion und Resorption; Parasympathikus (ACh) fördert, Sympathikus (NA über α₁) hemmt Motilität/Sekretion und erhöht Sphinktertonus.",
+        "Motilitätsmuster und Reflexe: Schrittmacherzellen (Magen ~3/min, Frequenzabfall nach distal, elektrische Isolation am Pylorus) werden durch ACh aktiviert und durch NA gehemmt; zwischen Mahlzeiten läuft alle ~90 Min. der Motilin-gesteuerte wandernde myoelektrische Motorkomplex (MMC), ergänzt durch Massenbewegungen (5–10×/d), gastrokolischen (Feedforward) sowie kolono-ilealen und enterogastrischen Reflex (Feedback)."
+      ],
+      "clinical_pearls": [
+        "Die vegetative Schrittmacher-Regulation im Darm ist umgekehrt zum Herzen: Noradrenalin (α₁) hemmt die Schrittmacheraktivität im Darm, Acetylcholin aktiviert sie.",
+        "Endogene und exogene Opioide hemmen Peristaltik und Sekretion, steigern die Wasserresorption sowie den Tonus des unteren Ösophagus- und Analsphinkters und führen typischerweise zu Obstipation.",
+        "Magenknurren entsteht durch den Motilin-gesteuerten MMC zur Selbstreinigung im Nüchternzustand, nicht primär als Hungersignal; chronisches Erbrechen (z. B. Bulimie) bewirkt Flüssigkeitsverlust, Hypokaliämie, Alkalose, Gaumenulzerationen und Zahnschmelzerosionen."
+      ],
+      "deemphasized_notes": [
+        "Anatomische Detailverläufe der vegetativen Leitungsbahnen zum Darm müssen nicht verfolgt werden (Fokus liegt auf der lokalen Darmsteuerung)."
+      ]
+    },
+    {
+      "id": "wagner_hunger_saettigung",
+      "themenblock": "TB Verdauung",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Hunger und Sättigung"
+      ],
+      "source_summaries": [
+        "2025-11-26_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-26"
+      ],
+      "exam_highlights": [
+        "Hypothalamische Integration: Das laterale Hypothalamuszentrum steuert Hunger, das ventromediale Sättigung; im Nucleus arcuatus wirken orexigene NPY/AgRP-Neurone gegensätzlich zu anorexigenen POMC/α-MSH-Neuronen am MC4-Rezeptor.",
+        "Periphere Signale (*Satiation* innerhalb einer Mahlzeit vs. *Satiety* bis zur nächsten): Ghrelin (einziges Hungerhormon aus Magen/Pankreas, durch Dehnung über Piezo-Kanäle gehemmt) steht CCK (Fettsäuren), den Inkretinen GLP-1 und GIP, PYY sowie Leptin (weißes Fettgewebe) gegenüber.",
+        "Die Energiebilanz unterliegt zudem Mikrobiom-Signalen, erlerntem/sozialem Verhalten und 600–800 überwiegend im ZNS exprimierten BMI-assoziierten Genen."
+      ],
+      "clinical_pearls": [
+        "GLP-1 + GIP-Ko-Agonisten erzielen > 12 kg Gewichtsverlust in ~9 Monaten (mit Rebound nach Absetzen); DPP-4 baut endogenes GLP-1/GIP in 10–15 Min. ab (hemmbar durch Vildagliptin), und GLP-1 wirkt zudem kardio-/neuroprotektiv sowie natriuretisch.",
+        "Stark erniedrigtes Leptin verursacht Osteoporose und Amenorrhö (monogenetischer Leptinmangel ist mit Leptin behandelbar, Leptinrezeptor- und MC4R-Mutationen nicht); Schlafmangel steigert bei Männern Ghrelin und senkt bei Frauen GLP-1.",
+        "Die U-förmige BMI-Sterblichkeitskurve ist ein Artefakt schwerer Vorerkrankungen (Messung der Fettmasse zeigt einen linearen Risikoanstieg)."
+      ],
+      "deemphasized_notes": [
+        "Es müssen nicht alle Darmhormone im Detail gekannt werden – entscheidend sind die ausführlich besprochenen Signale Ghrelin, CCK, GLP-1, GIP, PYY und Leptin."
+      ]
+    },
+    {
+      "id": "dutzler_makronaehrstoffe",
+      "themenblock": "TB Verdauung",
+      "dozent": "Dutzler",
+      "subdeck_patterns": [
+        "Makronährstoffe / Dutzler"
+      ],
+      "source_summaries": [
+        "2025-11-19_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-19"
+      ],
+      "exam_highlights": [
+        "Triglyceride (Brennwert 37 kJ/g) werden bis zum β-Monoacylglycerid gespalten und so in Enterozyten resorbiert; physiologische Doppelbindungen sind nicht-konjugiert (CH₂-Gruppe dazwischen → farblos) und liegen in cis-Konfiguration vor (Knick → flüssige Öle; vs. Elaidinsäure/Transfette).",
+        "Die Zählung vom Omega-Ende (z. B. 18:3 ω-3) bleibt bei der Kettenverlängerung um C₂ am Carboxylende konstant; da menschliche Desaturasen nur bis ω-9 arbeiten, sind Linolsäure (ω-6), α-Linolensäure (ω-3) und bedarfsbedingt Arachidonsäure (ω-6) essentiell.",
+        "Alkohol (Brennwert 29 kJ/g, „leere Kalorien“) hat eine geschlechtsabhängige Verträglichkeitsgrenze (~20 g/Tag beim Mann vs. ~10 g/Tag bei der Frau wegen geringerer Körpermasse, höherem Fettanteil und geringerer hepatischer ADH-Aktivität) und verursacht diuretische Verluste von K⁺, Mg²⁺ und Zn²⁺."
+      ],
+      "clinical_pearls": [
+        "Ein Quotient Meadsäure (ω-9) / Arachidonsäure (ω-6) > 0,4 zeigt einen Mangel an essentiellen Fettsäuren an; Linolsäure/α-Linolensäure > 5:1 hemmt kompetitiv die ω-3-Reihe (EPA/DHA), und > 3 % Nahrungsenergie aus ω-3 erhöht das Blutungsrisiko sowie T-Zell-vermittelte Immunsuppression.",
+        "Transfettsäuren (industrielle Härtung sowie Milch/Fleisch von Wiederkäuern) erhöhen LDL und senken HDL; beim „French Paradox“ hemmen Rotwein-Polyphenole Endothelin-1 (weniger Vasokonstriktion), nicht Ethanol."
+      ],
+      "deemphasized_notes": [
+        "Genaue Verhältniszahlen von mehrfach ungesättigten : einfach ungesättigten : gesättigten Fettsäuren sowie altersabhängige Fettzufuhr-Prozentangaben (10 %, 7–10 %, 10–13 %) müssen nicht im Detail gewusst werden."
+      ]
+    },
+    {
+      "id": "dutzler_fettloesliche_vitamine",
+      "themenblock": "TB Verdauung",
+      "dozent": "Dutzler",
+      "subdeck_patterns": [
+        "1 fettlösliche Vitamine"
+      ],
+      "source_summaries": [
+        "2025-11-19_TB_Verdauung.md",
+        "2025-11-20_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-19",
+        "2025-11-20"
+      ],
+      "exam_highlights": [
+        "Vitamin A (all-trans-Retinol/Retinal, Carotinoide/β-Carotin; Transport via RBP/Albumin/Lipoproteine) absorbiert dank konjugierter Doppelbindungen sichtbares Licht (Basis des Sehprozesses/Rhodopsin); wegen Speicherung fettlöslicher Vitamine ist Vitamin-A-Überdosierung toxisch (v. a. teratogen in der Schwangerschaft).",
+        "Vitamin D (Cholecalciferol D₃ aus Cholesterin via UV-Licht in der Haut bzw. Ergocalciferol D₂) wird in Leber und Niere zweistufig zu Calcitriol hydroxyliert und steuert die Ca²⁺-/Phosphat-Homöostase.",
+        "Vitamin E (Tocopherole/Tocotrienole) unterbricht in Membranen die Lipidperoxidations-Kettenreaktion, wobei Vitamin C das Tocopherolradikal regeneriert; eine Überdosierung ist nicht toxisch.",
+        "Vitamin K (Phyllochinon K₁, Menachinon K₂, Menadion) dient der γ-Glutamylcarboxylase als Kofaktor zur Ca²⁺-Bindung der Gerinnungsfaktoren II, VII, IX, X und von Osteocalcin und wird im Epoxid-Zyklus durch die Epoxid-Reduktase regeneriert."
+      ],
+      "clinical_pearls": [
+        "Vitamin-A-Mangel führt über gestörte Rhodopsin-Regeneration zu Nachtblindheit (Hemeralopie) und über Schleimhautverhornung zu Xerophthalmie (Erblindungsgefahr).",
+        "Vitamin-D-Mangel bewirkt bei Kindern eine Rachitis (offene Wachstumsfugen, O-Beine, rachitischer Rosenkranz, Froschbauch) und bei Erwachsenen eine Osteomalazie (Looser-Umbauzonen; nur Mineralgehalt reduziert, nicht gesamte Matrix wie bei Osteoporose).",
+        "Vitamin-E-Mangel tritt v. a. bei chronischen Darmmukosa-Erkrankungen auf und führt zu hämolytischer Anämie; Warfarin hemmt die Vitamin-K-Epoxid-Reduktase (bakterielles K₂ im Dickdarm wird mangels Resorption kaum aufgenommen)."
+      ],
+      "deemphasized_notes": [
+        "Auswendiges Zeichnen chemischer Vitaminstrukturen, konkrete Zufuhrmengen und Vitamin-Äquivalente müssen nicht gewusst werden.",
+        "Detailnamen ohne Funktionsbezug wie Jononring, Hitzestabilitätswerte von Carotinoiden/Cryptoxanthin sowie die 4 einzelnen Tocopherol-Vitamere samt Wirksamkeitstabelle sind nicht im Detail zu lernen."
+      ]
+    },
+    {
+      "id": "dutzler_wasserloesliche_vitamine",
+      "themenblock": "TB Verdauung",
+      "dozent": "Dutzler",
+      "subdeck_patterns": [
+        "2 wasserlösliche Vitamine"
+      ],
+      "source_summaries": [
+        "2025-11-20_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-20"
+      ],
+      "exam_highlights": [
+        "Wasserlösliche Vitamine werden nicht gespeichert (Ausnahme Vitamin B12: 3–5 Jahre in Leber/Muskel über Transcobalamin I & III), gehen im Kochwasser verloren und wirken als Kofaktoren: B1 (TDP), B2 (FMN/FAD), B3 (NAD/NADH, teils aus Tryptophan), B6 (PLP: Aldehydgruppe für Transaminasen/Decarboxylasen vs. Phosphatgruppe für Glykogenphosphorylase), Biotin (Carboxylasen) und Pantothensäure (CoA).",
+        "Vitamin B12 (Corrinring + Kobalt; Kaskade Haptocorrin → Trypsin → Intrinsic Factor → Ileum/Cubam-Rezeptor, Bluttransport via Transcobalamin II) und Folsäure (THF) wirken mit B6 bei der Homocystein-Entgiftung zusammen; hohe Folsäure-Zufuhr (> 1 mg/d) kann die megaloblastäre Anämie eines B12-Mangels maskieren.",
+        "Vitamin C (Ascorbinsäure; Gulonolacton-Oxidase fehlt beim Menschen, Menschenaffen, Meerschweinchen) wird für Kollagen-Hydroxylierung (Prolin/Lysin), Fe³⁺ → Fe²⁺-Reduktion und Vitamin-E-Regeneration benötigt."
+      ],
+      "clinical_pearls": [
+        "B1-Mangel verursacht Beriberi (feuchte vs. trockene Form) und bei Alkoholikern Neuropathie (~50 %) sowie Enzephalopathie/Psychosen; B2 ist lichtempfindlich (Mundwinkelrhagaden, dunkle Milchverpackung); B3-Mangel führt zu Pellagra („3 D“ + Himbeerzunge; ausgelöst u. a. durch Isoniazid, 5-FU, Hydantoin).",
+        "B12-Mangel (Veganer, Autoimmungastritis, Magen-OP, Omeprazol, Crohn/Zöliakie) erfordert bei Aufnahmestörung i.m.-Injektionen; Folsäuremangel in der Schwangerschaft bedingt Neuralrohrdefekte (Anenzephalie, Spina bifida aperta).",
+        "Avidin im rohen Ei bindet Biotin fest bis zur Hitzedenaturierung; Vitamin-C-Mangel führt zu Skorbut bzw. Möller-Barlow-Krankheit bei Kleinkindern."
+      ],
+      "deemphasized_notes": [
+        "Referenzwerte und empfohlene Zufuhrmengen (K, B1, B2, Niacin, B6, B12, Pantothensäure) sowie die genauen beladenen THF-Formen (N5 vs. N10) der Folsäure müssen nicht gewusst werden."
+      ]
+    },
+    {
+      "id": "dutzler_ernaehrung",
+      "themenblock": "TB Verdauung",
+      "dozent": "Dutzler",
+      "subdeck_patterns": [
+        "Ernährung / Dutzler"
+      ],
+      "source_summaries": [
+        "2025-11-26_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-26"
+      ],
+      "exam_highlights": [
+        "Vegetarische und vegane Ernährungsformen (Ovo-, Lakto-, Lakto-Ovo-Vegetarier, Veganer inkl. Honig, Rohköstler) erfordern Aufmerksamkeit für die biologische Wertigkeit pflanzlicher Proteine, Vitamin D/B12 sowie die schlechtere Bioverfügbarkeit von Nicht-Häm-Eisen.",
+        "Kochen/Erhitzen verbessert die Verdaulichkeit durch Denaturierung, tötet Keime ab und inaktiviert pflanzliche Schadstoffe (Peptidase-Inhibitoren, Lektine, Alkaloide/Solanin, Blausäureglykoside/HCN, Oxal-/Phytinsäure).",
+        "Hitzeinduzierte Schadstoffe entstehen beim Grillen bei 300–600 °C (Benzpyren → Benzpyrendiolepoxid → DNA-Interkalation) und über die Maillard-Reaktion (reduzierende Zucker + Aminogruppen → Aromastoffe/Melanoide sowie Acrylamid aus Glukose + Asparagin).",
+        "Lebensmittelzusatzstoffe (E-Nummern mit ADI-Werten, u. a. Farbstoffe 100–199, Konservierung, Antioxidanzien, Emulgatoren, Verdickungsmittel, Glutamat; Verbote in Bio-/Frischprodukten), funktionelle Lebensmittel und Gentechnik."
+      ],
+      "clinical_pearls": [
+        "Cyanid (Blausäure aus Bittermandeln/Steinkernen) blockiert das dreiwertige Eisen der Cytochrom-c-Oxidase und wird über Sulfurtransferasen zu unschädlichem Isothiocyanat entgiftet.",
+        "Acrylamid entsteht beim Frittieren (Pommes frites, Chips) aus Glukose und Asparagin und könnte schätzungsweise zu ~3 % der Krebsfälle beitragen."
+      ],
+      "deemphasized_notes": [
+        "Konkrete E-Nummern der Lebensmittelzusatzstoffe sowie spezifische Aminosäure-Glukose-Kombinationen für einzelne Maillard-Reaktionsaromen (Steak, Pudding, Brot) müssen ausdrücklich nicht gewusst werden."
+      ]
+    },
+    {
+      "id": "dutzler_spurenelemente_mineralien",
+      "themenblock": "TB Verdauung",
+      "dozent": "Dutzler",
+      "subdeck_patterns": [
+        "Spurenelemente&Mineralien / Dutzler"
+      ],
+      "source_summaries": [
+        "2025-11-26_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-26"
+      ],
+      "exam_highlights": [
+        "Elemente unterteilen sich in Grundelemente (H, C, N, O), Mengenelemente (> 50 mg/kg KG: Na, K, Ca, Mg, P, S, Cl) und Spurenelemente (< 50 mg/kg KG); Eisen zählt trotz ~60 mg/kg KG als Ausnahme zu den Spurenelementen (Häm-Eisen deutlich besser resorbierbar als pflanzliches Eisen).",
+        "Der Körperwasseranteil beträgt ca. 60 % beim Mann, 50 % bei der Frau und 70 % beim Säugling; die Wasserbilanz (~2,6 L/Tag) berücksichtigt auch Oxidationswasser aus der ATP-Synthese/O₂-Reduktion.",
+        "Na⁺ dominiert extrazellulär und im Serum, während K⁺ insgesamt in größerer Menge im Körper vorkommt, aber intrazellulär lokalisiert ist; Zinn wurde explizit als exotisches Spurenelement im Gewebshormon Gastrin genannt."
+      ],
+      "clinical_pearls": [
+        "Fluorid wirkt kariesprophylaktisch durch selektive Hemmung der bakteriellen Enolase von *Streptococcus mutans* (verminderte anaerobe Milchsäurebildung schützt den Zahnschmelz).",
+        "Jodmangel in Schweizer Alpentälern verursachte historisch Kretinismus bei Kindern und Struma/Kropf bei Erwachsenen, bevor er durch Salzjodierung beseitigt wurde."
+      ],
+      "deemphasized_notes": [
+        "Konkrete Zahlenwerte der empfohlenen Tageszufuhr von Mineralstoffen und Natrium (~550 mg/Tag bzw. max. 6 g Kochsalz/Tag) müssen ausdrücklich nicht gewusst werden."
+      ]
+    },
+    {
+      "id": "dutzler_verdauung_absorption",
+      "themenblock": "TB Verdauung",
+      "dozent": "Dutzler",
+      "subdeck_patterns": [
+        "3 Verdauung und Absorption"
+      ],
+      "source_summaries": [
+        "2025-11-26_TB_Verdauung.md",
+        "2025-11-27_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-26",
+        "2025-11-27"
+      ],
+      "exam_highlights": [
+        "Gesamtbilanz (2 L Nahrung + 7 L Sekrete mit bis zu 60 g Enzymen = 9 L; 8,8 L rückresorbiert, 0,2 L im Stuhl) und Resorptionsorte: Vitamin B12 (mit Intrinsic Factor via Endozytose) und Gallensäuren werden im Ileum rückresorbiert.",
+        "Kohlenhydratabbau: Speichel-Amylase (inaktiviert im Magen bei pH 1–4) und Pankreas-Amylase liefern aus Amylose Maltose/Maltotriose und aus Amylopektin zusätzlich Grenzdextrin; Bürstensaumenzyme (Maltase, Saccharase-Isomaltase, Laktase) spalten für SGLT1 (2 Na⁺/Glukose oder Galaktose), GLUT5 (Fruktose) und basolateral GLUT2.",
+        "Proteinverdauung (96 % Verdaulichkeit): Inaktive Zymogene (Pepsinogen autokatalytisch bei pH 1–2; Trypsinogen via Enteropeptidase → Trypsin aktiviert sich selbst, Chymotrypsinogen, Proelastase, Procarboxypeptidasen A/B) spalten spezifisch (Pepsin hydrophob; Trypsin Arg/Lys über Asp; Chymotrypsin aromatisch; Elastase Ala/Val) für AS-Transporter und den H⁺-gekoppelten PepT1 (max. Di-/Tripeptide).",
+        "Lipide und Darmflora: Gallensäuren bilden gemischte Mizellen; in der sauren Grenzschicht an den Enterozyten (Na⁺/H⁺-Austauscher) werden freie Fettsäuren protoniert, diffundieren hinein und bilden Chylomikronen (kurzkettige FS direkt ins Blut); im Kolon bilden ~1,2 kg Bakterien SCFAs, Gase, Indol/Skatol und Fäulnisamine."
+      ],
+      "clinical_pearls": [
+        "Fruktosemalabsorption (GLUT5-Defekt) ist von der hereditären Fruktoseintoleranz (1:20.000, Aldolase-B-Mangel → Fruktose-1-phosphat-Stau mit schwerer Hypoglykämie) abzugrenzen; ebenso der physiologische Laktasemangel Erwachsener von der seltenen kongenitalen Laktoseintoleranz des Säuglings.",
+        "Orlistat (Xenical) hemmt die pankreatische Lipase (Steatorrhö und verminderte Aufnahme fettlöslicher Vitamine; kurzkettige FS umgehen Mizellen und Chylomikronen); Fehlaktivierung von Trypsinogen durch Cathepsin B in Azinuszellen löst akute Pankreatitis aus.",
+        "Resorbierte bakterielle Fäulnisamine (Tyramin, Histamin, Cadaverin, Putrescin) werden hepatisch glucuronidiert → bei Leberversagen droht eine metabolische Enzephalopathie."
+      ],
+      "deemphasized_notes": [
+        "Intakte Proteinaufnahme über M-Zellen/Peyer-Plaques beim Säugling wird ausdrücklich in andere Vorlesungen verwiesen."
+      ]
+    },
+    {
+      "id": "lukic_kaumuskelbeschwerden",
+      "themenblock": "TB Verdauung",
+      "dozent": "Lukic",
+      "subdeck_patterns": [
+        "1 Kaumuskelbeschwerden"
+      ],
+      "source_summaries": [
+        "2025-11-28_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-28"
+      ],
+      "exam_highlights": [
+        "Biomechanik und Nomenklatur: Der Unterkiefer ist über zwei gekoppelte, schräg stehende Kiefergelenke mobil (Rotations-/Translationsbewegungen); Synonyme für Kaufunktionsstörungen sind Myoarthropathie (CH), CMD (D/AT) und TMD/TMJD (angelsächsisch; historisch Costen-Syndrom) ohne einheitliches Krankheitsbild.",
+        "Die 3 Leitsymptome der Kaufunktionsstörung sind (1) Kiefergelenksgeräusche (Knacken bei ~1/3 der Bevölkerung, meist harmlos; vs. Reiben/Krepitation), (2) Dysfunktion (Mittellinienabweichung/Deviation, Kieferklemme) und (3) Schmerz (akut vs. chronisch > 3 Monate).",
+        "Bruxismus (nach Lobbezoo) ist keine Krankheit und setzt keinen Zahnkontakt voraus, sondern ZNS-/Trigeminus-gesteuerte Kaumuskelarbeit (auch Halten/Stabilisieren); Parafunktionen werden durch Stress, Koffein, Schlafapnoe, Nikotin, Alkohol, Stimulanzien und Antidepressiva getriggert.",
+        "Beliebte Prüfungsfalle Okklusion: Zahnstellung/Okklusion hat keinerlei Einfluss auf Allgemeinbefinden, Beckenschiefstand, Leberaktivität, Kognition, Sexualleben oder Kiefergelenksschäden (Korrektur rein ästhetisch); > 50 % der als „Zahnschmerz“ empfundenen Beschwerden sind nicht dentogen."
+      ],
+      "clinical_pearls": [
+        "Masseter-Triggerpunkte strahlen in Molaren, Jochbogen/Kieferhöhle, Schläfe, Stirn und Ohren aus (Begleitsymptome: Ohrendruck, Tinnitus, Schwankschwindel, Globusgefühl, Zungenbrennen); bei extrem abradierten Frontzähnen („Alpenrelief“) nach Stimulanzien wie Kokain fragen.",
+        "Therapie umfasst Edukation/Selbstbeobachtung, aktive Kieferentspannung (Summen/„Om“, Zähne außer Kontakt), Kaugummi-Verzicht, Wärme/Dehnung, topische NSAR, Aufbissschiene und Schmerzpsychologie (Myorelaxanzien nur zurückhaltend als „Mogelpackung“)."
+      ],
+      "deemphasized_notes": [
+        "Das Posselt-Diagramm (nur Zahnmedizin), Details chronischer Schmerzmechanismen und Detailkriterien der ICOP-Klassifikation sind für Humanmediziner ausdrücklich nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "rogler_gastroenterologie",
+      "themenblock": "TB Verdauung",
+      "dozent": "Rogler",
+      "subdeck_patterns": [
+        "1 Gastroenterolgie"
+      ],
+      "source_summaries": [
+        "2025-11-28_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-28"
+      ],
+      "exam_highlights": [
+        "Ösophagus: Reflux (NERD/GERD; gefördert durch Hiatushernie bei > 50 % der > 50-Jährigen, Schwangerschaft 80 %, viszerale Hypersensitivität) kann zum Barrett-Ösophagus führen („Zehnerregel“: 1–10 % entwickeln Barrett, 1–10 % davon Adeno-Ca im unteren Drittel vs. Plattenepithel-Ca im mittleren Drittel durch Hochprozentiges + Rauchen); Eosinophile Ösophagitis (EoE) zeigt Dysphagie, Poulet-Bolusimpaktierung und Trachealisierung.",
+        "Magen und Ulkus: Ulcus ventriculi muss wegen Malignom-/Ischämie-DD immer biopsiert werden, während das Ulcus duodeni (~95 % *H. pylori*) nicht routinemäßig biopsiert wird; bei *H. pylori* gilt Biopsie > Stuhlantigen > C13-Atemtest (Serologie sinnlos); NSAR schädigen den gesamten GI-Trakt (PPI schützt nur den Magen).",
+        "Darm und Diarrhö: Adenom-Karzinom-Sequenz (APC → KRAS → p53) und HNPCC (2–5 %, Mismatch-Repair → Checkpoint-Inhibitoren); osmotische Diarrhö (sistiert im 24h-Nüchterntest) vs. sekretorische Diarrhö (persistiert); Morbus Crohn (transmural, Pflastersteinrelief, gesamter GI-Trakt/terminales Ileum, Fisteln/Stenosen) vs. Colitis ulcerosa (mukosal, kontinuierlich ab Rektum)."
+      ],
+      "clinical_pearls": [
+        "PPIs müssen 30 Min. vor der Hauptmahlzeit eingenommen werden (Protonenpumpen erscheinen erst auf Essens-Stimulus an der Oberfläche; kurze HWZ 4–6 h); Colestyramin (Quantalan) bei biliärer Diarrhö zwischen den Mahlzeiten/vor dem Schlafen geben, sonst entstehen Fettstühle.",
+        "Ösophagusvarizen erfordern als einziger akuter GI-Blutungsnotfall sofortige nächtliche Endoskopie (Gummibandligatur bei Ösophagus-, Histoacryl-Sekundenkleber bei Fundusvarizen); unkomplizierte Divertikulitis wird primär ohne Antibiotika behandelt, und Pyoderma gangraenosum darf niemals biopsiert werden (Pathergie-Phänomen).",
+        "Calprotectin (Cut-off 50) ersetzt teure Mikrobiom-/Pilz-Stuhlanalysen; bei > 10 Stühlen/Tag werden orale Medikamente (L-Thyroxin, Steroide, Antihypertensiva, Pille) schlecht resorbiert, und bei Morbus Crohn junger Frauen besteht ein ~2-jähriger Gender-Bias als „Endometriose“."
+      ],
+      "deemphasized_notes": [
+        "Aus der ausgefallenen Einführungsvorlesung wird keine Frage kommen; die 200 genetischen Risikofaktoren beim Morbus Crohn und Detailstufen der Forrest-Klassifikation sind für die Prüfung unwichtig."
+      ]
+    },
+    {
+      "id": "endo_einfuehrung",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Einführung & Abschluss",
+      "subdeck_patterns": [
+        "Einführung"
+      ],
+      "source_summaries": [
+        "2025-12-01_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-01"
+      ],
+      "exam_highlights": [
+        "Zentrales diagnostisches Prinzip (Dr. Cavelti): Das diagnostische Paar aus peripherem Hormon und hypophysärem Steuerungshormon unterscheidet primäre, sekundäre und tertiäre Störungen.",
+        "Konzept ‚inadäquat normal‘: Sind periphere Hormone sehr tief (z. B. Hypothyreose), müsste das Steuerungshormon (TSH) ansteigen; bleibt es normal oder tief, liegt die Störung zentral (sekundär/tertiär).",
+        "Grundprinzipien (endokrin, parakrin, autokrin), vier chemische Hormonklassen (Steroid-, Peptidhormone, Aminosäure- und Arachidonsäurederivate) sowie hypothalamische Liberine/Statine und die fünf hypophysären Hormonachsen mit negativem Feedback."
+      ],
+      "clinical_pearls": [
+        "Hypothalamische Hormone werden klinisch sehr selten gemessen (kurze Halbwertszeit, pulsatile Ausschüttung), daher dient das hypophysäre Steuerungshormon als Partner im diagnostischen Paar.",
+        "Chronische Glukokortikoid-Einnahme bremst zentral die gesamte HPA-Achse; Zufallsbefunde (Inzidentalome) an Nebennieren (> 70 J.) oder Schilddrüse sind durch häufige Bildgebung oft harmlos.",
+        "Bauchschmerzen können Leitsymptom lebensbedrohlicher endokriner Notfälle sein (Addison-Krise, diabetische Ketoazidose als Erstmanifestation eines Typ-1-DM, Hyperparathyreoidismus); bei Akromegalie alte Fotos (vor 10 Jahren) vergleichen."
+      ],
+      "deemphasized_notes": [
+        "Die Liste endokrinologischer Erkrankungen diente nur als Überblick und muss nicht im Detail auswendig gelernt werden (Dr. Cavelti)."
+      ]
+    },
+    {
+      "id": "endo_abschluss",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Einführung & Abschluss",
+      "subdeck_patterns": [
+        "Abschluss"
+      ],
+      "source_summaries": [
+        "2025-12-18_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-18"
+      ],
+      "exam_highlights": [
+        "Allgemeine endokrinologische Grundregeln (Prof./Dr. Beuschlein): Diagnostische Paare messen (Renin/Aldosteron, TSH/T4, ACTH/Cortisol, LH/Testosteron); bei Überfunktion Suppressionstest und bei Unterfunktion Stimulationstest durchführen.",
+        "Primärer Hyperaldosteronismus (Conn-Syndrom): Autonome Aldosteronproduktion in der Zona glomerulosa (CYP11B2, häufig durch somatische Ionenkanal-/Transporter-Mutationen mit Ca²⁺-Anstieg); Aldosteron fungiert primär als Natrium-Sparmechanismus.",
+        "Stufendiagnostik beim Conn-Syndrom: Screening mittels Aldosteron-Renin-Quotient (ARQ), Bestätigung per Suppressionstest (z. B. 2 L NaCl-Infusion über 4 h) und Subtypisierung (unilateral vs. bilateral) mittels Nebennierenvenenkatheter aufgrund begrenzter CT/MRT-Sensitivität und -Spezifität."
+      ],
+      "clinical_pearls": [
+        "Hypokaliämie ist ein typisches ‚Red Flag‘, aber keine zwingende Voraussetzung – die Mehrzahl der Conn-Patienten ist normokaliämisch.",
+        "5–10 % aller Hypertoniker haben einen primären Hyperaldosteronismus mit um Faktor 2–2,6 erhöhter Odds Ratio für Schlaganfall, KHK und Herzinsuffizienz unabhängig vom Blutdruck; Therapie erfolgt bei unilateraler Form per laparoskopischer Adrenalektomie, sonst mittels MRA (Spironolacton, Eplerenon, Finerenon).",
+        "ACE-Hemmer, Betablocker und Diuretika verfälschen das ARQ-Screening (ggf. Umstellung auf Kalziumantagonisten oder Alphablocker); die Nierenarterienstenose ist ein klassischer sekundärer (hyperreninämischer) Hyperaldosteronismus."
+      ],
+      "deemphasized_notes": [
+        "Die zellulären Regulationsdetails der zonenabhängigen Steroidbiosynthese wurden ausgeklammert (entscheidend sind CYP11B2 in der Zona glomerulosa und die Natrium-Sparfunktion), ebenso musste der Betablocker-Effekt auf Renin (Senkung) nicht als Detail gewusst werden."
+      ]
+    },
+    {
+      "id": "hall_des",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Hall",
+      "subdeck_patterns": [
+        "1 Disseminiertes endokrines System"
+      ],
+      "source_summaries": [
+        "2025-12-01_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-01"
+      ],
+      "exam_highlights": [
+        "Merkmale endokriner vs. exokriner Drüsen (keine Ausführungsgänge, starke Vaskularisierung mit fenestrierten Kapillaren, starke Innervation) sowie Ultrastruktur Protein- (rER, Golgi, Granula) vs. Lipid-produzierender Zellen (Cholesterin-Tröpfchen, sER, tubuläre Mitochondrien).",
+        "Enteroendokrine Zellen im GI-Trakt: Offener Typ (Mikrovilli mit Geschmacksrezeptoren/GPCRs) vs. geschlossener Typ (Reaktion auf Dehnung) sowie Verteilung entlang des GI-Trakts (z. B. EC-, D-, G-, S-Zellen).",
+        "Feed-Forward-Mechanismus (z. B. GLP-1) als Ergänzung zu Feedback-Systemen zur Vermeidung von Hyperglykämie und Hyperkaliämie."
+      ],
+      "clinical_pearls": [
+        "GLP-1-Agonisten nutzen das Feed-Forward-System therapeutisch gegen Adipositas und Typ-2-Diabetes; das Somatostatin-Analogon Octreotid hemmt überaktive intestinale neuroendokrine Tumoren.",
+        "Karzinoid-Syndrom (EC-Zell-Tumor, Serotonin-Überproduktion) verursacht Diarrhö, Bronchokonstriktion, Tachykardie und Flushing.",
+        "Zollinger-Ellison-Syndrom (Gastrinom, meist im Pankreas) führt zu schweren therapieresistenten Magenulzera; Verner-Morrison-Syndrom (VIPom) zu wässriger Diarrhö und Hypokaliämie."
+      ],
+      "deemphasized_notes": [
+        "Die über 40 Hormone des disseminierten endokrinen Systems und die Elektronenmikroskopie-Namen der enteroendokrinen Zellen müssen nicht auswendig gelernt werden (Grundprinzipien genügen).",
+        "Klinische Syndrome (Karzinoid, Zollinger-Ellison, VIPom) dienen in der Anatomie dem Systemverständnis und sind nicht als Detail-Prüfungsstoff relevant."
+      ]
+    },
+    {
+      "id": "hall_hypothalamus_hypophyse",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Hall",
+      "subdeck_patterns": [
+        "3 Hypothalamo-hypophysäres System"
+      ],
+      "source_summaries": [
+        "2025-12-10_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-10"
+      ],
+      "exam_highlights": [
+        "Hypothalamus: Lage unterhalb des Thalamus an Boden/Wand des 3. Ventrikels (Lamina terminalis bis Corpora mamillaria) und fehlende Blut-Hirn-Schranke zum Messen von Osmolarität, Glukose und Hormonen (Leptin, GLP-1).",
+        "Die vier endokrin relevanten Kerne: Ncl. suprachiasmaticus (Retina-Input, steuert Zirbeldrüse/Melatonin), Ncl. arcuatus (Steuerung der Adenohypophyse) sowie Ncl. paraventricularis und Ncl. supraopticus (Neurohypophyse).",
+        "Entwicklung, Histologie & Gefäßversorgung der Hypophyse: Neurohypophyse als Zwischenhirn-Ausstülpung (A. hypophysialis inferior, marklose Axone, Pituizyten, Herring-Körper) vs. Adenohypophyse aus der Rathke-Tasche (A. hypophysialis superior und Pfortadersystem; Azidophile, Basophile, Chromophobe, Pseudofollikel)."
+      ],
+      "clinical_pearls": [
+        "Hypophysentumoren in der Sella turcica dehnen sich nach oben aus und komprimieren das Chiasma opticum (bitemporale Hemianopsie: Anstoßen an Türrahmen/Personen) oder stauen Liquor (morgens schlimmere posturale Kopfschmerzen); OP-Zugang erfolgt transsphenoidal über den Sinus sphenoidalis (Risiko: Insuffizienz, Liquorrhoe).",
+        "Korsakow-Syndrom: Vitamin-B1-Mangel (häufig bei Alkoholikern) schädigt die Corpora mamillaria und führt zu anterograder Amnesie sowie Konfabulation.",
+        "Prader-Willi-Syndrom (Chromosom 15) verursacht hypothalamische Dysfunktion mit Kleinwuchs, Hypogonadismus und unstillbarem Hunger; angeborener Leptinmangel führt im Kindesalter zu extremer Adipositas und ist durch Leptingabe vollständig korrigierbar."
+      ],
+      "deemphasized_notes": [
+        "Es werden ausdrücklich nicht alle Hypothalamus-Kerne behandelt, sondern die vier endokrin relevanten Kerne (Ncl. arcuatus, paraventricularis, supraopticus, suprachiasmaticus) sowie die kurze Erwähnung der Corpora mamillaria."
+      ]
+    },
+    {
+      "id": "hall_nebennieren",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Hall",
+      "subdeck_patterns": [
+        "4 Nebennieren",
+        "3 Nebennieren"
+      ],
+      "source_summaries": [
+        "2025-12-01_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-01"
+      ],
+      "exam_highlights": [
+        "Retroperitoneale Lage, Form (rechts pyramidenförmig, links halbmondförmig) und Entwicklung: Rinde aus Zölomepithel nahe Mesonephros, Mark aus Neuralleistenzellen (modifizierte postganglionäre sympathische Neurone, innerviert durch präganglionäre Fasern).",
+        "Gefäßversorgung: 3 Arterien pro Drüse, aber nur 1 Vene; Pfortadersystem (Kortex → Mark) und muskelstarke Zentralvenen im Mark zur schlagartigen Adrenalin-Ausschüttung.",
+        "Histologische Zonen: Zona glomerulosa (fehlt CYP17 → Aldosteron), Zona fasciculata (Spongiozyten → Kortisol), Zona reticularis (Lipofuszin → Androgene) und Chromaffinzellen des Marks."
+      ],
+      "clinical_pearls": [
+        "Die rechte V. suprarenalis mündet kurz und steil direkt in die V. cava inferior (links in die V. renalis) → höheres Risiko bei rechtsseitiger Adrenalektomie und schwierige Katheterisierung beim Adrenal Venous Sampling (Conn-Syndrom).",
+        "Morbus Addison (heute meist autoimmun, früher oft Tuberkulose mit verkäsenden Granulomen oder Sepsis) zeigt Müdigkeit sowie Schleimhaut-Hyperpigmentierung durch kompensatorisch stark erhöhtes ACTH.",
+        "Phäochromozytom (Tumor des Nebennierenmarks) äußert sich mit der klassischen Trias Kopfschmerzen, Herzrasen (Tachykardie) und Schwitzen."
+      ],
+      "deemphasized_notes": [
+        "Klinische Syndrome (Addison, Conn, Cushing, Phäochromozytom) dienen in dieser Anatomie-Vorlesung dem Verständnis und sind nicht als Detail-Prüfungsstoff relevant."
+      ]
+    },
+    {
+      "id": "jelezarov_einfuehrung",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Jelezarov",
+      "subdeck_patterns": [
+        "1 Einführung Hormone"
+      ],
+      "source_summaries": [
+        "2025-12-01_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-01"
+      ],
+      "exam_highlights": [
+        "Eindeutige chemische Klassifikation: (1) Tyrosin-/Tryptophan-Derivate, (2) Peptid-/Proteinhormone, (3) Steroidhormone, (4) Fettsäurederivate; Vergleich vegetatives Nervensystem (akut/zeitlich begrenzt) vs. endokrines System (langfristig, oft über Genexpression).",
+        "Wasserlöslichkeit vs. Lipophilie bestimmt Bluttransport (frei vs. Transportproteine), Speicherung (Vesikel vs. Synthese on demand) und Rezeptorlokalisation (Zelloberfläche vs. intrazellulär/nukleär).",
+        "Peptidhormon-Biosynthese (Prä-Prohormon → ER-Signalpeptid ab → Prohormon → Golgi zu reifem Hormon + C-Peptid/Fragmenten), Katecholamin-Rezeptoren (α senkt cAMP, β erhöht cAMP) und genomische vs. nicht-genomische Effekte nukleärer Rezeptoren."
+      ],
+      "clinical_pearls": [
+        "Die Abspaltung von C-Peptid/Fragmenten aus Prohormonen im Golgi-Apparat erklärt die gemeinsame Sekretion mit dem reifen Peptidhormon.",
+        "Lipophile Hormone werden nicht in Vesikeln gespeichert, sondern bei Bedarf synthetisiert und an Transportproteine gebunden im Blut transportiert."
+      ],
+      "deemphasized_notes": [
+        "Intrakrine, juxtakrine und matrikrine Wirkungen, konkrete Prohormon-Beispiele (Proinsulin, Prosomatostatin) sowie der detaillierte DNA-Bindungsmechanismus nukleärer Rezeptoren müssen nicht im Detail gelernt werden."
+      ]
+    },
+    {
+      "id": "jelezarov_pankreas",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Jelezarov",
+      "subdeck_patterns": [
+        "2 Hormone des endokrinen Pankreas"
+      ],
+      "source_summaries": [
+        "2025-12-05_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-05"
+      ],
+      "exam_highlights": [
+        "Inselzellen & Biosynthese: α-Zellen (Glukagon aus Proglukagon, das im Darm GLP-1/GLP-2 liefert) und β-Zellen (~70 % Inselvolumen; Präproinsulin → Proinsulin im ER → reifes Insulin aus A-/B-Kette mit Disulfidbrücken + C-Peptid im Golgi).",
+        "Regulation der Sekretion: Insulin wird stimuliert durch Glukose (GLUT → Glykolyse/ATP↑ → K_ATP-Schließung → Depolarisation → Ca²⁺-Einstrom), Inkretine, Nährstoffsensoren (FFS, Leucin, Glutamat) sowie β-Adrenozeptoren und gehemmt durch überwiegende α-Adrenozeptoren.",
+        "Glukagon wird stimuliert durch tiefe Glukose, Aminosäuren und Adrenalin und gehemmt durch hohe Glukose sowie parakrines Insulin; die Tabellen und Anhang-Folien von Dr. Jelezarov zu den Wirkungen von Insulin und Glukagon sind ausdrücklich Prüfungsstoff."
+      ],
+      "clinical_pearls": [
+        "Bei einer proteinreichen Mahlzeit ohne Kohlenhydrate stimulieren Aminosäuren und Inkretine leicht die Insulinsekretion – daher muss Glukagon stark ansteigen, um eine Hypoglykämie zu verhindern.",
+        "Bei kohlenhydratreicher Mahlzeit steigt Insulin und sinkt Glukagon; β-Zellen tragen selbst Insulinrezeptoren zur autokrinen/parakrinen Proliferationsstimulation."
+      ],
+      "deemphasized_notes": [
+        "Die genauen Details der Sekretionsmechanismen und der Unterschied der K_ATP-Kanal-Isoformen in α- vs. β-Zellen werden ausdrücklich nicht in der Prüfung gefragt (wichtig ist, welche Faktoren die Sekretion stimulieren oder inhibieren)."
+      ]
+    },
+    {
+      "id": "jelezarov_hypothalamus_hypophyse",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Jelezarov",
+      "subdeck_patterns": [
+        "3 Hypothalamische und hypophyäre Hormone"
+      ],
+      "source_summaries": [
+        "2025-12-10_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-10"
+      ],
+      "exam_highlights": [
+        "Magnozellulärer HHL (Freisetzung via Aktionspotential & Ca²⁺-Einstrom): ADH/Vasopressin (Nonapeptid; zentral ACTH-Freisetzung, peripher Nieren-Aquaporine & Vasokonstriktion; Alkohol hemmt, Nikotin stimuliert) und Oxytocin (Nonapeptid, 2 AS Unterschied; Geburt/Stillen).",
+        "Parvozellulärer HVL: Liberine/Statine → Tropine → Zielhormone (+ lange und kurze negative Feedback-Loops) der 5 Achsen (HPA, HPT, HPG, Mamma/Prolaktin mit Dopamin-Hemmung, GH/IGF-1) samt zirkadianer Rhythmik (GH-Peak ~2 Uhr nachts, Kortisol morgens, Melatonin nachts).",
+        "Direkte vs. indirekte GH-Wirkung: Direkt wirkt GH anti-insulinär/diabetogen (Glukoseaufnahme↓, Glykolyse↓, Glukoneogenese↑, Lipolyse↑); indirekt über IGF-1 wirkt es insulinähnlich (Glykolyse↑, Glukoneogenese↓, Lipogenese↑, Zelldifferenzierung/-proliferation an Epiphysenfugen); Proteinsynthese wird von beiden synergistisch gefördert."
+      ],
+      "clinical_pearls": [
+        "Prolaktinome lassen sich oft medikamentös mit Dopaminagonisten behandeln, da Dopamin das Prolaktin-inhibierende Statin ist; sie können auch bei Männern zu Gynäkomastie und Galaktorrhö führen.",
+        "GH/IGF-1-Mangel in der Kindheit führt zu proportioniertem Zwergwuchs; GH-Überschuss vor Epiphysenfugenschluss bewirkt Gigantismus, danach Akromegalie (Vergrößerung von Händen, Füßen, Gesichtszügen/Lippen).",
+        "Beim Gestationsdiabetes stimuliert das hyperinsulinämische Milieu über Insulin/IGF-1-Synergismus starkes fötales Längenwachstum (Femurlänge im Ultraschall)."
+      ],
+      "deemphasized_notes": [
+        "Der genaue Aquaporin-Mechanismus und Volumenrezeptoren der ADH-Regulation sowie die Details der IGF-1-Produktion (JAK-STAT) und Rezeptorkaskade (Tyrosinkinase) müssen nicht im Detail gewusst werden (wichtig ist aber die Funktion von IGF-1 für Zelldifferenzierung und -proliferation)."
+      ]
+    },
+    {
+      "id": "jelezarov_nnr_steroide",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Jelezarov",
+      "subdeck_patterns": [
+        "5 Steroidhormone Nebennierenrinde"
+      ],
+      "source_summaries": [
+        "2025-12-15_TB_Endokrinologie.md",
+        "2025-12-17_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-15",
+        "2025-12-17"
+      ],
+      "exam_highlights": [
+        "HPA-Achse & Steroidogenese (Dr. Sokolowska): CRH (+ ADH über V3) → POMC-Spaltung zu ACTH (+ MSH + Endorphine) → MC2R/cAMP/PKA → akute PKA-Aktivierung von Cholesterinesterhydrolase, StAR-Protein und CYP11A1 (= P450scc = Cytochrom P450scc = Cholesterindesmolase; Cholesterin → Pregnenolon; NADPH aus PPP mit mitochondrialem vs. sER-Shuttle).",
+        "Zonierung & Mineralokortikoide: Zona glomerulosa ohne CYP17 mit CYP11B2 (Aldosteronsynthase; Hauptstimuli Angiotensin II via AT1 & K⁺; RAAS als ‚super wichtigstes Slide‘; Aldosteron meist frei vs. Cortisol an CBG/Transcortin & Albumin); Zona fasciculata (CYP17 + CYP11B1 → Cortisol); Zona reticularis (Androgene).",
+        "Glukokortikoid-Rezeptor & Stoffwechsel: Homodimere an GRE (Transaktivierung, alle 4 Glukoneogenese-Schlüsselenzyme↑) vs. nGRE (Cis-Repression, z. B. PEPCK in Leber aktiviert, im Fettgewebe reprimiert) und Transrepression (NF-κB/IκB, AP-1); Organeffekte (Leber: Steatose; Muskel: GLUT4↓/mTOR↓/FoxO→Atrogin-1/MuRF-1↑; Fett: akute Lipolyse vs. chronische viszerale Hypertrophie) und Blutbild (↑ Ery/Thrombo/Neutro, ↓ Lympho/Mono).",
+        "Aldosteron-Wirkung & Inaktivierung: 11β-HSD2 schützt den Mineralokortikoidrezeptor im distalen Tubulus (Hauptzellen: ENaC, Na⁺/K⁺-ATPase, AQP2; α-Schaltzellen: H⁺-Pumpen, Cl⁻/HCO₃⁻-Austauscher); Cortisol-Abbau über 5α-/5β-Reduktase, 3α-HSD und Glukuronidierung in der Leber."
+      ],
+      "clinical_pearls": [
+        "Cushing-Zeichen und ihre Mechanismen: Stammfettsucht (viszerale Hypertrophie vs. subkutaner Abbau), Vollmondgesicht, Stiernacken, dünne Extremitäten (Muskelatrophie), violette Striae, dünne Haut, Hämatome, verzögerte Wundheilung, Hypertonie, Osteoporose und diabetogene Stoffwechsellage / hepatische Steatose.",
+        "Lakritz-Hypertonie (Pseudohyperaldosteronismus): Glycyrrhizinsäure hemmt 11β-HSD2, sodass Cortisol den Mineralokortikoidrezeptor aktiviert (Hypertonie bei niedrigem Aldosteron); POMC-Spaltung zu ACTH + MSH erklärt die Hyperpigmentierung bei hohem ACTH.",
+        "Inaktives Cortison wird durch 11β-HSD1 in der Leber aktiviert und sollte morgens eingenommen werden (bei Dauertherapie Magenschutz, Osteoporose-Prophylaxe und Diabetes-Überwachung beachten); nicht-genomische Soforteffekte (Sekunden–Minuten) erklären schnelle i.v.-Effekte bei akutem Asthma/Schock."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "jelezarov_katecholamine",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Jelezarov",
+      "subdeck_patterns": [
+        "6 Katecholamine"
+      ],
+      "source_summaries": [
+        "2025-12-17_TB_Endokrinologie.md",
+        "2025-12-18_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-17",
+        "2025-12-18"
+      ],
+      "exam_highlights": [
+        "Biosynthese, Speicherung & Abbau: L-Tyrosin → DOPA → Dopamin → Noradrenalin → Adrenalin (Tyrosinhydroxylase als geschwindigkeitsbestimmender Schritt), Speicherung via VMAT1 mit Chromogranin/Ca²⁺/ATP; Abbau über NET/VMAT, MAO, COMT und ALDH zu Homovanillinsäure (HVA, Dopamin) und Vanillinmandelsäure (VMA, Adrenalin/Noradrenalin).",
+        "Adrenozeptoren & Stressantwort: α₁ (Gq), α₂ (Gi), β₁/β₂/β₃ (Gs; β₁ verstärkt Herzkontraktion, β₂ vermittelt Bronchodilatation); im Stress steigert Adrenalin Glukoneogenese/Glykogenolyse in der Leber und Lipolyse im Fettgewebe, hemmt Insulin über α₂-Rezeptoren an β-Zellen (stimuliert Glukagon in α-Zellen) und senkt so die Glukoseaufnahme im Muskel bei muskulärer Glykogenolyse.",
+        "Glykogen- & Glukose-Signaltransduktion: Gs/AC/cAMP/PKA aktiviert Phosphorylase-Kinase → Glykogenphosphorylase (T→R), hemmt Glykogensynthase (PKA, GSK3, CK2, AMPK) und schaltet PP1 ab (G_M, Inhibitor-1); in der Leber Glukoneogenese↑ via CREB und PFK-2/FBPase-2 (F2,6BP↓) sowie Inaktivierung von ChREBP, direkt antagonisiert durch Insulin über IRS/PI3K/Akt → PDE3B (cAMP↓).",
+        "Lipolyse & Fettsäure-Feedback: PKA phosphoryliert Perilipin und HSL; freie Fettsäuren erhöhen Acetyl-CoA (Pyruvatcarboxylase↑, PDH↓ in Leber) und Citrat (PFK/PDH↓ im Muskel)."
+      ],
+      "clinical_pearls": [
+        "Wegen der extrem kurzen Plasmahalbwertszeit von Adrenalin/Noradrenalin (1–2 Minuten) erfolgt die Diagnostik über stabile Urin-Abbauprodukte wie Normetanephrin, Vanillinmandelsäure (VMA) und für Dopamin Homovanillinsäure (HVA).",
+        "Kurz- (SABA) und langwirksame (LABA) β₂-Agonisten nutzen den Gs/cAMP-Weg zur Bronchodilatation in der Pneumologie.",
+        "Bei hohem Insulin und niedrigen Katecholaminspiegeln steigt die Glykogensynthese stark an, während Lipolyse, Glukoneogenese und CREB-vermittelte Genexpression stark gedrosselt sind."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "wagner_schilddruese",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Schilddrüsenhormone / Wagner"
+      ],
+      "source_summaries": [
+        "2025-12-04_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-04"
+      ],
+      "exam_highlights": [
+        "HPT-Achse & Synthese: TRH → TSH → T4/T3 (+ negatives Feedback); Jodidaufnahme über NIS und Pendrin ins Follikellumen, Einbau in Thyreoglobulin (T4, T3, rT3; Jodbedarf 120–150 µg/Tag).",
+        "Aktivierung & Transport: Periphere Dejodinierung (Typ 1 in Leber/Niere, Typ 2 in ZNS/Hypophyse/Plazenta), HWZ T4 ~8 Tage vs. T3 ~24 h; Transport im Blut über TBG (~90 %), Transthyretin und Albumin; Zellaufnahme via MCT8.",
+        "Wirkmechanismus (THR) & Organsysteme: Nukleärer Rezeptor (Heterodimer mit RXR; ohne T3 aktive Korepressor-Repression, mit T3 Koaktivator-Rekrutierung) steuert 1–5 % aller Gene (Na⁺/K⁺-ATPase, Atmungskette, Myosin, permissive Wirkung auf β₁- und GH/IGF-1-Rezeptoren) für Hirnreifung, Thermogenese/Grundumsatz, Knochenwachstum/-remodeling und Herz-Kreislauf/Fibrinolyse."
+      ],
+      "clinical_pearls": [
+        "Pendred-Syndrom (Defekt von Pendrin in Schilddrüse, Innenohr und Niere) verursacht 5–10 % aller angeborenen Taubheiten plus Struma/Hypothyreose; Neugeborenenscreening aus Fersenblut am 1.–2. Lebenstag verhindert irreversiblen Kretinismus.",
+        "TSH und T3 schwanken zirkadian (Blutentnahmen immer zur gleichen Tageszeit); Morbus Basedow entsteht durch stimulierende TSH-Rezeptor-Autoantikörper (Hyperthyreose, Struma, Exophthalmus).",
+        "In der Pertechnetat-Szintigraphie ist ein kalter Knoten malignitätsverdächtig (verminderte Aufnahme), ein heißer Knoten i. d. R. gutartig autonom; Goitrogene (Maniok, Hirse, Kohlarten) hemmen kompetitiv den Jodideinbau."
+      ],
+      "deemphasized_notes": [
+        "Seltene MCT8-Erkrankungen, die gewebsspezifische Verteilung der THR-Isoformen sowie Pharmakologie-Ausblicke und Medikamenten-Interaktionen sind ausdrücklich nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "wagner_ca_phosphat",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Regulation des Ca- und Phosphatstoffwechsels / Wagner"
+      ],
+      "source_summaries": [
+        "2025-12-15_TB_Endokrinologie.md",
+        "2025-12-17_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-15",
+        "2025-12-17"
+      ],
+      "exam_highlights": [
+        "Hierarchie & Ca²⁺-Konstanz: Die Niere ist das zentrale Regulationsventil; ionisiertes Ca²⁺ (~1,2 mmol/L; Gesamt-Ca ~2,5 mmol/L) hat absolute Priorität und bleibt tageszeitlich stabil (während PO₄³⁻, PTH, Calcitriol und FGF23 zirkadian schwanken; H⁺ und Ca²⁺ konkurrieren um Albuminbindung).",
+        "Parathormon (PTH) & Calcitriol: PTH-Steuerung über den CaSR (PO₄³⁻ wirkt als Kalzilytikum), trennt Ca²⁺ und PO₄³⁻ (spart Ca²⁺ und scheidet PO₄³⁻ renal aus), steuert Knochenremodelling über das RANKL/OPG-Verhältnis (pulsatil anabol vs. tonisch katabol) und fördert die renale Calcitriol-Synthese (Haut → Leber Calcidiol → Niere Calcitriol → VDR).",
+        "FGF23, Klotho & Calcitonin: Phosphat und PTH induzieren im Knochen FGF23, das in der Niere obligat mit Klotho wirkt, die PO₄³⁻-Ausscheidung steigert sowie PTH und die Calcitriol-Synthese hemmt (neutralisiert den PTH-Effekt auf Calcitriol); C-Zellen der Schilddrüse bilden Calcitonin."
+      ],
+      "clinical_pearls": [
+        "Hyperventilation (respiratorische Alkalose) senkt innerhalb von 1–2 Min. ionisiertes Ca²⁺ → Übererregbarkeit mit Krämpfen (Chvostek- und Trousseau-Zeichen); Glukose-Insulin-Infusionen können durch intrazelluläre Phosphorylierung eine akute Hypophosphatämie (Atemmuskelschwäche, ↓ 2,3-DPG) auslösen.",
+        "Bei chronischer Niereninsuffizienz (~10 % der Bevölkerung) fallen zuerst Klotho, dann Calcitriol bei steigendem FGF23 ab, gefolgt von Phosphatretention und sekundärem Hyperparathyreoidismus mit Gefäßverkalkungen (sekundäre Kalziproteinpartikel, hohe Mortalität).",
+        "Granulomatöse Erkrankungen (z. B. Tuberkulose) können ektop unreguliert Calcitriol bilden (Hyperkalzämie bei supprimiertem PTH); das Milch-Alkali-Syndrom verursacht Hyperkalzämie mit Nierensteinen."
+      ],
+      "deemphasized_notes": [
+        "Konkrete Zahlenwerte der Mineralbilanzen, detaillierte Darm-/Nierentransporter, große klinische Detailtiefe, molekulare Details der VDR-Genregulation sowie weitere FGF23-Begleitstimuli neben Phosphat müssen nicht auswendig gelernt werden."
+      ]
+    },
+    {
+      "id": "wagner_nebenniere",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Wagner",
+      "subdeck_patterns": [
+        "Nebennierenphysiologie / Wagner"
+      ],
+      "source_summaries": [
+        "2025-12-17_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-17"
+      ],
+      "exam_highlights": [
+        "Zona glomerulosa (Aldosteron): Regulation über Serum-K⁺, RAAS (Renin → Angiotensin I → ACE → Angiotensin II) und Azidose über pH-/AT1-sensitive K⁺-Kanäle (Depolarisation → Ca²⁺-Einstrom), Gegenregulation durch ANP und Schutz des unspezifischen Mineralokortikoidrezeptors durch 11β-HSD2.",
+        "Zona fasciculata (Cortisol) & Zona reticularis (DHEA/Sexualhormone): HPA-Achse (CRH → ACTH aus Prä-POMC → Cortisol mit Morgen-Peak, metabolischer Mobilisation und Immunmodulation); ACTH-abhängige DHEA-Bildung als Vorläufer für Testosteron/Östrogene und Überlauf-Prinzip bei Enzymdefekten.",
+        "Nebennierenmark & Stresskopplung: Modifiziertes sympathisches Ganglion (präganglionär cholinerg über nikotinerge Rezeptoren, Abgabe von ~80 % Adrenalin / ~20 % Noradrenalin); das durch Cortisol stimulierte Enzym PNMT koppelt akute (Sympathikus) und chronische Stressachse (HPA)."
+      ],
+      "clinical_pearls": [
+        "Adrenogenitales Syndrom (AGS, ~1 : 10.000 Geburten, meist 21-Hydroxylase-Defekt): Cortisolmangel plus Vorstufen-Überlauf in die Zona reticularis → DHEA/Testosteron↑ mit verfrühter Pubertät und vorzeitigem Epiphysenschluss (Minderwuchs) bei Jungen bzw. Virilisierung und Minderwuchs bei Mädchen (bei proximaleren Defekten teils auch Aldosteronmangel).",
+        "Morbus Addison und Addison-Krise sind bei akuten Infekten lebensbedrohlich, da eine basale Cortisolversorgung für Immun- und Stressantwort zwingend nötig ist.",
+        "Hypoaldosteronismus führt zu Salzverlust, Hypotonie und Hyperkaliämie; primärer Hyperaldosteronismus (Conn-Syndrom) zu schwerer Hypertonie, Hypokaliämie und metabolischer Alkalose."
+      ],
+      "deemphasized_notes": [
+        "Die detaillierten Steroid-Synthesewege und zellulären Nieren-Transportproteine von Aldosteron sowie die Frage, wie die Niere zwischen Hyperkaliämie, Azidose und Hypotonie differenziert, müssen in der Physiologie nicht im Detail gewusst werden; beim vegetativen Nervensystem genügen die Fight-or-Flight-Grundfunktionen."
+      ]
+    },
+    {
+      "id": "emmert_nahrungsaufnahme",
+      "themenblock": "TB Stoffwechsel",
+      "dozent": "Emmert",
+      "subdeck_patterns": [
+        "4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme"
+      ],
+      "source_summaries": [
+        "2025-12-04_TB_Endokrinologie.md",
+        "2025-12-05_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-04",
+        "2025-12-05"
+      ],
+      "exam_highlights": [
+        "Resorptionsphase (0–4/6 h): Insulin dominiert; Leber (insulinunabhängiger GLUT2, Glukokinase → Glykolyse/Glykogen), Muskel und Fettgewebe (GLUT4-Translokation; TAG-Speicherung via Lipoproteinlipase & Glycerin-3-P); Proteinbiosynthese über mTOR-Aktivierung und FoxO-Hemmung.",
+        "Postresorptionsphase (ca. 4/6–18 h): Glukagon dominiert (wirkt physiologisch ausschließlich auf die Leber!) mit 50 % Glykogenabbau und 50 % Glukoneogenese (Laktat/Pyruvat, Alanin, Glycerin) v. a. für Gehirn und Erythrozyten; Adrenalin/Noradrenalin + tiefes Insulin steuern Muskel und Lipolyse (HSL).",
+        "Hungerstoffwechsel (Phasen 1–5): Leberglykogen reicht ~18 h, Fettreserven ~55 Tage; ab ~18 h überwiegt Glukoneogenese (Phase 3), ab Tag 2–3 steigt hepatische Ketonkörpersynthese ~50-fach (Phase 4: β-Hydroxybutyrat/Acetoacetat decken max. ~75 % des Hirnbedarfs; Nieren-Glukoneogenese aus Glutamin liefert bis 1/3–1/2 der Blutglukose; Muskel spart Glukose durch GLUT4↓ und Zitrat-Hemmung), ab Tag 20–24 droht Proteinabbau mit Organschäden (Phase 5)."
+      ],
+      "clinical_pearls": [
+        "Stark betont: Glukagon wirkt physiologisch wirklich nur auf die Leber (nicht auf Muskel oder Fettgewebe).",
+        "Um Tag 3 des Fastens tritt eine ~6-stündige Übergangsphase mit starken Kopfschmerzen, Schwindel und Übelkeit auf, bis das Gehirn auf Ketonkörper umgestellt hat; typisch ist ein Aceton-Geruch in der Atemluft.",
+        "Protein ist beim chronischen Hungern der limitierende Faktor: Durch Abbau im Immunsystem und der Atemmuskulatur sterben Betroffene meist an Infektionen/Pneumonie (> 80 %) vor völliger Fetterschöpfung (vgl. Angus Barbieri: 382 Tage nur mit Vitamin-/Mineral-/Hefe-Supplementierung)."
+      ],
+      "deemphasized_notes": [
+        "Details der mTOR-Signalkaskade, der Energiesensor AMPK, chemische Details der Ketonkörper-Abbauwege, der BCAA-Mechanismus zur Proteolysehemmung sowie die Beispielsrechnung zur 65-kg-Person (34 Tage) sind ausdrücklich nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "emmert_erhoehter_energiebedarf",
+      "themenblock": "TB Stoffwechsel",
+      "dozent": "Emmert",
+      "subdeck_patterns": [
+        "7 Stoffwechsel bei erhöhtem Energiebedarf"
+      ],
+      "source_summaries": [
+        "2025-12-18_TB_Endokrinologie.md"
+      ],
+      "lecture_dates": [
+        "2025-12-18"
+      ],
+      "exam_highlights": [
+        "Vaskuläre Anpassung & Energiephasen: HMV steigt von ~5 L/min (15–20 % Muskel) auf ~25 L/min (80–85 % Muskel); zeitlich folgen auf Kreatinphosphat (0–10 s) die anaerobe Glykolyse (10–150 s, ~50× höhere Kapazität als Citratzyklus) und ab ~2–3 min oxidative Phosphorylierung (Typ-1-Fasern).",
+        "Laktat bei aerober Belastung & Protonenherkunft: Auch bei aerober Belastung entsteht Laktat direkt proportional zur Glykolyserate wegen der ~50× höheren Glykolysekapazität; die Milchsäuregärung verbraucht Protonen, während die Azidose aus der ATP-Hydrolyse stammt (Export über Symporter, Abbau in Typ-1-Fasern und Leber).",
+        "Substratwahl & Hormonkonstellation: Maximale Leistung erfordert viel Adrenalin, viel Noradrenalin und wenig Insulin; bei niedriger/mittlerer Intensität liefern Plasmafettsäuren ~80 % der Energie, bei maximaler Intensität dominiert Muskelglykogen (lokale Ca²⁺-Freisetzung stärker als systemisches Adrenalin; Nachbrenneffekt über AMPK bis zur ersten Mahlzeit)."
+      ],
+      "clinical_pearls": [
+        "Im Ein-Bein-Fahrrad-Experiment war der Glykogenabbau im arbeitenden Bein deutlich stärker als im ruhenden Bein (nur systemisches Adrenalin) → lokale Muskelkontraktion (Ca²⁺) ist gewichtiger als Adrenalin allein; kohlenhydratreiche vs. -reduzierte Diät verlängert die Ausdauerzeit von ~30–45 auf ~200–240 Minuten.",
+        "Der ‚Hungerast / Hitting the Wall‘ ist medizinisch eine akute Hypoglykämie nach komplettem Verbrauch der Glykogenreserven (Müdigkeit, Schwindel, Koordinationsverlust, Schwarzwerden vor Augen, Zusammenbruch).",
+        "Muskelkater entsteht durch feine Muskelhaarrisse, nicht durch Laktat."
+      ],
+      "deemphasized_notes": [
+        "Die VO₂max-Formel, biochemische Details des Randle-Mechanismus (Fettsäure-Hemmung auf den KH-Stoffwechsel), molekulare Details der Ca²⁺-vermittelten GLUT4-Translokation sowie die am Vorlesungsende gekürzten Inhalte und Details zur Proteinbiosynthese nach Sport sind ausdrücklich nicht prüfungsrelevant."
+      ]
+    }
+  ]
+}

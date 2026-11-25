@@ -304,7 +304,7 @@
     "next_day_index": 394
   },
   "_latest_target_date": "2026-11-25",
-  "_updated_at": "2026-11-25T09:38:53.678018",
+  "_updated_at": "2026-11-25T09:51:17.067068",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -1608,7 +1608,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-25T09:38:14.307462",
+    "last_sync_timestamp": "2026-11-25T09:50:56.710779",
     "current_day_index": 429,
     "target_day_index": 358,
     "next_day_index": 359
@@ -12042,7 +12042,7 @@
         "front": "Welches sind die Funktionen der Erythrozyten?"
       }
     ],
-    "last_sync_timestamp": "2026-11-25T09:29:05.562839",
+    "last_sync_timestamp": "2026-11-25T09:49:04.716801",
     "current_day_index": 429,
     "target_day_index": 428,
     "next_day_index": 429
@@ -12396,7 +12396,7 @@
         "front": "Was sagt das Affinitätsmodell der T-Zell-Selektion aus?"
       }
     ],
-    "last_sync_timestamp": "2026-11-25T09:38:53.302725",
+    "last_sync_timestamp": "2026-11-25T09:51:16.849871",
     "current_day_index": 429,
     "target_day_index": 429,
     "next_day_index": 430

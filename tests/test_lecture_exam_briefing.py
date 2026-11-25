@@ -52,3 +52,91 @@ def test_live_anki_subdeck_coverage_100_percent():
         assert cov["uncovered_professors"] == []
         assert cov["total_coverage_pct"] == 100.0
         assert cov["exact_coverage_pct"] >= 90.0
+
+
+def test_daily_prof_briefing_strict_today_scope_and_budget_scaling():
+    """Teil 3 (a) & (b): Briefing contains ONLY today's selected subdecks and grows synchronously from 350 to 600."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    client = TestClient(app)
+    r350 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350").json()
+    r600 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=600").json()
+
+    b350 = r350.get("daily_prof_briefing")
+    b600 = r600.get("daily_prof_briefing")
+    assert b350 is not None and b600 is not None
+
+    # (a) Exact 1:1 correspondence between selected_subdecks and daily_prof_briefing subdecks
+    sel_350_set = {sd["full_anki_deck"] for sd in r350.get("selected_subdecks", [])}
+    brief_350_set = {
+        s["full_anki_deck"]
+        for item in b350.get("items", [])
+        for s in item.get("subdecks", [])
+    }
+    assert brief_350_set == sel_350_set
+    assert b350["total_subdecks_covered"] == len(r350.get("selected_subdecks", []))
+    assert b350["total_briefing_cards"] == r350["budget_accumulated_cards"]
+
+    # Every item must have rank #1, #2, ... and real exam_highlights
+    ranks = [item["rank"] for item in b350.get("items", [])]
+    assert ranks == list(range(1, len(ranks) + 1))
+    for item in b350.get("items", []):
+        assert len(item["exam_highlights"]) >= 1
+        assert item["header_summary"]
+
+    # (b) Growing budget 350 -> 600 grows briefing synchronously
+    sel_600_set = {sd["full_anki_deck"] for sd in r600.get("selected_subdecks", [])}
+    brief_600_set = {
+        s["full_anki_deck"]
+        for item in b600.get("items", [])
+        for s in item.get("subdecks", [])
+    }
+    assert brief_600_set == sel_600_set
+    assert sel_350_set.issubset(sel_600_set)
+    if r600["active_focus_pool_due"] > 350:
+        assert b600["total_briefing_cards"] > b350["total_briefing_cards"]
+        assert b600["total_subdecks_covered"] >= b350["total_subdecks_covered"]
+
+
+def test_daily_prof_briefing_cloud_sync_and_snapshot_parity():
+    """Teil 3 (c): Cloud snapshot + /anki/triage-sync + cached _apply_budget produce identical live briefings on Render/iPad."""
+    import json
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.services.anki_backlog_triage import (
+        BACKLOG_TRIAGE_SNAPSHOT_PATH,
+        _apply_budget,
+        calculate_backlog_triage,
+        get_cached_triage,
+    )
+
+    client = TestClient(app)
+    live_350 = calculate_backlog_triage(max_capacity=350)
+    assert "daily_prof_briefing" in live_350
+
+    # Sync payload via /api/v1/schedule/anki/triage-sync (even if daily_prof_briefing stripped, backend must rebuild it)
+    payload_without_briefing = json.loads(json.dumps(live_350))
+    payload_without_briefing.pop("daily_prof_briefing", None)
+    resp = client.post("/api/v1/schedule/anki/triage-sync", json=payload_without_briefing)
+    assert resp.status_code == 200
+    assert resp.json().get("cached") is True
+
+    # Verify cached_backlog_triage.json and get_cached_triage() both include daily_prof_briefing
+    assert BACKLOG_TRIAGE_SNAPSHOT_PATH.exists()
+    snap = json.loads(BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8"))
+    assert "daily_prof_briefing" in snap
+    assert len(snap["daily_prof_briefing"]["items"]) == len(live_350["daily_prof_briefing"]["items"])
+
+    cached = get_cached_triage()
+    assert cached is not None and "daily_prof_briefing" in cached
+
+    # Simulate Render/iPad switching budget from 350 -> 600 purely on the cached snapshot
+    cached_copy = json.loads(json.dumps(cached))
+    _apply_budget(cached_copy, 600, focus_mode="smart", r_threshold=0.80)
+    live_600 = calculate_backlog_triage(max_capacity=600)
+    assert cached_copy["daily_prof_briefing"]["total_subdecks_covered"] == live_600["daily_prof_briefing"]["total_subdecks_covered"]
+    assert cached_copy["daily_prof_briefing"]["total_briefing_cards"] == live_600["daily_prof_briefing"]["total_briefing_cards"]
+    # Restore default 350 snapshot
+    calculate_backlog_triage(max_capacity=350)
+

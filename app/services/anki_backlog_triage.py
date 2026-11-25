@@ -1999,13 +1999,34 @@ def _apply_budget(
         result["budget_combined_anki_query_all"] = "is:due"
         result["budget_combined_anki_query"] = "is:due"
 
+    # ── STEP 7 (Teil 3): Dynamic Daily Professor Exam Briefing strictly for today's selected_subdecks ──
+    try:
+        from app.services.lecture_exam_briefing_service import build_daily_triage_prof_briefing
+        result["daily_prof_briefing"] = build_daily_triage_prof_briefing(
+            selected_subdecks=selected_subdecks,
+            max_capacity=budget,
+            focus_mode=eff_mode,
+            r_threshold=eff_r_val,
+        )
+    except Exception:
+        result["daily_prof_briefing"] = {
+            "max_capacity": budget,
+            "focus_mode": eff_mode,
+            "r_threshold": eff_r_val,
+            "total_briefing_cards": 0,
+            "total_subdecks_covered": 0,
+            "total_topics_count": 0,
+            "headline": "🎙️ Heutiges Prof-Prüfungs-Briefing",
+            "items": [],
+        }
+
 
 def cache_triage(data: Dict[str, Any]):
     if not isinstance(data, dict):
         return
     _sanitize_triage_payload(data)
 
-    # Protect against legacy in-memory sync daemons overwriting Triage 3.0 subdeck schema
+    # Protect against legacy in-memory sync daemons overwriting Triage 3.0 subdeck + briefing schema
     topics = data.get("topics", [])
     is_legacy_payload = bool(topics) and (
         "is_vortag_new" not in topics[0]
@@ -2030,7 +2051,11 @@ def cache_triage(data: Dict[str, Any]):
             focus_mode=data.get("focus_mode") or "smart",
             r_threshold=data.get("r_threshold") or 0.80,
         )
-    elif "focus_plan_open" not in data or "selected_subdecks" not in data:
+    elif (
+        "focus_plan_open" not in data
+        or "selected_subdecks" not in data
+        or "daily_prof_briefing" not in data
+    ):
         _apply_budget(
             data,
             data.get("max_capacity") or 350,
@@ -2082,6 +2107,8 @@ def get_cached_triage() -> Optional[Dict[str, Any]]:
         if not tps:
             return 0
         t0 = tps[0]
+        if "young_due_today" in t0 and "selected_subdecks" in payload and "daily_prof_briefing" in payload:
+            return 6
         if "young_due_today" in t0 and "selected_subdecks" in payload:
             return 5
         if "smart_avg_retrievability_map" in t0:

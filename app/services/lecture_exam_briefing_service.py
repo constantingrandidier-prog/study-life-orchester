@@ -321,3 +321,179 @@ def verify_anki_subdeck_coverage(col_path=None) -> Dict[str, Any]:
         "matched_fallback_decks": matched_fallback,
         "unmatched_decks": unmatched,
     }
+
+
+def _dedupe_bullets_round_robin(
+    per_subdeck_lists: List[List[str]],
+    max_items: int,
+) -> List[str]:
+    """
+    Collects concise, deduplicated bullets round-robin across a professor's today subdecks
+    so every selected subdeck gets represented within the compact scannable cap.
+    """
+    out: List[str] = []
+    seen = set()
+    if not per_subdeck_lists or max_items <= 0:
+        return out
+    max_depth = max((len(lst) for lst in per_subdeck_lists), default=0)
+    for depth in range(max_depth):
+        for lst in per_subdeck_lists:
+            if depth < len(lst):
+                bullet = str(lst[depth] or "").strip()
+                key = bullet.lower()
+                if bullet and key not in seen:
+                    seen.add(key)
+                    out.append(bullet)
+                    if len(out) >= max_items:
+                        return out
+    return out
+
+
+def build_daily_triage_prof_briefing(
+    selected_subdecks: List[Dict[str, Any]],
+    max_capacity: int = 350,
+    focus_mode: str = "smart",
+    r_threshold: float = 0.80,
+) -> Dict[str, Any]:
+    """
+    Teil 3 — Dynamic Daily Professor Exam Briefing.
+
+    Synthesizes a compact, scannable daily exam review exclusively for the subdecks
+    currently selected in today's triage package (`selected_subdecks`), preserving
+    the exact `#1, #2, #3 ...` working order.
+    Recalculates live whenever today's due cards change or the user adjusts `max_capacity`
+    (e.g., 350 -> 500 -> 700 -> All), both locally and on Render / iPad.
+    """
+    from datetime import date
+
+    if not selected_subdecks:
+        return {
+            "generated_for_date": date.today().isoformat(),
+            "max_capacity": int(max_capacity or 350),
+            "focus_mode": str(focus_mode or "smart"),
+            "r_threshold": float(r_threshold or 0.80),
+            "total_briefing_cards": 0,
+            "total_subdecks_covered": 0,
+            "total_topics_count": 0,
+            "headline": "🎙️ Heutiges Prof-Prüfungs-Briefing: Aktuell keine offenen Triage-Themen",
+            "items": [],
+        }
+
+    # Group selected subdecks by (themenblock, dozent) while preserving exact first-appearance order!
+    grouped_order: List[Tuple[str, str]] = []
+    grouped_sds: Dict[Tuple[str, str], List[Dict[str, Any]]] = {}
+    for sd in selected_subdecks:
+        tb = str(sd.get("themenblock") or "").strip()
+        prof = str(sd.get("dozent") or "").strip()
+        if not tb or not prof:
+            continue
+        key = (tb, prof)
+        if key not in grouped_sds:
+            grouped_order.append(key)
+            grouped_sds[key] = []
+        grouped_sds[key].append(sd)
+
+    items: List[Dict[str, Any]] = []
+    total_cards = 0
+    total_subdecks = 0
+
+    for rank_idx, (tb, prof) in enumerate(grouped_order, start=1):
+        sds = grouped_sds[(tb, prof)]
+        prof_assigned_cards = sum(int(s.get("assigned_cards", s.get("active_due", 0)) or 0) for s in sds)
+        total_cards += prof_assigned_cards
+        total_subdecks += len(sds)
+
+        # Highest priority zone among this professor's selected subdecks today (first item is highest)
+        lead_sd = sds[0]
+        lead_zone = str(lead_sd.get("zone") or "C")
+        lead_zone_badge = str(lead_sd.get("zone_badge") or "🔄 C Rotation")
+
+        subdeck_briefings: List[Dict[str, Any]] = []
+        hl_lists: List[List[str]] = []
+        pearl_lists: List[List[str]] = []
+        deemph_lists: List[List[str]] = []
+        all_dates: List[str] = []
+        all_sources: List[str] = []
+
+        for sd in sds:
+            sub_name = str(sd.get("subdeck") or "").strip()
+            full_deck = str(sd.get("full_anki_deck") or "").strip()
+            sig = match_subdeck_to_exam_signal(
+                themenblock=tb,
+                dozent=prof,
+                subdeck=sub_name,
+                full_anki_deck=full_deck,
+                allow_prof_fallback=True,
+            )
+            sd_hl = list(sig.get("exam_highlights") or []) if sig else []
+            sd_pearls = list(sig.get("clinical_pearls") or []) if sig else []
+            sd_deemph = list(sig.get("deemphasized_notes") or []) if sig else []
+            sd_dates = list(sig.get("lecture_dates") or []) if sig else []
+            sd_sources = list(sig.get("source_summaries") or []) if sig else []
+
+            if sd_hl:
+                hl_lists.append(sd_hl)
+            if sd_pearls:
+                pearl_lists.append(sd_pearls)
+            if sd_deemph:
+                deemph_lists.append(sd_deemph)
+            for dt in sd_dates:
+                if dt not in all_dates:
+                    all_dates.append(dt)
+            for sf in sd_sources:
+                if sf not in all_sources:
+                    all_sources.append(sf)
+
+            subdeck_briefings.append({
+                "rank": int(sd.get("rank", 0) or 0),
+                "subdeck": sub_name,
+                "full_anki_deck": full_deck,
+                "assigned_cards": int(sd.get("assigned_cards", sd.get("active_due", 0)) or 0),
+                "active_due": int(sd.get("active_due", 0) or 0),
+                "zone": str(sd.get("zone") or "C"),
+                "zone_badge": str(sd.get("zone_badge") or "🔄 C Rotation"),
+                "match_type": sig.get("match_type", "unmatched") if sig else "unmatched",
+                "signal_id": sig.get("id") if sig else None,
+                "lecture_dates": sorted(sd_dates),
+                "source_summaries": sd_sources,
+                "exam_highlights": sd_hl,
+                "clinical_pearls": sd_pearls,
+                "deemphasized_notes": sd_deemph,
+            })
+
+        # Compact top-level summary for fast scanning (2-4 highlights, 2-3 pearls, 0-2 calm de-emphasis notes)
+        agg_highlights = _dedupe_bullets_round_robin(hl_lists, max_items=4)
+        agg_pearls = _dedupe_bullets_round_robin(pearl_lists, max_items=3)
+        agg_deemph = _dedupe_bullets_round_robin(deemph_lists, max_items=2)
+
+        sub_lbl = f"{len(sds)} Vorlesung" if len(sds) == 1 else f"{len(sds)} Vorlesungen"
+        items.append({
+            "rank": rank_idx,
+            "themenblock": tb,
+            "dozent": prof,
+            "deck_name": f"{tb} › {prof}",
+            "zone": lead_zone,
+            "zone_badge": lead_zone_badge,
+            "assigned_cards": prof_assigned_cards,
+            "subdeck_count": len(sds),
+            "header_summary": f"{prof_assigned_cards} Karten ({sub_lbl}) – {lead_zone_badge}",
+            "lecture_dates": sorted(all_dates),
+            "source_summaries": all_sources,
+            "exam_highlights": agg_highlights,
+            "clinical_pearls": agg_pearls,
+            "deemphasized_notes": agg_deemph,
+            "subdecks": subdeck_briefings,
+        })
+
+    return {
+        "generated_for_date": date.today().isoformat(),
+        "max_capacity": int(max_capacity or 350),
+        "focus_mode": str(focus_mode or "smart"),
+        "r_threshold": float(r_threshold or 0.80),
+        "total_briefing_cards": total_cards,
+        "total_subdecks_covered": total_subdecks,
+        "total_topics_count": len(items),
+        "headline": f"🎙️ Heutiges Prof-Prüfungs-Briefing ({total_subdecks} Vorlesungen • {total_cards} Karten)",
+        "items": items,
+    }
+

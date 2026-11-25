@@ -1367,19 +1367,40 @@
         </div>
 
         <!-- Workload Triage 2.1 (Effizienz-Fokus: Vortag + FSRS Schwachstellen + Budget) -->
+        <style>
+          .triage-3-split-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+            gap: 1rem;
+            align-items: start;
+            margin-bottom: 1.15rem;
+          }
+          @media (max-width: 1080px) {
+            .triage-3-split-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+          .triage-briefing-card details > summary {
+            list-style: none;
+            cursor: pointer;
+          }
+          .triage-briefing-card details > summary::-webkit-details-marker {
+            display: none;
+          }
+        </style>
         <div style="background: rgba(22, 27, 34, 0.95); padding: 1.25rem; border-radius: 10px; border: 1px solid rgba(88, 166, 255, 0.3); font-size: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
           
           <!-- Header Strip -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
             <div>
               <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                <span style="font-size: 15px; font-weight: 700; color: #58a6ff;">🎯 Workload-Triage 2.1: Effizienz-Fokus</span>
+                <span style="font-size: 15px; font-weight: 700; color: #58a6ff;">🎯 Workload-Triage 3.0: 3-Zonen-Fokus &amp; Prof-Briefing</span>
                 <span id="triageActiveBudgetBadge" style="font-size: 10.5px; padding: 0.15rem 0.5rem; background: rgba(56, 139, 253, 0.15); border: 1px solid rgba(56, 139, 253, 0.3); color: #79c0ff; border-radius: 12px; font-weight: 600;">
-                  Ziel: ~350 Karten
+                  Ziel: 350 Karten (Standard)
                 </span>
               </div>
               <div style="color: var(--text-muted); font-size: 11.5px; margin-top: 3px;">
-                Wählt automatisch nur <strong>1. Vortag neu gelernt</strong> + <strong>2. schwache (FSRS Recall)</strong> + <strong>3. &gt;7 Tage ungesehene Risikokarten</strong> aus.
+                Subdeck-genaue Kaskade: <strong>🔥 A1 Vortag</strong> → <strong>🛡️ A2 Jung ≤5d</strong> → <strong>🎯 B High-Yield</strong> → <strong>🔄 C Rotation + ⏰ Anti-Starvation (≥10d)</strong>.
               </div>
             </div>
 
@@ -1394,9 +1415,9 @@
               <!-- FSRS Retrievability Threshold Selector -->
               <div id="triageRThresholdGroup" style="display: flex; align-items: center; gap: 0.25rem; background: rgba(0,0,0,0.28); padding: 0.22rem 0.4rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
                 <span style="font-size: 10px; color: var(--text-muted); margin-right: 0.1rem;">Recall:</span>
-                <button type="button" class="btn-triage-r" data-r="0.78" onclick="setTriageRThreshold(0.78, this)" title="Streng: Nur Vortag + akute Karten unter 78% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.42rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">&lt;78%</button>
-                <button type="button" class="btn-triage-r active" data-r="0.80" onclick="setTriageRThreshold(0.80, this)" title="Standard: Vortag + Karten unter 80% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer;">&lt;80%</button>
-                <button type="button" class="btn-triage-r" data-r="0.82" onclick="setTriageRThreshold(0.82, this)" title="Gründlich: Vortag + Karten unter 82% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.42rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">&lt;82%</button>
+                <button type="button" class="btn-triage-r" data-r="0.78" onclick="setTriageRThreshold(0.78, this)" title="Streng: Nur Vortag + ≤5d + akute Karten unter 78% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.42rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">&lt;78%</button>
+                <button type="button" class="btn-triage-r active" data-r="0.80" onclick="setTriageRThreshold(0.80, this)" title="Standard: Vortag + ≤5d + Karten unter 80% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer;">&lt;80%</button>
+                <button type="button" class="btn-triage-r" data-r="0.82" onclick="setTriageRThreshold(0.82, this)" title="Gründlich: Vortag + ≤5d + Karten unter 82% Abrufwahrscheinlichkeit" style="padding: 0.18rem 0.42rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">&lt;82%</button>
               </div>
 
               <div style="display: flex; align-items: center; gap: 0.3rem; background: rgba(0,0,0,0.35); padding: 0.22rem 0.5rem; border-radius: 6px; border: 1px solid rgba(88, 166, 255, 0.3);">
@@ -1409,46 +1430,76 @@
                 </button>
               </div>
 
-              <div style="display: flex; align-items: center; gap: 0.3rem; background: rgba(0,0,0,0.25); padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
-                <span style="font-size: 10px; color: var(--text-muted); margin-right: 0.15rem;">Schnellwahl:</span>
-                <button type="button" class="btn-triage-cap" data-cap="200" onclick="setTriageBudget(200, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">200</button>
-                <button type="button" class="btn-triage-cap active" data-cap="350" onclick="setTriageBudget(350, this)" style="padding: 0.2rem 0.5rem; font-size: 10px; border-radius: 4px; border: none; background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer;">~350 (Standard)</button>
-                <button type="button" class="btn-triage-cap" data-cap="500" onclick="setTriageBudget(500, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">500</button>
-                <button type="button" class="btn-triage-cap" data-cap="all" onclick="setTriageBudget(9999, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">Alle</button>
+              <div style="display: flex; align-items: center; gap: 0.25rem; background: rgba(0,0,0,0.25); padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap;">
+                <span style="font-size: 10px; color: var(--text-muted); margin-right: 0.15rem;">Paketgröße:</span>
+                <button type="button" class="btn-triage-cap active" data-cap="350" onclick="setTriageBudget(350, this)" style="padding: 0.2rem 0.5rem; font-size: 10px; border-radius: 4px; border: none; background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer;">350 (Standard)</button>
+                <button type="button" class="btn-triage-cap" data-cap="450" onclick="setTriageBudget(450, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">450</button>
+                <button type="button" class="btn-triage-cap" data-cap="550" onclick="setTriageBudget(550, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">550</button>
+                <button type="button" class="btn-triage-cap" data-cap="700" onclick="setTriageBudget(700, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">700</button>
+                <button type="button" class="btn-triage-cap" data-cap="9999" onclick="setTriageBudget(9999, this)" style="padding: 0.2rem 0.45rem; font-size: 10px; border-radius: 4px; border: none; background: transparent; color: #8b949e; cursor: pointer;">Alle</button>
               </div>
             </div>
           </div>
 
-          <!-- TOP PRIORITY FOCUS BOX: Welche 350 Ankis muss ich heute wiederholen? (Von wichtigstem zu unwichtigstem) -->
-          <div id="pageTriageTopFocusBox" style="background: linear-gradient(180deg, rgba(31, 111, 235, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); border: 2px solid rgba(56, 139, 253, 0.5); border-radius: 10px; padding: 1rem 1.15rem; margin-bottom: 1.15rem; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 0.85rem;">
-              <div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                  <span style="font-size: 14px; font-weight: 800; color: #e6edf3; letter-spacing: 0.2px;">📌 HEUTE WIEDERHOLEN: DEINE FOKUS-LISTE (OBEN NACH UNTEN)</span>
-                  <span id="pageTriageCoveragePill" style="font-size: 10.5px; padding: 0.12rem 0.5rem; border-radius: 10px; background: rgba(63, 185, 80, 0.18); border: 1px solid rgba(63, 185, 80, 0.4); color: #3fb950; font-weight: 700;">
-                    350 Karten Ziel
-                  </span>
+          <!-- 2-COLUMN SPLIT: Left = Today's Focus Checklist & Anki Filter | Right = Daily Prof Exam Briefing -->
+          <div class="triage-3-split-grid">
+            <!-- LEFT COLUMN: TOP PRIORITY FOCUS BOX -->
+            <div id="pageTriageTopFocusBox" style="background: linear-gradient(180deg, rgba(31, 111, 235, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); border: 2px solid rgba(56, 139, 253, 0.5); border-radius: 10px; padding: 1rem 1.15rem; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 0.85rem;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <span style="font-size: 13.5px; font-weight: 800; color: #e6edf3; letter-spacing: 0.2px;">📌 HEUTE WIEDERHOLEN: FOKUS-CHECKLISTE</span>
+                    <span id="pageTriageCoveragePill" style="font-size: 10.5px; padding: 0.12rem 0.5rem; border-radius: 10px; background: rgba(63, 185, 80, 0.18); border: 1px solid rgba(63, 185, 80, 0.4); color: #3fb950; font-weight: 700;">
+                      350 Karten Ziel
+                    </span>
+                  </div>
+                  <div id="pageTriageBudgetText" style="font-size: 11px; color: #8b949e; margin-top: 3px;">
+                    Strikt nach Zonen (#1 A1 Vortag → A2 Jung ≤5d → B High-Yield → C Rotation).
+                  </div>
                 </div>
-                <div id="pageTriageBudgetText" style="font-size: 11.5px; color: #8b949e; margin-top: 3px;">
-                  Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • Gestern neu gelernte + vergessensgefährdete Karten zuerst.
+                <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                  <button type="button" id="btnCopyPageTriageQuery" onclick="copyPageTriageQuery()" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.8rem; background: #238636; border-color: #2ea043; color: #fff; font-weight: 600; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                    📋 Anki-Filter kopieren
+                  </button>
                 </div>
               </div>
-              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-                <button type="button" id="btnCopyPageTriageQuery" onclick="copyPageTriageQuery()" class="btn-primary" style="font-size: 11px; padding: 0.35rem 0.8rem; background: #238636; border-color: #2ea043; color: #fff; font-weight: 600; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                  📋 Anki-Filter kopieren
-                </button>
+
+              <!-- Dynamic Checklist of Top Decks (#1 to #N) + Zone Summary + Completed Today + Rollover -->
+              <div id="pageTriageTopChecklistContainer">
+                <div style="color: var(--text-muted); padding: 0.5rem 0;">Berechne deine wichtigsten 350 Wiederholungen für heute...</div>
+              </div>
+
+              <!-- Compact exact subdeck query preview + iPad AnkiMobile tip -->
+              <div style="margin-top: 0.7rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 0.3rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+                  <span style="font-size: 10px; color: var(--text-muted);">Präziser Subdeck-Suchbefehl (Desktop &amp; iPad):</span>
+                  <span id="pageTriageQueryPreview" style="font-family: monospace; font-size: 10px; color: #79c0ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">is:due</span>
+                </div>
+                <div id="pageTriageIpadTip" style="font-size: 10.5px; color: #8b949e; background: rgba(56, 139, 253, 0.08); border: 1px solid rgba(56, 139, 253, 0.22); border-radius: 5px; padding: 0.28rem 0.55rem;">
+                  📱 <strong>Tipp iPad (AnkiMobile):</strong> Stapel-Limit im Filterstapel passend auf <strong>350</strong> stellen.
+                </div>
               </div>
             </div>
 
-            <!-- Dynamic Checklist of Top Decks (#1 to #N) + Completed Today + Multi-Day Rollover -->
-            <div id="pageTriageTopChecklistContainer">
-              <div style="color: var(--text-muted); padding: 0.5rem 0;">Berechne deine wichtigsten 350 Wiederholungen für heute...</div>
-            </div>
+            <!-- RIGHT COLUMN: DAILY DYNAMIC PROFESSOR EXAM BRIEFING -->
+            <div id="pageTriageProfBriefingBox" style="background: linear-gradient(180deg, rgba(163, 113, 247, 0.12) 0%, rgba(13, 17, 23, 0.96) 100%); border: 2px solid rgba(163, 113, 247, 0.42); border-radius: 10px; padding: 1rem 1.15rem; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 0.85rem;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                    <span style="font-size: 13.5px; font-weight: 800; color: #e6edf3;">🎙️ HEUTIGES PROF-PRÜFUNGS-BRIEFING</span>
+                    <span id="pageTriageBriefingMeta" style="font-size: 10px; padding: 0.12rem 0.5rem; border-radius: 10px; background: rgba(163, 113, 247, 0.18); border: 1px solid rgba(163, 113, 247, 0.4); color: #d2a8ff; font-weight: 700;">
+                      Live für heute
+                    </span>
+                  </div>
+                  <div style="font-size: 11px; color: #8b949e; margin-top: 3px;">
+                    Nur für deine <strong>heute ausgewählten Subdecks</strong> – belegt aus den 38 Vorlesungs-Tonspuren.
+                  </div>
+                </div>
+              </div>
 
-            <!-- Hidden/compact query preview for compatibility -->
-            <div style="margin-top: 0.65rem; padding-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
-              <span style="font-size: 10px; color: var(--text-muted);">Anki-Suchbefehl für dieses Paket:</span>
-              <span id="pageTriageQueryPreview" style="font-family: monospace; font-size: 10px; color: #79c0ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 650px;">is:due</span>
+              <div id="pageTriageProfBriefingContainer" style="display: flex; flex-direction: column; gap: 0.65rem; max-height: 760px; overflow-y: auto; padding-right: 2px;">
+                <div style="color: var(--text-muted); padding: 0.5rem 0;">Lade heutiges Prof-Prüfungs-Briefing...</div>
+              </div>
             </div>
           </div>
 

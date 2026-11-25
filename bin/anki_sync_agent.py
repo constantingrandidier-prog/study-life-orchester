@@ -245,13 +245,20 @@ def sync_now(trigger_anki_sync: bool = True):
         log_msg(f"[ERROR] Forecast sync error: {e}")
         forecast = {}
 
-    # 4. Sync topic triage
+    # 4. Sync topic triage 3.0 (subdeck zones + daily professor exam briefing)
     try:
+        try:
+            import app.services.lecture_exam_briefing_service as _lebs_mod
+            importlib.reload(_lebs_mod)
+        except Exception:
+            pass
         import app.services.anki_backlog_triage as _abt_mod
         importlib.reload(_abt_mod)
-        triage = _abt_mod.calculate_backlog_triage()
+        triage = _abt_mod.calculate_backlog_triage(max_capacity=350)
         for base in targets:
-            post_json(f"{base}/triage-sync", triage)
+            ok = post_json(f"{base}/triage-sync", triage, timeout=25.0)
+            if not ok:
+                log_msg(f"[WARN] triage-sync failed to {base}")
     except Exception as e:
         log_msg(f"[ERROR] Triage sync error: {e}")
 

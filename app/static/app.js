@@ -4218,7 +4218,14 @@ async function setTriageBudget(capacity, btnElement) {
 
   const badge = document.getElementById('triageActiveBudgetBadge');
   if (badge) {
-    badge.textContent = effectiveCap >= 9000 ? 'Ziel: Alle fälligen Karten' : `Ziel: ~${effectiveCap} Karten`;
+    badge.textContent = effectiveCap >= 9000
+      ? 'Ziel: Alle nötigen Karten'
+      : (effectiveCap === 350 ? 'Ziel: 350 Karten (Standard)' : `Ziel: ${effectiveCap} Karten`);
+  }
+  const ipadTip = document.getElementById('pageTriageIpadTip');
+  if (ipadTip) {
+    const capLabel = effectiveCap >= 9000 ? '9999 (Alle)' : String(effectiveCap);
+    ipadTip.innerHTML = `📱 <strong>Tipp iPad (AnkiMobile):</strong> Stapel-Limit im Filterstapel passend auf <strong>${capLabel}</strong> stellen.`;
   }
   await loadBacklogTriage(effectiveCap);
   if (currentForecastData) {
@@ -4236,6 +4243,125 @@ async function applyCustomTriageBudget() {
   await setTriageBudget(val, null);
 }
 
+function renderDailyProfBriefing(data) {
+  const container = document.getElementById('pageTriageProfBriefingContainer');
+  const metaEl = document.getElementById('pageTriageBriefingMeta');
+  if (!container) return;
+
+  const briefing = (data && data.daily_prof_briefing) || null;
+  const items = (briefing && Array.isArray(briefing.items)) ? briefing.items : [];
+
+  if (metaEl) {
+    if (briefing && items.length > 0) {
+      metaEl.textContent = `${briefing.total_subdecks_covered || items.length} Vorlesungen • ${briefing.total_briefing_cards || 0} Karten`;
+    } else {
+      metaEl.textContent = '0 offene Themen';
+    }
+  }
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="background: rgba(63, 185, 80, 0.1); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 0.85rem; color: #7ee787; font-size: 12px; text-align: center;">
+        🎉 Aktuell keine offenen Triage-Themen für das heutige Prof-Briefing.
+      </div>
+    `;
+    return;
+  }
+
+  const zoneColor = (z) => {
+    if (z === 'A1') return '#f85149';
+    if (z === 'A2') return '#f0883e';
+    if (z === 'B') return '#d2a8ff';
+    return '#79c0ff';
+  };
+
+  container.innerHTML = items.map((item, idx) => {
+    const zCol = zoneColor(item.zone);
+    const highlights = item.exam_highlights || [];
+    const pearls = item.clinical_pearls || [];
+    const deemph = item.deemphasized_notes || [];
+    const sds = item.subdecks || [];
+    const datesStr = (item.lecture_dates || []).length > 0 ? `📅 ${item.lecture_dates.join(', ')}` : '';
+    const openByDefault = idx < 2 ? 'open' : '';
+
+    const subChipsHtml = sds.map(s => `
+      <span style="display:inline-block; font-size:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#c9d1d9; padding:0.1rem 0.4rem; border-radius:4px; margin:2px 4px 2px 0;">
+        ${escapeHtml(s.subdeck)} <strong style="color:#79c0ff;">(${s.assigned_cards})</strong>
+      </span>
+    `).join('');
+
+    const hlHtml = highlights.length > 0 ? `
+      <div style="margin-top: 0.45rem;">
+        <div style="font-size: 10.5px; font-weight: 700; color: #d2a8ff; margin-bottom: 0.25rem;">🎯 Darauf legt der Prof an der Prüfung Wert:</div>
+        <ul style="margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.25rem; font-size: 11px; color: #e6edf3; line-height: 1.42;">
+          ${highlights.map(h => `<li>${escapeHtml(h)}</li>`).join('')}
+        </ul>
+      </div>
+    ` : '';
+
+    const pearlsHtml = pearls.length > 0 ? `
+      <div style="margin-top: 0.45rem; padding: 0.38rem 0.55rem; background: rgba(210, 153, 34, 0.09); border-left: 3px solid #d29922; border-radius: 4px;">
+        <div style="font-size: 10.5px; font-weight: 700; color: #e3b341; margin-bottom: 0.2rem;">💡 Kleine wichtige Details / Fallen aus dem Hörsaal:</div>
+        <ul style="margin: 0; padding-left: 1.05rem; display: flex; flex-direction: column; gap: 0.2rem; font-size: 10.5px; color: #c9d1d9; line-height: 1.38;">
+          ${pearls.map(p => `<li>${escapeHtml(p)}</li>`).join('')}
+        </ul>
+      </div>
+    ` : '';
+
+    const deemphHtml = deemph.length > 0 ? `
+      <div style="margin-top: 0.4rem; padding: 0.32rem 0.55rem; background: rgba(63, 185, 80, 0.08); border-left: 3px solid #3fb950; border-radius: 4px; font-size: 10.5px; color: #8b949e; line-height: 1.38;">
+        <strong style="color: #7ee787;">🪶 Nicht verrückt machen bei:</strong> ${deemph.map(d => escapeHtml(d)).join(' • ')}
+      </div>
+    ` : '';
+
+    const subDetailHtml = sds.length > 1 ? `
+      <details style="margin-top: 0.45rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.35rem;">
+        <summary style="font-size: 10.5px; color: #79c0ff; font-weight: 600;">📂 Einzelne Vorlesungs-Subdecks anzeigen (${sds.length}) ▾</summary>
+        <div style="margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.4rem;">
+          ${sds.map(sd => `
+            <div style="background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 0.4rem 0.55rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                <strong style="font-size:11px; color:#f0f6fc;">${escapeHtml(sd.subdeck)}</strong>
+                <span style="font-size:10px; color:#8b949e;">${sd.assigned_cards} Karten • ${escapeHtml(sd.zone_badge || '')}</span>
+              </div>
+              ${(sd.exam_highlights || []).length > 0 ? `<div style="font-size:10.5px; color:#c9d1d9; margin-top:0.2rem;">🎯 ${escapeHtml(sd.exam_highlights[0])}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </details>
+    ` : '';
+
+    return `
+      <div class="triage-briefing-card" style="background: rgba(22, 27, 34, 0.9); border: 1px solid ${zCol}55; border-radius: 8px; padding: 0.65rem 0.8rem;">
+        <details ${openByDefault}>
+          <summary style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+              <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:21px; padding:0 5px; border-radius:5px; background:${zCol}; color:#fff; font-weight:800; font-size:11px;">#${item.rank}</span>
+              <strong style="font-size: 12.5px; color: #f0f6fc;">${escapeHtml(item.themenblock)} › ${escapeHtml(item.dozent)}</strong>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+              <span style="font-size: 10px; font-weight: 700; color: ${zCol}; background: ${zCol}18; border: 1px solid ${zCol}40; padding: 0.1rem 0.45rem; border-radius: 4px;">
+                ${escapeHtml(item.header_summary || `${item.assigned_cards} Karten`)}
+              </span>
+              <span style="font-size: 10px; color: #8b949e;">▾</span>
+            </div>
+          </summary>
+          <div style="margin-top: 0.45rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.25rem;">
+              <div>${subChipsHtml}</div>
+              ${datesStr ? `<span style="font-size: 9.5px; color: #8b949e;">${escapeHtml(datesStr)}</span>` : ''}
+            </div>
+            ${hlHtml}
+            ${pearlsHtml}
+            ${deemphHtml}
+            ${subDetailHtml}
+          </div>
+        </details>
+      </div>
+    `;
+  }).join('');
+}
+
 let latestTriageData = null;
 
 async function loadBacklogTriage(maxCapacity = 350) {
@@ -4249,6 +4375,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
   const pageBudgetText = document.getElementById('pageTriageBudgetText');
   const pageCoveragePill = document.getElementById('pageTriageCoveragePill');
   const topChecklistEl = document.getElementById('pageTriageTopChecklistContainer');
+  const ipadTipEl = document.getElementById('pageTriageIpadTip');
 
   try {
     const url = `/api/v1/schedule/anki/backlog-triage?max_capacity=${effectiveCap}&focus_mode=${encodeURIComponent(currentTriageFocusMode)}&r_threshold=${currentTriageRThreshold}&_t=${Date.now()}`;
@@ -4280,12 +4407,13 @@ async function loadBacklogTriage(maxCapacity = 350) {
       }).filter(tb => tb.professors.length > 0);
     }
     latestTriageData = data;
+    renderDailyProfBriefing(data);
 
     const isSmart = (data.focus_mode || currentTriageFocusMode) === 'smart';
     const rPct = Math.round(((data.r_threshold != null ? data.r_threshold : currentTriageRThreshold)) * 100);
     const rKey = (data.r_threshold != null ? data.r_threshold : currentTriageRThreshold).toFixed(2);
 
-    const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Vortag-Neukarten, Überfälligkeit und Fehlerquote.';
+    const adviceText = data.summary_advice || 'Themen wissenschaftlich priorisiert nach Vortag-Neukarten, Jung-Schutz ≤5d, High-Yield & Anti-Starvation.';
     if (modalAdviceEl) {
       modalAdviceEl.textContent = adviceText;
       modalAdviceEl.style.borderColor = data.is_overloaded ? 'rgba(88,166,255,0.4)' : 'rgba(88,166,255,0.3)';
@@ -4309,10 +4437,15 @@ async function loadBacklogTriage(maxCapacity = 350) {
     const effectiveTarget = data.effective_today_target != null ? data.effective_today_target : Math.min(effectiveCap, totalPoolWorkload);
     const coveragePct = data.coverage_pct != null ? data.coverage_pct : 100.0;
     const deferredCount = data.deferred_cards_count != null ? data.deferred_cards_count : Math.max(0, poolDueToday - effectiveTarget);
+    const selectedSubdeckCount = Array.isArray(data.selected_subdecks) ? data.selected_subdecks.length : 0;
 
     if (pageQueryPreview) {
       pageQueryPreview.textContent = query;
       pageQueryPreview.setAttribute('title', query);
+    }
+    if (ipadTipEl) {
+      const capLbl = effectiveCap >= 9000 ? `${effectiveTarget} (Alle)` : String(effectiveCap);
+      ipadTipEl.innerHTML = `📱 <strong>Tipp iPad (AnkiMobile):</strong> Stapel-Limit im Filterstapel passend auf <strong>${capLbl}</strong> stellen (${selectedSubdeckCount} exakte Vorlesungs-Subdecks im Filter).`;
     }
     if (pageCoveragePill) {
       if (isSmart && solidSkipped > 0) {
@@ -4325,8 +4458,8 @@ async function loadBacklogTriage(maxCapacity = 350) {
     }
     if (pageBudgetText) {
       pageBudgetText.innerHTML = isSmart
-        ? `<strong>Effizienz-Modus (Recall &lt; ${rPct}% oder &gt;7d ungesehen):</strong> Zeigt nur <strong>Vortag-Neukarten + vergessensgefährdete Karten</strong> – gefestigter Stoff blockiert keine Plätze mehr.`
-        : `<strong>Voll-Modus:</strong> Vom <strong>wichtigsten (#1)</strong> zum <strong>unwichtigsten</strong> geordnet • Alle fälligen Karten im Überblick.`;
+        ? `<strong>Triage 3.0 (Recall &lt; ${rPct}% / ≤5d Jung-Schutz):</strong> Exakte Subdeck-Auswahl (<strong>${selectedSubdeckCount} Vorlesungen</strong>) – <strong>A1 Vortag</strong> &amp; <strong>A2 ≤5d</strong> immer zuerst.`
+        : `<strong>Voll-Modus:</strong> Exakte Subdeck-Auswahl (<strong>${selectedSubdeckCount} Vorlesungen</strong>) über alle fälligen Karten.`;
     }
 
     // Render TOP PRIORITY FOCUS BOX (#pageTriageTopChecklistContainer)
@@ -4345,7 +4478,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
         ? ` • <strong style="color:#3fb950;">${solidSkipped} gefestigte</strong> automatisch übersprungen`
         : '';
       checklistHtml += `
-        <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.8rem;">
+        <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.7rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
             <div style="font-size: 12px; color: #e6edf3;">
               🎯 <strong>Dein Tagespensum heute: ${effectiveTarget} Wiederholungen</strong>
@@ -4362,6 +4495,34 @@ async function loadBacklogTriage(maxCapacity = 350) {
           </div>
         </div>
       `;
+
+      // 1b. Triage 3.0 Zone Summary Pills
+      const zs = data.zone_summary || null;
+      if (zs) {
+        const zPills = [
+          { k: 'A1', lbl: '🔥 A1 Vortag', col: '#f85149' },
+          { k: 'A2', lbl: '🛡️ A2 Jung ≤5d', col: '#f0883e' },
+          { k: 'B', lbl: '🎯 B High-Yield', col: '#d2a8ff' },
+          { k: 'C_starvation', lbl: '⏰ Anti-Starv. ≥10d', col: '#d29922' },
+          { k: 'C_rotation', lbl: '🔄 C Rotation', col: '#79c0ff' },
+          { k: 'C_low_yield', lbl: '🐢 Low-Yield Ende', col: '#8b949e' },
+        ].filter(z => zs[z.k] && zs[z.k].total_cards > 0);
+        if (zPills.length > 0) {
+          checklistHtml += `
+            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.7rem;">
+              ${zPills.map(z => {
+                const st = zs[z.k];
+                const isSel = st.selected_cards > 0;
+                return `
+                  <span style="font-size: 10px; padding: 0.14rem 0.5rem; border-radius: 12px; background: ${isSel ? `${z.col}22` : 'rgba(255,255,255,0.04)'}; border: 1px solid ${isSel ? `${z.col}66` : 'rgba(255,255,255,0.1)'}; color: ${isSel ? z.col : '#8b949e'}; font-weight: ${isSel ? '700' : '500'};">
+                    ${z.lbl}: <strong>${st.selected_cards}</strong>/${st.total_cards}
+                  </span>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+      }
 
       // 2. Already repeated today (if any)
       if (completedToday.length > 0) {
@@ -4397,17 +4558,18 @@ async function loadBacklogTriage(maxCapacity = 350) {
           const isPartial = Boolean(item.is_partial);
           const isVortagNew = Boolean(item.is_vortag_new);
           const vortCnt = item.vortag_due_today || 0;
+          const youngCnt = item.young_due_today || 0;
           const timeRiskCnt = item.time_risk_due_today || 0;
           const weakCnt = item.weak_due_today != null ? item.weak_due_today : Math.max(0, poolDue - vortCnt - timeRiskCnt);
           const solidCnt = item.solid_due_today || 0;
           const subdecks = item.yesterday_subdecks || [];
-          const smartSubdecks = (item.smart_subdecks || []).filter(sd => {
-            const sc = (sd.smart_due_counts && sd.smart_due_counts[rKey] != null) ? sd.smart_due_counts[rKey] : sd.all_due;
-            return sc > 0;
-          });
+          const chosenSubdecks = Array.isArray(item.selected_subdecks) ? item.selected_subdecks : [];
+          const zoneBadgeText = item.zone_badge || item.level_badge || '🔄 C Rotation';
+          const rowQuery = item.selected_subdecks_anki_query || item.anki_filter_query || 'is:due';
+
           const rowBorder = isVortagNew
             ? '1.5px solid rgba(248, 81, 73, 0.65)'
-            : (rankNum === 1 ? '1.5px solid rgba(88, 166, 255, 0.55)' : '1px solid rgba(255, 255, 255, 0.12)');
+            : (item.zone === 'A2' ? '1.5px solid rgba(240, 136, 62, 0.55)' : (rankNum === 1 ? '1.5px solid rgba(88, 166, 255, 0.55)' : '1px solid rgba(255, 255, 255, 0.12)'));
           const rowBg = isVortagNew
             ? 'linear-gradient(90deg, rgba(248, 81, 73, 0.14) 0%, rgba(22, 27, 34, 0.9) 100%)'
             : 'rgba(22, 27, 34, 0.88)';
@@ -4421,14 +4583,13 @@ async function loadBacklogTriage(maxCapacity = 350) {
               </div>
             `;
           }
-          if (isSmart && smartSubdecks.length > 1 && (vortCnt > 0 || solidCnt > 0)) {
-            const subBreakdown = smartSubdecks.slice(0, 4).map(sd => {
-              const sc = (sd.smart_due_counts && sd.smart_due_counts[rKey] != null) ? sd.smart_due_counts[rKey] : sd.all_due;
-              return `<span><strong>${sc}×</strong> ${escapeHtml(sd.subdeck)}${sc < sd.all_due ? ` <span style="color:#8b949e;">/${sd.all_due}</span>` : ''}</span>`;
-            }).join(' • ');
+          if (chosenSubdecks.length > 0) {
+            const sdChips = chosenSubdecks.map(sd =>
+              `<span style="display:inline-block; margin:2px 4px 2px 0; padding:0.08rem 0.4rem; border-radius:4px; background:rgba(56, 139, 253, 0.12); border:1px solid rgba(56, 139, 253, 0.28); color:#c9d1d9; font-size:10.5px;">${escapeHtml(sd.subdeck)} <strong style="color:#79c0ff;">(${sd.assigned_cards})</strong></span>`
+            ).join('');
             subdeckHtml += `
-              <div style="margin-top: 0.22rem; padding: 0.24rem 0.55rem; background: rgba(56, 139, 253, 0.1); border-left: 3px solid #58a6ff; border-radius: 4px; font-size: 10.5px; color: #c9d1d9;">
-                📂 <strong>Effizienz-Aufteilung:</strong> ${subBreakdown}
+              <div style="margin-top: 0.28rem; line-height: 1.45;">
+                ${sdChips}
               </div>
             `;
           }
@@ -4441,50 +4602,50 @@ async function loadBacklogTriage(maxCapacity = 350) {
           if (isSmart) {
             const detailParts = [];
             if (vortCnt > 0) detailParts.push(`${vortCnt} Vortag`);
+            if (youngCnt > 0) detailParts.push(`${youngCnt} ≤5d`);
             if (weakCnt > 0) detailParts.push(`${weakCnt} schwach`);
-            if (timeRiskCnt > 0) detailParts.push(`${timeRiskCnt} >7d ungesehen`);
+            if (timeRiskCnt > 0) detailParts.push(`${timeRiskCnt} >7d`);
             const mixStr = detailParts.join(' + ');
             const skipStr = solidCnt > 0 ? ` • ${solidCnt} solid skip` : '';
             cardBoxSub = isPartial ? `Rest ${item.deferred_from_deck} morgen${skipStr}` : `${mixStr}${skipStr}`;
           } else {
-            cardBoxSub = isPartial ? `Restliche ${item.deferred_from_deck} automatisch morgen` : 'Ordner in Anki auf 0 bringen';
+            cardBoxSub = isPartial ? `Restliche ${item.deferred_from_deck} automatisch morgen` : 'Subdecks in Anki auf 0 bringen';
           }
 
           checklistHtml += `
             <div style="border: ${rowBorder}; background: ${rowBg}; border-radius: 8px; padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-              <div style="flex: 1; min-width: 260px;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 24px; padding: 0 6px; border-radius: 6px; background: ${isVortagNew ? '#da3633' : '#1f6feb'}; color: #fff; font-weight: 800; font-size: 12px;">
+              <div style="flex: 1; min-width: 240px;">
+                <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 22px; padding: 0 6px; border-radius: 6px; background: ${isVortagNew ? '#da3633' : (item.zone === 'A2' ? '#d97706' : '#1f6feb')}; color: #fff; font-weight: 800; font-size: 11.5px;">
                     #${rankNum}
                   </span>
-                  <span style="font-size: 10.5px; font-weight: 700; color: ${item.color}; background: ${item.color}18; border: 1px solid ${item.color}40; padding: 0.1rem 0.45rem; border-radius: 4px;">
-                    ${item.level_badge}
+                  <span style="font-size: 10px; font-weight: 700; color: ${item.color}; background: ${item.color}18; border: 1px solid ${item.color}40; padding: 0.1rem 0.42rem; border-radius: 4px;">
+                    ${escapeHtml(zoneBadgeText)}
                   </span>
-                  <strong style="font-size: 13.5px; color: #f0f6fc;">
+                  <strong style="font-size: 13px; color: #f0f6fc;">
                     ${escapeHtml(item.themenblock)} › ${escapeHtml(item.dozent)}
                   </strong>
-                  ${isSmart && solidCnt > 0 ? `<span style="font-size: 10px; padding: 0.1rem 0.45rem; border-radius: 10px; background: rgba(63, 185, 80, 0.14); border: 1px solid rgba(63, 185, 80, 0.35); color: #3fb950; font-weight: 600;">🟢 ${solidCnt} gut gekonnt übersprungen</span>` : ''}
+                  ${isSmart && solidCnt > 0 ? `<span style="font-size: 9.5px; padding: 0.08rem 0.4rem; border-radius: 10px; background: rgba(63, 185, 80, 0.14); border: 1px solid rgba(63, 185, 80, 0.35); color: #3fb950; font-weight: 600;">🟢 ${solidCnt} skip</span>` : ''}
                 </div>
                 ${subdeckHtml}
-                <div style="display: flex; gap: 0.85rem; flex-wrap: wrap; font-size: 11px; color: #8b949e; margin-top: 0.35rem;">
-                  <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${escapeHtml(item.days_since_last_review_str)}</strong></span>
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; font-size: 10.5px; color: #8b949e; margin-top: 0.32rem;">
+                  <span>⏱️ <strong style="color: #e6edf3;">vor ${escapeHtml(item.days_since_last_review_str)}</strong></span>
                   ${item.avg_retrievability_pct != null ? `<span>🧠 Recall: <strong style="color: ${item.avg_retrievability_pct < rPct ? '#ff7b72' : '#58a6ff'};">${item.avg_retrievability_pct}%</strong></span>` : ''}
                   <span>🎯 Retention: <strong style="color: ${item.retention_rate_pct < 70 ? '#ff7b72' : '#3fb950'};">${item.retention_rate_pct}%</strong></span>
-                  <span>⚙️ Ease: <strong style="color: #c9d1d9;">${item.avg_ease_pct}%</strong></span>
                   <span>📊 Score: <strong style="color: ${item.color};">${item.urgency_score}/100</strong></span>
                 </div>
               </div>
 
-              <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                <div style="text-align: right; background: ${isPartial ? 'rgba(210, 153, 34, 0.14)' : 'rgba(46, 160, 67, 0.16)'}; border: 1px solid ${isPartial ? 'rgba(210, 153, 34, 0.45)' : 'rgba(63, 185, 80, 0.45)'}; padding: 0.38rem 0.75rem; border-radius: 7px;">
-                  <div style="font-size: 14px; font-weight: 800; color: ${isPartial ? '#e3b341' : '#3fb950'};">
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <div style="text-align: right; background: ${isPartial ? 'rgba(210, 153, 34, 0.14)' : 'rgba(46, 160, 67, 0.16)'}; border: 1px solid ${isPartial ? 'rgba(210, 153, 34, 0.45)' : 'rgba(63, 185, 80, 0.45)'}; padding: 0.35rem 0.65rem; border-radius: 7px;">
+                  <div style="font-size: 13px; font-weight: 800; color: ${isPartial ? '#e3b341' : '#3fb950'};">
                     ${cardBoxTitle}
                   </div>
-                  <div style="font-size: 10px; color: #c9d1d9;">
+                  <div style="font-size: 9.5px; color: #c9d1d9;">
                     ${cardBoxSub}
                   </div>
                 </div>
-                <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(item.anki_filter_query)}', this)" class="btn-secondary" style="font-size: 10.5px; padding: 0.35rem 0.6rem; color: #c9d1d9; border-radius: 5px; cursor: pointer;">
+                <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(rowQuery)}', this)" class="btn-secondary" style="font-size: 10px; padding: 0.32rem 0.55rem; color: #c9d1d9; border-radius: 5px; cursor: pointer;">
                   📋 Filter
                 </button>
               </div>
@@ -4499,13 +4660,13 @@ async function loadBacklogTriage(maxCapacity = 350) {
         checklistHtml += `
           <div style="margin-top: 0.85rem; padding-top: 0.7rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
             <div style="font-size: 11px; font-weight: 700; color: #79c0ff; margin-bottom: 0.45rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem;">
-              <span>📅 AUTOMATISCHE VERSCHIEBUNG &amp; TÄGLICHE ROTATION DER RESTLICHEN ${deferredCount} KARTEN:</span>
-              <span style="font-size: 10.5px; color: #8b949e; font-weight: 500;">Jeden Tag rücken die nächsten Dozenten automatisch nach oben</span>
+              <span>📅 AUTOMATISCHE ROTATION DER RESTLICHEN ${deferredCount} KARTEN:</span>
+              <span style="font-size: 10px; color: #8b949e; font-weight: 500;">Spätestens nach 10d rückt jedes Deck per Anti-Starvation hoch</span>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.5rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.5rem;">
               ${rolloverDays.slice(0, 3).map(rDay => {
-                const deckPills = (rDay.decks || []).map(d =>
-                  `<span style="display:inline-block; font-size:10.5px; color:#c9d1d9; background:rgba(255,255,255,0.06); padding:0.1rem 0.4rem; border-radius:4px; margin:2px 3px 2px 0;"><strong>${escapeHtml(d.dozent)}</strong> (${d.cards})</span>`
+                const deckPills = (rDay.decks || []).slice(0, 6).map(d =>
+                  `<span style="display:inline-block; font-size:10px; color:#c9d1d9; background:rgba(255,255,255,0.06); padding:0.1rem 0.38rem; border-radius:4px; margin:2px 3px 2px 0;"><strong>${escapeHtml(d.dozent)}</strong>${d.subdeck ? `: ${escapeHtml(d.subdeck.slice(0, 22))}` : ''} (${d.cards})</span>`
                 ).join('');
                 return `
                   <div style="background: rgba(13, 17, 23, 0.75); border: 1px solid rgba(88, 166, 255, 0.22); border-radius: 6px; padding: 0.5rem 0.65rem;">

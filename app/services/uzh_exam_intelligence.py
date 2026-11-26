@@ -311,11 +311,21 @@ def classify_deck_yield(
     """
     nl = anki_name.lower()
 
-    # 1. No Yield (Reine Orientierung, Einführung, Abschluss, Organisation)
-    no_yield_terms = [
-        "einführung", "abschluss", "einfuehrung", "organisat", "vorbesprechung", "feedback"
-    ]
-    if any(t in nl for t in no_yield_terms) and "versuch" not in nl:
+    # 1. No Yield (Reine Orientierung, Block-Einführung, Abschluss, Organisation)
+    # Important (B3): Subject lectures taught by faculty (e.g. Jelezarov "1 Einführung Hormone")
+    # contain dense exam-relevant biochemistry/physiology and must NOT be penalized as No-Yield!
+    subject_lecturers = (
+        "jelezarov", "loffing", "kurtcuoglu", "stockmann", "schneider", "manatschal",
+        "tuzlak", "becher", "dutzler", "lukic", "rogler", "wagner", "emmert",
+        "hersberger", "robert", "hall",
+    )
+    is_subject_lecturer_deck = any(prof in nl for prof in subject_lecturers)
+    org_only_terms = ["organisat", "vorbesprechung", "feedback"]
+    block_intro_terms = ["einführung", "abschluss", "einfuehrung"]
+    if (
+        (any(t in nl for t in org_only_terms) or (any(t in nl for t in block_intro_terms) and not is_subject_lecturer_deck))
+        and "versuch" not in nl
+    ):
         return {
             "yield_level": "none",
             "yield_label": "No-Yield (Einführung / Orga)",

@@ -266,22 +266,22 @@
   {
     "deck_id": 1789378222987,
     "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-    "card_count": 172,
+    "card_count": 122,
     "new_cards": 0,
-    "mastered_cards": 168,
+    "mastered_cards": 118,
     "learning_cards": 0,
-    "avg_card_chars": 282.0,
+    "avg_card_chars": 277.9,
     "is_completed": true,
     "is_in_progress": false
   },
   {
     "deck_id": 1789378222988,
     "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
-    "card_count": 173,
+    "card_count": 158,
     "new_cards": 2,
-    "mastered_cards": 166,
+    "mastered_cards": 151,
     "learning_cards": 0,
-    "avg_card_chars": 263.6,
+    "avg_card_chars": 259.6,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -343,11 +343,11 @@
   {
     "deck_id": 1789378222994,
     "deck_name": "2. SJ - 1 :: TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
-    "card_count": 76,
+    "card_count": 68,
     "new_cards": 0,
-    "mastered_cards": 76,
+    "mastered_cards": 68,
     "learning_cards": 0,
-    "avg_card_chars": 281.1,
+    "avg_card_chars": 277.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -541,11 +541,11 @@
   {
     "deck_id": 1789378223014,
     "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
-    "card_count": 125,
+    "card_count": 32,
     "new_cards": 7,
-    "mastered_cards": 118,
+    "mastered_cards": 25,
     "learning_cards": 0,
-    "avg_card_chars": 517.1,
+    "avg_card_chars": 584.1,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -618,11 +618,11 @@
   {
     "deck_id": 1789378223021,
     "deck_name": "2. SJ - 1 :: TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
-    "card_count": 197,
+    "card_count": 149,
     "new_cards": 2,
-    "mastered_cards": 195,
+    "mastered_cards": 147,
     "learning_cards": 0,
-    "avg_card_chars": 340.3,
+    "avg_card_chars": 334.6,
     "is_completed": false,
     "is_in_progress": true
   },
@@ -805,11 +805,11 @@
   {
     "deck_id": 1789378223038,
     "deck_name": "2. SJ - 1 :: TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
-    "card_count": 77,
+    "card_count": 57,
     "new_cards": 0,
-    "mastered_cards": 76,
+    "mastered_cards": 56,
     "learning_cards": 0,
-    "avg_card_chars": 221.6,
+    "avg_card_chars": 227.2,
     "is_completed": true,
     "is_in_progress": false
   },
@@ -916,12 +916,12 @@
     "deck_id": 1789378223048,
     "deck_name": "2. SJ - 1 :: TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
     "card_count": 109,
-    "new_cards": 0,
+    "new_cards": 1,
     "mastered_cards": 108,
     "learning_cards": 0,
     "avg_card_chars": 666.1,
-    "is_completed": true,
-    "is_in_progress": false
+    "is_completed": false,
+    "is_in_progress": true
   },
   {
     "deck_id": 1789378223049,
@@ -1047,22 +1047,22 @@
   {
     "deck_id": 1789378223062,
     "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
-    "card_count": 142,
+    "card_count": 59,
     "new_cards": 42,
-    "mastered_cards": 100,
+    "mastered_cards": 17,
     "learning_cards": 0,
-    "avg_card_chars": 256.3,
+    "avg_card_chars": 247.2,
     "is_completed": false,
     "is_in_progress": true
   },
   {
     "deck_id": 1789378223063,
     "deck_name": "2. SJ - 1 :: TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
-    "card_count": 137,
+    "card_count": 104,
     "new_cards": 0,
-    "mastered_cards": 137,
+    "mastered_cards": 104,
     "learning_cards": 0,
-    "avg_card_chars": 275.2,
+    "avg_card_chars": 257.5,
     "is_completed": true,
     "is_in_progress": false
   },

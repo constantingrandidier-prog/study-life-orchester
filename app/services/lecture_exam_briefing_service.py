@@ -236,6 +236,11 @@ def validate_signals_against_transcripts() -> Dict[str, Any]:
             if not (LECTURE_SUMMARIES_DIR / sf).exists():
                 missing_files.append((eid, sf))
 
+    for sf in data.get("ignored_dozent_summaries") or []:
+        referenced_summaries.add(sf)
+        if not (LECTURE_SUMMARIES_DIR / sf).exists():
+            missing_files.append(("<ignored_dozent_summaries>", sf))
+
     all_summary_files = sorted(p.name for p in LECTURE_SUMMARIES_DIR.glob("*.md")) if LECTURE_SUMMARIES_DIR.exists() else []
     unreferenced_summaries = [f for f in all_summary_files if f not in referenced_summaries]
 
@@ -244,6 +249,7 @@ def validate_signals_against_transcripts() -> Dict[str, Any]:
         "entry_count": len(entries),
         "total_summary_files": len(all_summary_files),
         "referenced_summary_count": len(referenced_summaries),
+        "ignored_dozent_summaries": list(data.get("ignored_dozent_summaries") or []),
         "unreferenced_summaries": unreferenced_summaries,
         "missing_files": missing_files,
         "invalid_entries": invalid_entries,

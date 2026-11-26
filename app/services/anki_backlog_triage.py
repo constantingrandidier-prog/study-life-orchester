@@ -177,14 +177,32 @@ def _get_time_guard_r_cap(r_threshold: float) -> float:
 
 
 def _build_smart_filter_suffix(r_threshold: float) -> str:
-    """Builds the Anki search suffix matching Triage 3.0 Smart Focus (A1 Vortag + weak FSRS + A2 young <=5d + >=7d unseen risk)."""
+    """Builds the Anki search suffix matching Triage 3.0 Smart Focus (Learn + A1 Vortag + weak FSRS + A2 young <=5d + >=7d unseen risk)."""
     t_cap = _get_time_guard_r_cap(r_threshold)
     return (
-        f"is:due (introduced:2 or prop:r<{r_threshold:.2f} "
+        f"is:due (is:learn or introduced:2 or prop:r<{r_threshold:.2f} "
         f"or prop:ivl<={SMART_YOUNG_IVL_DAYS} "
         f"or (-rated:{SMART_UNSEEN_DAYS} prop:r<{t_cap:.2f} "
         f"(prop:lapses>=2 or prop:reps<=2 or prop:due<=-{SMART_OVERDUE_GUARD_DAYS})))"
     )
+
+
+def _escape_deck_path(path: str) -> str:
+    """Escapes double quotes in an Anki deck path for safe search clauses."""
+    return str(path or "").replace('"', '\\"')
+
+
+def _build_exact_subdeck_clause(exact_path: str, has_children: bool = False) -> str:
+    """
+    Builds a mathematically disjoint Anki deck search clause.
+    If a parent deck holds direct cards AND also has child subdecks (e.g. `Kurtcuoglu` or
+    `4 Nebennieren  🟢`), explicitly excludes child decks (`-deck:"Parent::*"`) so Anki
+    never leaks unselected child-deck cards into the filtered deck.
+    """
+    escaped = _escape_deck_path(exact_path)
+    if has_children:
+        return f'(deck:"{escaped}" -deck:"{escaped}::*")'
+    return f'deck:"{escaped}"'
 
 
 def _is_young_consolidation_card(is_vortag: bool, ivl: int = 99, queue: int = 2) -> bool:
@@ -416,7 +434,8 @@ def _score_and_describe_topic(
 
     days_ago_val = t.get("days_since_last_review")
     days_ago = float(days_ago_val) if days_ago_val is not None else 999.0
-    raw_days_ago = float(t.get("raw_days_since_last_review", days_ago if days_ago < 900 else 999.0))
+    raw_days_val = t.get("raw_days_since_last_review")
+    raw_days_ago = float(raw_days_val) if raw_days_val is not None else (days_ago if days_ago < 900 else 999.0)
     fail_rate = float(t.get("fail_rate_pct", 0.0) or 0.0)
     retention_rate = float(t.get("retention_rate_pct", 100.0) or 100.0)
     avg_ease_pct = float(t.get("avg_ease_pct", 250.0) or 250.0)
@@ -767,6 +786,7 @@ def calculate_backlog_triage(
         crt_anchor_sec = int(today_4am.timestamp()) - (current_day * 86400)
 
         raw_decks = cur.execute("SELECT id, name FROM decks").fetchall()
+        all_exact_paths = {_extract_exact_anki_deck_path(dname) for _, dname in raw_decks}
         deck_map = {}
         did_meta = {}
         for did, dname in raw_decks:
@@ -774,6 +794,8 @@ def calculate_backlog_triage(
             if tb:
                 cleaned = clean_deck_name(dname)
                 y_info = classify_deck_yield(cleaned)
+                exact_p = _extract_exact_anki_deck_path(dname)
+                has_child = any(op.startswith(exact_p + "::") for op in all_exact_paths)
                 deck_map[did] = (
                     tb,
                     prof,
@@ -782,7 +804,8 @@ def calculate_backlog_triage(
                     _extract_subdeck_short_title(dname),
                 )
                 did_meta[did] = {
-                    "exact_anki_deck": _extract_exact_anki_deck_path(dname),
+                    "exact_anki_deck": exact_p,
+                    "has_children": has_child,
                     "yield_level": y_info.get("yield_level", "medium"),
                     "yield_label": y_info.get("yield_label", "Med-Yield"),
                 }
@@ -843,28 +866,39 @@ def calculate_backlog_triage(
             for r in cur.execute(sql_revs, dids + [sem_start_ts]).fetchall()
         }
 
+        # Single scoped card_rev_bounds subquery (only scans revlog for active 2. SJ cards, never full table)
+        scoped_rev_bounds_cte = f"""
+        WITH target_cards AS (
+            SELECT id, did, queue, due, ivl, lapses, reps, data
+            FROM {NORM_CARDS_SQL}
+            WHERE did IN ({placeholders}) AND queue != -1
+        ),
+        card_revs AS (
+            SELECT r.cid, MIN(r.id) AS first_rev, MAX(r.id) AS last_rev
+            FROM revlog r
+            WHERE r.cid IN (SELECT id FROM target_cards)
+            GROUP BY r.cid
+        )
+        """
+
         # Detect newly learned cards from yesterday (or 48h unconsolidated) per subdeck
         sql_new_learned = f"""
+        {scoped_rev_bounds_cte}
         SELECT c.did,
                SUM(CASE WHEN fr.first_rev >= ? AND fr.first_rev < ? THEN 1 ELSE 0 END) as learned_yesterday,
                SUM(CASE WHEN fr.first_rev >= ? AND fr.first_rev < ? AND ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?)) THEN 1 ELSE 0 END) as learned_yest_due_now,
                SUM(CASE WHEN fr.first_rev >= ? AND fr.first_rev < ? AND c.ivl <= 1 AND ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?)) THEN 1 ELSE 0 END) as learned_prev48_uncons_due
-        FROM (
-            SELECT cid, MIN(id) as first_rev
-            FROM revlog
-            GROUP BY cid
-        ) fr
-        JOIN {NORM_CARDS_SQL} c ON fr.cid = c.id
-        WHERE c.did IN ({placeholders}) AND c.queue != -1
+        FROM target_cards c
+        JOIN card_revs fr ON fr.cid = c.id
         GROUP BY c.did
         """
         new_learned_rows = cur.execute(
             sql_new_learned,
-            [
+            dids + [
                 yesterday_ms, today_ms,
                 yesterday_ms, today_ms, current_day, current_day,
                 two_days_ms, yesterday_ms, current_day, current_day,
-            ] + dids
+            ]
         ).fetchall()
         new_learned_by_did = {
             r[0]: {
@@ -875,44 +909,59 @@ def calculate_backlog_triage(
             for r in new_learned_rows
         }
 
-        # Detect daily review sessions & today's completed repetitions vs yesterday's repetitions
-        sql_daily_activity = f"""
+        # 1) Daily review volume per (did, rev_day) for substantive session recency (no card_revs join needed)
+        sql_daily_sessions = f"""
         SELECT c.did,
                CAST((r.id / 1000 - ?) / 86400 AS INT) as rev_day,
-               COUNT(*) as rev_count,
-               COUNT(DISTINCT CASE WHEN r.id >= ? AND fr.first_rev < ? THEN r.cid END) as rep_today_cards,
-               COUNT(DISTINCT CASE WHEN r.id >= ? AND r.id < ? AND fr.first_rev < ? THEN r.cid END) as rep_yest_non_new_cards
+               COUNT(*) as rev_count
         FROM revlog r
         JOIN {NORM_CARDS_SQL} c ON r.cid = c.id
-        JOIN (
-            SELECT cid, MIN(id) as first_rev
-            FROM revlog
-            GROUP BY cid
-        ) fr ON r.cid = fr.cid
         WHERE c.did IN ({placeholders}) AND r.id >= ? AND r.type != 4
         GROUP BY c.did, rev_day
         """
-        activity_rows = cur.execute(
-            sql_daily_activity,
-            [
-                crt_anchor_sec,
-                today_ms, today_ms,
+        session_rows = cur.execute(
+            sql_daily_sessions,
+            [crt_anchor_sec] + dids + [sem_start_ts]
+        ).fetchall()
+
+        # 2) Per-did completed today & yesterday repetitions WITHOUT rev_day grouping (B5):
+        #    - Prevents DST/04:00 double-counting across rev_day buckets.
+        #    - Excludes cards that are STILL due right now (e.g. failed/relearning in queue 1/3 today)
+        #      so unmastered cards are NEVER double-counted in both already_repeated_today and active_due!
+        sql_rep_today_yest = f"""
+        {scoped_rev_bounds_cte}
+        SELECT c.did,
+               COUNT(DISTINCT CASE
+                   WHEN r.id >= ? AND fr.first_rev < ?
+                    AND NOT ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?))
+                   THEN r.cid
+               END) as rep_today_cards,
+               COUNT(DISTINCT CASE
+                   WHEN r.id >= ? AND r.id < ? AND fr.first_rev < ?
+                   THEN r.cid
+               END) as rep_yest_non_new_cards
+        FROM revlog r
+        JOIN target_cards c ON r.cid = c.id
+        JOIN card_revs fr ON r.cid = fr.cid
+        WHERE r.id >= ? AND r.type != 4
+        GROUP BY c.did
+        """
+        rep_today_yest_rows = cur.execute(
+            sql_rep_today_yest,
+            dids + [
+                today_ms, today_ms, current_day, current_day,
                 yesterday_ms, today_ms, yesterday_ms,
-            ] + dids + [sem_start_ts]
+                yesterday_ms,
+            ]
         ).fetchall()
 
         # Per-card FSRS retrievability, Vortag & >=7d unseen time-risk inspection for Smart Efficiency Triage
         sql_due_cards_detail = f"""
+        {scoped_rev_bounds_cte}
         SELECT c.did, c.queue, c.due, c.ivl, c.lapses, c.reps, c.data, fr.first_rev, fr.last_rev
-        FROM {NORM_CARDS_SQL} c
-        LEFT JOIN (
-            SELECT cid, MIN(id) as first_rev, MAX(id) as last_rev
-            FROM revlog
-            GROUP BY cid
-        ) fr ON c.id = fr.cid
-        WHERE c.did IN ({placeholders})
-          AND ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?))
-          AND c.queue != -1
+        FROM target_cards c
+        LEFT JOIN card_revs fr ON c.id = fr.cid
+        WHERE ((c.queue = 2 AND c.due <= ?) OR c.queue = 1 OR (c.queue = 3 AND c.due <= ?))
         """
         due_cards_detail_rows = cur.execute(
             sql_due_cards_detail,
@@ -921,15 +970,19 @@ def calculate_backlog_triage(
 
     prof_day_revs = defaultdict(lambda: defaultdict(int))
     did_day_revs = defaultdict(lambda: defaultdict(int))
-    prof_rep_today = defaultdict(int)
-    prof_rep_yest_non_new = defaultdict(int)
-    did_rep_today = defaultdict(int)
-    did_rep_yest = defaultdict(int)
-    for did, rev_day, rev_cnt, rep_tod, rep_yest in activity_rows:
+    for did, rev_day, rev_cnt in session_rows:
         tb, prof, _, _, _ = deck_map[did]
         key = (tb, prof)
         prof_day_revs[key][rev_day] += (rev_cnt or 0)
         did_day_revs[did][rev_day] += (rev_cnt or 0)
+
+    prof_rep_today = defaultdict(int)
+    prof_rep_yest_non_new = defaultdict(int)
+    did_rep_today = defaultdict(int)
+    did_rep_yest = defaultdict(int)
+    for did, rep_tod, rep_yest in rep_today_yest_rows:
+        tb, prof, _, _, _ = deck_map[did]
+        key = (tb, prof)
         prof_rep_today[key] += (rep_tod or 0)
         prof_rep_yest_non_new[key] += (rep_yest or 0)
         did_rep_today[did] += (rep_tod or 0)
@@ -951,6 +1004,7 @@ def calculate_backlog_triage(
             "did": None,
             "subdeck": "",
             "full_anki_deck": "",
+            "has_children": False,
             "yield_level": "medium",
             "yield_label": "Med-Yield",
             "all_due": 0,
@@ -993,6 +1047,7 @@ def calculate_backlog_triage(
             sub_rec["did"] = did
             sub_rec["subdeck"] = sub_title
             sub_rec["full_anki_deck"] = exact_path
+            sub_rec["has_children"] = bool(dmeta.get("has_children", False))
             sub_rec["yield_level"] = dmeta.get("yield_level", "medium")
             sub_rec["yield_label"] = dmeta.get("yield_label", "Med-Yield")
         sub_rec["all_due"] += 1
@@ -1293,6 +1348,7 @@ def calculate_backlog_triage(
                     "deck_name": f"{tb} › {prof}",
                     "subdeck": svals["subdeck"] or exact_key,
                     "full_anki_deck": svals["full_anki_deck"] or exact_key,
+                    "has_children": bool(svals.get("has_children", False)),
                     "yield_level": svals["yield_level"],
                     "yield_label": svals["yield_label"],
                     "all_due": sub_all_due,
@@ -1449,14 +1505,23 @@ def calculate_backlog_triage(
         "max_capacity": effective_budget,
     }
 
-    _apply_budget(result, effective_budget, focus_mode=eff_mode, r_threshold=eff_r_val)
+    # Normalize cached base snapshot to default (350, smart, 0.80) so custom UI clicks
+    # (e.g. max_capacity=50 or 700) NEVER pollute cached_backlog_triage.json on disk!
+    base_result = json.loads(json.dumps(result))
+    base_result["max_capacity"] = 350
+    _apply_budget(base_result, 350, focus_mode="smart", r_threshold=0.80)
 
     if col_path is None and cur_mtime > 0:
         _MEM_TRIAGE_CACHE["mtime"] = cur_mtime
         _MEM_TRIAGE_CACHE["ts"] = time.time()
-        _MEM_TRIAGE_CACHE["data"] = json.loads(json.dumps(result))
+        _MEM_TRIAGE_CACHE["data"] = json.loads(json.dumps(base_result))
 
-    cache_triage(result)
+    cache_triage(base_result, update_mem_cache=False)
+
+    if effective_budget == 350 and eff_mode == "smart" and abs(eff_r_val - 0.80) < 1e-6:
+        return base_result
+
+    _apply_budget(result, effective_budget, focus_mode=eff_mode, r_threshold=eff_r_val)
     return result
 
 
@@ -1688,8 +1753,16 @@ def _apply_budget(
     )
 
     # ── STEP 2: Pack subdecks strictly by 3-zone order up to packing_target (with 100% A1 Vortag guarantee) ──
-    def _escape_deck_path(path: str) -> str:
-        return str(path or "").replace('"', '\\"')
+    all_known_deck_paths = {
+        str(s.get("full_anki_deck") or "")
+        for topic_item in all_topics
+        for s in (topic_item.get("smart_subdecks") or [])
+        if s.get("full_anki_deck")
+    }
+    for s in all_scored_subdecks:
+        ep = str(s.get("full_anki_deck") or "")
+        if ep:
+            all_known_deck_paths.add(ep)
 
     open_a1_vortag_cards = sum(
         min(int(sd.get("active_due", 0) or 0), int(sd.get("vortag_due", 0) or 0))
@@ -1711,8 +1784,11 @@ def _apply_budget(
             continue
 
         exact_path = sd.get("full_anki_deck") or ""
+        sd_has_children = bool(sd.get("has_children", False)) or (
+            bool(exact_path) and any(op.startswith(exact_path + "::") for op in all_known_deck_paths)
+        )
         if exact_path:
-            sd_clause = f'deck:"{_escape_deck_path(exact_path)}"'
+            sd_clause = _build_exact_subdeck_clause(exact_path, has_children=sd_has_children)
         else:
             pfxs = sd.get("real_anki_prefixes") or []
             sd_clause = build_anki_deck_clause(pfxs, sd.get("themenblock", ""), sd.get("dozent", ""))
@@ -1728,14 +1804,20 @@ def _apply_budget(
             assigned = max(min(pool_cnt, room_left), min_vortag_req)
             is_partial = assigned < pool_cnt
             rem_after = max(0, pool_cnt - assigned)
+            # B6: If budget forced this A1 subdeck down to ONLY its Vortag cards (assigned == min_vortag_req < pool_cnt),
+            # restrict Anki query to `introduced:2` so older cards don't displace true Vortag cards!
+            is_a1_only = bool(min_vortag_req > 0 and assigned == min_vortag_req and is_partial and room_left <= min_vortag_req)
 
             entry = dict(sd)
+            entry["has_children"] = sd_has_children
+            entry["anki_deck_clause"] = sd_clause
+            entry["a1_only_filter"] = is_a1_only
             entry["rank"] = len(selected_subdecks) + 1
             entry["assigned_cards"] = assigned
             entry["is_partial"] = is_partial
             entry["deferred_from_subdeck"] = rem_after
             entry["vortag_guaranteed"] = vortag_cnt > 0
-            entry["anki_filter_query"] = sd_query
+            entry["anki_filter_query"] = f"{sd_clause} is:due introduced:2" if is_a1_only else sd_query
             entry["anki_filter_query_all"] = sd_query_all
             selected_subdecks.append(entry)
             accumulated += assigned
@@ -1744,13 +1826,17 @@ def _apply_budget(
         elif min_vortag_req > 0:
             # Zone A1 hard guarantee: Vortag newly learned cards are NEVER dropped even when budget is full
             rem_after = max(0, pool_cnt - min_vortag_req)
+            is_a1_only = rem_after > 0
             entry = dict(sd)
+            entry["has_children"] = sd_has_children
+            entry["anki_deck_clause"] = sd_clause
+            entry["a1_only_filter"] = is_a1_only
             entry["rank"] = len(selected_subdecks) + 1
             entry["assigned_cards"] = min_vortag_req
             entry["is_partial"] = rem_after > 0
             entry["deferred_from_subdeck"] = rem_after
             entry["vortag_guaranteed"] = True
-            entry["anki_filter_query"] = sd_query
+            entry["anki_filter_query"] = f"{sd_clause} is:due introduced:2" if is_a1_only else sd_query
             entry["anki_filter_query_all"] = sd_query_all
             selected_subdecks.append(entry)
             accumulated += min_vortag_req
@@ -1812,16 +1898,37 @@ def _apply_budget(
         time_risk_cnt = int(t.get("time_risk_due_today", 0) or 0)
         solid_cnt = int(t.get("solid_due_today", 0) or 0)
 
-        prof_sd_clauses = []
+        prof_sd_clauses_all = []
+        prof_a1_only_clauses = []
+        prof_regular_clauses = []
         for sd in prof_sds:
-            ep = sd.get("full_anki_deck")
-            if ep:
-                prof_sd_clauses.append(f'deck:"{_escape_deck_path(ep)}"')
-        if prof_sd_clauses:
-            p_union = " or ".join(dict.fromkeys(prof_sd_clauses))
-            p_clause = f"({p_union})" if len(dict.fromkeys(prof_sd_clauses)) > 1 else p_union
+            cl = sd.get("anki_deck_clause")
+            if not cl:
+                ep = sd.get("full_anki_deck")
+                if ep:
+                    cl = _build_exact_subdeck_clause(ep, has_children=bool(sd.get("has_children", False)))
+            if cl:
+                prof_sd_clauses_all.append(cl)
+                if sd.get("a1_only_filter"):
+                    prof_a1_only_clauses.append(cl)
+                else:
+                    prof_regular_clauses.append(cl)
+        if prof_sd_clauses_all:
+            uniq_all = list(dict.fromkeys(prof_sd_clauses_all))
+            p_union = " or ".join(uniq_all)
+            p_clause = f"({p_union})" if len(uniq_all) > 1 else p_union
             prof_selected_q_all = f"{p_clause} is:due"
-            prof_selected_q = f"{p_clause} {smart_suffix}" if eff_mode == "smart" else prof_selected_q_all
+            if prof_a1_only_clauses and not prof_regular_clauses:
+                a1_u = " or ".join(dict.fromkeys(prof_a1_only_clauses))
+                a1_c = f"({a1_u})" if len(dict.fromkeys(prof_a1_only_clauses)) > 1 else a1_u
+                prof_selected_q = f"{a1_c} is:due introduced:2"
+            elif prof_a1_only_clauses and prof_regular_clauses:
+                a1_u = " or ".join(dict.fromkeys(prof_a1_only_clauses))
+                reg_u = " or ".join(dict.fromkeys(prof_regular_clauses))
+                reg_suf = smart_suffix if eff_mode == "smart" else "is:due"
+                prof_selected_q = f"(({a1_u}) is:due introduced:2) or (({reg_u}) {reg_suf})"
+            else:
+                prof_selected_q = f"{p_clause} {smart_suffix}" if eff_mode == "smart" else prof_selected_q_all
         else:
             prof_selected_q_all = t.get("anki_filter_query_all", "is:due")
             prof_selected_q = t.get("anki_filter_query", "is:due")
@@ -2066,37 +2173,72 @@ def _apply_budget(
 
     if selected_subdecks:
         subdeck_clauses = []
+        a1_only_clauses = []
+        regular_clauses = []
         for sd in selected_subdecks:
-            exact_path = sd.get("full_anki_deck")
-            if exact_path:
-                subdeck_clauses.append(f'deck:"{_escape_deck_path(exact_path)}"')
+            cl = sd.get("anki_deck_clause")
+            if not cl:
+                exact_path = sd.get("full_anki_deck")
+                if exact_path:
+                    cl = _build_exact_subdeck_clause(exact_path, has_children=bool(sd.get("has_children", False)))
+            if cl:
+                subdeck_clauses.append(cl)
+                if sd.get("a1_only_filter"):
+                    a1_only_clauses.append(cl)
+                else:
+                    regular_clauses.append(cl)
             else:
                 for pfx in sd.get("real_anki_prefixes") or []:
                     subdeck_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
-                subdeck_clauses.append(f'deck:"*2. SJ*{sd["themenblock"]}*{sd["dozent"]}*"')
+                    regular_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
+                fb_cl = f'deck:"*2. SJ*{sd["themenblock"]}*{sd["dozent"]}*"'
+                subdeck_clauses.append(fb_cl)
+                regular_clauses.append(fb_cl)
+
         deck_union = " or ".join(dict.fromkeys(subdeck_clauses))
         result["budget_combined_anki_query_all"] = f"({deck_union}) is:due"
         result["budget_combined_anki_query_chunks_all"] = _split_anki_query_chunks(subdeck_clauses, "is:due")
-        if eff_mode == "smart":
+
+        reg_suffix = smart_suffix if eff_mode == "smart" else "is:due"
+        if a1_only_clauses and not regular_clauses:
+            a1_union = " or ".join(dict.fromkeys(a1_only_clauses))
+            result["budget_combined_anki_query"] = f"({a1_union}) is:due introduced:2"
+            result["budget_combined_anki_query_chunks"] = _split_anki_query_chunks(a1_only_clauses, "is:due introduced:2")
+        elif a1_only_clauses and regular_clauses:
+            a1_union = " or ".join(dict.fromkeys(a1_only_clauses))
+            reg_union = " or ".join(dict.fromkeys(regular_clauses))
+            combined_mixed = f"(({a1_union}) is:due introduced:2) or (({reg_union}) {reg_suffix})"
+            result["budget_combined_anki_query"] = combined_mixed
+            if len(combined_mixed) <= 1450:
+                result["budget_combined_anki_query_chunks"] = [combined_mixed]
+            else:
+                result["budget_combined_anki_query_chunks"] = (
+                    _split_anki_query_chunks(a1_only_clauses, "is:due introduced:2")
+                    + _split_anki_query_chunks(regular_clauses, reg_suffix)
+                )
+        elif eff_mode == "smart":
             result["budget_combined_anki_query"] = f"({deck_union}) {smart_suffix}"
             result["budget_combined_anki_query_chunks"] = _split_anki_query_chunks(subdeck_clauses, smart_suffix)
-            urgent_sds = [sd for sd in selected_subdecks if sd.get("zone") in ("A1", "A2")] or selected_subdecks[:6]
-            urgent_clauses = []
-            for sd in urgent_sds:
-                exact_path = sd.get("full_anki_deck")
-                if exact_path:
-                    urgent_clauses.append(f'deck:"{_escape_deck_path(exact_path)}"')
-                else:
-                    for pfx in sd.get("real_anki_prefixes") or []:
-                        urgent_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
-            result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(urgent_clauses))}) {smart_suffix}"
         else:
             result["budget_combined_anki_query"] = result["budget_combined_anki_query_all"]
             result["budget_combined_anki_query_chunks"] = result["budget_combined_anki_query_chunks_all"]
-            urgent_sds = [sd for sd in selected_subdecks if sd.get("zone") in ("A1", "A2")] or selected_subdecks[:6]
-            urgent_clauses = [f'deck:"{_escape_deck_path(sd["full_anki_deck"])}"' for sd in urgent_sds if sd.get("full_anki_deck")]
-            if urgent_clauses:
-                result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(urgent_clauses))}) is:due"
+
+        urgent_sds = [sd for sd in selected_subdecks if sd.get("zone") in ("A1", "A2")] or selected_subdecks[:6]
+        urgent_clauses = []
+        for sd in urgent_sds:
+            cl = sd.get("anki_deck_clause")
+            if not cl:
+                exact_path = sd.get("full_anki_deck")
+                if exact_path:
+                    cl = _build_exact_subdeck_clause(exact_path, has_children=bool(sd.get("has_children", False)))
+            if cl:
+                urgent_clauses.append(cl)
+            else:
+                for pfx in sd.get("real_anki_prefixes") or []:
+                    urgent_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
+        if urgent_clauses:
+            urg_suf = "is:due introduced:2" if (a1_only_clauses and not regular_clauses) else reg_suffix
+            result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(urgent_clauses))}) {urg_suf}"
     elif selected:
         clauses = []
         for t in selected:
@@ -2142,7 +2284,7 @@ def _apply_budget(
         }
 
 
-def cache_triage(data: Dict[str, Any]):
+def cache_triage(data: Dict[str, Any], update_mem_cache: bool = True):
     if not isinstance(data, dict):
         return
     _sanitize_triage_payload(data)
@@ -2202,6 +2344,11 @@ def cache_triage(data: Dict[str, Any]):
         BACKLOG_TRIAGE_SNAPSHOT_PATH.write_text(json_str, encoding="utf-8")
     except Exception:
         pass
+
+    # 3. B7: Immediately invalidate in-memory mtime cache on external sync (/anki/triage-sync)
+    if update_mem_cache:
+        _MEM_TRIAGE_CACHE["ts"] = 0.0
+        _MEM_TRIAGE_CACHE["data"] = None
 
 
 def get_cached_triage() -> Optional[Dict[str, Any]]:

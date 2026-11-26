@@ -365,12 +365,12 @@ def test_f4_prof_fallback_clearly_labeled_and_never_dilutes_direct_matches():
     """Fallback subdecks carry is_prof_fallback=True + coverage_note and don't pollute direct matches of same prof."""
     fb_only_sd = {
         "rank": 1,
-        "themenblock": "TB Endokrinologie",
-        "dozent": "Hall",
-        "subdeck": "2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
-        "full_anki_deck": "Anki::2. SJ::TB Endokrinologie::Hall::2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
-        "assigned_cards": 15,
-        "active_due": 15,
+        "themenblock": "TB Herz-Kreislauf",
+        "dozent": "Kurtcuoglu",
+        "subdeck": "Kurtcuoglu",
+        "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu",
+        "assigned_cards": 1,
+        "active_due": 1,
         "zone": "B",
         "zone_badge": "🎯 B Prüfungs-Kern",
     }
@@ -383,10 +383,10 @@ def test_f4_prof_fallback_clearly_labeled_and_never_dilutes_direct_matches():
     # When mixed with a real matched subdeck of the same prof, top-level is NOT fallback-only
     direct_sd = {
         "rank": 1,
-        "themenblock": "TB Endokrinologie",
-        "dozent": "Hall",
-        "subdeck": "4 Nebennieren  🟢",
-        "full_anki_deck": "Anki::2. SJ::TB Endokrinologie::Hall::4 Nebennieren  🟢",
+        "themenblock": "TB Herz-Kreislauf",
+        "dozent": "Kurtcuoglu",
+        "subdeck": "EKG / Kurtcuoglu",
+        "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::EKG / Kurtcuoglu",
         "assigned_cards": 20,
         "active_due": 20,
         "zone": "B",
@@ -425,22 +425,22 @@ def test_f10_app_js_and_index_html_integrity():
     js_text = (ROOT / "app" / "static" / "app.js").read_text(encoding="utf-8")
     html_text = (ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
 
-    # Required Triage 3.0 persistence & chunking markers
+    # Required Triage 3.0 persistence, race guard, goal-reached fix & chunking markers
     assert "sl_triage_budget" in js_text
     assert "copyPageTriageQueryChunk" in js_text
     assert "window.copyPageTriageQueryChunk = copyPageTriageQueryChunk" in js_text
     assert "a1_overflow_cards" in js_text
     assert "is_prof_fallback" in js_text
     assert "coverage_note" in js_text
+    assert "Array.isArray(data.focus_plan_open)" in js_text
+    assert "triageRequestSeq" in js_text
 
     assert "<!-- Workload Triage 3.0" in html_text
     assert "<!-- Workload Triage 2.1" not in html_text
     assert 'id="pageTriageQueryChunks"' in html_text
 
-    # Ensure zero unbalanced braces/brackets/parens in the Triage 3.0 block (L4125..L4915)
-    triage_lines = js_text.splitlines()[4124:4920]
+    triage_lines = js_text.splitlines()[4124:4990]
     triage_src = "\n".join(triage_lines)
-    # Strip single-line comments safely outside strings/templates for balance sanity check
     assert triage_src.count("function renderDailyProfBriefing") == 1
     assert triage_src.count("function copyPageTriageQueryChunk") == 1
 
@@ -459,3 +459,186 @@ def test_f11_push_script_strips_volatile_snapshot_timestamps():
     assert push_to_github._strip_volatile_json(a) != push_to_github._strip_volatile_json(c)
     assert push_to_github._is_cached_snapshot_json("app/data/cached_backlog_triage.json") is True
     assert push_to_github._is_cached_snapshot_json("app/data/lecture_exam_signals.json") is False
+    assert "push_to_github.py" not in push_to_github.IGNORED_FILES
+    assert ".token" in push_to_github.IGNORED_FILES
+
+
+# ── Improvement Plan 2.0 Regression Tests (B1–B7) ──
+def test_b2_parent_deck_query_excludes_child_subdecks():
+    """Parent decks holding direct cards (e.g. Kurtcuoglu, 4 Nebennieren) must emit `-deck:"Parent::*"`."""
+    parent_sd = _make_subdeck("TB Herz-Kreislauf", "Kurtcuoglu", "Kurtcuoglu", all_due=1, smart_due=1, yield_level="high")
+    parent_sd["full_anki_deck"] = "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu"
+    parent_sd["has_children"] = True
+    child_sd = _make_subdeck("TB Herz-Kreislauf", "Kurtcuoglu", "EKG / Kurtcuoglu", all_due=50, smart_due=50, yield_level="low", days_ago=1.0)
+    child_sd["full_anki_deck"] = "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::EKG / Kurtcuoglu"
+    child_sd["has_children"] = False
+
+    # Select only parent (tiny budget = 1) -> query MUST exclude child subdecks!
+    payload = {"connected": True, "topics": [_make_topic("TB Herz-Kreislauf", "Kurtcuoglu", "high", [parent_sd, child_sd])], "themenbloecke": []}
+    _apply_budget(payload, budget=1, focus_mode="smart", r_threshold=0.80)
+
+    q = payload["budget_combined_anki_query"]
+    assert '(deck:"2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu" -deck:"2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::*")' in q
+    # Leaf decks without children keep compact single clause without -deck::*
+    leaf_cl = abt._build_exact_subdeck_clause("2. SJ - 1::TB Atmung::Loffing::Lunge / Loffing", has_children=False)
+    assert leaf_cl == 'deck:"2. SJ - 1::TB Atmung::Loffing::Lunge / Loffing"'
+
+    # Also test dynamic inference when cached snapshot lacks explicit has_children flag
+    parent_sd_no_flag = dict(parent_sd)
+    parent_sd_no_flag.pop("has_children", None)
+    payload_cached = {"connected": True, "topics": [_make_topic("TB Herz-Kreislauf", "Kurtcuoglu", "high", [parent_sd_no_flag, child_sd])], "themenbloecke": []}
+    _apply_budget(payload_cached, budget=1, focus_mode="smart", r_threshold=0.80)
+    assert '-deck:"2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::*"' in payload_cached["budget_combined_anki_query"]
+
+
+def test_b3_jelezarov_einfuehrung_hormone_not_no_yield():
+    """Faculty subject lectures with 'Einführung' in title must NOT be penalized as No-Yield."""
+    from app.services.uzh_exam_intelligence import classify_deck_yield
+
+    res_jel = classify_deck_yield("2. SJ - 1::TB Endokrinologie::1 Jelezarov::1 Einführung Hormone")
+    assert res_jel["yield_level"] == "medium"
+
+    # True block intro/outro remains No-Yield
+    res_block = classify_deck_yield("2. SJ - 1::TB Endokrinologie::Einführung & Abschluss::Einführung")
+    assert res_block["yield_level"] == "none"
+
+
+def test_b4_zero_dead_signals_and_89_of_90_direct_matches():
+    """Strict signal audit: 0 dead entries, 0 numeric mismatches, 38/38 summaries covered, 89/90 direct matches."""
+    import sys
+    sys.path.insert(0, str(ROOT / "bin"))
+    import verify_signals
+
+    rep = verify_signals.verify_signals()
+    assert rep["ok"] is True
+    assert rep["dead_entries"] == []
+    assert rep["numeric_mismatches"] == []
+    assert rep["unreferenced_summaries"] == []
+    assert rep["referenced_summaries"] == 38
+    assert rep["golden_total_subdecks"] == 90
+    assert rep["golden_direct_matches"] == 89
+
+
+def test_b5_failed_relearning_card_today_not_counted_completed(monkeypatch, tmp_path):
+    """A card reviewed today with ease=1 (still due in queue=1) must NOT be counted in already_repeated_today."""
+    import sqlite3
+    from datetime import datetime, timedelta
+
+    db_path = tmp_path / "mini_collection.anki2"
+    now = datetime.now()
+    today_4am = now.replace(hour=4, minute=0, second=0, microsecond=0)
+    if now < today_4am:
+        today_4am -= timedelta(days=1)
+    crt_dt = today_4am - timedelta(days=100)
+    crt_sec = int(crt_dt.timestamp())
+    current_day = (today_4am.date() - crt_dt.date()).days
+    today_rev_ms = int((today_4am + timedelta(hours=2)).timestamp() * 1000)
+    old_rev_ms = int((today_4am - timedelta(days=5)).timestamp() * 1000)
+
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE col (crt INTEGER)")
+    conn.execute("INSERT INTO col VALUES (?)", (crt_sec,))
+    conn.execute("CREATE TABLE decks (id INTEGER PRIMARY KEY, name TEXT)")
+    conn.execute("INSERT INTO decks VALUES (10, '2. SJ - 1\x1fTB Atmung\x1fLoffing\x1fLunge / Loffing')")
+    conn.execute(
+        "CREATE TABLE cards (id INTEGER PRIMARY KEY, nid INTEGER, did INTEGER, ord INTEGER, mod INTEGER, usn INTEGER, "
+        "type INTEGER, queue INTEGER, due INTEGER, ivl INTEGER, factor INTEGER, reps INTEGER, lapses INTEGER, "
+        "left INTEGER, odue INTEGER, odid INTEGER, flags INTEGER, data TEXT)"
+    )
+    conn.execute("CREATE TABLE revlog (id INTEGER PRIMARY KEY, cid INTEGER, usn INTEGER, ease INTEGER, ivl INTEGER, lastIvl INTEGER, factor INTEGER, time INTEGER, type INTEGER)")
+
+    # Card 1: reviewed 5d ago + reviewed today and PASSED -> due in future (current_day + 10)
+    conn.execute(
+        "INSERT INTO cards VALUES (1, 1, 10, 0, 0, 0, 2, 2, ?, 10, 2500, 3, 0, 0, 0, 0, 0, '{\"s\":10.0,\"decay\":0.5,\"lrt\":1700000000}')",
+        (current_day + 10,),
+    )
+    conn.execute("INSERT INTO revlog VALUES (?, 1, 0, 3, 5, 1, 2500, 4000, 1)", (old_rev_ms,))
+    conn.execute("INSERT INTO revlog VALUES (?, 1, 0, 3, 10, 5, 2500, 4000, 1)", (today_rev_ms,))
+
+    # Card 2: reviewed 5d ago + reviewed today with AGAIN (ease=1) -> STILL DUE in queue=1 (relearning)
+    conn.execute(
+        "INSERT INTO cards VALUES (2, 2, 10, 0, 0, 0, 3, 1, ?, 1, 2300, 3, 1, 1001, 0, 0, 0, '{\"s\":1.0,\"decay\":0.5,\"lrt\":1700000000}')",
+        (int(now.timestamp()),),
+    )
+    conn.execute("INSERT INTO revlog VALUES (?, 2, 0, 3, 5, 1, 2500, 4000, 1)", (old_rev_ms + 1,))
+    conn.execute("INSERT INTO revlog VALUES (?, 2, 0, 1, -600, 5, 2300, 4000, 1)", (today_rev_ms + 1000,))
+    conn.commit()
+    conn.close()
+
+    tmp_snap = tmp_path / "cached_backlog_triage.json"
+    monkeypatch.setattr(abt, "BACKLOG_TRIAGE_SNAPSHOT_PATH", tmp_snap)
+    monkeypatch.setattr(abt, "_MEM_TRIAGE_CACHE", {"ts": 0.0, "data": None})
+
+    res = abt.calculate_backlog_triage(col_path=db_path, max_capacity=350)
+    # Only Card 1 is completed today; Card 2 is still due in queue=1 -> ZERO double counting!
+    assert res["already_repeated_today"] == 1
+    assert res["total_due_today"] == 1
+    assert res["active_focus_pool_due"] == 1
+
+
+def test_b6_a1_overflow_uses_introduced_clause_and_smart_has_is_learn():
+    """Smart suffix includes `is:learn`; A1-only truncated subdeck emits `is:due introduced:2`."""
+    suffix = abt._build_smart_filter_suffix(0.80)
+    assert "is:learn" in suffix
+
+    sd_a1 = _make_subdeck(
+        "TB Verdauung", "Stockmann", "Colon und Rektum / Stockmann",
+        all_due=90, smart_due=90, vortag_due=80, yield_level="high",
+    )
+    payload = {"connected": True, "topics": [_make_topic("TB Verdauung", "Stockmann", "high", [sd_a1])], "themenbloecke": []}
+    _apply_budget(payload, budget=50, focus_mode="smart", r_threshold=0.80)
+
+    assert payload["selected_subdecks"][0]["a1_only_filter"] is True
+    assert "introduced:2" in payload["selected_subdecks"][0]["anki_filter_query"]
+    assert "prop:r<" not in payload["selected_subdecks"][0]["anki_filter_query"]
+    assert "is:due introduced:2" in payload["budget_combined_anki_query"]
+
+
+def test_b7_custom_budget_does_not_pollute_disk_snapshot_and_cache_invalidates_mem(monkeypatch, tmp_path):
+    """calculate_backlog_triage(max_capacity=700) keeps cached disk snapshot normalized at 350; cache_triage invalidates mem cache."""
+    import sqlite3
+    from datetime import datetime, timedelta
+
+    db_path = tmp_path / "mini_col_b7.anki2"
+    now = datetime.now()
+    today_4am = now.replace(hour=4, minute=0, second=0, microsecond=0)
+    if now < today_4am:
+        today_4am -= timedelta(days=1)
+    crt_sec = int((today_4am - timedelta(days=50)).timestamp())
+    current_day = 50
+
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE col (crt INTEGER)")
+    conn.execute("INSERT INTO col VALUES (?)", (crt_sec,))
+    conn.execute("CREATE TABLE decks (id INTEGER PRIMARY KEY, name TEXT)")
+    conn.execute("INSERT INTO decks VALUES (10, '2. SJ - 1\x1fTB Atmung\x1fLoffing\x1fLunge / Loffing')")
+    conn.execute(
+        "CREATE TABLE cards (id INTEGER PRIMARY KEY, nid INTEGER, did INTEGER, ord INTEGER, mod INTEGER, usn INTEGER, "
+        "type INTEGER, queue INTEGER, due INTEGER, ivl INTEGER, factor INTEGER, reps INTEGER, lapses INTEGER, "
+        "left INTEGER, odue INTEGER, odid INTEGER, flags INTEGER, data TEXT)"
+    )
+    conn.execute("CREATE TABLE revlog (id INTEGER PRIMARY KEY, cid INTEGER, usn INTEGER, ease INTEGER, ivl INTEGER, lastIvl INTEGER, factor INTEGER, time INTEGER, type INTEGER)")
+    conn.execute(
+        "INSERT INTO cards VALUES (1, 1, 10, 0, 0, 0, 2, 2, ?, 3, 2500, 2, 0, 0, 0, 0, 0, '{\"s\":2.0,\"decay\":0.5,\"lrt\":1700000000}')",
+        (current_day - 2,),
+    )
+    conn.commit()
+    conn.close()
+
+    tmp_snap = tmp_path / "cached_backlog_triage.json"
+    mem_cache = {"mtime": 123.0, "ts": 9999999999.0, "data": {"stale": True}}
+    monkeypatch.setattr(abt, "BACKLOG_TRIAGE_SNAPSHOT_PATH", tmp_snap)
+    monkeypatch.setattr(abt, "_MEM_TRIAGE_CACHE", mem_cache)
+
+    res_700 = abt.calculate_backlog_triage(col_path=db_path, max_capacity=700)
+    assert res_700["max_capacity"] == 700
+    snap_on_disk = json.loads(tmp_snap.read_text(encoding="utf-8"))
+    assert snap_on_disk["max_capacity"] == 350
+
+    # External cache_triage() call (like /anki/triage-sync) must immediately invalidate _MEM_TRIAGE_CACHE
+    mem_cache["ts"] = 9999999999.0
+    mem_cache["data"] = {"stale": True}
+    cache_triage(snap_on_disk)
+    assert mem_cache["ts"] == 0.0
+    assert mem_cache["data"] is None
+

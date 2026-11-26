@@ -363,8 +363,16 @@ def generate_daily_science_rhythm(
                         dur_reps = int(round(actual_work_mins / 5.0) * 5)
                         reps_completed_early = True
             finish_str = comp_time_str or ""
-            reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten) - Erledigt"
-            reps_subtitle = f"Alle {effective_due} Wiederholungen erledigt!"
+            if reps_completed_early:
+                reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten) - Vorzeitig Erledigt"
+                reps_subtitle = (
+                    f"Alle {effective_due} Wiederholungen um {finish_str} Uhr fertig! · Vormittag optimal genutzt"
+                    if finish_str
+                    else f"Alle {effective_due} Wiederholungen vorzeitig erledigt!"
+                )
+            else:
+                reps_title = f"Block 1: Morgen-Repetitionen ({effective_due} Karten) - Erledigt"
+                reps_subtitle = f"Alle {effective_due} Wiederholungen erledigt!"
         elif effective_due > 0:
             calc_reps_mins = max(30, min(240, round((effective_due * SECS_PER_REVIEW) / 60.0)))
             dur_reps = int(round(calc_reps_mins / 15.0) * 15)

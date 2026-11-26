@@ -304,7 +304,7 @@
     "next_day_index": 394
   },
   "_latest_target_date": "2026-11-26",
-  "_updated_at": "2026-11-26T08:10:20.759533",
+  "_updated_at": "2026-11-26T09:19:57.512197",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -964,7 +964,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:41.484352",
+    "last_sync_timestamp": "2026-11-26T09:18:04.327318",
     "current_day_index": 430,
     "target_day_index": 396,
     "next_day_index": 397
@@ -1134,7 +1134,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:44.866675",
+    "last_sync_timestamp": "2026-11-26T09:18:06.362101",
     "current_day_index": 430,
     "target_day_index": 366,
     "next_day_index": 367
@@ -1281,7 +1281,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:32.025916",
+    "last_sync_timestamp": "2026-11-26T09:17:50.741711",
     "current_day_index": 430,
     "target_day_index": 361,
     "next_day_index": 362
@@ -1327,7 +1327,7 @@
     "due_tomorrow_topics": [],
     "recent_reviews_sample": [],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:25.481383",
+    "last_sync_timestamp": "2026-11-26T09:17:42.765754",
     "current_day_index": 430,
     "target_day_index": 368,
     "next_day_index": 369
@@ -1466,7 +1466,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:30.922933",
+    "last_sync_timestamp": "2026-11-26T09:17:49.259116",
     "current_day_index": 430,
     "target_day_index": 357,
     "next_day_index": 358
@@ -1608,7 +1608,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:52.688379",
+    "last_sync_timestamp": "2026-11-26T09:18:20.489784",
     "current_day_index": 430,
     "target_day_index": 358,
     "next_day_index": 359
@@ -1749,7 +1749,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:44.581038",
+    "last_sync_timestamp": "2026-11-26T09:18:05.761846",
     "current_day_index": 430,
     "target_day_index": 359,
     "next_day_index": 360
@@ -1896,7 +1896,7 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T08:09:29.309193",
+    "last_sync_timestamp": "2026-11-26T09:17:47.050565",
     "current_day_index": 430,
     "target_day_index": 360,
     "next_day_index": 361
@@ -12513,7 +12513,7 @@
         "front": "Was sagt das Affinitätsmodell der T-Zell-Selektion aus?"
       }
     ],
-    "last_sync_timestamp": "2026-11-26T08:09:21.160208",
+    "last_sync_timestamp": "2026-11-26T09:19:05.883500",
     "current_day_index": 430,
     "target_day_index": 429,
     "next_day_index": 430
@@ -12892,7 +12892,7 @@
         "front": "Wie läuft die ADCC ab?"
       }
     ],
-    "last_sync_timestamp": "2026-11-26T08:10:20.633880",
+    "last_sync_timestamp": "2026-11-26T09:19:57.418819",
     "current_day_index": 430,
     "target_day_index": 430,
     "next_day_index": 431

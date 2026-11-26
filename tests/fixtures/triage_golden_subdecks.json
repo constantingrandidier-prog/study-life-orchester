@@ -265,9 +265,9 @@
     "dozent": "Hall",
     "subdeck": "2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
     "full_anki_deck": "2. SJ - 1::TB Endokrinologie::2 Hall::2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
-    "expected_id": "prof_fallback_tb_endokrinologie_hall",
-    "expected_match_type": "prof_fallback",
-    "expected_is_fallback": true
+    "expected_id": "hall_langerhans_schilddruese_nebenschilddruese",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
   },
   {
     "themenblock": "TB Endokrinologie",
@@ -697,27 +697,27 @@
     "dozent": "Stockmann",
     "subdeck": "Leber und Gallenwege / Stockmann",
     "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Dickdarm, Leber, Duodenum, Pankreas::Leber und Gallenwege / Stockmann",
-    "expected_id": "prof_fallback_tb_verdauung_stockmann",
-    "expected_match_type": "prof_fallback",
-    "expected_is_fallback": true
+    "expected_id": "stockmann_leber_und_gallenwege",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
   },
   {
     "themenblock": "TB Verdauung",
     "dozent": "Stockmann",
     "subdeck": "Mundhöhle, Kauapparat, Zähne / Stockmann",
     "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Mundhöhle, Kauapparat, Zähne / Stockmann",
-    "expected_id": "prof_fallback_tb_verdauung_stockmann",
-    "expected_match_type": "prof_fallback",
-    "expected_is_fallback": true
+    "expected_id": "stockmann_mundhoehle_kauapparat_zaehne",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
   },
   {
     "themenblock": "TB Verdauung",
     "dozent": "Stockmann",
     "subdeck": "Mundhöhle, Kauapparat, Zähne Teil 2 / Stockmann",
     "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Mundhöhle, Kauapparat, Zähne Teil 2 / Stockmann",
-    "expected_id": "prof_fallback_tb_verdauung_stockmann",
-    "expected_match_type": "prof_fallback",
-    "expected_is_fallback": true
+    "expected_id": "stockmann_mundhoehle_kauapparat_zaehne",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
   },
   {
     "themenblock": "TB Verdauung",

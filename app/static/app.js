@@ -4259,9 +4259,18 @@ function renderDailyProfBriefing(data) {
 
   const briefing = (data && data.daily_prof_briefing) || null;
   const items = (briefing && Array.isArray(briefing.items)) ? briefing.items : [];
+  const isGoalDoneToday = Boolean(
+    data
+    && Array.isArray(data.focus_plan_open)
+    && data.focus_plan_open.length === 0
+    && (data.already_repeated_today || 0) > 0
+    && (data.a1_overflow_cards || 0) === 0
+  );
 
   if (metaEl) {
-    if (briefing && items.length > 0) {
+    if (isGoalDoneToday) {
+      metaEl.textContent = '✅ Tagesziel erreicht – Vorschau';
+    } else if (briefing && items.length > 0) {
       metaEl.textContent = `${briefing.total_subdecks_covered || items.length} Vorlesungen • ${briefing.total_briefing_cards || 0} Karten`;
     } else {
       metaEl.textContent = '0 offene Themen';
@@ -4284,7 +4293,13 @@ function renderDailyProfBriefing(data) {
     return '#79c0ff';
   };
 
-  container.innerHTML = items.map((item, idx) => {
+  const goalDonePrefixHtml = isGoalDoneToday ? `
+    <div style="background: rgba(46, 160, 67, 0.12); border: 1px solid rgba(63, 185, 80, 0.35); border-radius: 7px; padding: 0.5rem 0.7rem; color: #7ee787; font-size: 11px; margin-bottom: 0.25rem;">
+      ✅ <strong>Tagesziel erreicht!</strong> Unten siehst du die Vorschau-Briefings für die nächsten priorisierten Themen (optional bei Zusatz-Motivation).
+    </div>
+  ` : '';
+
+  container.innerHTML = goalDonePrefixHtml + items.map((item, idx) => {
     const zCol = zoneColor(item.zone);
     const highlights = item.exam_highlights || [];
     const pearls = item.clinical_pearls || [];
@@ -4293,7 +4308,7 @@ function renderDailyProfBriefing(data) {
     const isFallbackOnly = Boolean(item.is_prof_fallback);
     const coverageNote = String(item.coverage_note || '').trim();
     const datesStr = (item.lecture_dates || []).length > 0 ? `📅 ${item.lecture_dates.join(', ')}` : '';
-    const openByDefault = idx < 2 ? 'open' : '';
+    const openByDefault = (!isGoalDoneToday && idx < 2) ? 'open' : '';
 
     const subChipsHtml = sds.map(s => `
       <span style="display:inline-block; font-size:10px; background:rgba(255,255,255,0.06); border:1px solid ${s.is_prof_fallback ? 'rgba(210,153,34,0.4)' : 'rgba(255,255,255,0.1)'}; color:#c9d1d9; padding:0.1rem 0.4rem; border-radius:4px; margin:2px 4px 2px 0;">
@@ -4387,9 +4402,11 @@ function renderDailyProfBriefing(data) {
 }
 
 let latestTriageData = null;
+let triageRequestSeq = 0;
 
 async function loadBacklogTriage(maxCapacity = 350) {
   syncTriageControlButtons();
+  const mySeq = ++triageRequestSeq;
   const effectiveCap = (maxCapacity && maxCapacity > 0) ? parseInt(maxCapacity, 10) : (currentTriageBudget || 350);
   const modalListEl = document.getElementById('triageTopicsList');
   const modalAdviceEl = document.getElementById('triageAdviceBanner');
@@ -4406,6 +4423,8 @@ async function loadBacklogTriage(maxCapacity = 350) {
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    // B8: Drop stale responses when user rapidly switches budgets/thresholds
+    if (mySeq !== triageRequestSeq) return;
     const isIgnoredProf = (p) => {
       const doz = String((p && p.dozent) || '').trim().toLowerCase();
       return doz === 'wenger' || doz === 'sommer' || doz.includes('wenger') || doz.includes('sommer');
@@ -4513,9 +4532,11 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
     // Render TOP PRIORITY FOCUS BOX (#pageTriageTopChecklistContainer)
     if (topChecklistEl) {
-      const openPlan = (data.focus_plan_open && data.focus_plan_open.length > 0)
+      // B1 Fix: Empty `focus_plan_open` array means today's goal is reached (do NOT fall back to preview list!)
+      const openPlan = Array.isArray(data.focus_plan_open)
         ? data.focus_plan_open
         : (data.budget_selected_topics || []);
+      const previewTopics = Array.isArray(data.budget_selected_topics) ? data.budget_selected_topics : [];
       const completedToday = data.focus_plan_completed_today || [];
       const rolloverDays = data.multi_day_rollover || [];
       const progressPct = effectiveTarget > 0 ? Math.min(100, Math.round((alreadyRepeated / effectiveTarget) * 100)) : (poolDueToday === 0 ? 100 : 0);
@@ -4596,9 +4617,25 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
       // 3. Numbered Priority Checklist (#1 to #N, most important to least important)
       if (openPlan.length === 0) {
+        const goalMsg = (totalAllDueToday > 0 && isSmart && poolDueToday === 0)
+          ? `Alle offenen Karten sitzen stabil (R ≥ ${rPct}%). Bei Bedarf oben auf '📚 Alle Fälligen' wechseln.`
+          : `Du hast dein heutiges Fokus-Ziel (${effectiveTarget} Wiederholungen) komplett erreicht!`;
+        const previewHtml = previewTopics.length > 0 ? `
+          <details style="margin-top: 0.55rem; text-align: left; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 0.45rem 0.65rem;">
+            <summary style="cursor: pointer; font-size: 11px; color: #79c0ff; font-weight: 600;">👀 Vorschau: Nächste priorisierte Themen bei Zusatz-Motivation anzeigen (${previewTopics.length})</summary>
+            <div style="margin-top: 0.4rem; display: flex; flex-wrap: wrap; gap: 0.35rem;">
+              ${previewTopics.slice(0, 8).map(pt => `
+                <span style="font-size: 10.5px; color: #c9d1d9; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 0.14rem 0.45rem; border-radius: 4px;">
+                  #${pt.rank} <strong>${escapeHtml(pt.dozent)}</strong> (${pt.assigned_cards || 0} Karten • ${escapeHtml(pt.zone_badge || '')})
+                </span>
+              `).join('')}
+            </div>
+          </details>
+        ` : '';
         checklistHtml += `
           <div style="background: rgba(46, 160, 67, 0.12); border: 1px solid rgba(63, 185, 80, 0.4); border-radius: 8px; padding: 0.85rem; text-align: center; color: #3fb950; font-weight: 700; font-size: 13px;">
-            🎉 Perfekt! ${totalAllDueToday > 0 && isSmart ? `Alle offenen Karten sitzen stabil (R ≥ ${rPct}%). Bei Bedarf oben auf '📚 Alle Fälligen' wechseln.` : `Du hast dein heutiges Fokus-Ziel (${effectiveTarget} Wiederholungen) komplett erreicht!`}
+            🎉 Perfekt! ${goalMsg}
+            ${previewHtml}
           </div>
         `;
       } else {
@@ -4838,6 +4875,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
     if (modalListEl) modalListEl.innerHTML = tbHtml;
 
   } catch (err) {
+    if (mySeq !== triageRequestSeq) return;
     console.error('loadBacklogTriage error:', err);
     const errHtml = `<div style="color: #ff7b72; padding: 0.5rem;">Fehler beim Laden der Triage: ${escapeHtml(err && err.message ? err.message : String(err))}</div>`;
     if (pageContainer) pageContainer.innerHTML = errHtml;
@@ -4925,7 +4963,10 @@ let currentForecastData = null;
 
 async function loadWorkloadForecast(showFeedback = false) {
   try {
-    const budgetParam = currentTriageBudget || 350;
+    // B9 Fix: When triage is set to "Alle" (9999), keep forecast API on realistic 350 reference
+    const budgetParam = (currentTriageBudget && currentTriageBudget > 0 && currentTriageBudget < 9000)
+      ? currentTriageBudget
+      : 350;
     const res = await fetch(`/api/v1/schedule/anki/workload-forecast?daily_budget=${budgetParam}&_t=${Date.now()}`);
     if (!res.ok) return;
     const data = await res.json();

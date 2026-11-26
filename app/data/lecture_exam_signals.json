@@ -1,5 +1,5 @@
 {
-  "version": "2.1",
+  "version": "2.2",
   "total_source_summaries": 38,
   "entries": [
     {
@@ -19,7 +19,7 @@
       "exam_highlights": [
         "Anatomie-Jahresprüfung (Lienkamp/Colacicco): „Alles“ ab Tag 1 des 1. Jahres (inkl. Kursskripte, Röntgenanatomie, klinische Vorlesungen) ist ohne Vertiefungsthemen oder Eingrenzungen prüfungsrelevant. Große Zusammenhänge verstehen (z. B. Organlage im Thorax, 4 Leberlappen) und im Tutorat mündlich argumentieren.",
         "Klinische Einführung TB Blut & Immunsystem (Dr. Kreutmayer): Grobgliederung der Hämatopoese (Myelopoese vs. Lymphopoese; Knochenmark, Thymus, Blut, sekundär lymphatische Organe) und Immunantwort (angeboren vs. erworben; humoral vs. zellvermittelt) verstehen.",
-        "AML-Einführungsfall (Kreutmayer): Panzytopenie im Blutbild mit 15 % Blasten im Blutausstrich und 85 % myeloischen Blasten (Verdrängung der Hämatopoese) im Knochenmark; die 5 Fall-Quizfragen werden erst in der Abschlussvorlesung aufgelöst (nicht in den 6 Transkripten vom 15.–26.09. enthalten)."
+        "AML-Einführungsfall (Kreutmayer): Panzytopenie im Blutbild mit 15 % Blasten im Blutausstrich und 85 % myeloischen Blasten (Verdrängung der Hämatopoese) im Knochenmark; die 5 Fall-Quizfragen werden erst in der Abschlussvorlesung aufgelöst."
       ],
       "clinical_pearls": [
         "AML & Tumorlysesyndrom: Gingivahyperplasie kann ein charakteristisches AML-Zeichen sein; rascher Zellzerfall unter Chemotherapie setzt Kalium (Herzrhythmusstörungen/EKG), Phosphat und Harnsäure (Nierenschädigung) frei → Pause, massive Flüssigkeitszufuhr und Elektrolytkontrolle.",
@@ -29,7 +29,8 @@
       "deemphasized_notes": [
         "Anatomie-Mini-Details wie die „14. Generation der Abzweigung einer Arterie am Vorfuß“ oder „18. Generation der arteriellen Leberlappenversorgung“ bezeichnete Prof. Lienkamp explizit als „wurscht“.",
         "In der klinischen Einführung (Kreutmayer) muss der Fachbegriff „Tumorlysesyndrom“ nicht auswendig gelernt werden – wichtig ist nur das Verständnis der Elektrolytverschiebung."
-      ]
+      ],
+      "coverage_note": "Die Auflösung der 5 Fall-Quizfragen erfolgt in der Abschlussvorlesung (nicht in den 6 Transkripten vom 15.–26.09. enthalten)."
     },
     {
       "id": "manatschal_myoglobin_haemoglobin",
@@ -2328,31 +2329,97 @@
       ]
     },
     {
-      "id": "embryologie_herzentwicklung",
-      "themenblock": "TB Herz-Kreislauf",
-      "dozent": "Embryologie",
+      "id": "hall_langerhans_schilddruese_nebenschilddruese",
+      "themenblock": "TB Endokrinologie",
+      "dozent": "Hall",
       "subdeck_patterns": [
-        "Herzentwicklung",
-        "Organogenese Herzentwicklung"
+        "2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen",
+        "Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen"
       ],
       "source_summaries": [
-        "2025-10-22_TB_Atmung.md"
+        "2025-12-04_TB_Endokrinologie.md",
+        "2025-12-05_TB_Endokrinologie.md",
+        "2025-12-15_TB_Endokrinologie.md"
       ],
       "lecture_dates": [
-        "2025-10-22"
+        "2025-12-04",
+        "2025-12-05",
+        "2025-12-15"
       ],
+      "coverage_note": "Keine separate Histologie-Aufnahme von Prof. Hall zu diesem Subdeck in den 38 Dateien – Fakten stammen direkt aus den zugehörigen Pankreas-, Schilddrüsen- und Nebenschilddrüsen-Vorlesungen.",
       "exam_highlights": [
-        "Ursprung des Herzens: Primäres Herzfeld (Vorhöfe, linker Ventrikel, Teile rechter Ventrikel), sekundäres Herzfeld (Ausflussbahn, Teile rechter Ventrikel) und kardiale Neuralleistenzellen (Septierung der Ausflussbahn).",
-        "Herzschleife & Septierung: Herzschlauch schlägt ab Tag 22; C-/S-förmige Herzschleife bildet erste Rechts-Links-Asymmetrie; Vorhofseptierung (Septum primum, Ostium primum/secundum, Septum secundum, Foramen ovale), AV-Kanal (Endokardkissen) und spiraliges Konus-/Trunkusseptum.",
-        "Alle prüfungsrelevanten Keywords stehen laut Dozent bewusst vollständig auf den Vorlesungsfolien (keine Zusatzbücher nötig)."
+        "Langerhans-Inseln (05.12. & 15.12.): Endokrine Inselzellen bestehen aus α-Zellen (Glukagon) und β-Zellen (~70 % des Inselvolumens, Insulin); Entwicklung aus gemeinsamem entodermalem Vorläufer über PDX1 und proneurales Programm (Neurogenin-3, NeuroD).",
+        "Schilddrüse (04.12. & 15.12.): Jodidaufnahme über NIS und Pendrin ins Follikellumen zum Einbau in Thyreoglobulin (T4/T3 unter HPT-Achse TRH → TSH); parafollikuläre C-Zellen bilden Calcitonin.",
+        "Nebenschilddrüsen (15.12.): 4 Nebenschilddrüsen sezernieren Parathormon (PTH, HWZ 20–30 Min.), gesteuert über den Calcium-Sensing Receptor (CaSR, steilste Kurve bei ~1,2 mmol/L)."
       ],
       "clinical_pearls": [
-        "Kongenitale Herzfehler betreffen ca. 1 % der Neugeborenen; häufigste Ursache sind Migrations-/Differenzierungsfehler der kardialen Neuralleistenzellen (v.a. Ausflussbahn).",
-        "Vorhofseptumdefekte (ASD): Übermäßige Resorption im Septum primum oder fehlendes Septum secundum führt postnatal zu Links-Rechts-Shunt, pulmonaler Hypertonie und Rechtsherzhypertrophie."
+        "Historie Schilddrüse (04.12.): Theodor Kocher erhielt den Nobelpreis für die Erkenntnis, dass das Belassen eines Schilddrüsenrests das chirurgische Myxödem verhindert; Jodprophylaxe beseitigte Kretinismus und Struma im Alpengürtel.",
+        "PDX1 & Diabetes-Perspektive (15.12.): PDX1-Verlust führt zur Pankreasagenesie; adulte Endodermzellen (Leber, Gallenblase, Darm, exokrines Pankreas) werden für β-Zell-Transdifferenzierung erforscht."
       ],
       "deemphasized_notes": [
-        "Detaillierte molekulare Signalwege und die schrittweise Herleitung des frühen Herzkreislaufs sind laut Dozent nicht im Detail prüfungsrelevant."
+        "Der Unterschied der K_ATP-Kanal-Isoformen in α- vs. β-Zellen wird laut Biochemie-Dozentin (05.12.) nicht in der Prüfung gefragt."
+      ]
+    },
+    {
+      "id": "stockmann_leber_und_gallenwege",
+      "themenblock": "TB Verdauung",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Leber und Gallenwege"
+      ],
+      "source_summaries": [
+        "2025-11-20_TB_Verdauung.md",
+        "2025-11-27_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-20",
+        "2025-11-27"
+      ],
+      "coverage_note": "Keine separate Stockmann-Makroanatomie-Aufnahme zur Leber in den 38 Dateien – belegte Kernpunkte stammen aus den Leber-/Galle-Vorlesungen (Embryologie & Physiologie) im TB Verdauung.",
+      "exam_highlights": [
+        "Aufbau & Herkunft der Leber (27.11.): Hepatozyten (Leberzellplatten/-balken) sind endodermal, Bindegewebe und Glisson-Triaden stammen aus viszeralem Mesoderm; Gefäße bilden die Lebersinusoide.",
+        "Galle & Gallenblase (20.11.): Gallenblase dient als reiner Speicher mit Eindickung der Galle; primäre/sekundäre Gallensalze unterliegen dem enterohepatischen Kreislauf und bilden Mizellen für Lipasen sowie Vitamine A/D/E/K (Cholezystokinin-Steuerung).",
+        "Bilirubin & Ikterus-Differenzierung (20.11.): Prähepatisch (Hämolyse → unkonjugiertes Bilirubin ↑), intrahepatisch (Gilbert-Meulengracht / Crigler-Najjar unkonjugiert vs. Dubin-Johnson konjugiert) und posthepatisch (Gallenstein/Tumor → konjugiertes Bilirubin ↑)."
+      ],
+      "clinical_pearls": [
+        "Fetale Hämatopoese (27.11.): Blutstammzellen siedeln bis zur Übernahme durch das Knochenmark in den Lebersinusoiden – Grund für die enorme Größe der fetalen Leber.",
+        "Cholestase & Gallensteine (20.11.): Führen zu Steatorrhoe, Mangel fettlöslicher Vitamine (A/D/E/K) und sekundären Kalziumoxalat-Nierensteinen; Therapie u. a. per ERCP."
+      ],
+      "deemphasized_notes": []
+    },
+    {
+      "id": "stockmann_mundhoehle_kauapparat_zaehne",
+      "themenblock": "TB Verdauung",
+      "dozent": "Stockmann",
+      "subdeck_patterns": [
+        "Mundhöhle, Kauapparat, Zähne Teil 2",
+        "Mundhöhle, Kauapparat, Zähne"
+      ],
+      "source_summaries": [
+        "2025-11-12_TB_Verdauung.md",
+        "2025-11-14_TB_Verdauung.md"
+      ],
+      "lecture_dates": [
+        "2025-11-12",
+        "2025-11-14"
+      ],
+      "coverage_note": "Keine separate Stockmann-Aufnahme zu Mundhöhle/Zähnen in den 38 Dateien – belegte Kernpunkte stammen aus den Zahn-/Gaumen- und Parotis-Histologie-Abschnitten im TB Verdauung.",
+      "exam_highlights": [
+        "Zahnentwicklung (12.11., explizites Lernziel): Ektoderm-Mesenchym-Interaktion an der Zahnleiste bildet Ameloblasten/Adamantoblasten (Schmelz, aus Oberflächenektoderm) vs. Odontoblasten (Dentin, aus Neuralleistenmesenchym).",
+        "Mundbucht, Gaumen & Innervation (12.11.): Zunge sinkt nach kaudal, sodass Gaumenplatten von vertikal auf horizontal umschalten und mit Nasenseptum und primärem Gaumen (Zwischenkiefer mit 4 Schneidezähnen) verschmelzen; wichtig: N. trigeminus (1. Bogen, Kaumuskulatur) und N. facialis (2. Bogen, mimische Muskulatur).",
+        "Parotis vs. Pankreas in der Histologie (14.11.): Sind keine Langerhans-Inseln angeschnitten, bilden zentroazinäre Zellen das einzige histologische Unterscheidungsmerkmal zwischen exokrinem Pankreas und Parotis."
+      ],
+      "clinical_pearls": [
+        "Lippen-Kiefer-Gaumenspalten (12.11.): Entstehen durch gestörte Verschmelzung von Zwischenkiefer (mediale Nasenwulst), Oberkieferfortsätzen und Gaumenplatten (ein-/beidseitig oder isolierte Gaumenspalte).",
+        "DiGeorge-Syndrom (12.11.): Neuralleistendefekt mit Kombination aus Gaumenspalte, Thymus-/Nebenschilddrüsen-Hypoplasie und Herzfehlern (Truncus arteriosus, VSD)."
+      ],
+      "deemphasized_notes": [
+        "Molekulare Signalwege bei Gaumenspalten (TGF-β, Rho-GTPasen) und die komplette lange Sadler-Tabelle der Schlundbogenderivate müssen laut Dozent (12.11.) nicht auswendig gelernt werden."
       ]
     }
-  ]
+  ],
+  "ignored_dozent_summaries": [
+    "2025-10-22_TB_Atmung.md"
+  ],
+  "ignored_dozent_summaries_note": "2025-10-22_TB_Atmung.md enthält Teil 1 Physiologie (Prof. Wenger) und Teil 2 Embryologie (Prof. Sommer); beide Dozenten sind laut semester_config.IGNORED_DOZENTEN bewusst von der Anki-Triage ausgeschlossen."
 }

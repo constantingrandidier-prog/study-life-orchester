@@ -172,7 +172,8 @@ def test_triage_default_350_focus_and_rollover():
     open_plan = data.get("focus_plan_open", [])
     if active_pool > 0 and already_rep < 350:
         assigned_sum = sum(item["assigned_cards"] for item in open_plan)
-        expected_open = min(active_pool, 350 - already_rep)
+        a1_overflow = data.get("a1_overflow_cards", 0)
+        expected_open = min(active_pool, (350 - already_rep) + a1_overflow)
         assert assigned_sum == expected_open
         # Verify strict top-to-bottom urgency score ordering
         scores = [item["urgency_score"] for item in open_plan]

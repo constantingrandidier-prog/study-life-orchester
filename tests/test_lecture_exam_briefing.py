@@ -1,4 +1,7 @@
-"""Automated verification tests for Teil 2: Verified Lecture & Exam Signals Knowledge Base."""
+"""Automated verification tests for Teil 2 & 3: Verified Lecture & Exam Signals Knowledge Base."""
+
+import json
+import pytest
 
 from app.services.lecture_exam_briefing_service import (
     match_subdeck_to_exam_signal,
@@ -15,7 +18,8 @@ def test_lecture_exam_signals_integrity_against_transcripts():
     assert audit["invalid_entries"] == []
     assert audit["duplicate_ids"] == []
     assert audit["entry_count"] >= 80
-    assert audit["referenced_summary_count"] >= 37
+    assert audit["referenced_summary_count"] == audit["total_summary_files"]
+    assert audit["unreferenced_summaries"] == []
 
 
 def test_numbered_and_emoji_subdeck_disambiguation():
@@ -46,18 +50,25 @@ def test_numbered_and_emoji_subdeck_disambiguation():
 def test_live_anki_subdeck_coverage_100_percent():
     """Every active 2. SJ Anki professor & leaf deck must be covered cleanly with zero unmatched decks."""
     cov = verify_anki_subdeck_coverage()
-    if cov.get("connected"):
-        assert cov["total_leaf_decks"] >= 80
-        assert cov["unmatched_count"] == 0
-        assert cov["uncovered_professors"] == []
-        assert cov["total_coverage_pct"] == 100.0
-        assert cov["exact_coverage_pct"] >= 90.0
+    if not cov.get("connected"):
+        pytest.skip("Lokale Anki-DB nicht verbunden")
+    assert cov["total_leaf_decks"] >= 80
+    assert cov["unmatched_count"] == 0
+    assert cov["uncovered_professors"] == []
+    assert cov["total_coverage_pct"] == 100.0
+    assert cov["exact_coverage_pct"] >= 90.0
 
 
-def test_daily_prof_briefing_strict_today_scope_and_budget_scaling():
+def test_daily_prof_briefing_strict_today_scope_and_budget_scaling(monkeypatch, tmp_path):
     """Teil 3 (a) & (b): Briefing contains ONLY today's selected subdecks and grows synchronously from 350 to 600."""
     from fastapi.testclient import TestClient
     from app.main import app
+    import app.services.anki_backlog_triage as abt
+
+    # Isolate snapshot writes to tmp_path so tests never overwrite the real repo snapshot
+    tmp_snap = tmp_path / "cached_backlog_triage.json"
+    monkeypatch.setattr(abt, "BACKLOG_TRIAGE_SNAPSHOT_PATH", tmp_snap)
+    monkeypatch.setattr(abt, "_MEM_TRIAGE_CACHE", {"ts": 0.0, "data": None})
 
     client = TestClient(app)
     r350 = client.get("/api/v1/schedule/anki/backlog-triage?max_capacity=350").json()
@@ -99,20 +110,26 @@ def test_daily_prof_briefing_strict_today_scope_and_budget_scaling():
         assert b600["total_subdecks_covered"] >= b350["total_subdecks_covered"]
 
 
-def test_daily_prof_briefing_cloud_sync_and_snapshot_parity():
+def test_daily_prof_briefing_cloud_sync_and_snapshot_parity(monkeypatch, tmp_path):
     """Teil 3 (c): Cloud snapshot + /anki/triage-sync + cached _apply_budget produce identical live briefings on Render/iPad."""
-    import json
     from fastapi.testclient import TestClient
     from app.main import app
+    import app.services.anki_backlog_triage as abt
     from app.services.anki_backlog_triage import (
-        BACKLOG_TRIAGE_SNAPSHOT_PATH,
         _apply_budget,
         calculate_backlog_triage,
         get_cached_triage,
     )
 
+    # Isolate snapshot writes so the real repo cached_backlog_triage.json is never mutated by tests
+    tmp_snap = tmp_path / "cached_backlog_triage.json"
+    monkeypatch.setattr(abt, "BACKLOG_TRIAGE_SNAPSHOT_PATH", tmp_snap)
+    monkeypatch.setattr(abt, "_MEM_TRIAGE_CACHE", {"ts": 0.0, "data": None})
+
     client = TestClient(app)
     live_350 = calculate_backlog_triage(max_capacity=350)
+    if not live_350.get("connected"):
+        pytest.skip("Lokale Anki-DB nicht verbunden")
     assert "daily_prof_briefing" in live_350
 
     # Sync payload via /api/v1/schedule/anki/triage-sync (even if daily_prof_briefing stripped, backend must rebuild it)
@@ -122,9 +139,9 @@ def test_daily_prof_briefing_cloud_sync_and_snapshot_parity():
     assert resp.status_code == 200
     assert resp.json().get("cached") is True
 
-    # Verify cached_backlog_triage.json and get_cached_triage() both include daily_prof_briefing
-    assert BACKLOG_TRIAGE_SNAPSHOT_PATH.exists()
-    snap = json.loads(BACKLOG_TRIAGE_SNAPSHOT_PATH.read_text(encoding="utf-8"))
+    # Verify isolated snapshot and get_cached_triage() both include daily_prof_briefing
+    assert tmp_snap.exists()
+    snap = json.loads(tmp_snap.read_text(encoding="utf-8"))
     assert "daily_prof_briefing" in snap
     assert len(snap["daily_prof_briefing"]["items"]) == len(live_350["daily_prof_briefing"]["items"])
 
@@ -137,6 +154,4 @@ def test_daily_prof_briefing_cloud_sync_and_snapshot_parity():
     live_600 = calculate_backlog_triage(max_capacity=600)
     assert cached_copy["daily_prof_briefing"]["total_subdecks_covered"] == live_600["daily_prof_briefing"]["total_subdecks_covered"]
     assert cached_copy["daily_prof_briefing"]["total_briefing_cards"] == live_600["daily_prof_briefing"]["total_briefing_cards"]
-    # Restore default 350 snapshot
-    calculate_backlog_triage(max_capacity=350)
 

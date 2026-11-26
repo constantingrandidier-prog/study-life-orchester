@@ -1,0 +1,812 @@
+[
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Einführung & Abschluss",
+    "subdeck": "Einführung und Abschluss Atmung",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Einführung und Abschluss Atmung",
+    "expected_id": "atmung_einfuehrung_abschluss",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Loffing",
+    "subdeck": "Anatomie der Atmungsorgane / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Loffing::Anatomie der Atmungsorgane / Loffing",
+    "expected_id": "loffing_anatomie_atmungsorgane",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Loffing",
+    "subdeck": "Anatomie der Atmungsorgane II / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Loffing::Anatomie der Atmungsorgane II / Loffing",
+    "expected_id": "loffing_anatomie_atmungsorgane_ii",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Loffing",
+    "subdeck": "Atemmuskulatur / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Loffing::Atemmuskulatur / Loffing",
+    "expected_id": "loffing_atemmuskulatur",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Loffing",
+    "subdeck": "Lunge / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Loffing::Lunge / Loffing",
+    "expected_id": "loffing_lunge",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Loffing",
+    "subdeck": "Trachea und Bronchien / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Loffing::Trachea und Bronchien / Loffing",
+    "expected_id": "loffing_trachea_und_bronchien",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Atmung",
+    "dozent": "Loffing",
+    "subdeck": "Trachea und Bronchien 2 / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Atmung::Loffing::Trachea und Bronchien 2 / Loffing",
+    "expected_id": "loffing_trachea_und_bronchien_2",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Einführung & Abschluss",
+    "subdeck": "Einführung und Abschluss",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Einführung und Abschluss",
+    "expected_id": "einfuehrung_abschluss",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Manatschal",
+    "subdeck": "1 Myoglobin, Hämoglobin 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Manatschal::1 Myoglobin, Hämoglobin 🟢",
+    "expected_id": "manatschal_myoglobin_haemoglobin",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Manatschal",
+    "subdeck": "2 CO2-Transport",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Manatschal::2 CO2-Transport",
+    "expected_id": "manatschal_co2_transport",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Manatschal",
+    "subdeck": "3 Blutgerinnung",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Manatschal::3 Blutgerinnung",
+    "expected_id": "manatschal_blutgerinnung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Schneider",
+    "subdeck": "Blut und Blutplasma / Wenger",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Schneider::Blut und Blutplasma / Wenger",
+    "expected_id": "schneider_blut_und_blutplasma",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Schneider",
+    "subdeck": "Erythrozyten / Wenger",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Schneider::Erythrozyten / Wenger",
+    "expected_id": "schneider_erythrozyten",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Schneider",
+    "subdeck": "Thrombozyten, Wundheilung, Blutgruppen",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Schneider::Thrombozyten, Wundheilung, Blutgruppen",
+    "expected_id": "schneider_thrombozyten_wundheilung_blutgruppen",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Stockmann",
+    "subdeck": "Erythropoiese, Myelopoiese",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Stockmann::Erythropoiese, Myelopoiese",
+    "expected_id": "stockmann_erythropoiese_myelopoiese",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Stockmann",
+    "subdeck": "Leukozyten I / Ullrich",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Stockmann::Leukozyten I / Ullrich",
+    "expected_id": "stockmann_leukozyten_1",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Stockmann",
+    "subdeck": "Phasen der Immunantwort Ulli",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Stockmann::Phasen der Immunantwort Ulli",
+    "expected_id": "stockmann_phasen_der_immunantwort",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Stockmann",
+    "subdeck": "Thymus und lymphatisches System / Ullrich",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Stockmann::Thymus und lymphatisches System / Ullrich",
+    "expected_id": "stockmann_thymus_lymphatisches_system",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Stockmann",
+    "subdeck": "Zelluläre Immunität und Immunsystem 2",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Stockmann::Zelluläre Immunität und Immunsystem 2",
+    "expected_id": "stockmann_zellulaere_immunitaet",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Stockmann",
+    "subdeck": "Zelluläre Immunität und Immunsystem Ulli",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Stockmann::Zelluläre Immunität und Immunsystem Ulli",
+    "expected_id": "stockmann_zellulaere_immunitaet",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Tuzlak / Becher",
+    "subdeck": "Autoimmunität und Entzündung",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)::Autoimmunität und Entzündung",
+    "expected_id": "tuzlak_becher_autoimmunitaet_entzuendung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Tuzlak / Becher",
+    "subdeck": "Das angeborene und erworbene Immunsystem",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)::Das angeborene und erworbene Immunsystem",
+    "expected_id": "tuzlak_becher_angeborenes_erworbenes_immunsystem",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Tuzlak / Becher",
+    "subdeck": "Immuntoleranz",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)::Immuntoleranz",
+    "expected_id": "tuzlak_becher_immuntoleranz",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Tuzlak / Becher",
+    "subdeck": "Monoklonale Antikörper in Diagnostik und Therapie",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)::Monoklonale Antikörper in Diagnostik und Therapie",
+    "expected_id": "tuzlak_becher_monoklonale_antikoerper",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Tuzlak / Becher",
+    "subdeck": "Rekombination adaptiver Immunrezeptoren",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)::Rekombination adaptiver Immunrezeptoren",
+    "expected_id": "tuzlak_becher_rekombination_immunrezeptoren",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Blut & Immunsystem",
+    "dozent": "Tuzlak / Becher",
+    "subdeck": "Zellentstehung und Reifung",
+    "full_anki_deck": "2. SJ - 1::TB Blut/Immunsystem::Tuzlak (jetzt Becher)::Zellentstehung und Reifung",
+    "expected_id": "tuzlak_becher_zellentstehung_und_reifung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Einführung & Abschluss",
+    "subdeck": "Abschluss",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::Einführung/Abschluss::Abschluss",
+    "expected_id": "endo_abschluss",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Einführung & Abschluss",
+    "subdeck": "Einführung",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::Einführung/Abschluss::Einführung",
+    "expected_id": "endo_einfuehrung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Hall",
+    "subdeck": "1 Disseminiertes endokrines System ⚫",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::2 Hall::1 Disseminiertes endokrines System ⚫",
+    "expected_id": "hall_des",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Hall",
+    "subdeck": "2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::2 Hall::2 Langerhans-Inseln, Schilddrüse, Nebenschilddrüsen 🟢",
+    "expected_id": "prof_fallback_tb_endokrinologie_hall",
+    "expected_match_type": "prof_fallback",
+    "expected_is_fallback": true
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Hall",
+    "subdeck": "3 Hypothalamo-hypophysäres System 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::2 Hall::3 Hypothalamo-hypophysäres System 🟢",
+    "expected_id": "hall_hypothalamus_hypophyse",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Hall",
+    "subdeck": "3 Nebennieren 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::2 Hall::4 Nebennieren  🟢::3 Nebennieren 🟢",
+    "expected_id": "hall_nebennieren",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Hall",
+    "subdeck": "4 Nebennieren  🟢",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::2 Hall::4 Nebennieren  🟢",
+    "expected_id": "hall_nebennieren",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Jelezarov",
+    "subdeck": "1 Einführung Hormone",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::1 Jelezarov::1 Einführung Hormone",
+    "expected_id": "jelezarov_einfuehrung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Jelezarov",
+    "subdeck": "2 Hormone des endokrinen Pankreas",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::1 Jelezarov::2 Hormone des endokrinen Pankreas",
+    "expected_id": "jelezarov_pankreas",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Jelezarov",
+    "subdeck": "3 Hypothalamische und hypophyäre Hormone 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::1 Jelezarov::3 Hypothalamische und hypophyäre Hormone 🟢",
+    "expected_id": "jelezarov_hypothalamus_hypophyse",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Jelezarov",
+    "subdeck": "5 Steroidhormone Nebennierenrinde  ⚫",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::1 Jelezarov::5 Steroidhormone Nebennierenrinde  ⚫",
+    "expected_id": "jelezarov_nnr_steroide",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Jelezarov",
+    "subdeck": "6 Katecholamine",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::1 Jelezarov::6 Katecholamine",
+    "expected_id": "jelezarov_katecholamine",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Wagner",
+    "subdeck": "Nebennierenphysiologie / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::3 Wagner+::Nebennierenphysiologie / Wagner",
+    "expected_id": "wagner_nebenniere",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Wagner",
+    "subdeck": "Regulation des Ca- und Phosphatstoffwechsels / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::3 Wagner+::Regulation des Ca- und Phosphatstoffwechsels / Wagner",
+    "expected_id": "wagner_ca_phosphat",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Endokrinologie",
+    "dozent": "Wagner",
+    "subdeck": "Schilddrüsenhormone / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Endokrinologie::3 Wagner+::Schilddrüsenhormone / Wagner",
+    "expected_id": "wagner_schilddruese",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Einführung & Abschluss",
+    "subdeck": "Herz-Kreislauf Abschluss",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Einführung/Abschluss::Herz-Kreislauf Abschluss",
+    "expected_id": "herz_kreislauf_abschluss",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Einführung & Abschluss",
+    "subdeck": "Herz-Kreislauf Einführung",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Einführung/Abschluss::Herz-Kreislauf Einführung",
+    "expected_id": "herz_kreislauf_einfuehrung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "EKG / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::EKG / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_ekg",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Erregungsleitungssystem / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Erregungsleitungssystem / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_erregungsleitungssystem",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_herzarbeit_regulation",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Herzmechanik / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Herzmechanik / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_herzmechanik",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Hochdrucksystem / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Hochdrucksystem / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_hochdrucksystem",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Kreislauf-Übersicht / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Kreislauf-Übersicht / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_kreislauf_uebersicht",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu",
+    "expected_id": "prof_fallback_tb_herz_kreislauf_kurtcuoglu",
+    "expected_match_type": "prof_fallback",
+    "expected_is_fallback": true
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Lokale Durchblutung / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Lokale Durchblutung / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_lokale_durchblutung",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Niederdrucksysteme / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Niederdrucksysteme / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_niederdrucksysteme",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Organkreisläufe / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Organkreisläufe / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_organkreislaeufe",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Kurtcuoglu",
+    "subdeck": "Übergeordnete Regulation / Kurtcuoglu",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Kurtcuoglu::Übergeordnete Regulation / Kurtcuoglu",
+    "expected_id": "kurtcuoglu_uebergeordnete_regulation",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Loffing",
+    "subdeck": "Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Loffing::Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+    "expected_id": "loffing_arterien_arteriolen_kapillaren_venen",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Loffing",
+    "subdeck": "Gefässversorgung und Innervation des Herzens / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Loffing::Gefässversorgung und Innervation des Herzens / Loffing",
+    "expected_id": "loffing_gefaessversorgung_innervation",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Loffing",
+    "subdeck": "Herzstruktur / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Loffing::Herzstruktur / Loffing",
+    "expected_id": "loffing_herzstruktur",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Loffing",
+    "subdeck": "Herzwand / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Loffing::Herzwand / Loffing",
+    "expected_id": "loffing_herzwand",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Loffing",
+    "subdeck": "Lymphsystem / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Loffing::Lymphsystem / Loffing",
+    "expected_id": "loffing_lymphsystem",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Herz-Kreislauf",
+    "dozent": "Loffing",
+    "subdeck": "Mediastinum und Perikard / Loffing",
+    "full_anki_deck": "2. SJ - 1::TB Herz-Kreislauf::Loffing::Mediastinum und Perikard / Loffing",
+    "expected_id": "loffing_mediastinum_perikard",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Stoffwechsel",
+    "dozent": "Emmert",
+    "subdeck": "4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+    "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::1 Emmert::4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+    "expected_id": "emmert_nahrungsaufnahme",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Stoffwechsel",
+    "dozent": "Emmert",
+    "subdeck": "5 Regulation Kohlenhydrat Stoffwechsel",
+    "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::1 Emmert::5 Regulation Kohlenhydrat Stoffwechsel",
+    "expected_id": "emmert_kohlenhydrat_stoffwechsel",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Stoffwechsel",
+    "dozent": "Emmert",
+    "subdeck": "6 Leberspezifischer Stoffwechsel",
+    "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::1 Emmert::6 Leberspezifischer Stoffwechsel",
+    "expected_id": "emmert_leberspezifischer_stoffwechsel",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Stoffwechsel",
+    "dozent": "Emmert",
+    "subdeck": "7 Stoffwechsel bei erhöhtem Energiebedarf",
+    "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::1 Emmert::7 Stoffwechsel bei erhöhtem Energiebedarf",
+    "expected_id": "emmert_erhoehter_energiebedarf",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Stoffwechsel",
+    "dozent": "Hersberger",
+    "subdeck": "6 Regulation des Fettsäurestoffwechsels ⚫",
+    "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::2 Hersberger::6 Regulation des Fettsäurestoffwechsels ⚫",
+    "expected_id": "hersberger_fettsaeurestoffwechsel",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Stoffwechsel",
+    "dozent": "Robert",
+    "subdeck": "1 Lipoproteine",
+    "full_anki_deck": "2. SJ - 1::TB Stoffwechsel::4 Robert::1 Lipoproteine",
+    "expected_id": "robert_lipoproteine",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Dutzler",
+    "subdeck": "1 fettlösliche Vitamine 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::2 Mikronährstoffe::1 Vitamine::1 fettlösliche Vitamine 🟢",
+    "expected_id": "dutzler_fettloesliche_vitamine",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Dutzler",
+    "subdeck": "2 wasserlösliche Vitamine",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::2 Mikronährstoffe::1 Vitamine::2 wasserlösliche Vitamine",
+    "expected_id": "dutzler_wasserloesliche_vitamine",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Dutzler",
+    "subdeck": "3 Verdauung und Absorption 🟢",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::3 Verdauung und Absorption 🟢",
+    "expected_id": "dutzler_verdauung_absorption",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Dutzler",
+    "subdeck": "Ernährung / Dutzler",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::Ernährung / Dutzler",
+    "expected_id": "dutzler_ernaehrung",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Dutzler",
+    "subdeck": "Makronährstoffe / Dutzler",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::Makronährstoffe / Dutzler",
+    "expected_id": "dutzler_makronaehrstoffe",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Dutzler",
+    "subdeck": "Spurenelemente&Mineralien / Dutzler",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Dutzler::Spurenelemente&Mineralien / Dutzler",
+    "expected_id": "dutzler_spurenelemente_mineralien",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Lukic",
+    "subdeck": "1 Kaumuskelbeschwerden ⚫",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Lukic::1 Kaumuskelbeschwerden ⚫",
+    "expected_id": "lukic_kaumuskelbeschwerden",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Rogler",
+    "subdeck": "1 Gastroenterolgie ⚫",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Rogler::1 Gastroenterolgie ⚫",
+    "expected_id": "rogler_gastroenterologie",
+    "expected_match_type": "exact_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Colon und Rektum / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Dickdarm, Leber, Duodenum, Pankreas::Colon und Rektum / Stockmann",
+    "expected_id": "stockmann_colon_und_rektum",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Duodenum und Pankreas / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Dickdarm, Leber, Duodenum, Pankreas::Duodenum und Pankreas / Stockmann",
+    "expected_id": "stockmann_duodenum_und_pankreas",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Dünndarm / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Oesophagus bis Dünndarm::Dünndarm / Stockmann",
+    "expected_id": "stockmann_duenndarm",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Leber und Gallenwege / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Dickdarm, Leber, Duodenum, Pankreas::Leber und Gallenwege / Stockmann",
+    "expected_id": "prof_fallback_tb_verdauung_stockmann",
+    "expected_match_type": "prof_fallback",
+    "expected_is_fallback": true
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Mundhöhle, Kauapparat, Zähne / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Mundhöhle, Kauapparat, Zähne / Stockmann",
+    "expected_id": "prof_fallback_tb_verdauung_stockmann",
+    "expected_match_type": "prof_fallback",
+    "expected_is_fallback": true
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Mundhöhle, Kauapparat, Zähne Teil 2 / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Mundhöhle, Kauapparat, Zähne Teil 2 / Stockmann",
+    "expected_id": "prof_fallback_tb_verdauung_stockmann",
+    "expected_match_type": "prof_fallback",
+    "expected_is_fallback": true
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Stockmann",
+    "subdeck": "Oesophagus und Magen / Stockmann",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Stockmann::Oesophagus bis Dünndarm::Oesophagus und Magen / Stockmann",
+    "expected_id": "stockmann_oesophagus_und_magen",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Dickdarmfunktion: Verdauung, Absorption, Defäkation / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Dickdarmfunktion: Verdauung, Absorption, Defäkation / Wagner",
+    "expected_id": "wagner_dickdarmfunktion",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Dünndarmfunktion: Verdauung und Absoption / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Dünndarmfunktion: Verdauung und Absoption / Wagner",
+    "expected_id": "wagner_duenndarmfunktion",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Exokrine Pankreasfunktion / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Exokrine Pankreasfunktion / Wagner",
+    "expected_id": "wagner_exokrines_pankreas",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Hunger und Sättigung / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Hunger und Sättigung / Wagner",
+    "expected_id": "wagner_hunger_saettigung",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Kauen, Schmecken, Riechen / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Kauen, Schmecken, Riechen / Wagner",
+    "expected_id": "wagner_kauen_schmecken_riechen",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Leber, Gallenproduktion und -sekretion / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Leber, Gallenproduktion und -sekretion / Wagner",
+    "expected_id": "wagner_leber_galle",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Magenfüllung und Magensaftsekretion / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Magenfüllung und Magensaftsekretion / Wagner",
+    "expected_id": "wagner_magenfuellung_magensaft",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Regulation und Koordination der Verdauung / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Regulation und Koordination der Verdauung / Wagner",
+    "expected_id": "wagner_regulation_koordination",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  },
+  {
+    "themenblock": "TB Verdauung",
+    "dozent": "Wagner",
+    "subdeck": "Schlucken, Propulsion Peristaltik des Oesophagus / Wagner",
+    "full_anki_deck": "2. SJ - 1::TB Verdauung::Wagner::Schlucken, Propulsion Peristaltik des Oesophagus / Wagner",
+    "expected_id": "wagner_schlucken_oesophagus",
+    "expected_match_type": "pattern_subdeck",
+    "expected_is_fallback": false
+  }
+]

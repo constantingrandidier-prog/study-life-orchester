@@ -4130,7 +4130,14 @@ function toggleTomorrowAnkiDetails() {
   }
 }
 
-let currentTriageBudget = 350;
+let currentTriageBudget = (function () {
+  try {
+    const raw = localStorage.getItem('sl_triage_budget');
+    if (raw === 'all') return 9999;
+    const v = parseInt(raw, 10);
+    return (!isNaN(v) && v >= 10) ? v : 350;
+  } catch (e) { return 350; }
+})();
 let currentTriageFocusMode = (function () {
   try {
     return localStorage.getItem('sl_triage_focus_mode') === 'all' ? 'all' : 'smart';
@@ -4161,6 +4168,24 @@ function syncTriageControlButtons() {
     b.style.background = isAct ? '#1f6feb' : 'transparent';
     b.style.color = isAct ? '#fff' : '#8b949e';
   });
+  document.querySelectorAll('.btn-triage-cap').forEach(b => {
+    const capAttr = b.getAttribute('data-cap');
+    const bCap = capAttr === 'all' ? 9999 : parseInt(capAttr, 10);
+    const isAct = (currentTriageBudget >= 9000 && bCap >= 9000) || (bCap === currentTriageBudget);
+    b.classList.toggle('active', isAct);
+    b.style.background = isAct ? '#1f6feb' : 'transparent';
+    b.style.color = isAct ? '#fff' : '#8b949e';
+  });
+  const customInput = document.getElementById('triageCustomBudgetInput');
+  if (customInput && document.activeElement !== customInput) {
+    customInput.value = currentTriageBudget >= 9000 ? 350 : currentTriageBudget;
+  }
+  const badge = document.getElementById('triageActiveBudgetBadge');
+  if (badge) {
+    badge.textContent = currentTriageBudget >= 9000
+      ? 'Ziel: Alle nötigen Karten'
+      : (currentTriageBudget === 350 ? 'Ziel: 350 Karten (Standard)' : `Ziel: ${currentTriageBudget} Karten`);
+  }
 }
 
 async function setTriageFocusMode(mode, btnElement) {
@@ -4189,39 +4214,23 @@ async function toggleBacklogTriageModal() {
 }
 
 async function setTriageBudget(capacity, btnElement) {
-  const effectiveCap = (capacity && capacity > 0) ? parseInt(capacity, 10) : 350;
-  currentTriageBudget = effectiveCap;
-
-  const customInput = document.getElementById('triageCustomBudgetInput');
-  if (customInput) {
-    customInput.value = effectiveCap >= 9000 ? 350 : effectiveCap;
+  let effectiveCap = 350;
+  if (capacity === 'all') {
+    effectiveCap = 9999;
+  } else {
+    const parsed = parseInt(capacity, 10);
+    effectiveCap = (!isNaN(parsed) && parsed >= 10) ? parsed : 350;
   }
+  currentTriageBudget = effectiveCap;
+  try { localStorage.setItem('sl_triage_budget', String(effectiveCap)); } catch (e) {}
 
-  document.querySelectorAll('.btn-triage-cap').forEach(b => {
-    b.style.background = 'transparent';
-    b.style.color = '#8b949e';
-    b.classList.remove('active');
-  });
+  syncTriageControlButtons();
   if (btnElement) {
     btnElement.style.background = '#1f6feb';
     btnElement.style.color = '#fff';
     btnElement.classList.add('active');
-  } else {
-    document.querySelectorAll('.btn-triage-cap').forEach(b => {
-      if (parseInt(b.getAttribute('data-cap'), 10) === effectiveCap) {
-        b.style.background = '#1f6feb';
-        b.style.color = '#fff';
-        b.classList.add('active');
-      }
-    });
   }
 
-  const badge = document.getElementById('triageActiveBudgetBadge');
-  if (badge) {
-    badge.textContent = effectiveCap >= 9000
-      ? 'Ziel: Alle nötigen Karten'
-      : (effectiveCap === 350 ? 'Ziel: 350 Karten (Standard)' : `Ziel: ${effectiveCap} Karten`);
-  }
   const ipadTip = document.getElementById('pageTriageIpadTip');
   if (ipadTip) {
     const capLabel = effectiveCap >= 9000 ? '9999 (Alle)' : String(effectiveCap);
@@ -4281,18 +4290,30 @@ function renderDailyProfBriefing(data) {
     const pearls = item.clinical_pearls || [];
     const deemph = item.deemphasized_notes || [];
     const sds = item.subdecks || [];
+    const isFallbackOnly = Boolean(item.is_prof_fallback);
+    const coverageNote = String(item.coverage_note || '').trim();
     const datesStr = (item.lecture_dates || []).length > 0 ? `📅 ${item.lecture_dates.join(', ')}` : '';
     const openByDefault = idx < 2 ? 'open' : '';
 
     const subChipsHtml = sds.map(s => `
-      <span style="display:inline-block; font-size:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#c9d1d9; padding:0.1rem 0.4rem; border-radius:4px; margin:2px 4px 2px 0;">
-        ${escapeHtml(s.subdeck)} <strong style="color:#79c0ff;">(${s.assigned_cards})</strong>
+      <span style="display:inline-block; font-size:10px; background:rgba(255,255,255,0.06); border:1px solid ${s.is_prof_fallback ? 'rgba(210,153,34,0.4)' : 'rgba(255,255,255,0.1)'}; color:#c9d1d9; padding:0.1rem 0.4rem; border-radius:4px; margin:2px 4px 2px 0;">
+        ${escapeHtml(s.subdeck)} <strong style="color:#79c0ff;">(${s.assigned_cards || 0})</strong>${s.is_prof_fallback ? ' <span style="color:#e3b341;" title="Keine eigene Vorlesungsaufnahme – Dozenten-Allgemein">ℹ️</span>' : ''}
       </span>
     `).join('');
 
+    const coverageBannerHtml = coverageNote ? `
+      <div style="margin-top: 0.35rem; padding: 0.28rem 0.5rem; background: rgba(139, 148, 158, 0.12); border-left: 3px solid #8b949e; border-radius: 4px; font-size: 10px; color: #8b949e; line-height: 1.35;">
+        ℹ️ ${escapeHtml(coverageNote)}
+      </div>
+    ` : '';
+
+    const hlHeading = isFallbackOnly
+      ? '🎯 Allgemeine Dozenten-Schwerpunkte (keine eigene Vorlesungsaufnahme):'
+      : '🎯 Darauf legt der Prof an der Prüfung Wert:';
+
     const hlHtml = highlights.length > 0 ? `
       <div style="margin-top: 0.45rem;">
-        <div style="font-size: 10.5px; font-weight: 700; color: #d2a8ff; margin-bottom: 0.25rem;">🎯 Darauf legt der Prof an der Prüfung Wert:</div>
+        <div style="font-size: 10.5px; font-weight: 700; color: ${isFallbackOnly ? '#e3b341' : '#d2a8ff'}; margin-bottom: 0.25rem;">${hlHeading}</div>
         <ul style="margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.25rem; font-size: 11px; color: #e6edf3; line-height: 1.42;">
           ${highlights.map(h => `<li>${escapeHtml(h)}</li>`).join('')}
         </ul>
@@ -4316,15 +4337,16 @@ function renderDailyProfBriefing(data) {
 
     const subDetailHtml = sds.length > 1 ? `
       <details style="margin-top: 0.45rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.35rem;">
-        <summary style="font-size: 10.5px; color: #79c0ff; font-weight: 600;">📂 Einzelne Vorlesungs-Subdecks anzeigen (${sds.length}) ▾</summary>
+        <summary style="font-size: 10.5px; color: #79c0ff; font-weight: 600;">📂 Alle Punkte je Vorlesungs-Subdeck anzeigen (${sds.length}) ▾</summary>
         <div style="margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.4rem;">
           ${sds.map(sd => `
             <div style="background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 0.4rem 0.55rem;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem; flex-wrap:wrap;">
                 <strong style="font-size:11px; color:#f0f6fc;">${escapeHtml(sd.subdeck)}</strong>
-                <span style="font-size:10px; color:#8b949e;">${sd.assigned_cards} Karten • ${escapeHtml(sd.zone_badge || '')}</span>
+                <span style="font-size:10px; color:#8b949e;">${sd.assigned_cards || 0} Karten • ${escapeHtml(sd.zone_badge || '')}</span>
               </div>
-              ${(sd.exam_highlights || []).length > 0 ? `<div style="font-size:10.5px; color:#c9d1d9; margin-top:0.2rem;">🎯 ${escapeHtml(sd.exam_highlights[0])}</div>` : ''}
+              ${sd.coverage_note ? `<div style="font-size:9.5px; color:#8b949e; margin-top:0.18rem;">ℹ️ ${escapeHtml(sd.coverage_note)}</div>` : ''}
+              ${(sd.exam_highlights || []).length > 0 ? `<ul style="margin:0.2rem 0 0 0; padding-left:1rem; font-size:10.5px; color:#c9d1d9; line-height:1.35;">${sd.exam_highlights.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul>` : ''}
             </div>
           `).join('')}
         </div>
@@ -4338,6 +4360,7 @@ function renderDailyProfBriefing(data) {
             <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
               <span style="display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:21px; padding:0 5px; border-radius:5px; background:${zCol}; color:#fff; font-weight:800; font-size:11px;">#${item.rank}</span>
               <strong style="font-size: 12.5px; color: #f0f6fc;">${escapeHtml(item.themenblock)} › ${escapeHtml(item.dozent)}</strong>
+              ${isFallbackOnly ? `<span style="font-size:9.5px; color:#e3b341; background:rgba(210,153,34,0.14); border:1px solid rgba(210,153,34,0.35); padding:0.06rem 0.35rem; border-radius:4px;">Dozenten-Allgemein</span>` : ''}
             </div>
             <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
               <span style="font-size: 10px; font-weight: 700; color: ${zCol}; background: ${zCol}18; border: 1px solid ${zCol}40; padding: 0.1rem 0.45rem; border-radius: 4px;">
@@ -4351,6 +4374,7 @@ function renderDailyProfBriefing(data) {
               <div>${subChipsHtml}</div>
               ${datesStr ? `<span style="font-size: 9.5px; color: #8b949e;">${escapeHtml(datesStr)}</span>` : ''}
             </div>
+            ${coverageBannerHtml}
             ${hlHtml}
             ${pearlsHtml}
             ${deemphHtml}
@@ -4429,12 +4453,16 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
     // Update 1-Click Anki query display
     const query = data.budget_combined_anki_query || data.urgent_combined_anki_query || 'is:due';
+    const queryChunks = Array.isArray(data.budget_combined_anki_query_chunks) && data.budget_combined_anki_query_chunks.length > 0
+      ? data.budget_combined_anki_query_chunks
+      : [query];
     const totalAllDueToday = data.total_due_today || 0;
     const poolDueToday = data.active_focus_pool_due != null ? data.active_focus_pool_due : totalAllDueToday;
     const solidSkipped = data.total_solid_skipped_today != null ? data.total_solid_skipped_today : 0;
     const alreadyRepeated = data.already_repeated_today || 0;
     const totalPoolWorkload = poolDueToday + alreadyRepeated;
     const effectiveTarget = data.effective_today_target != null ? data.effective_today_target : Math.min(effectiveCap, totalPoolWorkload);
+    const a1Overflow = data.a1_overflow_cards || 0;
     const coveragePct = data.coverage_pct != null ? data.coverage_pct : 100.0;
     const deferredCount = data.deferred_cards_count != null ? data.deferred_cards_count : Math.max(0, poolDueToday - effectiveTarget);
     const selectedSubdeckCount = Array.isArray(data.selected_subdecks) ? data.selected_subdecks.length : 0;
@@ -4443,17 +4471,38 @@ async function loadBacklogTriage(maxCapacity = 350) {
       pageQueryPreview.textContent = query;
       pageQueryPreview.setAttribute('title', query);
     }
+    const queryChunksEl = document.getElementById('pageTriageQueryChunks');
+    if (queryChunksEl) {
+      if (queryChunks.length > 1) {
+        queryChunksEl.style.display = 'flex';
+        queryChunksEl.innerHTML = `<span style="font-size:10px; color:#e3b341; font-weight:600;">📱 Lange Suche (${query.length} Zeichen) – iPad-sichere Teil-Filter:</span>` +
+          queryChunks.map((ch, idx) => `
+            <button type="button" onclick="copyPageTriageQueryChunk(${idx}, this)" class="btn-secondary" style="font-size:10px; padding:0.16rem 0.48rem; border-radius:4px; color:#79c0ff; border:1px solid rgba(56,139,253,0.4); background:rgba(31,111,235,0.16); cursor:pointer;">
+              📋 Teil ${idx + 1}/${queryChunks.length} (${ch.length} Z.)
+            </button>
+          `).join('');
+      } else {
+        queryChunksEl.style.display = 'none';
+        queryChunksEl.innerHTML = '';
+      }
+    }
     if (ipadTipEl) {
-      const capLbl = effectiveCap >= 9000 ? `${effectiveTarget} (Alle)` : String(effectiveCap);
-      ipadTipEl.innerHTML = `📱 <strong>Tipp iPad (AnkiMobile):</strong> Stapel-Limit im Filterstapel passend auf <strong>${capLbl}</strong> stellen (${selectedSubdeckCount} exakte Vorlesungs-Subdecks im Filter).`;
+      const capLbl = effectiveCap >= 9000
+        ? `${effectiveTarget} (Alle)`
+        : (a1Overflow > 0 ? `${effectiveTarget} (inkl. +${a1Overflow} A1 Vortag-Pflicht)` : String(effectiveCap));
+      const fsrsNote = isSmart
+        ? ' • <span style="color:#79c0ff;">Smart-Filter (<code>prop:r</code>) setzt FSRS in Anki voraus (sonst „📚 Alle Fälligen“ wählen).</span>'
+        : '';
+      ipadTipEl.innerHTML = `📱 <strong>Tipp iPad (AnkiMobile):</strong> Stapel-Limit im Filterstapel passend auf <strong>${capLbl}</strong> stellen (${selectedSubdeckCount} exakte Vorlesungs-Subdecks im Filter)${fsrsNote}`;
     }
     if (pageCoveragePill) {
+      const a1Tag = a1Overflow > 0 ? ` • 🔥 +${a1Overflow} A1 Vortag` : '';
       if (isSmart && solidSkipped > 0) {
-        pageCoveragePill.textContent = `${effectiveTarget} / ${totalPoolWorkload} nötigen Karten (${solidSkipped} gefestigte entlastet)`;
+        pageCoveragePill.textContent = `${effectiveTarget} / ${totalPoolWorkload} nötigen Karten${a1Tag} (${solidSkipped} gefestigte entlastet)`;
       } else if (totalPoolWorkload > effectiveCap && effectiveCap < 9000) {
-        pageCoveragePill.textContent = `${effectiveTarget} / ${totalPoolWorkload} Karten (${coveragePct}% heute • ${deferredCount} verschoben)`;
+        pageCoveragePill.textContent = `${effectiveTarget} / ${totalPoolWorkload} Karten${a1Tag} (${coveragePct}% heute • ${deferredCount} verschoben)`;
       } else {
-        pageCoveragePill.textContent = `${effectiveTarget} Karten heute (100% Abdeckung)`;
+        pageCoveragePill.textContent = `${effectiveTarget} Karten heute${a1Tag} (100% Abdeckung)`;
       }
     }
     if (pageBudgetText) {
@@ -4477,13 +4526,16 @@ async function loadBacklogTriage(maxCapacity = 350) {
       const skipBadgeHtml = (isSmart && solidSkipped > 0)
         ? ` • <strong style="color:#3fb950;">${solidSkipped} gefestigte</strong> automatisch übersprungen`
         : '';
+      const overflowBadgeHtml = a1Overflow > 0
+        ? ` • <strong style="color:#f85149;">🔥 inkl. +${a1Overflow} A1 Vortag-Pflicht über Budget</strong>`
+        : '';
       checklistHtml += `
         <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.7rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
             <div style="font-size: 12px; color: #e6edf3;">
               🎯 <strong>Dein Tagespensum heute: ${effectiveTarget} Wiederholungen</strong>
               <span style="color: #8b949e; font-size: 11px; margin-left: 4px;">
-                (${isSmart ? `von ${totalPoolWorkload} nötigen aus ${totalAllDueToday + alreadyRepeated} gesamt` : `von ${totalPoolWorkload} fälligen`} = <strong>${coveragePct}%</strong>${deferredCount > 0 ? ` • Restliche <strong>${deferredCount}</strong> rotieren` : ''}${skipBadgeHtml})
+                (${isSmart ? `von ${totalPoolWorkload} nötigen aus ${totalAllDueToday + alreadyRepeated} gesamt` : `von ${totalPoolWorkload} fälligen`} = <strong>${coveragePct}%</strong>${overflowBadgeHtml}${deferredCount > 0 ? ` • Restliche <strong>${deferredCount}</strong> rotieren` : ''}${skipBadgeHtml})
               </span>
             </div>
             <div style="font-size: 11.5px; font-weight: 700; color: ${alreadyRepeated >= effectiveTarget && effectiveTarget > 0 ? '#3fb950' : '#58a6ff'};">
@@ -4748,14 +4800,14 @@ async function loadBacklogTriage(maxCapacity = 350) {
                   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                       <span style="font-size: 10.5px; font-weight: 700; color: ${p.color}; background: ${p.color}18; border: 1px solid ${p.color}35; padding: 0.1rem 0.4rem; border-radius: 4px;">
-                        ${p.level_badge}
+                        ${escapeHtml(p.level_badge)}
                       </span>
                       <strong style="color: #e6edf3; font-size: 12.5px;">👨‍🏫 ${escapeHtml(p.dozent)}</strong>
                       ${isSelectedInBudget ? `<span style="font-size: 10px; color: #58a6ff; background: rgba(56,139,253,0.12); padding: 0.08rem 0.35rem; border-radius: 3px; font-weight: 600;">⭐ Im Fokus-Paket</span>` : ''}
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 0.4rem;">
-                      <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(p.anki_filter_query)}', this)" class="btn-secondary" style="font-size: 10px; padding: 0.2rem 0.5rem; color: #c9d1d9; border-radius: 4px; cursor: pointer;">
+                      <button type="button" onclick="copyAnkiQuery('${encodeURIComponent(p.anki_filter_query || 'is:due')}', this)" class="btn-secondary" style="font-size: 10px; padding: 0.2rem 0.5rem; color: #c9d1d9; border-radius: 4px; cursor: pointer;">
                         Dozent filtern
                       </button>
                     </div>
@@ -4763,7 +4815,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
                   <!-- 3 Key Decision Factors Grid -->
                   <div style="display: flex; gap: 0.85rem; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; align-items: center; background: rgba(0,0,0,0.15); padding: 0.35rem 0.55rem; border-radius: 4px;">
-                    <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${p.days_since_last_review_str}</strong></span>
+                    <span>⏱️ Zuletzt: <strong style="color: #e6edf3;">vor ${escapeHtml(p.days_since_last_review_str)}</strong></span>
                     ${p.avg_retrievability_pct != null ? `<span>🧠 Recall: <strong style="color: ${p.avg_retrievability_pct < rPct ? '#ff7b72' : '#58a6ff'};">${p.avg_retrievability_pct}%</strong></span>` : ''}
                     <span>🎯 Retention: <strong style="color: ${p.retention_rate_pct < 70 ? '#ff7b72' : '#3fb950'};">${p.retention_rate_pct}%</strong> <span style="font-size: 10px; color: #8b949e;">(${p.total_fails}/${p.total_reviews} Fails)</span></span>
                     <span>⚙️ Stabilität: <strong style="color: #e6edf3;">${p.avg_ease_pct}% Ease</strong></span>
@@ -4787,7 +4839,7 @@ async function loadBacklogTriage(maxCapacity = 350) {
 
   } catch (err) {
     console.error('loadBacklogTriage error:', err);
-    const errHtml = `<div style="color: #ff7b72; padding: 0.5rem;">Fehler beim Laden der Triage: ${err.message}</div>`;
+    const errHtml = `<div style="color: #ff7b72; padding: 0.5rem;">Fehler beim Laden der Triage: ${escapeHtml(err && err.message ? err.message : String(err))}</div>`;
     if (pageContainer) pageContainer.innerHTML = errHtml;
     if (modalListEl) modalListEl.innerHTML = errHtml;
   }
@@ -4811,6 +4863,29 @@ function copyPageTriageQuery() {
     }
   }).catch(() => {
     prompt('Kopiere diesen Suchbegriff für Anki:', query);
+  });
+}
+
+function copyPageTriageQueryChunk(chunkIdx, btn) {
+  const chunks = (latestTriageData && Array.isArray(latestTriageData.budget_combined_anki_query_chunks))
+    ? latestTriageData.budget_combined_anki_query_chunks
+    : [];
+  const query = chunks[chunkIdx] || (latestTriageData && latestTriageData.budget_combined_anki_query) || 'is:due';
+  navigator.clipboard.writeText(query).then(() => {
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = `✓ Teil ${chunkIdx + 1} kopiert!`;
+      btn.style.color = '#3fb950';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.color = '#79c0ff';
+      }, 2000);
+    }
+    if (typeof showToast === 'function') {
+      showToast(`Anki-Teilfilter ${chunkIdx + 1}/${chunks.length || 1} kopiert!`);
+    }
+  }).catch(() => {
+    prompt(`Kopiere Teilfilter ${chunkIdx + 1}:`, query);
   });
 }
 
@@ -4838,6 +4913,7 @@ window.setTriageBudget = setTriageBudget;
 window.applyCustomTriageBudget = applyCustomTriageBudget;
 window.loadBacklogTriage = loadBacklogTriage;
 window.copyPageTriageQuery = copyPageTriageQuery;
+window.copyPageTriageQueryChunk = copyPageTriageQueryChunk;
 window.copyTriageQueryToClipboard = copyTriageQueryToClipboard;
 window.copyAnkiQuery = copyAnkiQuery;
 

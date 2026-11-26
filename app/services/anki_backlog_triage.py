@@ -255,6 +255,97 @@ def _normalize_focus_params(focus_mode: Optional[str] = "smart", r_threshold: Op
     return mode, r_val, r_key
 
 
+def _compute_zone_and_score(
+    *,
+    is_vortag: bool,
+    vortag_count: int,
+    is_a2: bool,
+    young_count: int,
+    active_due: int,
+    yield_level: str,
+    effective_unseen: float,
+    core_need: float,
+    repeated_yesterday: int,
+    cooldown_threshold: int = 15,
+    cooldown_penalty: float = -20.0,
+) -> Dict[str, Any]:
+    """
+    Single source of truth for Triage 3.0 strict non-overlapping 3-zone scoring
+    used by both subdeck-level and professor-level scoring:
+      - A1 (zone_rank=4, 92.0..99.9): Vortag newly learned cards (mandatory #1)
+      - A2 (zone_rank=3, 78.0..91.5): Young consolidation cards (interval <= 5 days)
+      - C Anti-Starvation (zone_rank=2, 58.0..77.5): Unseen >= 10d rescued automatically
+      - B  (zone_rank=2, 48.0..77.5): High-Yield exam focus decks
+      - C  (zone_rank=1, 20.0..47.5): Med-Yield rotation
+      - C  (zone_rank=0,  4.0..19.5): Low/No-Yield rotation (never hidden, rescued at >= 10d)
+    """
+    yl = str(yield_level or "medium").lower()
+    if yl not in YIELD_SCORE_WEIGHTS:
+        yl = "medium"
+    yield_score = YIELD_SCORE_WEIGHTS[yl]
+    starv_boost, starv_triggered = _compute_starvation_boost(
+        days_unseen=max(0.0, float(effective_unseen or 0.0)),
+        yield_level=yl,
+    )
+    rotated_cooldown = (
+        (not is_vortag)
+        and (not is_a2)
+        and (not starv_triggered)
+        and (int(repeated_yesterday or 0) >= cooldown_threshold)
+    )
+    rot_adj = cooldown_penalty if rotated_cooldown else 0.0
+
+    if is_vortag:
+        zone = "A1"
+        zone_rank = 4
+        zone_badge = "🔥 A1 Vortag-Pflicht"
+        score = round(92.0 + min(7.9, max(1, int(vortag_count or 0)) / 12.0), 1)
+    elif active_due > 0 and is_a2:
+        zone = "A2"
+        zone_rank = 3
+        zone_badge = "🛡️ A2 Jung-Schutz ≤5d"
+        score = round(
+            min(91.5, 78.0 + (core_need + max(0.0, yield_score) * 0.25 + min(15.0, young_count * 0.5) + starv_boost * 0.2) / 6.5),
+            1,
+        )
+    elif active_due > 0 and starv_triggered:
+        zone = "C"
+        zone_rank = 2
+        zone_badge = "⏰ C Anti-Starvation"
+        score = round(min(77.5, max(58.0, 58.0 + (core_need + starv_boost) / 5.5)), 1)
+    elif active_due > 0 and yl == "high":
+        zone = "B"
+        zone_rank = 2
+        zone_badge = "🎯 B Prüfungs-Kern"
+        score = round(min(77.5, max(48.0, 48.0 + (core_need + starv_boost + rot_adj) * 0.38)), 1)
+    elif active_due > 0 and yl == "medium":
+        zone = "C"
+        zone_rank = 1
+        zone_badge = "🔄 C Rotation"
+        score = round(min(47.5, max(20.0, 20.0 + (core_need + starv_boost + rot_adj) * 0.36)), 1)
+    elif active_due > 0:
+        zone = "C"
+        zone_rank = 0
+        zone_badge = "🐢 C Low-Yield Rotation"
+        score = round(min(19.5, max(4.0, 6.0 + (core_need + starv_boost + rot_adj) * 0.17)), 1)
+    else:
+        zone = "C"
+        zone_rank = 0
+        zone_badge = "✅ Stabil"
+        score = 0.0
+
+    return {
+        "yield_level": yl,
+        "zone": zone,
+        "zone_rank": zone_rank,
+        "zone_badge": zone_badge,
+        "score": score,
+        "starvation_boost": starv_boost,
+        "starvation_triggered": starv_triggered,
+        "rotated_cooldown": rotated_cooldown,
+    }
+
+
 def _score_and_describe_topic(
     t: Dict[str, Any],
     eff_mode: str = "smart",
@@ -342,7 +433,7 @@ def _score_and_describe_topic(
         else:
             time_score = 22.0 + min(8.0, ((effective_overdue - 10.0) / 15.0) * 8.0)
     else:
-        effective_overdue = 10.0
+        effective_overdue = active_od_days if active_od_days > 0 else 0.0
         time_score = 18.0 if active_revs > 0 else 0.0
 
     fail_score = min(22.0, (fail_rate / 42.0) * 22.0)
@@ -350,34 +441,37 @@ def _score_and_describe_topic(
     ease_penalty = min(8.0, max(0.0, (250.0 - avg_ease_pct) / 40.0 * 8.0))
     core_need = time_score + fail_score + forgetting_risk_score + ease_penalty
 
-    # Triage 3.0: Replace biased volume_score with Exam-Yield + Zone A2 Young Guard + Anti-Starvation
-    yield_level = str(t.get("yield_level") or "medium").lower()
-    if yield_level not in YIELD_SCORE_WEIGHTS:
-        yield_level = "medium"
-    t["yield_level"] = yield_level
-    yield_score = YIELD_SCORE_WEIGHTS[yield_level]
-
     young_due_cnt = int(t.get("young_due_today", 0) or 0)
     is_a2_topic = _is_zone_a2_dominant(young_due_cnt, eff_due)
 
-    starvation_boost, starvation_triggered = _compute_starvation_boost(
-        days_unseen=effective_overdue if (days_ago < 900 or active_od_days > 0) else 0.0,
-        yield_level=yield_level,
+    z = _compute_zone_and_score(
+        is_vortag=is_vortag_new,
+        vortag_count=max(vortag_due_cnt, uncons_new_due, learned_yest_total),
+        is_a2=is_a2_topic,
+        young_count=young_due_cnt,
+        active_due=eff_due,
+        yield_level=str(t.get("yield_level") or "medium"),
+        effective_unseen=effective_overdue,
+        core_need=core_need,
+        repeated_yesterday=rep_yest_cnt,
+        cooldown_threshold=20,
+        cooldown_penalty=-22.0,
     )
+    yield_level = z["yield_level"]
+    starvation_boost = z["starvation_boost"]
+    starvation_triggered = z["starvation_triggered"]
+    rotated_cooldown = z["rotated_cooldown"]
+    zone = z["zone"]
+    zone_badge = z["zone_badge"]
+    urgency_score = z["score"]
+
+    t["yield_level"] = yield_level
     t["starvation_boost"] = starvation_boost
     t["starvation_triggered"] = starvation_triggered
-
-    # Cooldown applies to Zone B/C decks heavily repeated yesterday, never suppresses A1/A2 or Starvation
-    rotated_cooldown = (not is_vortag_new) and (not is_a2_topic) and (not starvation_triggered) and (rep_yest_cnt >= 20)
     t["rotated_cooldown"] = rotated_cooldown
-    rotation_adjustment = -22.0 if rotated_cooldown else 0.0
 
     if is_vortag_new:
-        new_boost = min(7.9, max(vortag_due_cnt, uncons_new_due, learned_yest_total) / 15.0)
-        urgency_score = round(92.0 + new_boost, 1)
         urgency_level = "VORTAG_NEU"
-        zone = "A1"
-        zone_badge = "🔥 A1 Vortag-Pflicht"
         level_badge = "🔥 A1 Vortag neu gelernt"
         color = "#f85149"
         sub_sorted = sorted(t.get("yesterday_subdecks") or [], key=lambda x: x.get("new_learned", 0), reverse=True)
@@ -395,36 +489,24 @@ def _score_and_describe_topic(
         level_badge = "🟢 Gefestigt (0 nötig)"
         color = "#3fb950"
         action = f"Alle {due_tot} fälligen Karten sitzen stabil (Ø Recall {all_ret_pct}% ≥ {r_pct_label}%) – heute kein Fokus nötig."
-    elif eff_due > 0 and is_a2_topic:
-        urgency_score = round(min(91.5, 78.0 + (core_need + max(0.0, yield_score) * 0.25 + min(15.0, young_due_cnt * 0.6)) / 6.5), 1)
+    elif eff_due > 0 and zone == "A2":
         urgency_level = "KRITISCH"
-        zone = "A2"
-        zone_badge = "🛡️ A2 Jung-Schutz ≤5d"
         level_badge = "🛡️ A2 Jung-Schutz (≤5d)"
         color = "#f0883e"
         action = f"Aufbau-Schutz: {young_due_cnt} junge Karten (Intervall ≤5d) festigen, damit sie nicht auf Tag 1 zurückfallen!"
     elif eff_due > 0 and starvation_triggered:
-        urgency_score = round(min(77.5, max(58.0, 58.0 + (core_need + starvation_boost) / 6.0)), 1)
         urgency_level = "KRITISCH"
-        zone = "C"
-        zone_badge = "⏰ C Anti-Starvation"
         level_badge = "⏰ Anti-Starvation (≥10d)"
         color = "#d29922"
         action = f"Anti-Starvation-Garantie: Seit {days_ago}d nicht wiederholt – rotiert heute garantiert ins Fokus-Paket ({eff_due} nötig)!"
-    elif eff_due > 0 and yield_level == "high":
-        urgency_score = round(min(77.5, max(48.0, 48.0 + (core_need + starvation_boost + rotation_adjustment) * 0.36)), 1)
+    elif eff_due > 0 and zone == "B":
         urgency_level = "KRITISCH"
-        zone = "B"
-        zone_badge = "🎯 B Prüfungs-Kern"
         level_badge = "🎯 B High-Yield Fokus"
         color = "#f85149"
         need_non_v = (weak_val + time_val) if eff_mode == "smart" else due_tot
         action = f"Prüfungs-Kern (High-Yield, Ø Recall {round(active_ret_pct, 1)}%): {need_non_v} gefährdete Karten gezielt festigen!"
     elif eff_due > 0 and yield_level == "medium":
-        urgency_score = round(min(47.5, max(20.0, 20.0 + (core_need + starvation_boost + rotation_adjustment) * 0.34)), 1)
         urgency_level = "KRITISCH" if (active_ret_pct < (eff_r_val * 100.0) or fail_rate >= 35.0) else "HOCH"
-        zone = "C"
-        zone_badge = "🔄 C Rotation"
         level_badge = "🔄 Rotation (Gestern gelernt)" if rotated_cooldown else ("🚨 C Fokus-Rotation" if urgency_level == "KRITISCH" else "⚠️ C Rotation")
         color = "#58a6ff" if rotated_cooldown else "#d29922"
         need_non_v = (weak_val + time_val) if eff_mode == "smart" else due_tot
@@ -437,11 +519,7 @@ def _score_and_describe_topic(
         else:
             action = f"Steht für die rollierende Wiederholung bereit ({eff_due} nötig)."
     elif eff_due > 0:
-        # Low-Yield / No-Yield: never hidden, always placed at the end of Zone C until Anti-Starvation rescues them
-        urgency_score = round(min(19.5, max(4.0, 6.0 + (core_need + starvation_boost + rotation_adjustment) * 0.16)), 1)
         urgency_level = "HOCH"
-        zone = "C"
-        zone_badge = "🐢 C Low-Yield Rotation"
         level_badge = "🔄 Rotation (Gestern gelernt)" if rotated_cooldown else "🐢 C Low-Yield Rotation"
         color = "#58a6ff" if rotated_cooldown else "#8b949e"
         action = f"Ende der Rotation ({eff_due} nötig) – rückt spätestens nach {int(STARVATION_MAX_DAYS)}d Wartezeit automatisch hoch."
@@ -483,14 +561,8 @@ def _score_subdeck_entry(
     eff_r_key: str = "0.80",
 ) -> Dict[str, Any]:
     """
-    Scores an individual lecture subdeck for Triage 3.0 subdeck-precise packing.
-    Strict 3-zone priority (no volume bias):
-      - A1 (zone_rank=4, 92.0..99.9): Vortag newly learned cards (mandatory #1)
-      - A2 (zone_rank=3, 78.0..91.5): Young consolidation cards (interval <= 5 days)
-      - C Anti-Starvation (zone_rank=2, 58.0..77.5): Any deck unseen >= 10d rescued automatically
-      - B  (zone_rank=2, 48.0..77.5): High-Yield exam focus decks
-      - C  (zone_rank=1, 20.0..47.5): Med-Yield rotation
-      - C  (zone_rank=0,  4.0..19.5): Low/No-Yield rotation (never hidden, rescued at >= 10d)
+    Scores an individual lecture subdeck for Triage 3.0 subdeck-precise packing
+    using the shared `_compute_zone_and_score` engine.
     """
     all_due = int(sd.get("all_due", 0) or 0)
     sc_map = sd.get("smart_due_counts") or {}
@@ -499,9 +571,6 @@ def _score_subdeck_entry(
     vortag_due = int(sd.get("vortag_due", 0) or 0)
     young_due = int(sd.get("young_due", 0) or 0)
     is_a2_subdeck = _is_zone_a2_dominant(young_due, active_due)
-    yield_level = str(sd.get("yield_level") or "medium").lower()
-    if yield_level not in YIELD_SCORE_WEIGHTS:
-        yield_level = "medium"
 
     raw_days_ago = sd.get("days_since_last_review")
     days_ago = float(raw_days_ago) if raw_days_ago is not None else 999.0
@@ -527,55 +596,33 @@ def _score_subdeck_entry(
     forgetting_score = min(26.0, max(0.0, (85.0 - avg_r_pct) * 2.5)) if active_due > 0 else 0.0
     core_need = time_score + fail_score + forgetting_score
 
-    yield_score = YIELD_SCORE_WEIGHTS[yield_level]
-    starv_boost, starv_triggered = _compute_starvation_boost(effective_unseen, yield_level)
-    rotated_cooldown = (vortag_due == 0) and (not is_a2_subdeck) and (not starv_triggered) and (rep_yest >= 15)
-    cooldown_pen = -20.0 if rotated_cooldown else 0.0
-
-    if vortag_due > 0:
-        zone = "A1"
-        zone_rank = 4
-        zone_badge = "🔥 A1 Vortag-Pflicht"
-        score = round(92.0 + min(7.9, vortag_due / 12.0), 1)
-    elif is_a2_subdeck:
-        zone = "A2"
-        zone_rank = 3
-        zone_badge = "🛡️ A2 Jung-Schutz ≤5d"
-        score = round(min(91.5, 78.0 + (core_need + max(0.0, yield_score) * 0.25 + starv_boost * 0.2) / 6.0), 1)
-    elif starv_triggered:
-        zone = "C"
-        zone_rank = 2  # Anti-Starvation rescue competes directly with Zone B, never overrides A1/A2
-        zone_badge = "⏰ C Anti-Starvation"
-        score = round(min(77.5, max(58.0, 58.0 + (core_need + starv_boost) / 5.5)), 1)
-    elif yield_level == "high":
-        zone = "B"
-        zone_rank = 2
-        zone_badge = "🎯 B Prüfungs-Kern"
-        score = round(min(77.5, max(48.0, 48.0 + (core_need + starv_boost + cooldown_pen) * 0.42)), 1)
-    elif yield_level == "medium":
-        zone = "C"
-        zone_rank = 1
-        zone_badge = "🔄 C Rotation"
-        score = round(min(47.5, max(20.0, 20.0 + (core_need + starv_boost + cooldown_pen) * 0.39)), 1)
-    else:
-        zone = "C"
-        zone_rank = 0
-        zone_badge = "🐢 C Low-Yield Rotation"
-        score = round(min(19.5, max(4.0, 6.0 + (core_need + starv_boost + cooldown_pen) * 0.18)), 1)
+    z = _compute_zone_and_score(
+        is_vortag=(vortag_due > 0),
+        vortag_count=vortag_due,
+        is_a2=is_a2_subdeck,
+        young_count=young_due,
+        active_due=active_due,
+        yield_level=str(sd.get("yield_level") or "medium"),
+        effective_unseen=effective_unseen,
+        core_need=core_need,
+        repeated_yesterday=rep_yest,
+        cooldown_threshold=15,
+        cooldown_penalty=-20.0,
+    )
 
     out = dict(sd)
     out["active_due"] = active_due
-    out["yield_level"] = yield_level
+    out["yield_level"] = z["yield_level"]
     out["avg_r_pct"] = round(avg_r_pct, 1)
     out["avg_overdue_days"] = round(avg_overdue, 1)
     out["effective_unseen_days"] = round(effective_unseen, 1)
-    out["zone"] = zone
-    out["zone_rank"] = zone_rank
-    out["zone_badge"] = zone_badge
-    out["subdeck_score"] = score
-    out["starvation_boost"] = starv_boost
-    out["starvation_triggered"] = starv_triggered
-    out["rotated_cooldown"] = rotated_cooldown
+    out["zone"] = z["zone"]
+    out["zone_rank"] = z["zone_rank"]
+    out["zone_badge"] = z["zone_badge"]
+    out["subdeck_score"] = z["score"]
+    out["starvation_boost"] = z["starvation_boost"]
+    out["starvation_triggered"] = z["starvation_triggered"]
+    out["rotated_cooldown"] = z["rotated_cooldown"]
     return out
 
 
@@ -1640,7 +1687,19 @@ def _apply_budget(
         reverse=True,
     )
 
-    # ── STEP 2: Pack subdecks strictly by 3-zone order up to packing_target (with A1 Vortag guarantee) ──
+    # ── STEP 2: Pack subdecks strictly by 3-zone order up to packing_target (with 100% A1 Vortag guarantee) ──
+    def _escape_deck_path(path: str) -> str:
+        return str(path or "").replace('"', '\\"')
+
+    open_a1_vortag_cards = sum(
+        min(int(sd.get("active_due", 0) or 0), int(sd.get("vortag_due", 0) or 0))
+        for sd in all_scored_subdecks
+        if int(sd.get("vortag_due", 0) or 0) > 0
+    )
+    if remaining_budget_for_today == 0 and open_a1_vortag_cards > 0:
+        # Daily budget already reached, yet A1 Vortag cards remain open -> schedule 100% of A1 Vortag cards only
+        packing_target = 0
+
     smart_suffix = _build_smart_filter_suffix(eff_r_val)
     selected_subdecks: List[Dict[str, Any]] = []
     leftover_subdecks = []  # tuples of (subdeck_dict, remaining_cards)
@@ -1653,49 +1712,54 @@ def _apply_budget(
 
         exact_path = sd.get("full_anki_deck") or ""
         if exact_path:
-            sd_clause = f'deck:"{exact_path}"'
+            sd_clause = f'deck:"{_escape_deck_path(exact_path)}"'
         else:
             pfxs = sd.get("real_anki_prefixes") or []
             sd_clause = build_anki_deck_clause(pfxs, sd.get("themenblock", ""), sd.get("dozent", ""))
         sd_query_all = f"{sd_clause} is:due"
         sd_query = f"{sd_clause} {smart_suffix}" if eff_mode == "smart" else sd_query_all
 
+        vortag_cnt = int(sd.get("vortag_due", 0) or 0)
+        min_vortag_req = min(pool_cnt, vortag_cnt) if vortag_cnt > 0 else 0
+
         if accumulated < packing_target:
             room_left = packing_target - accumulated
-            assigned = min(pool_cnt, room_left)
+            # Zone A1 hard guarantee: ALL yesterday's newly learned cards are ALWAYS scheduled
+            assigned = max(min(pool_cnt, room_left), min_vortag_req)
             is_partial = assigned < pool_cnt
-            rem_after = pool_cnt - assigned
+            rem_after = max(0, pool_cnt - assigned)
 
             entry = dict(sd)
             entry["rank"] = len(selected_subdecks) + 1
             entry["assigned_cards"] = assigned
             entry["is_partial"] = is_partial
             entry["deferred_from_subdeck"] = rem_after
-            entry["vortag_guaranteed"] = bool(sd.get("vortag_due", 0) > 0)
+            entry["vortag_guaranteed"] = vortag_cnt > 0
             entry["anki_filter_query"] = sd_query
             entry["anki_filter_query_all"] = sd_query_all
             selected_subdecks.append(entry)
             accumulated += assigned
             if rem_after > 0:
                 leftover_subdecks.append((sd, rem_after))
-        elif sd.get("vortag_due", 0) > 0:
-            # Zone A1 hard guarantee: Vortag newly learned cards are NEVER dropped even under tiny budgets
-            v_guaranteed = min(pool_cnt, int(sd["vortag_due"]))
-            rem_after = max(0, pool_cnt - v_guaranteed)
+        elif min_vortag_req > 0:
+            # Zone A1 hard guarantee: Vortag newly learned cards are NEVER dropped even when budget is full
+            rem_after = max(0, pool_cnt - min_vortag_req)
             entry = dict(sd)
             entry["rank"] = len(selected_subdecks) + 1
-            entry["assigned_cards"] = v_guaranteed
+            entry["assigned_cards"] = min_vortag_req
             entry["is_partial"] = rem_after > 0
             entry["deferred_from_subdeck"] = rem_after
             entry["vortag_guaranteed"] = True
             entry["anki_filter_query"] = sd_query
             entry["anki_filter_query_all"] = sd_query_all
             selected_subdecks.append(entry)
-            accumulated += v_guaranteed
+            accumulated += min_vortag_req
             if rem_after > 0:
                 leftover_subdecks.append((sd, rem_after))
         else:
             leftover_subdecks.append((sd, pool_cnt))
+
+    a1_overflow_cards = max(0, accumulated - packing_target)
 
     # ── STEP 3: Compute Zone Summary across all active & selected subdecks ──
     def _zone_bucket_key(sd_item: Dict[str, Any]) -> str:
@@ -1752,7 +1816,7 @@ def _apply_budget(
         for sd in prof_sds:
             ep = sd.get("full_anki_deck")
             if ep:
-                prof_sd_clauses.append(f'deck:"{ep}"')
+                prof_sd_clauses.append(f'deck:"{_escape_deck_path(ep)}"')
         if prof_sd_clauses:
             p_union = " or ".join(dict.fromkeys(prof_sd_clauses))
             p_clause = f"({p_union})" if len(dict.fromkeys(prof_sd_clauses)) > 1 else p_union
@@ -1761,6 +1825,14 @@ def _apply_budget(
         else:
             prof_selected_q_all = t.get("anki_filter_query_all", "is:due")
             prof_selected_q = t.get("anki_filter_query", "is:due")
+
+        lead_sd = min(prof_sds, key=lambda sd: int(sd.get("rank", 9999)))
+        lead_zone = str(lead_sd.get("zone") or t.get("zone") or "C")
+        lead_zone_color = {
+            "A1": "#f85149",
+            "A2": "#f0883e",
+            "B": "#f85149",
+        }.get(lead_zone, "#d29922" if lead_sd.get("starvation_triggered") else t.get("color", "#79c0ff"))
 
         plan_entry = dict(t)
         plan_entry["assigned_cards"] = assigned
@@ -1772,6 +1844,12 @@ def _apply_budget(
         plan_entry["total_active_subdeck_count"] = active_subdeck_count_by_prof.get((tb, prof), len(prof_sds))
         plan_entry["selected_subdecks_anki_query"] = prof_selected_q
         plan_entry["selected_subdecks_anki_query_all"] = prof_selected_q_all
+        plan_entry["urgency_score"] = round(float(lead_sd.get("subdeck_score", t.get("urgency_score", 0.0))), 1)
+        plan_entry["zone"] = lead_zone
+        plan_entry["zone_badge"] = str(lead_sd.get("zone_badge") or t.get("zone_badge") or "🔄 C Rotation")
+        plan_entry["is_vortag_new"] = (lead_zone == "A1")
+        plan_entry["color"] = lead_zone_color
+        plan_entry["_lead_subdeck_rank"] = int(lead_sd.get("rank", 9999))
 
         if eff_mode == "smart":
             parts_lbl = []
@@ -1798,19 +1876,18 @@ def _apply_budget(
 
         selected.append(plan_entry)
 
-    # Sort professor-level selected list strictly by (is_vortag_new, urgency_score, avg_overdue_days) descending
+    # Sort professor-level selected list strictly by first subdeck appearance order so
+    # Checklist (#1..#N), selected_subdecks, and daily_prof_briefing match 1:1!
     selected.sort(
         key=lambda x: (
-            x.get("is_vortag_new", False),
-            x.get("urgency_score", 0.0),
-            x.get("avg_overdue_days", 0.0),
-            x.get("assigned_cards", 0),
+            x.get("_lead_subdeck_rank", 9999),
+            -float(x.get("urgency_score", 0.0)),
         ),
-        reverse=True,
     )
     for idx_sel, pe in enumerate(selected, start=1):
+        pe.pop("_lead_subdeck_rank", None)
         pe["rank"] = idx_sel
-        if remaining_budget_for_today > 0:
+        if remaining_budget_for_today > 0 or a1_overflow_cards > 0:
             focus_plan_open.append(pe)
 
     # If today had fewer active due cards than packing_target and total_due_today == 0, preview tomorrow
@@ -1880,9 +1957,12 @@ def _apply_budget(
     deferred_prof_keys = list(dict.fromkeys((sd.get("themenblock"), sd.get("dozent")) for (sd, _) in leftover_subdecks))
     deferred_topics = [topic_by_key[k] for k in deferred_prof_keys if k in topic_by_key]
 
-    effective_today_target = min(budget, total_workload_today) if total_workload_today > 0 else 0
+    if a1_overflow_cards > 0:
+        effective_today_target = min(total_workload_today, already_repeated_today + accumulated)
+    else:
+        effective_today_target = min(budget, total_workload_today) if total_workload_today > 0 else 0
     coverage_pct = round(min(100.0, (effective_today_target / max(1, total_workload_today)) * 100.0), 1)
-    if remaining_budget_for_today > 0:
+    if remaining_budget_for_today > 0 or a1_overflow_cards > 0:
         deferred_cards_count = max(0, active_focus_pool_due - sum(x["assigned_cards"] for x in focus_plan_open))
     else:
         deferred_cards_count = active_focus_pool_due
@@ -1910,6 +1990,7 @@ def _apply_budget(
     result["focus_plan_completed_today"] = completed_today_list
     result["budget_deferred_topics"] = deferred_topics
     result["budget_accumulated_cards"] = accumulated
+    result["a1_overflow_cards"] = a1_overflow_cards
     result["already_repeated_today"] = already_repeated_today
     result["remaining_budget_today"] = remaining_budget_for_today
     result["effective_today_target"] = effective_today_target
@@ -1919,12 +2000,17 @@ def _apply_budget(
     result["multi_day_rollover"] = multi_day_rollover
     result["max_capacity"] = budget
 
+    overflow_note = (
+        f" (🔥 inkl. +{a1_overflow_cards} A1 Vortag-Pflichtkarten über dem {budget}er Budget)"
+        if a1_overflow_cards > 0
+        else ""
+    )
     rollover_days_txt = "am nächsten Tag" if len(multi_day_rollover) == 1 else f"in den nächsten {len(multi_day_rollover)} Tagen"
     if eff_mode == "smart":
-        if active_focus_pool_due > budget:
+        if active_focus_pool_due > budget or a1_overflow_cards > 0:
             result["summary_advice"] = (
                 f"🎯 Triage 3.0 (A1 Vortag → A2 ≤5d → B High-Yield → C Rotation): Von {total_due_today} fälligen Karten brauchen {smart_total_due_today} "
-                f"heute Fokus ({solid_total_due_today} gefestigte übersprungen). Du machst {effective_today_target} heute aus {len(selected_subdecks)} "
+                f"heute Fokus ({solid_total_due_today} gefestigte übersprungen). Du machst {effective_today_target} heute{overflow_note} aus {len(selected_subdecks)} "
                 f"Vorlesungs-Subdecks ({coverage_pct}%), restliche {deferred_cards_count} rotieren {rollover_days_txt}!"
             )
         elif active_focus_pool_due > 0:
@@ -1941,9 +2027,9 @@ def _apply_budget(
             result["summary_advice"] = "🎉 Hervorragend: Aktuell keine offenen Wiederholungen für heute!"
     else:
         rollover_all_txt = "auf morgen" if len(multi_day_rollover) == 1 else f"auf die nächsten {len(multi_day_rollover)} Tage"
-        if total_due_today > budget:
+        if total_due_today > budget or a1_overflow_cards > 0:
             result["summary_advice"] = (
-                f"📚 Alle Fälligen aktiv: Du machst heute gezielt {effective_today_target} von {total_workload_today} fälligen Karten ({coverage_pct}%) "
+                f"📚 Alle Fälligen aktiv: Du machst heute gezielt {effective_today_target} von {total_workload_today} fälligen Karten{overflow_note} ({coverage_pct}%) "
                 f"aus {len(selected_subdecks)} Vorlesungs-Subdecks. Die übrigen {deferred_cards_count} Karten werden automatisch {rollover_all_txt} verschoben!"
             )
         elif total_due_today > 0:
@@ -1953,51 +2039,86 @@ def _apply_budget(
         else:
             result["summary_advice"] = "🎉 Hervorragend: Aktuell keine offenen Wiederholungen für heute!"
 
-    # ── STEP 6: Precise subdeck-level Anki filter query (single copyable string for Desktop & iPad) ──
+    # ── STEP 6: Precise subdeck-level Anki filter query + AnkiMobile-safe chunking (<= 1450 chars) ──
+    def _split_anki_query_chunks(clauses_list: List[str], suffix_str: str, max_chars: int = 1450) -> List[str]:
+        unique_clauses = list(dict.fromkeys(c for c in clauses_list if c))
+        if not unique_clauses:
+            return [suffix_str or "is:due"]
+        full_q = f"({' or '.join(unique_clauses)}) {suffix_str}".strip()
+        if len(full_q) <= max_chars:
+            return [full_q]
+        chunks: List[str] = []
+        current: List[str] = []
+        overhead = len(suffix_str) + 4  # '() ' + suffix
+        curr_len = overhead
+        for cl in unique_clauses:
+            add_len = len(cl) + (4 if current else 0)  # ' or '
+            if current and (curr_len + add_len) > max_chars:
+                chunks.append(f"({' or '.join(current)}) {suffix_str}".strip())
+                current = [cl]
+                curr_len = overhead + len(cl)
+            else:
+                current.append(cl)
+                curr_len += add_len
+        if current:
+            chunks.append(f"({' or '.join(current)}) {suffix_str}".strip())
+        return chunks
+
     if selected_subdecks:
         subdeck_clauses = []
         for sd in selected_subdecks:
             exact_path = sd.get("full_anki_deck")
             if exact_path:
-                subdeck_clauses.append(f'deck:"{exact_path}"')
+                subdeck_clauses.append(f'deck:"{_escape_deck_path(exact_path)}"')
             else:
                 for pfx in sd.get("real_anki_prefixes") or []:
-                    subdeck_clauses.append(f'deck:"{pfx}*"')
+                    subdeck_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
                 subdeck_clauses.append(f'deck:"*2. SJ*{sd["themenblock"]}*{sd["dozent"]}*"')
         deck_union = " or ".join(dict.fromkeys(subdeck_clauses))
         result["budget_combined_anki_query_all"] = f"({deck_union}) is:due"
+        result["budget_combined_anki_query_chunks_all"] = _split_anki_query_chunks(subdeck_clauses, "is:due")
         if eff_mode == "smart":
             result["budget_combined_anki_query"] = f"({deck_union}) {smart_suffix}"
+            result["budget_combined_anki_query_chunks"] = _split_anki_query_chunks(subdeck_clauses, smart_suffix)
             urgent_sds = [sd for sd in selected_subdecks if sd.get("zone") in ("A1", "A2")] or selected_subdecks[:6]
             urgent_clauses = []
             for sd in urgent_sds:
                 exact_path = sd.get("full_anki_deck")
                 if exact_path:
-                    urgent_clauses.append(f'deck:"{exact_path}"')
+                    urgent_clauses.append(f'deck:"{_escape_deck_path(exact_path)}"')
                 else:
                     for pfx in sd.get("real_anki_prefixes") or []:
-                        urgent_clauses.append(f'deck:"{pfx}*"')
+                        urgent_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
             result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(urgent_clauses))}) {smart_suffix}"
         else:
             result["budget_combined_anki_query"] = result["budget_combined_anki_query_all"]
+            result["budget_combined_anki_query_chunks"] = result["budget_combined_anki_query_chunks_all"]
             urgent_sds = [sd for sd in selected_subdecks if sd.get("zone") in ("A1", "A2")] or selected_subdecks[:6]
-            urgent_clauses = [f'deck:"{sd["full_anki_deck"]}"' for sd in urgent_sds if sd.get("full_anki_deck")]
+            urgent_clauses = [f'deck:"{_escape_deck_path(sd["full_anki_deck"])}"' for sd in urgent_sds if sd.get("full_anki_deck")]
             if urgent_clauses:
                 result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(urgent_clauses))}) is:due"
     elif selected:
         clauses = []
         for t in selected:
             for pfx in t.get("real_anki_prefixes", []):
-                clauses.append(f'deck:"{pfx}*"')
+                clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
             clauses.append(f'deck:"*2. SJ*{t["themenblock"]}*{t["dozent"]}*"')
         deck_union = " or ".join(dict.fromkeys(clauses))
         result["budget_combined_anki_query_all"] = f"({deck_union}) is:due"
+        result["budget_combined_anki_query_chunks_all"] = _split_anki_query_chunks(clauses, "is:due")
         result["budget_combined_anki_query"] = (
             f"({deck_union}) {smart_suffix}" if eff_mode == "smart" else result["budget_combined_anki_query_all"]
+        )
+        result["budget_combined_anki_query_chunks"] = (
+            _split_anki_query_chunks(clauses, smart_suffix)
+            if eff_mode == "smart"
+            else result["budget_combined_anki_query_chunks_all"]
         )
     else:
         result["budget_combined_anki_query_all"] = "is:due"
         result["budget_combined_anki_query"] = "is:due"
+        result["budget_combined_anki_query_chunks_all"] = ["is:due"]
+        result["budget_combined_anki_query_chunks"] = ["is:due"]
 
     # ── STEP 7 (Teil 3): Dynamic Daily Professor Exam Briefing strictly for today's selected_subdecks ──
     try:
@@ -2055,6 +2176,8 @@ def cache_triage(data: Dict[str, Any]):
         "focus_plan_open" not in data
         or "selected_subdecks" not in data
         or "daily_prof_briefing" not in data
+        or "a1_overflow_cards" not in data
+        or "budget_combined_anki_query_chunks" not in data
     ):
         _apply_budget(
             data,
@@ -2107,6 +2230,14 @@ def get_cached_triage() -> Optional[Dict[str, Any]]:
         if not tps:
             return 0
         t0 = tps[0]
+        if (
+            "young_due_today" in t0
+            and "selected_subdecks" in payload
+            and "daily_prof_briefing" in payload
+            and "a1_overflow_cards" in payload
+            and "budget_combined_anki_query_chunks" in payload
+        ):
+            return 7
         if "young_due_today" in t0 and "selected_subdecks" in payload and "daily_prof_briefing" in payload:
             return 6
         if "young_due_today" in t0 and "selected_subdecks" in payload:

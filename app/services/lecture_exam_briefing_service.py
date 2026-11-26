@@ -33,7 +33,6 @@ def _normalize_match_text(text: str) -> str:
         .replace("ö", "oe")
         .replace("ü", "ue")
         .replace("ß", "ss")
-        .replace("ss", "ss")
     )
     # Normalize common punctuation/separators to spaces
     s = re.sub(r"[/,:;_\-&+()]+", " ", s)
@@ -46,10 +45,17 @@ def _strip_leading_index(norm_text: str) -> str:
     return re.sub(r"^\d+\.?\s+", "", norm_text).strip()
 
 
+def _is_whole_phrase_match(needle: str, haystack: str) -> bool:
+    """Returns True only if `needle` appears at whole-word boundaries inside `haystack`."""
+    if not needle or not haystack:
+        return False
+    return re.search(rf"(?<!\w){re.escape(needle)}(?!\w)", haystack) is not None
+
+
 def load_lecture_exam_signals(force_reload: bool = False) -> Dict[str, Any]:
     """Loads `app/data/lecture_exam_signals.json` with mtime-based in-memory caching."""
     if not LECTURE_EXAM_SIGNALS_PATH.exists():
-        return {"version": "2.0", "total_source_summaries": 0, "entries": []}
+        return {"version": "2.1", "total_source_summaries": 0, "entries": []}
     mtime = LECTURE_EXAM_SIGNALS_PATH.stat().st_mtime
     if not force_reload and _SIGNALS_CACHE["data"] is not None and _SIGNALS_CACHE["mtime"] == mtime:
         return _SIGNALS_CACHE["data"]
@@ -73,9 +79,9 @@ def match_subdeck_to_exam_signal(
 ) -> Optional[Dict[str, Any]]:
     """
     Deterministically matches an Anki subdeck to its verified lecture exam signal entry.
-    Uses longest-specific-pattern matching within `(themenblock, dozent)` so numbered
-    variants (e.g. 'Trachea und Bronchien 2' vs 'Trachea und Bronchien',
-    'Anatomie der Atmungsorgane II' vs 'Anatomie der Atmungsorgane') never collide.
+    Uses exact -> whole-phrase word-boundary -> token overlap matching within `(themenblock, dozent)`
+    so short patterns (e.g. 'Lunge', 'EKG') never false-positive on unrelated compounds and numbered
+    variants ('Trachea und Bronchien 2' vs 'Trachea und Bronchien') never collide.
     """
     entries = get_all_exam_signal_entries()
     if not entries:
@@ -120,15 +126,17 @@ def match_subdeck_to_exam_signal(
             if sub_norm == pat_norm or (sub_no_idx and sub_no_idx == pat_no_idx):
                 score = 1000.0 + len(pat_norm)
                 mtype = "exact_subdeck"
-            # 2. Substring match on leaf subdeck (longest pattern wins -> 'II' beats base!)
-            elif pat_norm in sub_norm or (pat_no_idx and len(pat_no_idx) >= 4 and pat_no_idx in sub_no_idx):
-                # Prefer closer length match to avoid 'Trachea und Bronchien' matching 'Trachea und Bronchien 2'
-                matched_len = len(pat_norm) if pat_norm in sub_norm else len(pat_no_idx)
+            # 2. Whole-phrase word-boundary match on leaf subdeck (longest/closest pattern wins!)
+            elif (
+                (len(pat_norm) >= 3 and _is_whole_phrase_match(pat_norm, sub_norm))
+                or (pat_no_idx and len(pat_no_idx) >= 3 and _is_whole_phrase_match(pat_no_idx, sub_no_idx))
+            ):
+                matched_len = len(pat_norm) if _is_whole_phrase_match(pat_norm, sub_norm) else len(pat_no_idx)
                 len_penalty = abs(len(sub_no_idx) - len(pat_no_idx)) * 0.5
                 score = 500.0 + matched_len * 2.0 - len_penalty
                 mtype = "pattern_subdeck"
-            # 3. Substring match on full Anki deck path
-            elif pat_norm in full_norm:
+            # 3. Whole-phrase match on full Anki deck path
+            elif len(pat_norm) >= 4 and _is_whole_phrase_match(pat_norm, full_norm):
                 score = 300.0 + len(pat_norm)
                 mtype = "pattern_subdeck"
             # 4. Token overlap fallback (e.g. slight spelling variation)
@@ -150,10 +158,11 @@ def match_subdeck_to_exam_signal(
         out = dict(best_entry)
         out["match_type"] = best_match_type
         out["match_score"] = round(best_score, 1)
+        out["is_prof_fallback"] = False
         return out
 
     if allow_prof_fallback and same_prof_entries:
-        # Synthesize a professor-level overview from all verified lectures of this professor in this TB
+        # Synthesize a clearly labeled professor-level overview (max 2 highlights, 1 pearl, 1 deemph)
         all_sources: List[str] = []
         all_dates: List[str] = []
         highlights: List[str] = []
@@ -179,9 +188,11 @@ def match_subdeck_to_exam_signal(
             "subdeck_patterns": [subdeck],
             "source_summaries": all_sources,
             "lecture_dates": sorted(all_dates),
-            "exam_highlights": highlights[:3],
-            "clinical_pearls": pearls[:2],
-            "deemphasized_notes": deemph[:2],
+            "exam_highlights": highlights[:2],
+            "clinical_pearls": pearls[:1],
+            "deemphasized_notes": deemph[:1],
+            "coverage_note": f"Keine eigene Vorlesungsaufnahme für „{subdeck}“ – allgemeine Schwerpunkte von {dozent}.",
+            "is_prof_fallback": True,
             "match_type": "prof_fallback",
             "match_score": 10.0,
         }
@@ -409,9 +420,13 @@ def build_daily_triage_prof_briefing(
         lead_zone_badge = str(lead_sd.get("zone_badge") or "🔄 C Rotation")
 
         subdeck_briefings: List[Dict[str, Any]] = []
-        hl_lists: List[List[str]] = []
-        pearl_lists: List[List[str]] = []
-        deemph_lists: List[List[str]] = []
+        direct_hl_lists: List[List[str]] = []
+        direct_pearl_lists: List[List[str]] = []
+        direct_deemph_lists: List[List[str]] = []
+        fallback_hl_lists: List[List[str]] = []
+        fallback_pearl_lists: List[List[str]] = []
+        fallback_deemph_lists: List[List[str]] = []
+        coverage_notes: List[str] = []
         all_dates: List[str] = []
         all_sources: List[str] = []
 
@@ -425,18 +440,30 @@ def build_daily_triage_prof_briefing(
                 full_anki_deck=full_deck,
                 allow_prof_fallback=True,
             )
+            is_fb = bool(sig and (sig.get("is_prof_fallback") or sig.get("match_type") == "prof_fallback"))
             sd_hl = list(sig.get("exam_highlights") or []) if sig else []
             sd_pearls = list(sig.get("clinical_pearls") or []) if sig else []
             sd_deemph = list(sig.get("deemphasized_notes") or []) if sig else []
             sd_dates = list(sig.get("lecture_dates") or []) if sig else []
             sd_sources = list(sig.get("source_summaries") or []) if sig else []
+            sd_cov_note = str(sig.get("coverage_note") or "").strip() if sig else ""
 
-            if sd_hl:
-                hl_lists.append(sd_hl)
-            if sd_pearls:
-                pearl_lists.append(sd_pearls)
-            if sd_deemph:
-                deemph_lists.append(sd_deemph)
+            if is_fb:
+                if sd_hl:
+                    fallback_hl_lists.append(sd_hl)
+                if sd_pearls:
+                    fallback_pearl_lists.append(sd_pearls)
+                if sd_deemph:
+                    fallback_deemph_lists.append(sd_deemph)
+            else:
+                if sd_hl:
+                    direct_hl_lists.append(sd_hl)
+                if sd_pearls:
+                    direct_pearl_lists.append(sd_pearls)
+                if sd_deemph:
+                    direct_deemph_lists.append(sd_deemph)
+            if sd_cov_note and sd_cov_note not in coverage_notes:
+                coverage_notes.append(sd_cov_note)
             for dt in sd_dates:
                 if dt not in all_dates:
                     all_dates.append(dt)
@@ -453,6 +480,8 @@ def build_daily_triage_prof_briefing(
                 "zone": str(sd.get("zone") or "C"),
                 "zone_badge": str(sd.get("zone_badge") or "🔄 C Rotation"),
                 "match_type": sig.get("match_type", "unmatched") if sig else "unmatched",
+                "is_prof_fallback": is_fb,
+                "coverage_note": sd_cov_note,
                 "signal_id": sig.get("id") if sig else None,
                 "lecture_dates": sorted(sd_dates),
                 "source_summaries": sd_sources,
@@ -461,10 +490,16 @@ def build_daily_triage_prof_briefing(
                 "deemphasized_notes": sd_deemph,
             })
 
-        # Compact top-level summary for fast scanning (2-4 highlights, 2-3 pearls, 0-2 calm de-emphasis notes)
-        agg_highlights = _dedupe_bullets_round_robin(hl_lists, max_items=4)
-        agg_pearls = _dedupe_bullets_round_robin(pearl_lists, max_items=3)
-        agg_deemph = _dedupe_bullets_round_robin(deemph_lists, max_items=2)
+        # Never mix generic prof_fallback bullets into real subdeck-matched bullets
+        only_fallback = (len(direct_hl_lists) == 0 and len(fallback_hl_lists) > 0)
+        hl_lists = direct_hl_lists if direct_hl_lists else fallback_hl_lists
+        pearl_lists = direct_pearl_lists if direct_hl_lists else fallback_pearl_lists
+        deemph_lists = direct_deemph_lists if direct_hl_lists else fallback_deemph_lists
+
+        # Compact top-level summary for fast scanning (up to 5 highlights, 3 pearls, 2 calm de-emphasis notes)
+        agg_highlights = _dedupe_bullets_round_robin(hl_lists, max_items=2 if only_fallback else 5)
+        agg_pearls = _dedupe_bullets_round_robin(pearl_lists, max_items=1 if only_fallback else 3)
+        agg_deemph = _dedupe_bullets_round_robin(deemph_lists, max_items=1 if only_fallback else 2)
 
         sub_lbl = f"{len(sds)} Vorlesung" if len(sds) == 1 else f"{len(sds)} Vorlesungen"
         items.append({
@@ -477,6 +512,8 @@ def build_daily_triage_prof_briefing(
             "assigned_cards": prof_assigned_cards,
             "subdeck_count": len(sds),
             "header_summary": f"{prof_assigned_cards} Karten ({sub_lbl}) – {lead_zone_badge}",
+            "is_prof_fallback": only_fallback,
+            "coverage_note": " ".join(coverage_notes) if (only_fallback or coverage_notes) else "",
             "lecture_dates": sorted(all_dates),
             "source_summaries": all_sources,
             "exam_highlights": agg_highlights,

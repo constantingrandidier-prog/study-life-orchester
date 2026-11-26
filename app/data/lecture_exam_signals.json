@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "2.1",
   "total_source_summaries": 38,
   "entries": [
     {
@@ -454,7 +454,6 @@
         "2025-09-26"
       ],
       "exam_highlights": [
-        "Hinweis zur Transkript-Abdeckung: Eine eigene Tuzlak/Becher-Vorlesung zu diesem Subdeck bzw. zum Komplementsystem ist in den 6 Transkripten vom 15.–26.09.2025 noch nicht enthalten (das Komplementsystem wurde am 26.09. ausdrücklich auf den Montag nach der Blutgerinnung verschoben).",
         "Angeborene Immundefekte (Dr. Susanne Unger, 26.09. – explizites Lernziel): Abgrenzung primär (508 bekannte IUIS-Gene) vs. sekundär sowie Fähigkeit, anhand der 5 besprochenen Beispiele (SCID/RAG1, Hyper-IgE/STAT3, CVID, CTLA-4-Defizienz, CGD/CYBB) Klinik und zugrunde liegenden Mechanismus („wieso eigentlich“) zu erklären.",
         "Klinische Warnzeichen (Dr. Unger): Erkennungs-Akronyme ELVIS (Erreger, Lokalisation, Verlauf, Intensität, Summe – Infektanfälligkeit) und GARFIELD (Granulome, Autoimmunität, Rezidivierendes Fieber, ungewöhnliche Ekzeme, Lymphoproliferation, chronische Darmentzündungen – Immundysregulation) sowie Blutbild als erstes Screening."
       ],
@@ -463,7 +462,8 @@
         "CVID & septische Granulomatose (CGD): CVID ist der häufigste symptomatische Immundefekt (~30 % genetisch geklärt, Bronchiektasen, subkutane Ig-Substitution); X-chromosomale CGD (CYBB/gp91phox) verursacht tiefe Leber-/Bauchabszesse & Burkholderia-Pneumonie bei normalen B/T-Zellen/Ig (Schnelldiagnose via DHR-Test / fehlender Oxidative Burst).",
         "Ethischer Aspekt bei X-chromosomaler CGD (CYBB): Bei genetischer Testung von Schwestern/Konduktorinnen stehen Recht auf Wissen und Recht auf Nichtwissen für die Familienplanung im Fokus."
       ],
-      "deemphasized_notes": []
+      "deemphasized_notes": [],
+      "coverage_note": "Hinweis zur Transkript-Abdeckung: Eine eigene Tuzlak/Becher-Vorlesung zu diesem Subdeck bzw. zum Komplementsystem ist in den 6 Transkripten vom 15.–26.09.2025 noch nicht enthalten (das Komplementsystem wurde am 26.09. ausdrücklich auf den Montag nach der Blutgerinnung verschoben)."
     },
     {
       "id": "tuzlak_becher_rekombination_immunrezeptoren",
@@ -481,7 +481,6 @@
         "2025-09-26"
       ],
       "exam_highlights": [
-        "Hinweis zur Transkript-Abdeckung: Eine eigenständige Vorlesung zur Rekombination adaptiver Immunrezeptoren ist in den 6 Transkripten vom 15.–26.09.2025 nicht enthalten; belegt sind nur Querverweise aus Immuntoleranz und angeborenen Immundefekten.",
         "TCR-Diversität & Rezeptor-Editing (25.09.): Im Thymus entstehen bis zu 10¹⁸ TCR-Varianten; bei der zentralen B-Zell-Toleranz im Knochenmark dient Rezeptor-Editing (erneute VDJ-Umstrukturierung) zur Korrektur autoreaktiver B-Zell-Rezeptoren.",
         "RAG1-SCID (Dr. Unger, 26.09.): Eine Mutation in RAG1 führt zu einem T⁻B⁻NK⁺-Immundefekt mit fehlenden T- und B-Zellen bei erhaltenen NK-Zellen."
       ],
@@ -489,7 +488,8 @@
         "SCID-Fallbeispiel (26.09.): 4 Monate altes Mädchen mit Viren-/Pilzinfekten, Diarrhö, Gedeihstörung, fehlenden Lymphknoten/Tonsillen, konsanguinen Eltern und 2 verstorbenen Geschwistern (RAG1-Mutation; kurativ Stammzelltransplantation/Gentherapie; historisch: David Vetter); Differentialdiagnosen sind ADA⁻ (T⁻B⁻NK⁻) und IL-7R⁻ (T⁻B⁺NK⁺).",
         "Rezeptor-Editing (25.09.): Durch erneute VDJ-Umstrukturierung im Knochenmark können autoreaktive B-Zellen der klonalen Deletion entgehen, wobei ein Ausfall der B-Zell-Toleranz wegen der benötigten T-Zell-Hilfe insgesamt weniger schwerwiegend ist."
       ],
-      "deemphasized_notes": []
+      "deemphasized_notes": [],
+      "coverage_note": "Hinweis zur Transkript-Abdeckung: Eine eigenständige Vorlesung zur Rekombination adaptiver Immunrezeptoren ist in den 6 Transkripten vom 15.–26.09.2025 nicht enthalten; belegt sind nur Querverweise aus Immuntoleranz und angeborenen Immundefekten."
     },
     {
       "id": "tuzlak_becher_zellentstehung_und_reifung",
@@ -507,7 +507,6 @@
         "2025-09-25"
       ],
       "exam_highlights": [
-        "Hinweis zur Transkript-Abdeckung: Eine eigenständige Tuzlak/Becher-Vorlesung „Zellentstehung und Reifung“ ist in den 6 Transkripten vom 15.–26.09.2025 nicht enthalten; belegt sind die Reifungsschritte aus Anatomie (22.09.) und Immuntoleranz (25.09.).",
         "T-Zell-Reifung im Thymus (25.09.): Durchlaufen der Stadien DN (1–4) → DP (CD4⁺CD8⁺) → SP (CD4⁺ oder CD8⁺).",
         "Positive & negative Selektion (22.09. & 25.09.): Im Thymus-Kortex erfolgt die positive Selektion an cTECs (ca. 80–90 % sterben durch „Tod durch Vernachlässigung“), in der Medulla die negative Selektion an mTECs (AIRE) bzw. dendritischen Zellen sowie bei intermediärer Affinität die Agonistenselektion zu Tregs."
       ],
@@ -517,7 +516,8 @@
       ],
       "deemphasized_notes": [
         "Die genaue molekularbiologische Regulation der IgM-Herunterregulation bei anergischen B-Zellen muss nicht gewusst werden (25.09.)."
-      ]
+      ],
+      "coverage_note": "Hinweis zur Transkript-Abdeckung: Eine eigenständige Tuzlak/Becher-Vorlesung „Zellentstehung und Reifung“ ist in den 6 Transkripten vom 15.–26.09.2025 nicht enthalten; belegt sind die Reifungsschritte aus Anatomie (22.09.) und Immuntoleranz (25.09.)."
     },
     {
       "id": "herz_kreislauf_einfuehrung",
@@ -534,8 +534,7 @@
       ],
       "exam_highlights": [
         "Unterschiede zwischen akutem Stress (Adrenalin/Noradrenalin aus Nebennierenmark) und chronischem Stress (CRH → ACTH → Cortisol) sowie die Allostase-Reaktionsmuster (inkl. Burnout/fehlender Reaktion) verstehen.",
-        "Stellung psychosozialer Risikofaktoren im Vergleich zu traditionellen KHK-Risikofaktoren kennen (INTERHEART-Studie: Platz 3 nach Rauchen und Dyslipidämie) sowie den molekularen Endothelmechanismus (eNOS/NO-Downregulation, Hyperkoagulabilität, Zytokine).",
-        "Hinweis zur Quellenlage: In den 14 Transkript-Zusammenfassungen ist keine separate klinische Auftaktvorlesung vor dem 02.10. enthalten; diese Punkte stammen aus der ersten klinisch-psychophysiologischen Blockvorlesung."
+        "Stellung psychosozialer Risikofaktoren im Vergleich zu traditionellen KHK-Risikofaktoren kennen (INTERHEART-Studie: Platz 3 nach Rauchen und Dyslipidämie) sowie den molekularen Endothelmechanismus (eNOS/NO-Downregulation, Hyperkoagulabilität, Zytokine)."
       ],
       "clinical_pearls": [
         "Takotsubo-Syndrom („Broken Heart“ / „Happy Heart“): Betrifft vorwiegend Frauen (50–80 J.) mit apikaler Hypo-/Akinesie und basaler Hyperkontraktion; Auslöser können auch positive Ereignisse oder physische Trigger (Narkose, Sepsis) sein; Mortalität ~5 % (wie akuter Myokardinfarkt).",
@@ -545,7 +544,8 @@
       "deemphasized_notes": [
         "Detaillierte Zielorgan-Liste des vegetativen Nervensystems (Fokus liegt auf dem Herz) und die genaue immunologische Kaskade auf der Stress-Übersichtsfolie müssen nicht im Detail gewusst werden.",
         "Spezifische Studienzahlen („Grundverständnis wichtiger als Zahlen“) und der detaillierte Behandlungsalgorithmus beim Takotsubo-Syndrom sind nicht prüfungsrelevant."
-      ]
+      ],
+      "coverage_note": "Hinweis zur Quellenlage: In den 14 Transkript-Zusammenfassungen ist keine separate klinische Auftaktvorlesung vor dem 02.10. enthalten; diese Punkte stammen aus der ersten klinisch-psychophysiologischen Blockvorlesung."
     },
     {
       "id": "herz_kreislauf_abschluss",
@@ -2325,6 +2325,33 @@
       ],
       "deemphasized_notes": [
         "Die VO₂max-Formel, biochemische Details des Randle-Mechanismus (Fettsäure-Hemmung auf den KH-Stoffwechsel), molekulare Details der Ca²⁺-vermittelten GLUT4-Translokation sowie die am Vorlesungsende gekürzten Inhalte und Details zur Proteinbiosynthese nach Sport sind ausdrücklich nicht prüfungsrelevant."
+      ]
+    },
+    {
+      "id": "embryologie_herzentwicklung",
+      "themenblock": "TB Herz-Kreislauf",
+      "dozent": "Embryologie",
+      "subdeck_patterns": [
+        "Herzentwicklung",
+        "Organogenese Herzentwicklung"
+      ],
+      "source_summaries": [
+        "2025-10-22_TB_Atmung.md"
+      ],
+      "lecture_dates": [
+        "2025-10-22"
+      ],
+      "exam_highlights": [
+        "Ursprung des Herzens: Primäres Herzfeld (Vorhöfe, linker Ventrikel, Teile rechter Ventrikel), sekundäres Herzfeld (Ausflussbahn, Teile rechter Ventrikel) und kardiale Neuralleistenzellen (Septierung der Ausflussbahn).",
+        "Herzschleife & Septierung: Herzschlauch schlägt ab Tag 22; C-/S-förmige Herzschleife bildet erste Rechts-Links-Asymmetrie; Vorhofseptierung (Septum primum, Ostium primum/secundum, Septum secundum, Foramen ovale), AV-Kanal (Endokardkissen) und spiraliges Konus-/Trunkusseptum.",
+        "Alle prüfungsrelevanten Keywords stehen laut Dozent bewusst vollständig auf den Vorlesungsfolien (keine Zusatzbücher nötig)."
+      ],
+      "clinical_pearls": [
+        "Kongenitale Herzfehler betreffen ca. 1 % der Neugeborenen; häufigste Ursache sind Migrations-/Differenzierungsfehler der kardialen Neuralleistenzellen (v.a. Ausflussbahn).",
+        "Vorhofseptumdefekte (ASD): Übermäßige Resorption im Septum primum oder fehlendes Septum secundum führt postnatal zu Links-Rechts-Shunt, pulmonaler Hypertonie und Rechtsherzhypertrophie."
+      ],
+      "deemphasized_notes": [
+        "Detaillierte molekulare Signalwege und die schrittweise Herleitung des frühen Herzkreislaufs sind laut Dozent nicht im Detail prüfungsrelevant."
       ]
     }
   ]

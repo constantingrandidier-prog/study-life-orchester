@@ -1366,7 +1366,7 @@
           </div>
         </div>
 
-        <!-- Workload Triage 2.1 (Effizienz-Fokus: Vortag + FSRS Schwachstellen + Budget) -->
+        <!-- Workload Triage 3.0 (3-Zonen-Fokus: A1 Vortag + A2 Jung ≤5d + B High-Yield + C Rotation/Anti-Starvation + Prof-Briefing) -->
         <style>
           .triage-3-split-grid {
             display: grid;
@@ -1469,12 +1469,13 @@
                 <div style="color: var(--text-muted); padding: 0.5rem 0;">Berechne deine wichtigsten 350 Wiederholungen für heute...</div>
               </div>
 
-              <!-- Compact exact subdeck query preview + iPad AnkiMobile tip -->
-              <div style="margin-top: 0.7rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 0.3rem;">
+              <!-- Compact exact subdeck query preview + chunk buttons + iPad AnkiMobile tip -->
+              <div style="margin-top: 0.7rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 0.35rem;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
                   <span style="font-size: 10px; color: var(--text-muted);">Präziser Subdeck-Suchbefehl (Desktop &amp; iPad):</span>
                   <span id="pageTriageQueryPreview" style="font-family: monospace; font-size: 10px; color: #79c0ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">is:due</span>
                 </div>
+                <div id="pageTriageQueryChunks" style="display: none; flex-wrap: wrap; align-items: center; gap: 0.35rem;"></div>
                 <div id="pageTriageIpadTip" style="font-size: 10.5px; color: #8b949e; background: rgba(56, 139, 253, 0.08); border: 1px solid rgba(56, 139, 253, 0.22); border-radius: 5px; padding: 0.28rem 0.55rem;">
                   📱 <strong>Tipp iPad (AnkiMobile):</strong> Stapel-Limit im Filterstapel passend auf <strong>350</strong> stellen.
                 </div>

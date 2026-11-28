@@ -1,7 +1,7 @@
 {
   "available": true,
   "total_cards_scanned": 9687,
-  "total_kprim_traps": 662,
+  "total_kprim_traps": 663,
   "kprim_trap_percentage": 6.8,
   "top_25_todesfallen": [
     {
@@ -25,10 +25,10 @@
       "front_snippet": "Was sind die Komponenten der langfristigen Regulation des MAP?",
       "back_snippet": "Vasopressin (ADH) , Aldosteron , Angiotensin (durch Renin Akt.) modulieren die Sympathikuswirkung , Reninsezernierung und Nierenfunktion Also RAA & Vasopresin über Blutvolumen (Angiotensin: Vasokonstriktion & Aldosteron bild. In Niere) (Aldosteron: Weniger Na-",
       "hy_terms_detected": [
-        "raas",
-        "angiotensin",
         "renin",
-        "aldosteron"
+        "angiotensin",
+        "aldosteron",
+        "raas"
       ]
     },
     {
@@ -52,9 +52,9 @@
       "front_snippet": "Allosterische Regulation von Glykolyse und Gluconeogenese Was ist die Funktion von PFK-2/FBP-2?",
       "back_snippet": "Synthese/Abbau von Fructose-2,6-Biphosphat und somit Regulation der Glykolyse/GNG Reguliert über: - Phosphofructokinase-1 (PFK-1) - Fructose-1,6-bisphosphatase-1 (FBPase-1)",
       "hy_terms_detected": [
-        "phosphat",
-        "pfk-1",
         "glykolyse",
+        "pfk-1",
+        "phosphat",
         "pfk-2"
       ]
     },
@@ -79,9 +79,9 @@
       "front_snippet": "Regulation von Glykolyse und Gluconeogenese Was sind wichtige Funktionen und Auswirkungen der Fructose-2,6-Biphosphat?",
       "back_snippet": "➢ Starker Aktivator der PFK-1 und hemmt die FBPase-1 ➢ Hebt inhibierende Wirkung von ATP auf PFK-1 auf ➢ Hohe F-2,6-BP Konzentration beschleunigt die gesamte Glykolyse da: F-6-P → F-1,6-BP beschleunigt wird und F-1,6-BP ein allosterischer Aktivator der Pyruvat",
       "hy_terms_detected": [
-        "phosphat",
-        "pfk-1",
         "glykolyse",
+        "pfk-1",
+        "phosphat",
         "pfk-2"
       ]
     },
@@ -92,9 +92,9 @@
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
       "professor_name": "Prof. Dr. Christian Stockmann",
       "professor_institute": "Anatomisches Institut UZH",
-      "reps": 11,
-      "lapses": 2,
-      "interval_days": 6,
+      "reps": 13,
+      "lapses": 3,
+      "interval_days": 2,
       "card_yield_score": 92.0,
       "is_kprim_trap": true,
       "trap_type": "confusable_pair",
@@ -106,8 +106,8 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Was ist die Wirkung von SREBP-1c in der Glykolyse?",
       "back_snippet": "Glykolyse : Glykolyse ↑ durch erhöhte Transkription von Glukokinase , PFK-1, Pyruvatkinase & PFK-2/ FBPase-2 -> Hexokinase ausserhalb der Leber nihct durch SREBP-1c transkribiert",
       "hy_terms_detected": [
-        "pfk-1",
         "glykolyse",
+        "pfk-1",
         "pfk-2"
       ]
     },
@@ -132,8 +132,8 @@
       "front_snippet": "Transkriptionelle Regulation von Glykolyse in der Leber Wie ist die Wirkung von ChREBP?",
       "back_snippet": "Transkription der Gene, die PFK-1, PFK-2/FPBase-2 und Pyruvatkinase kodieren ( nicht aber für Glucokinase !)",
       "hy_terms_detected": [
-        "pfk-1",
         "glykolyse",
+        "pfk-1",
         "pfk-2"
       ]
     },
@@ -158,9 +158,9 @@
       "front_snippet": "Hypothalamus-HVL-Nebennierenrinden-Achse (glandotrop) Was läuft ab? Feedback Mechanismus?",
       "back_snippet": "Corticoliberin ( CRH ) Hypothalamus Corticotropin ( ACTH ) HVL Cortisol Nebennierenrinde Zona fasciculata & Aldosteron Nebennierenrinde Zona glomerulosa ⇒ Wirkung Feed-Back Mechanismus ➢ Cortisol hemmt im Hypothalamus und in der Adenohypophyse die Freisetzung ",
       "hy_terms_detected": [
-        "cortisol",
         "acth",
-        "aldosteron"
+        "aldosteron",
+        "cortisol"
       ]
     },
     {
@@ -208,8 +208,8 @@
       "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
       "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
       "hy_terms_detected": [
-        "cortisol",
-        "aldosteron"
+        "aldosteron",
+        "cortisol"
       ]
     },
     {
@@ -477,10 +477,10 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
+        "thrombose",
+        "hämoglobin",
         "po2",
         "epo",
-        "hämoglobin",
-        "thrombose",
         "hypoxie"
       ]
     },
@@ -505,10 +505,10 @@
       "front_snippet": "Hypoxie - Niere",
       "back_snippet": "Höhenakklimatisation: Während Höhenaufenthalt wird Produktion von EPO gesteigert: Bei erhöhung von EPO steigt auch Anteil von Hämatokrit und Hämoglobin im Blut → höhere Viskosität → erhöht periphere Widerstand (steigert Herzbelastung und Risiko für Gerinnung &",
       "hy_terms_detected": [
+        "thrombose",
+        "hämoglobin",
         "po2",
         "epo",
-        "hämoglobin",
-        "thrombose",
         "hypoxie"
       ]
     },
@@ -533,11 +533,11 @@
       "front_snippet": "Metabolische Regulation während Aerober Belastung Glucoseaufnahme in arbeitenden Muskelzellen → von was hängt der Aufnahmemechanismus NICHT ab, und von was hängt er ab?",
       "back_snippet": "NICHT von Insulin ⇒ der Mechanismus ist Insulin unabhängig (Der Insulinspiegel ist tief) Mechanismus nicht bekannt! Möglichkeiten: ➢ Ca 2+ Pathway (via cPKC oder CaMK) aktivieren AMPK ➢ AMP aktiviert AMPK ⟹ AMPK ⇒ f ördert Fusion von GLUT-4 enthaltenden intraz",
       "hy_terms_detected": [
-        "noradrenalin",
+        "t4",
+        "glykolyse",
         "adrenalin",
         "insulin",
-        "t4",
-        "glykolyse"
+        "noradrenalin"
       ]
     },
     {
@@ -562,9 +562,9 @@
       "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
       "hy_terms_detected": [
         "inr",
-        "tsh",
+        "glykolyse",
         "insulin",
-        "glykolyse"
+        "tsh"
       ]
     },
     {
@@ -588,11 +588,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
+        "hämoglobin",
         "po2",
         "epo",
-        "hämoglobin",
-        "sauerstoffbindung",
-        "hypoxie"
+        "hypoxie",
+        "sauerstoffbindung"
       ]
     },
     {
@@ -616,11 +616,11 @@
       "front_snippet": "Hypoxie",
       "back_snippet": "Formen der Hypoxie: - Hypoxämie: arterieller pO2 erniedrigt (durch tiefere Hb Sättigung Zustand oder tiefen alveolären pO2 oder Hypoventilation) - Chemische Hypoxie: chemische Stoffe verringern die O2-Konzentration in Erythrozyten CO: viel höhere Affinität zur",
       "hy_terms_detected": [
+        "hämoglobin",
         "po2",
         "epo",
-        "hämoglobin",
-        "sauerstoffbindung",
-        "hypoxie"
+        "hypoxie",
+        "sauerstoffbindung"
       ]
     }
   ],
@@ -701,8 +701,8 @@
           "front_snippet": "Besitzen Erythrozyten Mitochondrien?",
           "back_snippet": "Nein! - KEINE Mitochondrien -> Anaerobe Glykolyse (O2 ist ja an Hämoglobin gebunden und würde somit auch nicht zur Verfügung stehen) -> Entstehung von Laktat und ATP.",
           "hy_terms_detected": [
-            "hämoglobin",
-            "glykolyse"
+            "glykolyse",
+            "hämoglobin"
           ]
         },
         {
@@ -727,8 +727,8 @@
           "back_snippet": "Funktion: - Adhäsion , Aggregation & Freisetzung . - Wichtig für Blutgerinnung -> Sehr formvariabel im Blut in inaktivem Zustand, bei Oberflächenkontakt (z.B. Verletzung eines Gefässes) werden sie aktiviert. Durchmesser: - 2.5 μm . Vorkommen: - 150'000-350'000",
           "hy_terms_detected": [
             "calcium",
-            "blutgerinnung",
             "thrombozyt",
+            "blutgerinnung",
             "fibrinogen"
           ]
         }
@@ -750,9 +750,9 @@
           "deck_name": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 43,
+          "reps": 44,
           "lapses": 12,
-          "interval_days": 3,
+          "interval_days": 9,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -936,8 +936,8 @@
           "front_snippet": "Was kann mit dem MHC-II/Antigen-Komplex an der Zelloberfläche geschehen bei einer Antigenpräsentation mit MHC-II Molekülen?",
           "back_snippet": "Dort kann nur ein T-Cell Receptor (TCR) mit dem Molekülkomplex interagieren, stabilisiert und ermöglicht durch CD4. Falls das Antigen als körperfremd anerkannt wird, wird die T-Zelle wird aktiviert",
           "hy_terms_detected": [
-            "mhc-i",
             "mhc-ii",
+            "mhc-i",
             "t-zell"
           ]
         }
@@ -1017,8 +1017,8 @@
           "front_snippet": "Was muss passieren damit der TCR mit dem MHC-II Komplex interagieren kann? Was passiert nachdem der TCR gebunden hat? (bis&mit affinität erhöht)",
           "back_snippet": "Ein LFA-1 Molekül der T-Zelle interagiert mit geringer Affinität mit einem ICAM-1 der APC Nachdem der TCR dann gebunden hat, erhöht sich durch eine Konformationsänderung die Affiniät der Bindung und der Kontakt zwischen den zwei Zellen verlängert sich wenn Ant",
           "hy_terms_detected": [
-            "mhc-i",
             "mhc-ii",
+            "mhc-i",
             "t-zell"
           ]
         },
@@ -1236,11 +1236,11 @@
     "1789378222994": {
       "deck_id": 1789378222994,
       "deck_name": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
-      "total_cards": 68,
+      "total_cards": 76,
       "high_yield_cards_count": 0,
       "kprim_traps_count": 5,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 53.3,
+      "avg_card_yield_score": 53.6,
       "sample_kprim_traps": [
         {
           "card_id": 1601036762734,
@@ -1328,105 +1328,6 @@
           "back": "Wenn Durchmesser kleiner wird schieben sich alle Erythrozyten in die Mitte des Gefässes (im Axialstrom) um die scherkräfte am Rand zu entkommen, d.h. Am Rand ist nur noch Plasma und wirkt wie Gleitschicht -> Erythrozyt: 7.5müm Durchmesser",
           "front_snippet": "Was ist der Fahreus Lindquvist Effekt?",
           "back_snippet": "Wenn Durchmesser kleiner wird schieben sich alle Erythrozyten in die Mitte des Gefässes (im Axialstrom) um die scherkräfte am Rand zu entkommen, d.h. Am Rand ist nur noch Plasma und wirkt wie Gleitschicht -> Erythrozyt: 7.5müm Durchmesser",
-          "hy_terms_detected": []
-        }
-      ]
-    },
-    "1795680085803": {
-      "deck_id": 1795680085803,
-      "deck_name": "Filtered Deck 09:01",
-      "total_cards": 350,
-      "high_yield_cards_count": 0,
-      "kprim_traps_count": 16,
-      "confusable_pairs_count": 0,
-      "avg_card_yield_score": 42.3,
-      "sample_kprim_traps": [
-        {
-          "card_id": 1607978507004,
-          "note_id": 1607978507004,
-          "deck_id": 1795680085803,
-          "deck_name": "Filtered Deck 09:01",
-          "professor_name": "Dozententeam UZH",
-          "professor_institute": "Medizinische Fakultät UZH",
-          "reps": 8,
-          "lapses": 2,
-          "interval_days": 2,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was versteht man unter der chemischen Wertigkeit?",
-          "back": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konzept: Limitierende AS, also die AS mit dem tiefsten AA-Score. ",
-          "front_snippet": "Was versteht man unter der chemischen Wertigkeit?",
-          "back_snippet": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konze",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1607979921517,
-          "note_id": 1607979921517,
-          "deck_id": 1795680085803,
-          "deck_name": "Filtered Deck 09:01",
-          "professor_name": "Dozententeam UZH",
-          "professor_institute": "Medizinische Fakultät UZH",
-          "reps": 8,
-          "lapses": 1,
-          "interval_days": 2,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was ist das P:M:S-Verhältnis?",
-          "back": "Polyen : Monoen : Saturated = 0.7 : 1.3 : 1 Ungesättigte FS sollten Grossteil ausmachen! - Polyen: mehrfach ungesättigt (Linolensäure) (Omega-3&6) - Monoen: einfach ungesättigt (Ölsäure) (Omega-9) - Saturated: Gesättigt (Palmitin-, Stearinsäure) (haben nur einfachbind also kein Omega)",
-          "front_snippet": "Was ist das P:M:S-Verhältnis?",
-          "back_snippet": "Polyen : Monoen : Saturated = 0.7 : 1.3 : 1 Ungesättigte FS sollten Grossteil ausmachen! - Polyen: mehrfach ungesättigt (Linolensäure) (Omega-3&6) - Monoen: einfach ungesättigt (Ölsäure) (Omega-9) - Saturated: Gesättigt (Palmitin-, Stearinsäure) (haben nur ein",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1608225067220,
-          "note_id": 1608225067220,
-          "deck_id": 1795680085803,
-          "deck_name": "Filtered Deck 09:01",
-          "professor_name": "Dozententeam UZH",
-          "professor_institute": "Medizinische Fakultät UZH",
-          "reps": 6,
-          "lapses": 1,
-          "interval_days": 1,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Wann sind Maillardprodukte erwünscht?",
-          "back": "Melanoidine verleihen braune Farben und Aroma —> red. Zucker reagiert mit prim. Aminogruppe über schiffische Base Vorkommen: Brotkruste, Kaffee, gebräunte Fleischteile Geschmacksintensiv aber nicht Metabolisierbar: Aromastoffe: Cystein + Glucose --> gebratenes Steak Glycin + Glucose --> Karamellpudding; Prolin + Glucos",
-          "front_snippet": "Wann sind Maillardprodukte erwünscht?",
-          "back_snippet": "Melanoidine verleihen braune Farben und Aroma —> red. Zucker reagiert mit prim. Aminogruppe über schiffische Base Vorkommen: Brotkruste, Kaffee, gebräunte Fleischteile Geschmacksintensiv aber nicht Metabolisierbar: Aromastoffe: Cystein + Glucose --> gebratenes",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1637172326280,
-          "note_id": 1637172326280,
-          "deck_id": 1795680085803,
-          "deck_name": "Filtered Deck 09:01",
-          "professor_name": "Dr. Selma Tuzlak",
-          "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 6,
-          "card_yield_score": 50.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Beschreibe die strukturellen Bereiche von Apolipoproteinen , welches ein transportieren von hydrophoben Fetten in Blut/Lymphe möglich macht?",
-          "back": "➢ amphiphile α-Helices - typisches Strukturmerkmal von Apolipoproteinen - d.h. nach Aussen: fast nur polare und nach Innen fast nur apolare AS ⇒ Helix hat dadurch eine wasserlösliche und eine lipidbindende Seite ➢ amphiphile β-Faltblätter → gleiches Prinzip wie oben",
-          "front_snippet": "Beschreibe die strukturellen Bereiche von Apolipoproteinen , welches ein transportieren von hydrophoben Fetten in Blut/Lymphe möglich macht?",
-          "back_snippet": "➢ amphiphile α-Helices - typisches Strukturmerkmal von Apolipoproteinen - d.h. nach Aussen: fast nur polare und nach Innen fast nur apolare AS ⇒ Helix hat dadurch eine wasserlösliche und eine lipidbindende Seite ➢ amphiphile β-Faltblätter → gleiches Prinzip wi",
           "hy_terms_detected": []
         }
       ]
@@ -1540,9 +1441,9 @@
           "front_snippet": "Was versteht man unter negativer Selektion? Wo findet sie statt?",
           "back_snippet": "Vermeidung von Autoreaktivität und Erzeugung von zentraler Toleranz gegenüber körpereigenem Gewebe (damit sie nur fremdes angreiffen) --> DP-Zellen werden durch dendritische Zellen/ mTEC an der Kortex/Mark-Grenze auf TCRs mit zu hoher Affinität für körpereigen",
           "hy_terms_detected": [
+            "negative selektion",
             "thymus",
-            "t-zell",
-            "negative selektion"
+            "t-zell"
           ]
         },
         {
@@ -1729,10 +1630,10 @@
           "front_snippet": "Was geschieht nach der Thrombozytenadhäsion? (Überblick)",
           "back_snippet": "3. Aktivierung : Signaltransduktion führt zu Pseudopodien und Phosphatidylserin-Präsentation an der Membran. 4. GPIIb/IIIa-Aktivierung : Der Rezeptor wechselt in seine hochaffine Form. 5. Verstärkung & Aggregation : Aktiviertes GPIIb/IIIa bindet an vWF (feste ",
           "hy_terms_detected": [
-            "phosphat",
             "thrombozyt",
-            "fibrinogen",
-            "von-willebrand"
+            "phosphat",
+            "von-willebrand",
+            "fibrinogen"
           ]
         },
         {
@@ -2002,9 +1903,9 @@
           "deck_name": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 3,
-          "interval_days": 7,
+          "interval_days": 9,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2071,8 +1972,8 @@
           "front_snippet": "Was bewirkt Phospholamban? Wie wird es reguliert?",
           "back_snippet": "PLB hemmt im dephosphorylierten Zustand SERCA (Ca-ATPase) Ausschüttung von Noradrenalin durch Sympathikus aktiviert Beta1-Rezeptoren : --> aktiviert Adenylylcyclase --> erhöht cAMP --> erhöht Aktivität PKA --> Phosphorylierung von PLB --> Keine Hemmung von SER",
           "hy_terms_detected": [
-            "noradrenalin",
-            "adrenalin"
+            "adrenalin",
+            "noradrenalin"
           ]
         }
       ]
@@ -2104,7 +2005,7 @@
       "high_yield_cards_count": 6,
       "kprim_traps_count": 5,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 55.8,
+      "avg_card_yield_score": 56.0,
       "sample_kprim_traps": [
         {
           "card_id": 1603644152073,
@@ -2127,8 +2028,8 @@
           "front_snippet": "Was geschieht wenn die Atrien vollständig depolarisiert sind?",
           "back_snippet": "Isoelektrische Strecke (PQ) —> Kein Signal das wirklich ausgedrückt wird (Ladungsunterschiede werden durch den Körper ausgeglichen). Weiterleitung über AV-Knoten ist nicht sichtbar, da dieser zu klein ist. Durch elektrische Isolation der Ventilebene kann nur ü",
           "hy_terms_detected": [
-            "epo",
-            "av-knoten"
+            "av-knoten",
+            "epo"
           ]
         },
         {
@@ -2152,10 +2053,10 @@
           "front_snippet": "Was geschieht in der Depolarisation der Ventrikel und der Repolarisation der Atrien?",
           "back_snippet": "Prominenteste Zacke im EKG! So gross weil Ventrikel von Masse her gross . Weiterverlauf der Depolarisation. Dipolmoment zeigt eher Richtung linke Herzseite , da linke Herzseite von der Masse her grösser (muskulöser) --> grösserer Beitrag Repolarisation in den ",
           "hy_terms_detected": [
-            "depolarisation",
+            "repolarisation",
             "epo",
-            "ekg",
-            "repolarisation"
+            "depolarisation",
+            "ekg"
           ]
         },
         {
@@ -2165,8 +2066,8 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 16,
-          "lapses": 5,
+          "reps": 18,
+          "lapses": 6,
           "interval_days": 1,
           "card_yield_score": 68.0,
           "is_kprim_trap": true,
@@ -2489,9 +2390,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
           "professor_name": "Prof. Dr. Philipp Sommer",
           "professor_institute": "Kardiologie / Anatomisches Institut UZH",
-          "reps": 10,
+          "reps": 11,
           "lapses": 2,
-          "interval_days": 3,
+          "interval_days": 10,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -2509,11 +2410,11 @@
     "1789378222996": {
       "deck_id": 1789378222996,
       "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
-      "total_cards": 63,
+      "total_cards": 62,
       "high_yield_cards_count": 7,
       "kprim_traps_count": 14,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 60.0,
+      "avg_card_yield_score": 59.9,
       "sample_kprim_traps": [
         {
           "card_id": 1603645710856,
@@ -2862,6 +2763,16 @@
       "avg_card_yield_score": 40.5,
       "sample_kprim_traps": []
     },
+    "1795855103914": {
+      "deck_id": 1795855103914,
+      "deck_name": "Filtered Deck 09:38",
+      "total_cards": 4,
+      "high_yield_cards_count": 0,
+      "kprim_traps_count": 0,
+      "confusable_pairs_count": 0,
+      "avg_card_yield_score": 58.8,
+      "sample_kprim_traps": []
+    },
     "1789378222992": {
       "deck_id": 1789378222992,
       "deck_name": "TB Herz-Kreislauf :: Sommer :: Herzentwicklung / Sommer",
@@ -3116,9 +3027,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Dr. Selma Tuzlak",
           "professor_institute": "Institut für Experimentelle Immunologie UZH",
-          "reps": 15,
-          "lapses": 4,
-          "interval_days": 18,
+          "reps": 17,
+          "lapses": 5,
+          "interval_days": 3,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -3138,9 +3049,9 @@
           "deck_name": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
           "professor_name": "Prof. Dr. Johannes Loffing",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 16,
+          "reps": 17,
           "lapses": 4,
-          "interval_days": 4,
+          "interval_days": 7,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -3569,11 +3480,11 @@
           "front_snippet": "Was sind die Funktionen der Leber im Überblick? (9)",
           "back_snippet": "KH -Stoffwechsel AS - und Protein-Stoffwechsel Lipidstoffwechsel , Ketogenese Biotransformation : Entgiftung und Ausscheidung von SW-Produkten und körperfremden Substanzen Abwehrfunktion (Komplementfaktoren, Phagozytose) Speicher für Glykogen, Lipide, Vitamine",
           "hy_terms_detected": [
-            "erythropoietin",
+            "t4",
             "t3",
-            "angiotensin",
             "hämoglobin",
-            "t4"
+            "erythropoietin",
+            "angiotensin"
           ]
         },
         {
@@ -4035,9 +3946,9 @@
           "deck_name": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 2,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 1,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4057,9 +3968,9 @@
           "deck_name": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 0,
+          "reps": 3,
           "lapses": 0,
-          "interval_days": 0,
+          "interval_days": 1,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -4067,9 +3978,9 @@
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
           "front": "Was sind die Merkmale des Zahnschmelzes?",
-          "back": "Derivat des epithelialen Schmelzorgans! Keine bindegewebige Herkunft Die Zellen des inneren Schmelzepithels differenzieren zu Enameloblasten (sezernieren Schmelz) Härteste Substanz des menschlichen Körpers, massiv mineralisiert (96%!) Enthält Amelogenin statt Kollagen Enameloblasten sterben ab --> Schmelz nicht erneuer",
+          "back": "Derivat des epithelialen Schmelzorgans (früher Zahnleiste)! Keine bindegewebige Herkunft Die Zellen des inneren Schmelzepithels differenzieren zu Enameloblasten (sezernieren Schmelz) Härteste Substanz des menschlichen Körpers, massiv mineralisiert (96%!) Enthält Amelogenin statt Kollagen Enameloblasten sterben ab --> S",
           "front_snippet": "Was sind die Merkmale des Zahnschmelzes?",
-          "back_snippet": "Derivat des epithelialen Schmelzorgans! Keine bindegewebige Herkunft Die Zellen des inneren Schmelzepithels differenzieren zu Enameloblasten (sezernieren Schmelz) Härteste Substanz des menschlichen Körpers, massiv mineralisiert (96%!) Enthält Amelogenin statt ",
+          "back_snippet": "Derivat des epithelialen Schmelzorgans (früher Zahnleiste)! Keine bindegewebige Herkunft Die Zellen des inneren Schmelzepithels differenzieren zu Enameloblasten (sezernieren Schmelz) Härteste Substanz des menschlichen Körpers, massiv mineralisiert (96%!) Enthä",
           "hy_terms_detected": []
         }
       ]
@@ -4205,10 +4116,10 @@
           "front_snippet": "Was ist die TRH - TSH - T3/T4-Achse?",
           "back_snippet": "Positive Stimulation über das hypothalamische Liberin TRH (Thyreotropin releasing hormone = Thyreoliberin ) Adenohypophyse setzt THS (Thyroidea stimulierendes Hormung = Thyreotropin ) Regt in der Schilddrüse die Bildung von Thyroxin= T4 und Trijodothyronin= T3",
           "hy_terms_detected": [
-            "t3",
-            "tsh",
             "t4",
-            "schilddrüse"
+            "t3",
+            "schilddrüse",
+            "tsh"
           ]
         },
         {
@@ -4232,12 +4143,12 @@
           "front_snippet": "Welche Prozesse laufen bei der Schilddrüsenhormonbildung parallel ab?",
           "back_snippet": "Aufnahme von Iodid, wird durch Thyreoperoxidase zu Iod oxidiert und in TG eingebaut Synthese von Thyroglobulinketten (\"aufgefädelte Tyrosine\", sehr grosses Molekül) aus Tyrosin Exozytose von TG in das Kolloidlumen Oxidation und Iodierung von Tyrosinresten des ",
           "hy_terms_detected": [
+            "t4",
             "inr",
             "t3",
+            "schilddrüse",
             "peroxidase",
-            "thyreoglobulin",
-            "t4",
-            "schilddrüse"
+            "thyreoglobulin"
           ]
         },
         {
@@ -4405,10 +4316,10 @@
           "front_snippet": "Hypophosphatämie: Def, Ursachen, Symptome, Therapie?",
           "back_snippet": "Def: Plasmaphosphat <0.6 mmol/l Ursachen: renale Verluste, Shift zu Knochen und Muskeln (Refeeding-Syndrom, Leber-OP!), Malabsorption (Mangelernährung, bariatrische Chirurgie) --> Gemeinsamer Mechanismus: ATP- und 2,3-Bisphosphoglyceratdepletion Symptome: Musk",
           "hy_terms_detected": [
-            "phosphat",
             "inr",
             "azidose",
-            "insulin"
+            "insulin",
+            "phosphat"
           ]
         },
         {
@@ -4457,8 +4368,8 @@
           "front_snippet": "Was ist die Funktion von FGF23?",
           "back_snippet": "Senkt den Phosphatspiegel und leert Speicher --> immer auch in Kombinatuon mit Abfall des Ca-Spiegels! Hemmt Aufnahme aus dem Darm und fördert die Ausscheidung mit Urin --> wirkt so zusammen mit PTH dem erhöhten Ca/P-Produkt entgegen --> kann P einzel regulier",
           "hy_terms_detected": [
-            "phosphat",
-            "calcitriol"
+            "calcitriol",
+            "phosphat"
           ]
         }
       ]
@@ -4499,87 +4410,21 @@
     "1789378222987": {
       "deck_id": 1789378222987,
       "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-      "total_cards": 122,
+      "total_cards": 172,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 6,
+      "kprim_traps_count": 10,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 40.5,
       "sample_kprim_traps": [
         {
-          "card_id": 1637931601445,
-          "note_id": 1637931601445,
+          "card_id": 1607978507004,
+          "note_id": 1607978507004,
           "deck_id": 1789378222987,
           "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 6,
-          "lapses": 0,
-          "interval_days": 5,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Was ist Lingin ? Beschreibe!",
-          "back": "➢ unlöslicher Ballaststoff ➢ KEIN Kohlenhydrat, sondern Holzfaser ➢ ist unverdaulich, fördert Verdauung in allen Darmabschnitten",
-          "front_snippet": "Was ist Lingin ? Beschreibe!",
-          "back_snippet": "➢ unlöslicher Ballaststoff ➢ KEIN Kohlenhydrat, sondern Holzfaser ➢ ist unverdaulich, fördert Verdauung in allen Darmabschnitten",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1637934109938,
-          "note_id": 1637934109938,
-          "deck_id": 1789378222987,
-          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-          "professor_name": "Prof. Dr. Raimund Dutzler",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 6,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Die Proteinqualität: chemisch Amino-Acid Score?",
-          "back": "= vergleicht Gehalt jeder einzelnen essentiellen Aminosäure in einem Nahrungsprotein mit dem Gehalt der gleichen Aminosäure im Referenzprotein FAO und WHO haben ein Referenzprotein definiert: enthält alle essentiellen AS mit optimalem Verhältnis zu den nichtessentiellen AS (theoretisches Protein) Hier wird ein Protein ",
-          "front_snippet": "Die Proteinqualität: chemisch Amino-Acid Score?",
-          "back_snippet": "= vergleicht Gehalt jeder einzelnen essentiellen Aminosäure in einem Nahrungsprotein mit dem Gehalt der gleichen Aminosäure im Referenzprotein FAO und WHO haben ein Referenzprotein definiert: enthält alle essentiellen AS mit optimalem Verhältnis zu den nichtes",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1638996099887,
-          "note_id": 1638996099886,
-          "deck_id": 1789378222987,
-          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-          "professor_name": "Prof. Dr. Raimund Dutzler",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 0,
-          "lapses": 0,
-          "interval_days": 0,
-          "card_yield_score": 40.0,
-          "is_kprim_trap": true,
-          "trap_type": "negation_directional",
-          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
-          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
-          "card_type": "kprim_mechanism",
-          "front": "Wieso ist das Risiko für Kardiovaskulären Krankheiten in Frankreich kleiner als z.B. in England.? (vlt aussetzen)",
-          "back": "Polyphenole im Rotwein hemmen Endothelin-1 (verursacht Vasokonstriktion). Rotwein senkt Risiko von kardiovaskulären Krankheiten, da sie Polyphenole beinhaltet, die Endothelin-1 (verursacht Vasokonstriktion) hemmen. Nicht wegen Ethanol!",
-          "front_snippet": "Wieso ist das Risiko für Kardiovaskulären Krankheiten in Frankreich kleiner als z.B. in England.? (vlt aussetzen)",
-          "back_snippet": "Polyphenole im Rotwein hemmen Endothelin-1 (verursacht Vasokonstriktion). Rotwein senkt Risiko von kardiovaskulären Krankheiten, da sie Polyphenole beinhaltet, die Endothelin-1 (verursacht Vasokonstriktion) hemmen. Nicht wegen Ethanol!",
-          "hy_terms_detected": []
-        },
-        {
-          "card_id": 1641738451143,
-          "note_id": 1641738451143,
-          "deck_id": 1789378222987,
-          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-          "professor_name": "Prof. Dr. Raimund Dutzler",
-          "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
-          "lapses": 0,
+          "reps": 9,
+          "lapses": 2,
           "interval_days": 7,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
@@ -4587,10 +4432,76 @@
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Was sind nicht-reduzierende Zucker?",
-          "back": "beide anomeren C sind an Bindung beteiligt ⇒ können nicht offenkettig vorliegen",
-          "front_snippet": "Was sind nicht-reduzierende Zucker?",
-          "back_snippet": "beide anomeren C sind an Bindung beteiligt ⇒ können nicht offenkettig vorliegen",
+          "front": "Was versteht man unter der chemischen Wertigkeit?",
+          "back": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konzept: Limitierende AS, also die AS mit dem tiefsten AA-Score. ",
+          "front_snippet": "Was versteht man unter der chemischen Wertigkeit?",
+          "back_snippet": "Ein theoretisches Protein enthält alle essentiellen AS in optimalem Verhältnis zu den nicht-essentiellen AS Die E/N-Ratio (essentiell/nicht-essentiell) sollte zwischen 1:3 und 2:3 liegen AA-Score: % einer AS im Testprotein / % einer AS im Referenzprotein Konze",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1607979921517,
+          "note_id": 1607979921517,
+          "deck_id": 1789378222987,
+          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+          "professor_name": "Prof. Dr. Raimund Dutzler",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 9,
+          "lapses": 1,
+          "interval_days": 8,
+          "card_yield_score": 40.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Was ist das P:M:S-Verhältnis?",
+          "back": "Polyen : Monoen : Saturated = 0.7 : 1.3 : 1 Ungesättigte FS sollten Grossteil ausmachen! - Polyen: mehrfach ungesättigt (Linolensäure) (Omega-3&6) - Monoen: einfach ungesättigt (Ölsäure) (Omega-9) - Saturated: Gesättigt (Palmitin-, Stearinsäure) (haben nur einfachbind also kein Omega)",
+          "front_snippet": "Was ist das P:M:S-Verhältnis?",
+          "back_snippet": "Polyen : Monoen : Saturated = 0.7 : 1.3 : 1 Ungesättigte FS sollten Grossteil ausmachen! - Polyen: mehrfach ungesättigt (Linolensäure) (Omega-3&6) - Monoen: einfach ungesättigt (Ölsäure) (Omega-9) - Saturated: Gesättigt (Palmitin-, Stearinsäure) (haben nur ein",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1637930942520,
+          "note_id": 1637930942520,
+          "deck_id": 1789378222987,
+          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+          "professor_name": "Prof. Dr. Raimund Dutzler",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 6,
+          "lapses": 1,
+          "interval_days": 12,
+          "card_yield_score": 40.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "sind KH nicht-essentiell?",
+          "back": "Ja, richtig KH sind (theoretisch) nicht essentiell: Gluconeogenese aus AS, Glycerin",
+          "front_snippet": "sind KH nicht-essentiell?",
+          "back_snippet": "Ja, richtig KH sind (theoretisch) nicht essentiell: Gluconeogenese aus AS, Glycerin",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1637931017019,
+          "note_id": 1637931017018,
+          "deck_id": 1789378222987,
+          "deck_name": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+          "professor_name": "Prof. Dr. Raimund Dutzler",
+          "professor_institute": "Institut für Biochemie UZH",
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 4,
+          "card_yield_score": 40.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Was sind Ballaststoffe?",
+          "back": "Nahrungsfasern, Nicht-Stärke-Polysaccharide • Werden im menschlichen Verdauungstrakt durch humane Enzyme nicht verdaut • Zellwandbestandteile pflanzlicher Lebensmittel, vorwiegend Polysaccharide Zusatz: Richtwert für Erwachsene: mindestens 30 g/Tag (Ballaststoffdichte 2.5 - 3 g/MJ)",
+          "front_snippet": "Was sind Ballaststoffe?",
+          "back_snippet": "Nahrungsfasern, Nicht-Stärke-Polysaccharide • Werden im menschlichen Verdauungstrakt durch humane Enzyme nicht verdaut • Zellwandbestandteile pflanzlicher Lebensmittel, vorwiegend Polysaccharide Zusatz: Richtwert für Erwachsene: mindestens 30 g/Tag (Ballaststo",
           "hy_terms_detected": []
         }
       ]
@@ -4664,11 +4575,11 @@
     "1789378222988": {
       "deck_id": 1789378222988,
       "deck_name": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
-      "total_cards": 158,
+      "total_cards": 173,
       "high_yield_cards_count": 1,
-      "kprim_traps_count": 5,
+      "kprim_traps_count": 6,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 40.4,
+      "avg_card_yield_score": 39.9,
       "sample_kprim_traps": [
         {
           "card_id": 1608133004909,
@@ -4737,25 +4648,25 @@
           "hy_terms_detected": []
         },
         {
-          "card_id": 1608225166472,
-          "note_id": 1608225166472,
+          "card_id": 1608225067220,
+          "note_id": 1608225067220,
           "deck_id": 1789378222988,
           "deck_name": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 12,
+          "reps": 9,
+          "lapses": 2,
+          "interval_days": 2,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Was sind Zusatzstoffe?",
-          "back": "Zusatzstoffe sind besondere Zutaten, die mit E-Nummern bezeichnet werden Nur was ausdrücklich erlaubt ist, darf verwendet werden Zusatzstoffe werden bei technischer Notwendigkeit eingesetzt, wenn die Substanz gesundheitlich unbedenklich ist Der Verbraucher darf nicht getäuscht werden (z.B. Eiernudeln enthalten Eier und",
-          "front_snippet": "Was sind Zusatzstoffe?",
-          "back_snippet": "Zusatzstoffe sind besondere Zutaten, die mit E-Nummern bezeichnet werden Nur was ausdrücklich erlaubt ist, darf verwendet werden Zusatzstoffe werden bei technischer Notwendigkeit eingesetzt, wenn die Substanz gesundheitlich unbedenklich ist Der Verbraucher dar",
+          "front": "Wann sind Maillardprodukte erwünscht?",
+          "back": "Melanoidine verleihen braune Farben und Aroma —> red. Zucker reagiert mit prim. Aminogruppe über schiffische Base Vorkommen: Brotkruste, Kaffee, gebräunte Fleischteile Geschmacksintensiv aber nicht Metabolisierbar: Aromastoffe: Cystein + Glucose --> gebratenes Steak Glycin + Glucose --> Karamellpudding; Prolin + Glucos",
+          "front_snippet": "Wann sind Maillardprodukte erwünscht?",
+          "back_snippet": "Melanoidine verleihen braune Farben und Aroma —> red. Zucker reagiert mit prim. Aminogruppe über schiffische Base Vorkommen: Brotkruste, Kaffee, gebräunte Fleischteile Geschmacksintensiv aber nicht Metabolisierbar: Aromastoffe: Cystein + Glucose --> gebratenes",
           "hy_terms_detected": []
         }
       ]
@@ -4815,9 +4726,9 @@
           "back_snippet": "Steroidhormon --> nuklärer Rezeptor Wirkung auf alle Organe als Stresshormon --> stimmuliert Sympathikus Setzt Energiesubstrate frei: Lipolyse, GNG, hemmt Glukoseaufnahme in Fett-, Leber und Muskelzellen, Hemmung der Glykolyse, Insulinresistenz Proteolyse Thro",
           "hy_terms_detected": [
             "inr",
-            "tsh",
+            "glykolyse",
             "insulin",
-            "glykolyse"
+            "tsh"
           ]
         },
         {
@@ -4863,10 +4774,10 @@
           "front_snippet": "Wie funktioniert die Aldosteronfreisetzung über Angiotensin II?",
           "back_snippet": "Freisetzung von Renin (durch bspw. verminderte Cl-Konz., tiefer Blutdruck oder sympathische Stimulation) in der Niere Renin spaltet dem aus der Leber stammenden Angiotensinogen das Angiotensin I ab, wird durch proteolytische Reaktion durch ACE zu Angiotensin I",
           "hy_terms_detected": [
-            "depolarisation",
-            "angiotensin",
             "renin",
             "epo",
+            "depolarisation",
+            "angiotensin",
             "aldosteron"
           ]
         }
@@ -4875,17 +4786,17 @@
     "1789378223062": {
       "deck_id": 1789378223062,
       "deck_name": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
-      "total_cards": 59,
+      "total_cards": 142,
       "high_yield_cards_count": 0,
       "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 50.2,
+      "avg_card_yield_score": 50.1,
       "sample_kprim_traps": []
     },
     "1789378223063": {
       "deck_id": 1789378223063,
       "deck_name": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
-      "total_cards": 104,
+      "total_cards": 137,
       "high_yield_cards_count": 0,
       "kprim_traps_count": 0,
       "confusable_pairs_count": 0,
@@ -5095,12 +5006,105 @@
     "1789378223014": {
       "deck_id": 1789378223014,
       "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
-      "total_cards": 32,
+      "total_cards": 125,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 0,
+      "kprim_traps_count": 8,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 43.3,
-      "sample_kprim_traps": []
+      "avg_card_yield_score": 43.0,
+      "sample_kprim_traps": [
+        {
+          "card_id": 1637172326280,
+          "note_id": 1637172326280,
+          "deck_id": 1789378223014,
+          "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+          "professor_name": "Dr. Selma Tuzlak",
+          "professor_institute": "Institut für Experimentelle Immunologie UZH",
+          "reps": 4,
+          "lapses": 0,
+          "interval_days": 44,
+          "card_yield_score": 50.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Beschreibe die strukturellen Bereiche von Apolipoproteinen , welches ein transportieren von hydrophoben Fetten in Blut/Lymphe möglich macht?",
+          "back": "➢ amphiphile α-Helices - typisches Strukturmerkmal von Apolipoproteinen - d.h. nach Aussen: fast nur polare und nach Innen fast nur apolare AS ⇒ Helix hat dadurch eine wasserlösliche und eine lipidbindende Seite ➢ amphiphile β-Faltblätter → gleiches Prinzip wie oben",
+          "front_snippet": "Beschreibe die strukturellen Bereiche von Apolipoproteinen , welches ein transportieren von hydrophoben Fetten in Blut/Lymphe möglich macht?",
+          "back_snippet": "➢ amphiphile α-Helices - typisches Strukturmerkmal von Apolipoproteinen - d.h. nach Aussen: fast nur polare und nach Innen fast nur apolare AS ⇒ Helix hat dadurch eine wasserlösliche und eine lipidbindende Seite ➢ amphiphile β-Faltblätter → gleiches Prinzip wi",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1637176199866,
+          "note_id": 1637176199866,
+          "deck_id": 1789378223014,
+          "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+          "professor_name": "Dozententeam UZH",
+          "professor_institute": "Medizinische Fakultät UZH",
+          "reps": 4,
+          "lapses": 0,
+          "interval_days": 47,
+          "card_yield_score": 40.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "Lipoproteinklassen Welches Lipoprotein ist das einzige, welches KEIN Apo B als Apolipoprotein hat?",
+          "back": "HDL ⇒ ist das einzige Lipoprotein, welches kein Apo B hat -> hat Apo A1",
+          "front_snippet": "Lipoproteinklassen Welches Lipoprotein ist das einzige, welches KEIN Apo B als Apolipoprotein hat?",
+          "back_snippet": "HDL ⇒ ist das einzige Lipoprotein, welches kein Apo B hat -> hat Apo A1",
+          "hy_terms_detected": []
+        },
+        {
+          "card_id": 1637180859919,
+          "note_id": 1637180859919,
+          "deck_id": 1789378223014,
+          "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+          "professor_name": "Dozententeam UZH",
+          "professor_institute": "Medizinische Fakultät UZH",
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 2,
+          "card_yield_score": 59.0,
+          "is_kprim_trap": true,
+          "trap_type": "negation_directional",
+          "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
+          "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
+          "card_type": "kprim_mechanism",
+          "front": "postprandiale Triglycerid-Stoffwechsel Wie wird LPL reguliert?",
+          "back": "LPL wird aktiviert durch ApoA-V und ApoC-II Wird inhibiert durch ApoC-III Ausserdem hemmt Insulin Angptl4, sodass dieses die LPL nicht inhibieren kann (doppelte Hemmung --> Aktivierung) FAZIT : → bestimmte Apo haben stimulierende oder hemmende Wirkung auf LPL → Insulin fördert LPL indirekt, indem es seinen Hemmer inhib",
+          "front_snippet": "postprandiale Triglycerid-Stoffwechsel Wie wird LPL reguliert?",
+          "back_snippet": "LPL wird aktiviert durch ApoA-V und ApoC-II Wird inhibiert durch ApoC-III Ausserdem hemmt Insulin Angptl4, sodass dieses die LPL nicht inhibieren kann (doppelte Hemmung --> Aktivierung) FAZIT : → bestimmte Apo haben stimulierende oder hemmende Wirkung auf LPL ",
+          "hy_terms_detected": [
+            "insulin"
+          ]
+        },
+        {
+          "card_id": 1637180936875,
+          "note_id": 1637180936875,
+          "deck_id": 1789378223014,
+          "deck_name": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+          "professor_name": "Dozententeam UZH",
+          "professor_institute": "Medizinische Fakultät UZH",
+          "reps": 5,
+          "lapses": 1,
+          "interval_days": 2,
+          "card_yield_score": 59.0,
+          "is_kprim_trap": true,
+          "trap_type": "causal_chain",
+          "trap_label": "Kprim-Kausalkette: Reziproke Regulation",
+          "trap_warning": "Prüfe genau: Welches Hormon/Enzym stimuliert und welches hemmt? Bei Kprim führen getauschte Pfeilrichtungen zu Punktverlust.",
+          "card_type": "kprim_mechanism",
+          "front": "Was macht Angptl4?",
+          "back": "Ist ein Protein im Fettgewebe , das LPL und damit Aufnahme von FS HEMMT → wird aber selber von INSULIN gehemmt ⇒ Insulin fördert also LPL indirekt (\"d.h. nach Essen kann man gut FS ins Fettgewebe aufnehmen\")* * Achtung: nach Jele hemmt Insulin in der Resorptionsphase die Expression von LDL im Muskel, fördert die Expres",
+          "front_snippet": "Was macht Angptl4?",
+          "back_snippet": "Ist ein Protein im Fettgewebe , das LPL und damit Aufnahme von FS HEMMT → wird aber selber von INSULIN gehemmt ⇒ Insulin fördert also LPL indirekt (\"d.h. nach Essen kann man gut FS ins Fettgewebe aufnehmen\")* * Achtung: nach Jele hemmt Insulin in der Resorptio",
+          "hy_terms_detected": [
+            "insulin"
+          ]
+        }
+      ]
     },
     "1789378222950": {
       "deck_id": 1789378222950,
@@ -5319,9 +5323,9 @@
     "1789378223038": {
       "deck_id": 1789378223038,
       "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
-      "total_cards": 57,
+      "total_cards": 77,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 4,
+      "kprim_traps_count": 7,
       "confusable_pairs_count": 0,
       "avg_card_yield_score": 50.0,
       "sample_kprim_traps": [
@@ -5332,9 +5336,9 @@
           "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 3,
+          "interval_days": 10,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5392,25 +5396,25 @@
           "hy_terms_detected": []
         },
         {
-          "card_id": 1639064299602,
-          "note_id": 1639064299602,
+          "card_id": 1639063961344,
+          "note_id": 1639063961344,
           "deck_id": 1789378223038,
           "deck_name": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 3,
-          "lapses": 0,
-          "interval_days": 11,
+          "reps": 8,
+          "lapses": 2,
+          "interval_days": 2,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
           "trap_label": "Kprim-Logikfalle: Verneinung & Richtungswechsel",
           "trap_warning": "Achtung bei Kprim: Formulierungen wie 'hemmt nicht' oder 'ausschliesslich' werden von UZH-Dozenten gerne für Fangentscheidungen genutzt.",
           "card_type": "kprim_mechanism",
-          "front": "Wo findet man Colitis ulcerosa meistens im GI-Trakt?",
-          "back": "nur im Colon: vor allem im colon descendens —> beginnt immer beim Rektum",
-          "front_snippet": "Wo findet man Colitis ulcerosa meistens im GI-Trakt?",
-          "back_snippet": "nur im Colon: vor allem im colon descendens —> beginnt immer beim Rektum",
+          "front": "Was ist Morbus Crohn?",
+          "back": "Transmurale Entzündung (= durch alle Wandschichten) in allen Abschnitten des Gastrointestinaltrakt segmental (abschnittweise entzündet, dann wieder nicht entzündet)",
+          "front_snippet": "Was ist Morbus Crohn?",
+          "back_snippet": "Transmurale Entzündung (= durch alle Wandschichten) in allen Abschnitten des Gastrointestinaltrakt segmental (abschnittweise entzündet, dann wieder nicht entzündet)",
           "hy_terms_detected": []
         }
       ]
@@ -5496,9 +5500,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 7,
+          "reps": 8,
           "lapses": 1,
-          "interval_days": 4,
+          "interval_days": 14,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5518,8 +5522,8 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 15,
-          "lapses": 4,
+          "reps": 17,
+          "lapses": 5,
           "interval_days": 1,
           "card_yield_score": 49.0,
           "is_kprim_trap": true,
@@ -5542,9 +5546,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 11,
+          "reps": 12,
           "lapses": 3,
-          "interval_days": 4,
+          "interval_days": 5,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5564,9 +5568,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 12,
+          "reps": 13,
           "lapses": 3,
-          "interval_days": 4,
+          "interval_days": 7,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5683,11 +5687,11 @@
           "front_snippet": "Schilddrüse: was produziert sie? Durch was stimuliert?",
           "back_snippet": "produziert auch (durch C-Zellen) Calcitonin Produziert die jodhaltig Schilddrüsenhormone Trijodthyronin (T3) und Thyroxin (T4) . → Stimuliert durch TSH (Thyreoidea- stimulierendes Hormon)",
           "hy_terms_detected": [
-            "calcitonin",
-            "t3",
-            "tsh",
             "t4",
-            "schilddrüse"
+            "t3",
+            "calcitonin",
+            "schilddrüse",
+            "tsh"
           ]
         }
       ]
@@ -5766,8 +5770,8 @@
           "front_snippet": "Was passiert wenn ACTH von der Hypophyse ausgeschüttet wird? Beschreibe Feedbackloop",
           "back_snippet": "- es stimmuliert die poduktion von Cortisol in den Nebennieren - Cortisol hemmt CRH (corticotropin releasing hormone) - CRH gehemmt -> weniger/kein ACTH mehr ⇒ negativer Feedbackloop",
           "hy_terms_detected": [
-            "cortisol",
-            "acth"
+            "acth",
+            "cortisol"
           ]
         },
         {
@@ -5854,9 +5858,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
           "professor_name": "Prof. Dr. Christian Stockmann",
           "professor_institute": "Anatomisches Institut UZH",
-          "reps": 14,
+          "reps": 15,
           "lapses": 4,
-          "interval_days": 5,
+          "interval_days": 11,
           "card_yield_score": 78.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -5868,8 +5872,8 @@
           "front_snippet": "Rolle der Leber im Cholesterinstoffwechsel Zusammenhang: erhöhte hepatische Cholesterin konzentration, Cholesterinhaushalt und Gallensäuresynthese und - Export ?",
           "back_snippet": "HEMMUNG von SREBP-2 ⇒ ↓ HMG-CoA-Red und ↓ LDL-Rezeptor ⟹ HEMMUNG von Synthese und Aufnahme von Cholesterin aber auch: da viel Cholesterin → Oxysterine ↑ → LXR/RXR → ↑ Synthese und Export von Gallensäuren Info am Rande: LXR erhöht auch die Transkription von SRE",
           "hy_terms_detected": [
-            "insulin",
-            "glykolyse"
+            "glykolyse",
+            "insulin"
           ]
         },
         {
@@ -5901,11 +5905,11 @@
     "1789378223041": {
       "deck_id": 1789378223041,
       "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
-      "total_cards": 57,
+      "total_cards": 56,
       "high_yield_cards_count": 0,
       "kprim_traps_count": 8,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 53.1,
+      "avg_card_yield_score": 52.9,
       "sample_kprim_traps": [
         {
           "card_id": 1640006577221,
@@ -5914,9 +5918,9 @@
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 7,
+          "interval_days": 35,
           "card_yield_score": 50.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -5936,9 +5940,9 @@
           "deck_name": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
           "professor_name": "Prof. Dr. Carsten Wagner",
           "professor_institute": "Physiologisches Institut UZH",
-          "reps": 5,
-          "lapses": 0,
-          "interval_days": 6,
+          "reps": 7,
+          "lapses": 1,
+          "interval_days": 2,
           "card_yield_score": 59.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6041,10 +6045,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
-            "noradrenalin",
             "adrenalin",
-            "insulin"
+            "insulin",
+            "noradrenalin",
+            "katecholamin"
           ]
         },
         {
@@ -6068,10 +6072,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
-            "noradrenalin",
             "adrenalin",
-            "insulin"
+            "insulin",
+            "noradrenalin",
+            "katecholamin"
           ]
         },
         {
@@ -6095,10 +6099,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen → zusätzliche Regulation? (abgesehen von Glucose) Stimulation : − Enterische Hormone: ➢ Inkretine (GLP-1 und GIP) ➢ CCK, Sekretin und Gastrin − Neural: ➢ ACh (Vagus)→ via Steigerung von IP3 und",
           "back_snippet": "",
           "hy_terms_detected": [
-            "katecholamin",
-            "noradrenalin",
             "adrenalin",
-            "insulin"
+            "insulin",
+            "noradrenalin",
+            "katecholamin"
           ]
         },
         {
@@ -6122,10 +6126,10 @@
           "front_snippet": "Regulation der Insulin-Sekretion beim Menschen Wie wirkt Sympathikus (über Katecholamine) auf Insulinsekretion? Beschreibe Mechanismus",
           "back_snippet": "➢ α2 → cAMP ↓ → Kalium Kanal wird nicht durch PKA/EPAC2 phosphoryliert und geschlossen ⇒ keine Depolarisation, kein Ca 2+ Einstrom, keine Insulinausschüttung ➢ β2 → cAMP ↑ → PKA und EPAC2 ↑ → K+ Kanal wird phosphoryliert & schliesst ⇒ Depolarisation ⇒ Ca 2+ Ei",
           "hy_terms_detected": [
-            "depolarisation",
-            "katecholamin",
             "epo",
-            "insulin"
+            "insulin",
+            "depolarisation",
+            "katecholamin"
           ]
         }
       ]
@@ -6281,9 +6285,9 @@
           "front_snippet": "Nebenniere Zona Glomerulosa: Eigenschaften evt. auslassen, kommt bei jele schon vor. hier mehr als repetition",
           "back_snippet": "• 10-15% der Rinde • Zellen kugelförmig angeordnet (glomus: ball) • Enthalten Lipoidgranula • Haben keine 17a-hydroxylase, deshalb können Cortisol nicht bilden • Produzieren Aldosteron von Corticosteron • Aldosteron wird stimuliert von Angiotensin II (z.B. tie",
           "hy_terms_detected": [
-            "cortisol",
             "angiotensin",
-            "aldosteron"
+            "aldosteron",
+            "cortisol"
           ]
         },
         {
@@ -6329,8 +6333,8 @@
           "front_snippet": "Welches Hormon produzieren die jeweiligen histologischen Zonen der Nebennieren rinde ?",
           "back_snippet": "➢ Zona glomerulosa → Aldosteron ➢ Zona fasciculata → Cortisol (+ Androgen) ➢ Zona reticularis → Androgen",
           "hy_terms_detected": [
-            "cortisol",
-            "aldosteron"
+            "aldosteron",
+            "cortisol"
           ]
         }
       ]
@@ -6413,8 +6417,8 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Ist die Aktivität der LPL, welche durch Insulin induziert wurde, sofort maximal ?",
           "back_snippet": "Nein, sondern zeitlich verzögert -> weil durch Transkription (SREBP-1c) Grund : Re-Synthese von TAGs und CM Bildung in den Darm Mukosazellen braucht ein bissl Zeit ⇒ also steigt Konzentrationen von Chylomikronen im Plasma auch langsam an -> LPL nimmt Chylomikr",
           "hy_terms_detected": [
-            "insulin",
-            "ags"
+            "ags",
+            "insulin"
           ]
         },
         {
@@ -6438,8 +6442,8 @@
           "front_snippet": "Die Resorptionsphase - Lipidstoffwechsel Wie wirkt Insulin auf die Glycerophosphat-Acyltransferase (GPAT)?",
           "back_snippet": "Insulin aktiviert GPAT ➢ transkriptionell via SREBP-1c und ➢ via Senkung cAMP und damit ↓ PKA ⇒ GPAT wird nicht phosphoryliert und somit nicht gehemmt Lipogenese (vor allem Leber und Fett)",
           "hy_terms_detected": [
-            "phosphat",
-            "insulin"
+            "insulin",
+            "phosphat"
           ]
         }
       ]
@@ -6586,9 +6590,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 6,
+          "reps": 7,
           "lapses": 1,
-          "interval_days": 3,
+          "interval_days": 15,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6608,9 +6612,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 7,
+          "interval_days": 47,
           "card_yield_score": 58.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6633,9 +6637,9 @@
           "deck_name": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
           "professor_name": "Prof. Dr. Raimund Dutzler",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 3,
+          "reps": 4,
           "lapses": 0,
-          "interval_days": 7,
+          "interval_days": 41,
           "card_yield_score": 40.0,
           "is_kprim_trap": true,
           "trap_type": "negation_directional",
@@ -6653,11 +6657,11 @@
     "1789378223021": {
       "deck_id": 1789378223021,
       "deck_name": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
-      "total_cards": 149,
+      "total_cards": 196,
       "high_yield_cards_count": 0,
-      "kprim_traps_count": 18,
+      "kprim_traps_count": 19,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 40.8,
+      "avg_card_yield_score": 40.9,
       "sample_kprim_traps": [
         {
           "card_id": 1640723303043,
@@ -6829,8 +6833,8 @@
           "front_snippet": "Haben Cortisol- und Aldosteron-Synthese dieselben Enzyme?",
           "back_snippet": "einige ja, aber nicht alle Cortisol-Synthese teilt fast alle Enzyme mit Aldosteron-Synthese. Das letzte Enzym der Cortisol-Synthese hat in der z.fasciculata aber nur 1 Aktivität (z. glomerulosa 3 Aktivitäten) → Cortisol-spezifisch Aldosteron hat einige zusätzl",
           "hy_terms_detected": [
-            "cortisol",
-            "aldosteron"
+            "aldosteron",
+            "cortisol"
           ]
         },
         {
@@ -6854,8 +6858,8 @@
           "front_snippet": "Regulation der Cortisol-Synthese long feedback?",
           "back_snippet": "Cortisol: negative Rückkopplung auf - Hypophyse → hemmt ACTH-Freisetzung - Hypothalamus → hemmt CRH-Freisetzung",
           "hy_terms_detected": [
-            "cortisol",
-            "acth"
+            "acth",
+            "cortisol"
           ]
         }
       ]
@@ -6863,11 +6867,11 @@
     "1789378223048": {
       "deck_id": 1789378223048,
       "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
-      "total_cards": 109,
+      "total_cards": 108,
       "high_yield_cards_count": 3,
       "kprim_traps_count": 18,
       "confusable_pairs_count": 0,
-      "avg_card_yield_score": 56.5,
+      "avg_card_yield_score": 56.4,
       "sample_kprim_traps": [
         {
           "card_id": 1640871933346,
@@ -6898,9 +6902,9 @@
           "deck_name": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
           "professor_name": "Prof. Dr. Heimo Emmert",
           "professor_institute": "Institut für Biochemie UZH",
-          "reps": 4,
+          "reps": 5,
           "lapses": 0,
-          "interval_days": 8,
+          "interval_days": 13,
           "card_yield_score": 69.0,
           "is_kprim_trap": true,
           "trap_type": "causal_chain",
@@ -7035,11 +7039,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Was stimuliert die Synthese von: Dopamin und Noradrenalin? Was von Adrenalin?",
           "back_snippet": "Dopamin und Noradrenalin → stimuliert hauptsächlich durch Acetylcholin vom Sympathikus (Unterstützt durch ACTH → Cortisol) Adrenalin → stimuliert hauptsächlich durch Cortisol (← ACTH) (unterstützt durch ACh (sympat)",
           "hy_terms_detected": [
-            "cortisol",
             "acth",
-            "katecholamin",
+            "adrenalin",
             "noradrenalin",
-            "adrenalin"
+            "cortisol",
+            "katecholamin"
           ]
         },
         {
@@ -7063,11 +7067,11 @@
           "front_snippet": "Synthese und Sekretion der Katecholamine Die Synthese von Adrenalin aus Noradrenalin wird hauptsächlich von Cortisol (← ACTH) (und unterstützend von ACh (sympath).) angeregt.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "cortisol",
             "acth",
-            "katecholamin",
+            "adrenalin",
             "noradrenalin",
-            "adrenalin"
+            "cortisol",
+            "katecholamin"
           ]
         }
       ]
@@ -7102,10 +7106,10 @@
           "front_snippet": "Aldosteronfreisetzung wird durch was stimuliert? (3)",
           "back_snippet": "➢ Anstieg extrazelluläres K+ → reduziert chemischen Gradienten für K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Anstieg von Angiotensin II → hemmt K+-Efflux ⇒ Depolarisation und Ca Einstrom ➢ Azidose",
           "hy_terms_detected": [
+            "azidose",
+            "epo",
             "depolarisation",
             "angiotensin",
-            "epo",
-            "azidose",
             "aldosteron"
           ]
         },
@@ -7130,8 +7134,8 @@
           "front_snippet": "Wieso bekommt man einen Bluthockdruck wenn man Lakritze isst?",
           "back_snippet": "Weil Lakrize 11βHSD 2 hemmt → Cortisol kann nicht zu in aktivem Cortiso n gemacht werden. Folge: → Mineralokortikoidrezeptor (MR) kann Cortisol nciht mehr selber \"abbauen/deaktivieren\" und wird deshalb auch durch Cortisol aktiviert. ⇒ MR bindet dann also an Co",
           "hy_terms_detected": [
-            "cortisol",
-            "aldosteron"
+            "aldosteron",
+            "cortisol"
           ]
         },
         {
@@ -7177,8 +7181,8 @@
           "front_snippet": "Zweite sympathische Synapse: fast immer Noradrenalin Ausnahme: Nierenmark schüttet Adrenalin aus Schweissdrüsen werden über ACh aktiviert.",
           "back_snippet": "",
           "hy_terms_detected": [
-            "noradrenalin",
-            "adrenalin"
+            "adrenalin",
+            "noradrenalin"
           ]
         }
       ]
@@ -8749,8 +8753,8 @@
           "front_snippet": "T-Zell abhängige B-Zell Aktivierung",
           "back_snippet": "- BCR Signal durch Antigenerkennung - CD40-vermitteltes Signal durch T-Zellen (für gleiches Antigen spezifisch) - Affinitätsreifung und Klassenwechsel B-Zelle bindet Antigen über BCR → nimmt es auf, verarbeitet es, präsentiert Peptid auf MHC-II. T-Helferzelle ",
           "hy_terms_detected": [
-            "mhc-i",
             "mhc-ii",
+            "mhc-i",
             "t-zell"
           ]
         },
@@ -9006,5 +9010,5 @@
       "sample_kprim_traps": []
     }
   },
-  "updated_at": 1795681122.2929995
+  "updated_at": 1795862917.3360672
 }

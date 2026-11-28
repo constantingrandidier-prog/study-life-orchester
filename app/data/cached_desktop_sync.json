@@ -303,8 +303,8 @@
     "target_day_index": 393,
     "next_day_index": 394
   },
-  "_latest_target_date": "2026-11-26",
-  "_updated_at": "2026-11-26T09:19:57.512197",
+  "_latest_target_date": "2026-11-28",
+  "_updated_at": "2026-11-28T11:52:30.777340",
   "2026-10-21": {
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
@@ -1510,17 +1510,17 @@
       "TB Blut/Immunsystem :: Einführung und Abschluss": 23,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 12
     },
-    "yesterday_reviewed_count": 100,
-    "yesterday_new_cards_count": 100,
-    "yesterday_new_opened_count": 100,
-    "yesterday_repetition_cards_count": 351,
-    "yesterday_total_reviews_count": 665,
-    "yesterday_time_minutes": 181,
+    "yesterday_reviewed_count": 132,
+    "yesterday_new_cards_count": 132,
+    "yesterday_new_opened_count": 150,
+    "yesterday_repetition_cards_count": 344,
+    "yesterday_total_reviews_count": 747,
+    "yesterday_time_minutes": 168,
     "due_today_count": 85,
     "due_reviews_count": 85,
-    "cumulative_cards_learned": 5522,
+    "cumulative_cards_learned": 5772,
     "total_curriculum_cards": 8740,
-    "curriculum_progress_pct": 63.2,
+    "curriculum_progress_pct": 66.0,
     "curriculum_snapshot": [],
     "due_tomorrow_count": 0,
     "due_tomorrow_deck_breakdown": {},
@@ -1608,8 +1608,8 @@
       }
     ],
     "due_tomorrow_sample": [],
-    "last_sync_timestamp": "2026-11-26T09:18:20.489784",
-    "current_day_index": 430,
+    "last_sync_timestamp": "2026-11-28T11:52:14.544645",
+    "current_day_index": 432,
     "target_day_index": 358,
     "next_day_index": 359
   },
@@ -12105,11 +12105,11 @@
     "yesterday_time_minutes": 181,
     "due_today_count": 351,
     "due_reviews_count": 351,
-    "cumulative_cards_learned": 5522,
+    "cumulative_cards_learned": 5622,
     "total_curriculum_cards": 8740,
-    "curriculum_progress_pct": 63.2,
+    "curriculum_progress_pct": 64.3,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 357,
+    "due_tomorrow_count": 238,
     "due_tomorrow_deck_breakdown": {
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 2,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 3,
@@ -12141,13 +12141,11 @@
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 3,
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 7,
       "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 7,
-      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 24,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 22,
       "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 15,
       "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 13,
-      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 84,
-      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 37,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 6,
       "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
-      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 2,
       "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 11,
       "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 5,
       "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 7,
@@ -12162,16 +12160,8 @@
     },
     "due_tomorrow_topics": [
       {
-        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
-        "count": 84
-      },
-      {
-        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
-        "count": 37
-      },
-      {
         "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-        "count": 24
+        "count": 22
       },
       {
         "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
@@ -12224,6 +12214,10 @@
       {
         "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
         "count": 7
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
+        "count": 6
       },
       {
         "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
@@ -12327,10 +12321,6 @@
       },
       {
         "deck": "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing",
-        "count": 2
-      },
-      {
-        "deck": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
         "count": 2
       },
       {
@@ -12513,7 +12503,7 @@
         "front": "Was sagt das Affinitätsmodell der T-Zell-Selektion aus?"
       }
     ],
-    "last_sync_timestamp": "2026-11-26T09:19:05.883500",
+    "last_sync_timestamp": "2026-11-26T23:59:03.304030",
     "current_day_index": 430,
     "target_day_index": 429,
     "next_day_index": 430
@@ -12522,39 +12512,64 @@
     "connected": true,
     "source": "Anki Desktop (Benutzer 1)",
     "target_date": "2026-11-26",
-    "is_today": true,
+    "is_today": false,
     "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
-    "first_review_time": null,
-    "last_review_time": null,
-    "today_reviewed_count": 0,
-    "new_cards_count": 0,
-    "new_cards_opened_count": 0,
+    "first_review_time": "09:05",
+    "last_review_time": "12:02",
+    "today_reviewed_count": 100,
+    "new_cards_count": 100,
+    "new_cards_opened_count": 100,
     "new_cards_in_learning_count": 0,
-    "repetition_cards_count": 0,
-    "total_reviews_count": 0,
-    "today_time_minutes": 0.0,
-    "today_session_time_minutes": 0.0,
-    "effective_study_minutes": 0.0,
-    "today_lapses_count": 0,
-    "today_new_count": 0,
-    "today_review_count": 0,
-    "today_deck_breakdown": {},
-    "new_by_deck": {},
-    "new_opened_by_deck": {},
-    "rep_by_deck": {},
+    "repetition_cards_count": 340,
+    "total_reviews_count": 604,
+    "today_time_minutes": 143.4,
+    "today_session_time_minutes": 177.1,
+    "effective_study_minutes": 177.1,
+    "today_lapses_count": 161,
+    "today_new_count": 100,
+    "today_review_count": 340,
+    "today_deck_breakdown": {
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 127,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 172,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 60,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 11,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 45,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 102,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 42,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 18,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 27
+    },
+    "new_by_deck": {
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 42,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 58
+    },
+    "new_opened_by_deck": {
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 42,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 58
+    },
+    "rep_by_deck": {
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 15,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 33,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 84,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 50,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 90,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 40,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 20,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 8
+    },
     "yesterday_reviewed_count": 100,
     "yesterday_new_cards_count": 100,
     "yesterday_new_opened_count": 100,
-    "yesterday_repetition_cards_count": 351,
-    "yesterday_total_reviews_count": 665,
-    "yesterday_time_minutes": 181,
-    "due_today_count": 1900,
-    "due_reviews_count": 1900,
-    "cumulative_cards_learned": 5522,
+    "yesterday_repetition_cards_count": 340,
+    "yesterday_total_reviews_count": 604,
+    "yesterday_time_minutes": 143,
+    "due_today_count": 340,
+    "due_reviews_count": 340,
+    "cumulative_cards_learned": 5622,
     "total_curriculum_cards": 8740,
-    "curriculum_progress_pct": 63.2,
+    "curriculum_progress_pct": 64.3,
     "curriculum_snapshot": [],
-    "due_tomorrow_count": 272,
+    "due_tomorrow_count": 247,
     "due_tomorrow_deck_breakdown": {
       "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 4,
       "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 4,
@@ -12562,7 +12577,7 @@
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 4,
       "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 3,
       "TB Blut/Immunsystem :: Schneider :: Blut und Blutplasma / Wenger": 1,
-      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 5,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 6,
       "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 2,
       "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 8,
       "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 2,
@@ -12586,44 +12601,40 @@
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 6,
       "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 5,
       "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 7,
-      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 13,
-      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 6,
-      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 14,
-      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 24,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 18,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 17,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 3,
       "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 3,
-      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 1,
-      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 9,
-      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 2,
-      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 6,
-      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 10,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 2,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 4,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 9,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 4,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 3,
       "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 2,
       "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 13,
-      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 5,
-      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 20,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 2,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 21,
       "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 9,
       "TB Blut/Immunsystem :: Einführung und Abschluss": 1,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 2,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 4,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 3,
       "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 3,
-      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 1
     },
     "due_tomorrow_topics": [
       {
-        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
-        "count": 24
-      },
-      {
         "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
-        "count": 20
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
-        "count": 14
+        "count": 21
       },
       {
         "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
-        "count": 13
+        "count": 18
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
+        "count": 17
       },
       {
         "deck": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
@@ -12634,15 +12645,11 @@
         "count": 12
       },
       {
-        "deck": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
-        "count": 10
-      },
-      {
         "deck": "TB Atmung :: Loffing :: Lunge / Loffing",
         "count": 9
       },
       {
-        "deck": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+        "deck": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
         "count": 9
       },
       {
@@ -12662,6 +12669,10 @@
         "count": 7
       },
       {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "count": 6
+      },
+      {
         "deck": "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing",
         "count": 6
       },
@@ -12670,23 +12681,7 @@
         "count": 6
       },
       {
-        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
-        "count": 6
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
-        "count": 6
-      },
-      {
-        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
-        "count": 5
-      },
-      {
         "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
-        "count": 5
-      },
-      {
-        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
         "count": 5
       },
       {
@@ -12711,6 +12706,14 @@
       },
       {
         "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Hochdrucksystem / Kurtcuoglu",
+        "count": 4
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+        "count": 4
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
         "count": 4
       },
       {
@@ -12746,7 +12749,15 @@
         "count": 3
       },
       {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
+        "count": 3
+      },
+      {
         "deck": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
+        "count": 3
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
         "count": 3
       },
       {
@@ -12766,11 +12777,15 @@
         "count": 2
       },
       {
-        "deck": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
+        "deck": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
         "count": 2
       },
       {
         "deck": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
+        "count": 2
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
         "count": 2
       },
       {
@@ -12802,19 +12817,100 @@
         "count": 1
       },
       {
-        "deck": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
-        "count": 1
-      },
-      {
         "deck": "TB Blut/Immunsystem :: Einführung und Abschluss",
         "count": 1
       },
       {
         "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
         "count": 1
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+        "count": 1
       }
     ],
-    "recent_reviews_sample": [],
+    "recent_reviews_sample": [
+      {
+        "time": "12:02:06",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Welche Arterien versorgen die Mundhöhle?"
+      },
+      {
+        "time": "12:01:49",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:01:46",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:01:44",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:01:29",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:00:30",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:00:27",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:00:25",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:00:22",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "12:00:19",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      }
+    ],
     "due_tomorrow_sample": [
       {
         "card_id": 1598803349737,
@@ -12892,9 +12988,871 @@
         "front": "Wie läuft die ADCC ab?"
       }
     ],
-    "last_sync_timestamp": "2026-11-26T09:19:57.418819",
-    "current_day_index": 430,
+    "last_sync_timestamp": "2026-11-27T23:59:03.307347",
+    "current_day_index": 431,
     "target_day_index": 430,
     "next_day_index": 431
+  },
+  "2026-11-27": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-11-27",
+    "is_today": false,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": "09:45",
+    "last_review_time": "13:15",
+    "today_reviewed_count": 132,
+    "new_cards_count": 132,
+    "new_cards_opened_count": 150,
+    "new_cards_in_learning_count": 18,
+    "repetition_cards_count": 344,
+    "total_reviews_count": 747,
+    "today_time_minutes": 168.6,
+    "today_session_time_minutes": 210.1,
+    "effective_study_minutes": 210.1,
+    "today_lapses_count": 262,
+    "today_new_count": 132,
+    "today_review_count": 344,
+    "today_deck_breakdown": {
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 392,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 30,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 43,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 50,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 95,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 45,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 24,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 11,
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 4,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 51,
+      "TB Verdauung :: Lukic :: 1 Kaumuskelbeschwerden ⚫": 2
+    },
+    "new_by_deck": {
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 132
+    },
+    "new_opened_by_deck": {
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 150
+    },
+    "rep_by_deck": {
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 41,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 21,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 22,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 9,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 38,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 72,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 56,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 40,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 39,
+      "TB Blut/Immunsystem :: Einführung und Abschluss": 4,
+      "TB Verdauung :: Lukic :: 1 Kaumuskelbeschwerden ⚫": 2
+    },
+    "yesterday_reviewed_count": 132,
+    "yesterday_new_cards_count": 132,
+    "yesterday_new_opened_count": 150,
+    "yesterday_repetition_cards_count": 344,
+    "yesterday_total_reviews_count": 747,
+    "yesterday_time_minutes": 168,
+    "due_today_count": 344,
+    "due_reviews_count": 344,
+    "cumulative_cards_learned": 5772,
+    "total_curriculum_cards": 8740,
+    "curriculum_progress_pct": 66.0,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 340,
+    "due_tomorrow_deck_breakdown": {
+      "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich": 6,
+      "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli": 4,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 2,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 4,
+      "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport": 2,
+      "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich": 5,
+      "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen": 2,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 5,
+      "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 1,
+      "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing": 1,
+      "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing": 3,
+      "TB Atmung :: Loffing :: Lunge / Loffing": 8,
+      "TB Atmung :: Loffing :: Atemmuskulatur / Loffing": 4,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 2,
+      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing": 5,
+      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 4,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 118,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 9,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 17,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 11,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 1,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 24,
+      "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢": 1,
+      "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine": 9,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 15,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 3,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 8,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 10,
+      "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 2,
+      "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 5,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢": 3,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 11,
+      "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 1,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung": 1,
+      "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz": 2,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 1
+    },
+    "due_tomorrow_topics": [
+      {
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "count": 118
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
+        "count": 24
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "count": 17
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+        "count": 15
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
+        "count": 11
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "count": 11
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
+        "count": 10
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "count": 9
+      },
+      {
+        "deck": "TB Stoffwechsel :: 4 Robert :: 1 Lipoproteine",
+        "count": 9
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Lunge / Loffing",
+        "count": 8
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+        "count": 8
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "count": 6
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Thymus und lymphatisches System / Ullrich",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
+        "count": 5
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane / Loffing",
+        "count": 5
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+        "count": 5
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzstruktur / Loffing",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Herzwand / Loffing",
+        "count": 4
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzmechanik / Kurtcuoglu",
+        "count": 4
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Atemmuskulatur / Loffing",
+        "count": 4
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
+        "count": 4
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Trachea und Bronchien 2 / Loffing",
+        "count": 3
+      },
+      {
+        "deck": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
+        "count": 3
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 1 fettlösliche Vitamine 🟢",
+        "count": 3
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Rekombination adaptiver Immunrezeptoren",
+        "count": 3
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Thrombozyten, Wundheilung, Blutgruppen",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Kreislauf-Übersicht / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Herzarbeit und Regulation der Herzfunktion / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Immuntoleranz",
+        "count": 2
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Trachea und Bronchien / Loffing",
+        "count": 1
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 1 Myoglobin, Hämoglobin 🟢",
+        "count": 1
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Einführung",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Einführung/Abschluss :: Herz-Kreislauf Abschluss",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Das angeborene und erworbene Immunsystem",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Autoimmunität und Entzündung",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Monoklonale Antikörper in Diagnostik und Therapie",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+        "count": 1
+      }
+    ],
+    "recent_reviews_sample": [
+      {
+        "time": "13:15:36",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wie funktioniert das Zahnschema?"
+      },
+      {
+        "time": "13:15:26",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Welche Milchzähne brechen zuerst durch? Wann?"
+      },
+      {
+        "time": "13:15:22",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Was ist die Zahnformel des Dauergebisses?"
+      },
+      {
+        "time": "13:15:06",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Wie viele dauerhafte Zähne hat der Mensch?"
+      },
+      {
+        "time": "13:15:04",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "13:15:01",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "13:14:53",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "13:14:50",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "13:14:47",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      },
+      {
+        "time": "13:14:43",
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "ease": 1,
+        "ease_label": "Nochmal",
+        "type_label": "Neu",
+        "front": "Karte"
+      }
+    ],
+    "due_tomorrow_sample": [
+      {
+        "card_id": 1598803349764,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Was ist eine Links-Verschiebung? Wie kommt sie zu Stande?"
+      },
+      {
+        "card_id": 1598803349769,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Was versteht man unter extramedullärer Myelopoese?"
+      },
+      {
+        "card_id": 1598813336587,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Leukozyten I / Ullrich",
+        "front": "Die beiden Wege des KomplementsystemKlassischer Weg:- {{c1::Schnell.}}- Via {{c2::Opsonier"
+      },
+      {
+        "card_id": 1600699363885,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "front": "Nenne Beispiele von adaptiver Immunität (4 Ebenen von Schutzmechanismen vor Pathogenen)?"
+      },
+      {
+        "card_id": 1600703177653,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Phasen der Immunantwort Ulli",
+        "front": "Welche Schritte gehören zur Induktionsphase der adaptiven Immunabwehr?"
+      },
+      {
+        "card_id": 1600718802642,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "front": "Wie entsteht das Überlebenssignal (eines der drei T-Zell-Aktivierungssignale)?Was passiert"
+      },
+      {
+        "card_id": 1600718844073,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "front": "Wie entsteht das Differenzierungssignal (eines der drei T-Zell-Aktivierungssignale)?"
+      },
+      {
+        "card_id": 1600783405913,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "front": "Was garantiert der T-Zellreceptor (TCR)?"
+      },
+      {
+        "card_id": 1600786865500,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem Ulli",
+        "front": "Was machen TH1 Zellen?"
+      },
+      {
+        "card_id": 1600939338876,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "front": "Zu was führt die ADCC-Eigenschaft der NK-Zelle?"
+      },
+      {
+        "card_id": 1600946489281,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "front": "Wie erfolgt die indirekte Antigenerkennung bei der Transplantatabstossung?"
+      },
+      {
+        "card_id": 1601036762735,
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "front": "Was befindet sich auf der Membranaussenseite der Erythrozyten?"
+      },
+      {
+        "card_id": 1601036762866,
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "front": "Worauf weist ein erhöhter Hk hin?"
+      },
+      {
+        "card_id": 1601142639223,
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
+        "front": "Inwiefern hat der pH einen Einfluss auf das Hb, welches O2 transportiert?"
+      },
+      {
+        "card_id": 1601142951472,
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 2 CO2-Transport",
+        "front": "Was beeinflusst die Azidität von Hb?"
+      }
+    ],
+    "last_sync_timestamp": "2026-11-28T11:49:04.606770",
+    "current_day_index": 432,
+    "target_day_index": 431,
+    "next_day_index": 432
+  },
+  "2026-11-28": {
+    "connected": true,
+    "source": "Anki Desktop (Benutzer 1)",
+    "target_date": "2026-11-28",
+    "is_today": true,
+    "collection_path": "C:\\Users\\Constantin Grandidie\\AppData\\Roaming\\Anki2\\Benutzer 1\\collection.anki2",
+    "first_review_time": "09:38",
+    "last_review_time": "11:45",
+    "today_reviewed_count": 0,
+    "new_cards_count": 0,
+    "new_cards_opened_count": 0,
+    "new_cards_in_learning_count": 0,
+    "repetition_cards_count": 348,
+    "total_reviews_count": 403,
+    "today_time_minutes": 104.9,
+    "today_session_time_minutes": 126.9,
+    "effective_study_minutes": 126.9,
+    "today_lapses_count": 55,
+    "today_new_count": 0,
+    "today_review_count": 348,
+    "today_deck_breakdown": {
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 24,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 27,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 16,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 28,
+      "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 45,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 24,
+      "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 44,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 12,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 14,
+      "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 25,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 14,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 11,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 12,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 26,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 9,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 22,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 16,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 18,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 14,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 1,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 1
+    },
+    "new_by_deck": {},
+    "new_opened_by_deck": {},
+    "rep_by_deck": {
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 13,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 20,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 23,
+      "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 38,
+      "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 40,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 13,
+      "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 21,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 1,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 14,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 25,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 23,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 22,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 9,
+      "TB Herz-Kreislauf :: Loffing :: Gefässversorgung und Innervation des Herzens / Loffing": 10,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 19,
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 9,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 14,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Erregungsleitungssystem / Kurtcuoglu": 11,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 13,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Niederdrucksysteme / Kurtcuoglu": 9
+    },
+    "yesterday_reviewed_count": 132,
+    "yesterday_new_cards_count": 132,
+    "yesterday_new_opened_count": 150,
+    "yesterday_repetition_cards_count": 344,
+    "yesterday_total_reviews_count": 747,
+    "yesterday_time_minutes": 168,
+    "due_today_count": 1709,
+    "due_reviews_count": 1709,
+    "cumulative_cards_learned": 5772,
+    "total_curriculum_cards": 8740,
+    "curriculum_progress_pct": 66.0,
+    "curriculum_snapshot": [],
+    "due_tomorrow_count": 69,
+    "due_tomorrow_deck_breakdown": {
+      "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese": 1,
+      "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2": 1,
+      "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger": 3,
+      "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung": 1,
+      "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu": 2,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu": 1,
+      "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing": 1,
+      "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann": 3,
+      "TB Verdauung :: Dutzler :: Ernährung / Dutzler": 1,
+      "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler": 5,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann": 4,
+      "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler": 1,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann": 6,
+      "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann": 10,
+      "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel": 4,
+      "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫": 2,
+      "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine": 9,
+      "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel": 3,
+      "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫": 1,
+      "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme": 3,
+      "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf": 3,
+      "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung": 1,
+      "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu": 1,
+      "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢": 1
+    },
+    "due_tomorrow_topics": [
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Colon und Rektum / Stockmann",
+        "count": 10
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 2 Mikronährstoffe :: 1 Vitamine :: 2 wasserlösliche Vitamine",
+        "count": 9
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "count": 6
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "count": 5
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+        "count": 4
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 5 Regulation Kohlenhydrat Stoffwechsel",
+        "count": 4
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "count": 3
+      },
+      {
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "count": 3
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 6 Leberspezifischer Stoffwechsel",
+        "count": 3
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+        "count": 3
+      },
+      {
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 7 Stoffwechsel bei erhöhtem Energiebedarf",
+        "count": 3
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "count": 2
+      },
+      {
+        "deck": "TB Verdauung :: Rogler :: 1 Gastroenterolgie ⚫",
+        "count": 2
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
+        "count": 1
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "count": 1
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: Spurenelemente&Mineralien / Dutzler",
+        "count": 1
+      },
+      {
+        "deck": "TB Stoffwechsel :: 2 Hersberger :: 6 Regulation des Fettsäurestoffwechsels ⚫",
+        "count": 1
+      },
+      {
+        "deck": "TB Blut/Immunsystem :: Tuzlak (jetzt Becher) :: Zellentstehung und Reifung",
+        "count": 1
+      },
+      {
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Übergeordnete Regulation / Kurtcuoglu",
+        "count": 1
+      },
+      {
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "count": 1
+      }
+    ],
+    "recent_reviews_sample": [
+      {
+        "time": "11:45:39",
+        "deck": "TB Verdauung :: Dutzler :: 3 Verdauung und Absorption 🟢",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Wasserresorption im DünndarmMittels welchen 3 Mechanismen wird der Osmotische Gradient auf"
+      },
+      {
+        "time": "11:45:37",
+        "deck": "TB Verdauung :: Dutzler :: Makronährstoffe / Dutzler",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Energetisch liefert die Verbrennung von 1g Triglyceriden {{c1::37:: zahl}} kJ"
+      },
+      {
+        "time": "11:45:35",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Symptome Pankreaskopfkarzinom "
+      },
+      {
+        "time": "11:45:25",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Duodenum und Pankreas / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Karte"
+      },
+      {
+        "time": "11:45:21",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Wie funktioniert der Blutzufluss zur Leber?"
+      },
+      {
+        "time": "11:45:04",
+        "deck": "TB Stoffwechsel :: 1 Emmert :: 4 Stoffwechselregulation im Bezug auf Nahrungsaufnahme",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederlernen",
+        "front": "Stoffwechsel bei mehrtägigem bis mehrwöchigem Hungern - Phase der Adaption an chronischen "
+      },
+      {
+        "time": "11:44:56",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Karte"
+      },
+      {
+        "time": "11:44:52",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Karte"
+      },
+      {
+        "time": "11:44:49",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Karte"
+      },
+      {
+        "time": "11:44:46",
+        "deck": "TB Verdauung :: Stockmann :: Dickdarm, Leber, Duodenum, Pankreas :: Leber und Gallenwege / Stockmann",
+        "ease": 3,
+        "ease_label": "Gut",
+        "type_label": "Wiederholung",
+        "front": "Karte"
+      }
+    ],
+    "due_tomorrow_sample": [
+      {
+        "card_id": 1600619821231,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Erythropoiese, Myelopoiese",
+        "front": "Was sind die Stufen in der Entwicklung der Thrombozyten? Was sind ihre Merkmale?"
+      },
+      {
+        "card_id": 1600935660066,
+        "deck": "TB Blut/Immunsystem :: Stockmann :: Zelluläre Immunität und Immunsystem 2",
+        "front": "Wie läuft der alternative Weg ab?"
+      },
+      {
+        "card_id": 1601036763369,
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "front": "Was ist Anämie?"
+      },
+      {
+        "card_id": 1601036764060,
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "front": "Was macht die Ferritinreduktase?"
+      },
+      {
+        "card_id": 1601036764651,
+        "deck": "TB Blut/Immunsystem :: Schneider :: Erythrozyten / Wenger",
+        "front": "Ist Blut ein nichtnewtonisches Fluid?"
+      },
+      {
+        "card_id": 1601621804414,
+        "deck": "TB Blut/Immunsystem :: Manatschal :: 3 Blutgerinnung",
+        "front": "Wie wird Fibrinogen zu Fibrin?"
+      },
+      {
+        "card_id": 1603118921106,
+        "deck": "TB Herz-Kreislauf :: Loffing :: Arterien, Arteriolen, Kapillaren, Venulen und Venensystem / Loffing",
+        "front": "Welche arteriellen Anastomosen gibt es im Abdomen?"
+      },
+      {
+        "card_id": 1603644153898,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "front": "Was ist die ST-Strecke? Was ist besonders zu beachten?"
+      },
+      {
+        "card_id": 1603645711025,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: Lokale Durchblutung / Kurtcuoglu",
+        "front": "Übersicht intrazelluläre Signalkaskaden. Welche Stoffe führen zu einer Kontraktion, welche"
+      },
+      {
+        "card_id": 1603707371370,
+        "deck": "TB Herz-Kreislauf :: Kurtcuoglu :: EKG / Kurtcuoglu",
+        "front": "Wie wird der Lewis-Index berechnet? Klinische Bedeutung?"
+      },
+      {
+        "card_id": 1605804735459,
+        "deck": "TB Atmung :: Loffing :: Anatomie der Atmungsorgane II / Loffing",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1606841426862,
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1606841426870,
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1606842619008,
+        "deck": "TB Verdauung :: Stockmann :: Mundhöhle, Kauapparat, Zähne / Stockmann",
+        "front": "Karte"
+      },
+      {
+        "card_id": 1607975676438,
+        "deck": "TB Verdauung :: Dutzler :: Ernährung / Dutzler",
+        "front": "In welche Formen wird die Energie aus der Nahrung umgewandelt?"
+      }
+    ],
+    "last_sync_timestamp": "2026-11-28T11:52:30.587346",
+    "current_day_index": 432,
+    "target_day_index": 432,
+    "next_day_index": 433
   }
 }

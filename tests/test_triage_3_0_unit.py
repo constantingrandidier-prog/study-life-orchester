@@ -591,7 +591,7 @@ def test_b6_a1_overflow_uses_introduced_clause_and_smart_has_is_learn():
     assert payload["selected_subdecks"][0]["a1_only_filter"] is True
     assert "introduced:2" in payload["selected_subdecks"][0]["anki_filter_query"]
     assert "prop:r<" not in payload["selected_subdecks"][0]["anki_filter_query"]
-    assert "is:due introduced:2" in payload["budget_combined_anki_query"]
+    assert "is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))" in payload["budget_combined_anki_query"]
 
 
 def test_b7_custom_budget_does_not_pollute_disk_snapshot_and_cache_invalidates_mem(monkeypatch, tmp_path):
@@ -641,4 +641,53 @@ def test_b7_custom_budget_does_not_pollute_disk_snapshot_and_cache_invalidates_m
     cache_triage(snap_on_disk)
     assert mem_cache["ts"] == 0.0
     assert mem_cache["data"] is None
+
+
+def test_b12_reset_cards_with_pre_semester_revlog_detected_as_a1_vortag(monkeypatch, tmp_path):
+    """Cards reset ('Forget') that have 2025 pre-semester revlogs but were learned yesterday must be A1 Vortag."""
+    import sqlite3
+    from datetime import datetime, timedelta
+
+    db_path = tmp_path / "mini_col_reset_a1.anki2"
+    now = datetime.now()
+    today_4am = now.replace(hour=4, minute=0, second=0, microsecond=0)
+    if now < today_4am:
+        today_4am -= timedelta(days=1)
+    crt_dt = today_4am - timedelta(days=400)
+    crt_sec = int(crt_dt.timestamp())
+    current_day = (today_4am.date() - crt_dt.date()).days
+    pre_semester_ms = int(datetime(2025, 11, 4, 9, 0, 0).timestamp() * 1000)
+    yesterday_ms = int((today_4am - timedelta(days=1) + timedelta(hours=10)).timestamp() * 1000)
+
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE col (crt INTEGER)")
+    conn.execute("INSERT INTO col VALUES (?)", (crt_sec,))
+    conn.execute("CREATE TABLE decks (id INTEGER PRIMARY KEY, name TEXT)")
+    conn.execute("INSERT INTO decks VALUES (10, '2. SJ - 1\x1fTB Verdauung\x1fStockmann\x1fMundhöhle, Kauapparat, Zähne / Stockmann')")
+    conn.execute(
+        "CREATE TABLE cards (id INTEGER PRIMARY KEY, nid INTEGER, did INTEGER, ord INTEGER, mod INTEGER, usn INTEGER, "
+        "type INTEGER, queue INTEGER, due INTEGER, ivl INTEGER, factor INTEGER, reps INTEGER, lapses INTEGER, "
+        "left INTEGER, odue INTEGER, odid INTEGER, flags INTEGER, data TEXT)"
+    )
+    conn.execute("CREATE TABLE revlog (id INTEGER PRIMARY KEY, cid INTEGER, usn INTEGER, ease INTEGER, ivl INTEGER, lastIvl INTEGER, factor INTEGER, time INTEGER, type INTEGER)")
+    # Card 1: has old 2025 revlog (pre-semester) AND was re-learned yesterday (type=0) -> due today (ivl=1)
+    conn.execute(
+        "INSERT INTO cards VALUES (1, 1, 10, 0, 0, 0, 2, 2, ?, 1, 2500, 3, 0, 0, 0, 0, 0, '{\"s\":1.0,\"decay\":0.5,\"lrt\":1700000000}')",
+        (current_day,),
+    )
+    conn.execute("INSERT INTO revlog VALUES (?, 1, 0, 3, 1, 0, 2500, 3000, 0)", (pre_semester_ms,))
+    conn.execute("INSERT INTO revlog VALUES (?, 1, 0, 3, 1, 0, 2500, 3000, 0)", (yesterday_ms,))
+    conn.commit()
+    conn.close()
+
+    tmp_snap = tmp_path / "cached_backlog_triage.json"
+    monkeypatch.setattr(abt, "BACKLOG_TRIAGE_SNAPSHOT_PATH", tmp_snap)
+    monkeypatch.setattr(abt, "_MEM_TRIAGE_CACHE", {"ts": 0.0, "data": None})
+
+    res = abt.calculate_backlog_triage(col_path=db_path, max_capacity=350)
+    assert res["vortag_total_due_today"] == 1
+    assert res["selected_subdecks"][0]["zone"] == "A1"
+    assert res["selected_subdecks"][0]["vortag_due"] == 1
+    assert res["focus_plan_open"][0]["zone"] == "A1"
+
 

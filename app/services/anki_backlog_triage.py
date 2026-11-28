@@ -866,7 +866,8 @@ def calculate_backlog_triage(
             for r in cur.execute(sql_revs, dids + [sem_start_ts]).fetchall()
         }
 
-        # Single scoped card_rev_bounds subquery (only scans revlog for active 2. SJ cards, never full table)
+        # Single scoped card_rev_bounds subquery (only scans revlog for active 2. SJ cards since semester start,
+        # so pre-semester 2025 revlogs on reset/"Forget" cards never hide yesterday's newly learned cards!)
         scoped_rev_bounds_cte = f"""
         WITH target_cards AS (
             SELECT id, did, queue, due, ivl, lapses, reps, data
@@ -877,6 +878,8 @@ def calculate_backlog_triage(
             SELECT r.cid, MIN(r.id) AS first_rev, MAX(r.id) AS last_rev
             FROM revlog r
             WHERE r.cid IN (SELECT id FROM target_cards)
+              AND r.id >= ?
+              AND r.type != 4
             GROUP BY r.cid
         )
         """
@@ -894,7 +897,7 @@ def calculate_backlog_triage(
         """
         new_learned_rows = cur.execute(
             sql_new_learned,
-            dids + [
+            dids + [sem_start_ts] + [
                 yesterday_ms, today_ms,
                 yesterday_ms, today_ms, current_day, current_day,
                 two_days_ms, yesterday_ms, current_day, current_day,
@@ -948,7 +951,7 @@ def calculate_backlog_triage(
         """
         rep_today_yest_rows = cur.execute(
             sql_rep_today_yest,
-            dids + [
+            dids + [sem_start_ts] + [
                 today_ms, today_ms, current_day, current_day,
                 yesterday_ms, today_ms, yesterday_ms,
                 yesterday_ms,
@@ -965,7 +968,7 @@ def calculate_backlog_triage(
         """
         due_cards_detail_rows = cur.execute(
             sql_due_cards_detail,
-            dids + [current_day, current_day],
+            dids + [sem_start_ts] + [current_day, current_day],
         ).fetchall()
 
     prof_day_revs = defaultdict(lambda: defaultdict(int))
@@ -1817,7 +1820,7 @@ def _apply_budget(
             entry["is_partial"] = is_partial
             entry["deferred_from_subdeck"] = rem_after
             entry["vortag_guaranteed"] = vortag_cnt > 0
-            entry["anki_filter_query"] = f"{sd_clause} is:due introduced:2" if is_a1_only else sd_query
+            entry["anki_filter_query"] = f"{sd_clause} is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))" if is_a1_only else sd_query
             entry["anki_filter_query_all"] = sd_query_all
             selected_subdecks.append(entry)
             accumulated += assigned
@@ -1836,7 +1839,7 @@ def _apply_budget(
             entry["is_partial"] = rem_after > 0
             entry["deferred_from_subdeck"] = rem_after
             entry["vortag_guaranteed"] = True
-            entry["anki_filter_query"] = f"{sd_clause} is:due introduced:2" if is_a1_only else sd_query
+            entry["anki_filter_query"] = f"{sd_clause} is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))" if is_a1_only else sd_query
             entry["anki_filter_query_all"] = sd_query_all
             selected_subdecks.append(entry)
             accumulated += min_vortag_req
@@ -1921,12 +1924,12 @@ def _apply_budget(
             if prof_a1_only_clauses and not prof_regular_clauses:
                 a1_u = " or ".join(dict.fromkeys(prof_a1_only_clauses))
                 a1_c = f"({a1_u})" if len(dict.fromkeys(prof_a1_only_clauses)) > 1 else a1_u
-                prof_selected_q = f"{a1_c} is:due introduced:2"
+                prof_selected_q = f"{a1_c} is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))"
             elif prof_a1_only_clauses and prof_regular_clauses:
                 a1_u = " or ".join(dict.fromkeys(prof_a1_only_clauses))
                 reg_u = " or ".join(dict.fromkeys(prof_regular_clauses))
                 reg_suf = smart_suffix if eff_mode == "smart" else "is:due"
-                prof_selected_q = f"(({a1_u}) is:due introduced:2) or (({reg_u}) {reg_suf})"
+                prof_selected_q = f"(({a1_u}) is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))) or (({reg_u}) {reg_suf})"
             else:
                 prof_selected_q = f"{p_clause} {smart_suffix}" if eff_mode == "smart" else prof_selected_q_all
         else:
@@ -2202,18 +2205,18 @@ def _apply_budget(
         reg_suffix = smart_suffix if eff_mode == "smart" else "is:due"
         if a1_only_clauses and not regular_clauses:
             a1_union = " or ".join(dict.fromkeys(a1_only_clauses))
-            result["budget_combined_anki_query"] = f"({a1_union}) is:due introduced:2"
-            result["budget_combined_anki_query_chunks"] = _split_anki_query_chunks(a1_only_clauses, "is:due introduced:2")
+            result["budget_combined_anki_query"] = f"({a1_union}) is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))"
+            result["budget_combined_anki_query_chunks"] = _split_anki_query_chunks(a1_only_clauses, "is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))")
         elif a1_only_clauses and regular_clauses:
             a1_union = " or ".join(dict.fromkeys(a1_only_clauses))
             reg_union = " or ".join(dict.fromkeys(regular_clauses))
-            combined_mixed = f"(({a1_union}) is:due introduced:2) or (({reg_union}) {reg_suffix})"
+            combined_mixed = f"(({a1_union}) is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))) or (({reg_union}) {reg_suffix})"
             result["budget_combined_anki_query"] = combined_mixed
             if len(combined_mixed) <= 1450:
                 result["budget_combined_anki_query_chunks"] = [combined_mixed]
             else:
                 result["budget_combined_anki_query_chunks"] = (
-                    _split_anki_query_chunks(a1_only_clauses, "is:due introduced:2")
+                    _split_anki_query_chunks(a1_only_clauses, "is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))")
                     + _split_anki_query_chunks(regular_clauses, reg_suffix)
                 )
         elif eff_mode == "smart":
@@ -2237,7 +2240,7 @@ def _apply_budget(
                 for pfx in sd.get("real_anki_prefixes") or []:
                     urgent_clauses.append(f'deck:"{_escape_deck_path(pfx)}*"')
         if urgent_clauses:
-            urg_suf = "is:due introduced:2" if (a1_only_clauses and not regular_clauses) else reg_suffix
+            urg_suf = "is:due (introduced:2 or is:learn or (rated:2 prop:ivl<=1))" if (a1_only_clauses and not regular_clauses) else reg_suffix
             result["urgent_combined_anki_query"] = f"({' or '.join(dict.fromkeys(urgent_clauses))}) {urg_suf}"
     elif selected:
         clauses = []
